@@ -46,22 +46,23 @@
         color: #333;
     }
 </style>
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/jquery.js"></script>
 <!--<link href="__PUBLIC__/usercenter/css/style.css" rel="stylesheet" type="text/css" />-->
-<form action="/Profile/reset.html" method="post">
+<form action="{:U('User/doLogin')}" method="post">
         <fieldset>
             <div class="box_c_item">
                 <label class="l_title">帐号：</label>
-                <input class="text_input w300" type="text" name="username" placeholder="请输入帐号">
+                <input class="text_input w300" type="text" id="username" name="username" placeholder="请输入帐号">
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">密码：</label>
-                <input class="text_input w300" type="password" name="password" placeholder="请输入密码">
+                <input class="text_input w300" type="password" id="password" name="password" placeholder="请输入密码">
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title"></label>
-                <input class="text_input w300" type="text" name="vcode" placeholder="请输入验证码">
+                <input class="text_input w300" type="text" id="verify-code" name="vcode" placeholder="请输入验证码">
                 <div style="height:30px; display: inline-block">
                     <img style="" src="<yang:vcodeurl />" id="VCode" onclick="javascript:changeVcode(this);" />
                 </div>
@@ -75,21 +76,34 @@
         </fieldset>
     </form>
 <script type="text/javascript">
+    var loading = 0;
+    $('.btn_commit').click(function() {
+        if( loading == 1 ) {
+            return;
+        }
+        login();
+    });
     function login() {
-        var url = "{:U('User/login')}";
-        var username = $('#username').val().trim();
-        var password = $('#password').val().trim();
-        var vcode = $('#vcode').val().trim();
+        var url = "{:U('User/doLogin')}";
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var vcode = $('#verify-code').val();
         var param = {username:username, password:password, vcode:vcode};
         $.post(url, param, login_handler, 'json');
     }
 
     function login_handler(response) {
+        loading = 0;
         if( response.code == 1 ) {
             parent.window.location.href = "{:U('Profile/index')}";
         } else {
+            changeVcode(null);
             alert(response.msg);
         }
+    }
+    function changeVcode(obj) {
+        $("#VCode").attr("src", '<yang:vcodeurl />' + '#' + Math.random());
+        return false;
     }
 </script>
 

@@ -15,61 +15,67 @@
                 </div>
             </div>
             <div class="box_c">
-                <form action="{:U('Delivery/doAdd')}" method="post">
+                <form action="{:U('Receive/doEdit')}" method="post">
                     <fieldset>
                         <div class="box_c_item">
+                            <label class="l_title">公司：</label>
+                            <input class="text_input w300" type="text" name="company" placeholder="请输入公司" value="{$receive.company}">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
                             <label class="l_title">联系人：</label>
-                            <input class="text_input w300" type="text" name="consignor" placeholder="请输入发货人">
+                            <input class="text_input w300" type="text" name="addressee" placeholder="请输入发货人" value="{$receive.addressee}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">国家：</label>
                             <select class="w300" id="country" name="country">
-                            <foreach name="country_list" item="v">
-                                <option value="{$v.id}">{$v.name}</option>
-                            </foreach>
+                                <foreach name="country_list" item="v">
+                                    <option value="{$v.id}" <if condition="$receive.country_id eq $v['id']">selected</if>>{$v.name}</option>
+                                </foreach>
                             </select>
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">省：</label>
-                            <input class="text_input w300" type="text" name="state" placeholder="请输入省">
+                            <input class="text_input w300" type="text" name="state" placeholder="请输入省" value="{$receive.state}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">市：</label>
-                            <input class="text_input w300" type="text" name="city" placeholder="请输入市">
+                            <input class="text_input w300" type="text" name="city" placeholder="请输入市" value="{$receive.city}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">具体地址：</label>
-                            <input class="text_input w300" type="text" name="address" placeholder="请输入具体地址">
+                            <input class="text_input w300" type="text" name="address" placeholder="请输入具体地址" value="{$receive.detail_address}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">邮编：</label>
-                            <input class="text_input w300" type="text" name="postal_code" placeholder="请输入邮编">
+                            <input class="text_input w300" type="text" name="postal_code" placeholder="请输入邮编" value="{$receive.postal_code}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">手机：</label>
-                            <input class="text_input w300" type="text" name="mobile" placeholder="请输入手机">
+                            <input class="text_input w300" type="text" name="mobile" placeholder="请输入手机" value="{$receive.mobile}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">座机：</label>
-                            <input class="text_input w300" type="text" name="phone" placeholder="请输入座机">
+                            <input class="text_input w300" type="text" name="phone" placeholder="请输入座机" value="{$receive.phone}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">默认：</label>
-                            <input type="radio" name="default" value="1"  />是&nbsp;
-                            <input type="radio" name="default" value="0" checked="checked" />否
+                            <input type="radio" name="default" value="1" <if condition="$receive.is_default eq 1">checked</if> />是&nbsp;
+                            <input type="radio" name="default" value="0" <if condition="$receive.is_default eq 0">checked</if> />否
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title"></label>
-                            <button class="btn btn_commit" type="submit">确认</button> &nbsp;<a href="{:U('Delivery/index')}" class="btn btn_cancel">取消</a>
+                            <input type="hidden" name="id" value="{$receive.id}" />
+                            <button class="btn btn_commit" type="submit">确认</button> &nbsp;<a href="{:U('Receive/index')}" class="btn btn_cancel">取消</a>
                             <div class="clear"></div>
                         </div>
                     </fieldset>
@@ -85,7 +91,7 @@
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
 <script type="text/javascript">
     $(function () {
-        menu1("#ud3", "#ud3 a", ".coin_3 a.nav_top_item");
+        menu1("#ud4", "#ud4 a", ".coin_4 a.nav_top_item");
     })
 </script>
 </body>
