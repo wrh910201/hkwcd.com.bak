@@ -1,0 +1,18 @@
+body{background:#fff;padding:0px;margin: 0px;font-size:14px;}
+input,button{ border:solid 1px #dcdcdc;height:30px; line-height:30px; padding:3px 6px;color:#999;background:#fff; vertical-align: middle;}
+select{border:solid 1px #ccc;}
+img{border:none;}
+a{ text-decoration: none;color:#3361AD;}
+table,th,td{ border-collapse: collapse;background:#fff;}
+
+.btn_blue{background:#0d9ae4;height:30px;padding:0px 30px; border:0px;/*border-radius: 5px;*/line-height:1.8em;color:#fff;font-size:16px; cursor: pointer;}
+.btn_blue:hover {background-color: #0084c9;}
+.len250{width:220px;}
+
+div.login{background:#F1F1F1 url("../Images/logo.png") no-repeat right 2px;width:600px; height:260px;border:solid 5px #ccc;padding:20px;position: absolute;left: 50%;top: 50%;overflow: hidden;display:block;margin:-150px 0 0 -300px;}
+div.login .title{font-size:16px;height: 50px;}
+
+
+div.login th{ text-align: right; width: 100px;}
+div.login th,div.login td{padding:8px 8px;}
+.error{font-size: 12px; color: red;}

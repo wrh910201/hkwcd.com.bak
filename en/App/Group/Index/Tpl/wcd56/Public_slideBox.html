@@ -1,0 +1,19 @@
+ <div id="imageShow">
+  <div id="imgshow_mask"></div>
+  <ul class="imagebg" id="imagebg">
+     <yang:adlink typeid='0'  >
+     	<li data-sPic="{$adlink.description}"  class="bannerbg"  > 
+             <div class="bannerbg_main" style="background:url({$adlink.logo}) center no-repeat; cursor:pointer;" onclick="javascript:location.href='{$adlink.url}'"></div> 
+		</li> 
+      </yang:adlink>  
+  </ul>
+  <div class="scrollbg">
+    <div class="scroll">  
+      <div class="current" id="current"></div>
+      <div class="outScroll_pic">
+        <ul class="scroll_pic cls" id="small_pic">
+        </ul>
+      </div>
+     </div>
+  </div>
+</div>

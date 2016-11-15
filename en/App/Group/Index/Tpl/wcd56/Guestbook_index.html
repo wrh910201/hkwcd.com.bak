@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title><yang:sitetitle/></title>
+<meta name="keywords" content="<yang:sitekeywords/>" />
+<meta name="description" content="<yang:sitedescription/>" /> 
+<script type="text/javascript" src="/en/Public/config/js/jquery-1.3.2.min.js"></script>  
+<script type="text/javascript" src="/en/Public/config/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/en/Public/config/js/messages_cn.js"></script>
+<link type="text/css" rel="stylesheet" href="/Public/config/css/msg.css" />
+<link href="__PUBLIC__/css/hd.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__/css/zy.css" rel="stylesheet" type="text/css"> 
+<script type="text/javascript">
+    $(function () {
+        //表单验证JS
+        $("#form_do").validate({
+            //出错时添加的标签
+            errorElement: "span",
+            success: function (label) {
+                //正确时的样式
+                label.text(" ").addClass("success");
+            }
+        });
+    });
+    function changeVcode(obj) {
+        $("#VCode").attr("src", '<yang:vcodeurl />' + '#' + Math.random());
+        return false;
+    }
+</script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script> 
+</head> 
+<body> 
+<include file="Public:header" /> 
+<div id="sbanner" class="img_div1"></div> 
+
+ <div class="main_a"><div class="m_1100">
+  <div class="b_block">
+    <div class="midd" style="width:831px;">
+    	<div class="x_nav"><yang:position /></div>
+        <div class="zgwen">　　
+            <h1  style="text-align: center; border-bottom:1px dashed #CCC; line-height:36px; font-size:16px;color: #005daa;">
+            Dear customer, you are welcome to visit our website.<br /> 
+            please carefully fill in the form and we will contact you as soon as possible, thank you!</h1>
+               <div class="form">
+		 
+                    <form method='post' id="form_do" name="form_do" action="<yang:gbookaddurl />">
+		            <dl>
+			            <dt>Name：</dt>
+			            <dd>
+				            <input type="text" name="username" class="inp_one required" />
+			            </dd>
+		            </dl>
+		            <dl>
+			            <dt> Phone：</dt>
+			            <dd>
+				            <input type="text" name="tel" class="inp_one required"/>
+			            </dd>
+		            </dl>
+		            <dl>
+			            <dt>Email：</dt>
+			            <dd>
+				            <input type="text" name="email" class="inp_one  required email" />
+			            </dd>
+		            </dl>
+		            <dl>
+			            <dt>skype：</dt>
+			            <dd>
+				            <input type="text" name="qq" class="inp_one" />
+			            </dd>
+		            </dl>
+		            <dl>
+			            <dt>Guestbook：</dt>
+			            <dd>
+				            <textarea name="content" cols="50" rows="10"></textarea>
+			            </dd>
+		            </dl>
+
+		            <if condition="C('cfg_verify_guestbook') eq 1">
+		            <dl>
+			            <dt>Verification code：</dt>
+			            <dd>
+				            <input type="text" name="vcode" class="inp_small"  style="margin-top: -20px;margin-right: 5px;"/><img src="<yang:vcodeurl />" id="VCode" onclick="javascript:changeVcode(this);" />
+			            </dd>
+		            </dl>
+		            </if>
+		            <div class="form_b">		
+			            <input type="submit" class="btn_blue" style="height: 40px;width: 80px;font-size: 16px;" id="submit" value="Submitted">
+		            </div>
+	               </form>
+
+
+
+        </div>
+
+        </div>
+    </div>
+            <div class="rig">
+                <include file="Public:submeun" /> 
+            </div>
+		</div>
+</div></div>
+
+<include file="Public:footer" />
+<script type="text/javascript" src="__PUBLIC__/js/imgSlider.js"></script>
+<script type="text/javascript">
+    img.init();
+    img.play(0);
+    //阻止事件冒泡
+    function estop(e) {
+        var e = arguments.callee.caller.arguments[0] || event;
+        if (e && e.stopPropagation) {
+            //因此它支持W3C的stopPropagation()方法
+            e.stopPropagation();
+        } else {
+            //否则，我们需要使用IE的方式来取消事件冒泡
+            window.event.cancelBubble = true;
+            return false;
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title><yang:sitetitle/></title>
+<meta name="keywords" content="<yang:sitekeywords/>" />
+<meta name="description" content="<yang:sitedescription/>" /> 
+<link href="__PUBLIC__/css/hd.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__/css/zy.css" rel="stylesheet" type="text/css"> 
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>  
+</head>
+
+<body>
+
+<include file="Public:header" /> 
+<div class="img_div"></div>
+
+ <div class="main_a">
+ <div class="m_1100">
+  <div class="b_block">
+    <div class="midd" style="width:831px;">
+    	<div class="x_nav"><yang:position /></div>
+        <div class="zgwen">　　
+             <h1  style="text-align: center; border-bottom:1px dashed #CCC; line-height:36px; font-size:18px;color:#005daa">{$content.title}</h1>
+                  <div style="border:1px solid #FFE0B4; background:#ffeed5; font-size:12px; text-align:center;">Filesize：{$content.filesize}   丨   Update：{$content.publishtime|date='Y-m-d',###}   |  {$content.name}  <span  style=" font-size:14px; color:Red"> Click to download—> : </span> <foreach name="content['downlink']" item="v"><a href="{$v.url}" target="_blank" style=" font-size:14px; color:Blue" >[Download file]]</a></foreach></div>
+                  <br/><span style=" font-size:16px; font-weight:bold; margin-top:15px">Details:</span></br>
+                   {$content.content}
+                  <div class="addthis"> 
+                   <include file="Public:share" /> 
+		        </div> 
+
+                <div class="fenye1" style="text-align:left;">↑Prev：<yang:prev /><br/>↓Next：<yang:next /> </div>
+
+        </div>
+    </div>
+        <div class="rig">
+            <include file="Public:submeun" /> 
+        </div>
+	</div>
+</div>
+</div>
+
+<include file="Public:footer" /> 
+</body>
+</html>

@@ -1,0 +1,403 @@
+﻿<if condition="$data neq '' ">  
+
+<table width="520px" border="0" cellspacing="0" cellpadding="0"  style="border-collapse: collapse; border-spacing: 0;">
+    <tbody> 
+        <tr>
+            <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                运单号
+            </td>
+           <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                快递类型
+            </td> 
+            <td width="90" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                目的国家
+            </td>
+            <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                目的地区
+            </td>
+           <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                取件日期
+            </td>
+        </tr>
+        <tr>
+            <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                {$data.dda}  
+            </td>  
+            
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.leix} 
+            </td>
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.gjj} 
+            </td>
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.lmdd} 
+            </td>
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.qjrq} 
+            </td>
+        </tr>
+    </tbody>
+ </table>
+
+
+<div style="margin:10px; font-size:14px; color#64AADB">运单跟踪进度列表</div>
+
+<table width="520px" border="0" cellspacing="0" cellpadding="0" id="showtablecontext"
+    style="border-collapse: collapse; border-spacing: 0;">
+    <tbody>
+        <tr>
+            <td width="163" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                时间
+            </td>
+            <td width="354" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                地点和跟踪进度
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 10:29:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MIAMI GATEWAY, FL - USA]海关状态更新
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 11:03:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [GUANGZHOU - CHINA, PEOPLES REPUBLIC]快件已从发件人处提取
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 14:24:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [GUANGZHOU - CHINA, PEOPLES REPUBLIC]正在（已经）安排下一站的转运 GUANGZHOU - CHINA, PEOPLES REPUBLIC
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 14:47:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [GUANGZHOU - CHINA, PEOPLES REPUBLIC]离开转运地 GUANGZHOU - CHINA, PEOPLES REPUBLIC
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 15:36:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [GUANGZHOU - CHINA, PEOPLES REPUBLIC]快件到达中转中心 GUANGZHOU - CHINA, PEOPLES REPUBLIC
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 17:40:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [HONG KONG - HONG KONG]海关状态更新
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 20:05:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [HONG KONG - HONG KONG]快件到达中转中心 HONG KONG - HONG KONG
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 21:21:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [HONG KONG - HONG KONG]正在（已经）安排下一站的转运 HONG KONG - HONG KONG
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 21:21:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [HONG KONG - HONG KONG]快件已完成清关手续并从海关放行 HONG KONG - HONG KONG
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-22 21:47:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [HONG KONG - HONG KONG]离开转运地 HONG KONG - HONG KONG
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 09:53:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MIAMI GATEWAY, FL - USA]快件到达中转中心 MIAMI GATEWAY - USA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 10:11:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MIAMI GATEWAY, FL - USA]海关状态更新
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 10:12:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MIAMI GATEWAY, FL - USA]快件已完成清关手续并从海关放行 MIAMI GATEWAY - USA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 10:15:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MIAMI GATEWAY, FL - USA]正在（已经）安排下一站的转运 MIAMI GATEWAY - USA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 11:03:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MIAMI GATEWAY, FL - USA]离开转运地 MIAMI GATEWAY - USA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 15:00:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MAIQUETIA - VENEZUELA]快件到达中转中心 MAIQUETIA - VENEZUELA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 17:45:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MAIQUETIA - VENEZUELA]快件正在转运途中 MAIQUETIA - VENEZUELA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 17:45:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [MAIQUETIA - VENEZUELA]离开转运地 MAIQUETIA - VENEZUELA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 18:50:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]海关状态更新
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 21:35:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件到达中转中心 BOGOTA - COLOMBIA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 21:51:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件正在等待清关 BOGOTA - COLOMBIA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-23 21:51:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]清关流程
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-24 10:11:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]清关流程
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-24 10:24:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件已完成清关手续并从海关放行 BOGOTA - COLOMBIA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-24 11:13:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]正在（已经）安排下一站的转运 BOGOTA - COLOMBIA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-24 11:48:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]离开转运地 BOGOTA - COLOMBIA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-24 13:32:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件到达中转中心 BOGOTA - COLOMBIA
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-24 13:35:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件滞留－等待付款后安排派送
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-25 07:00:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件滞留－等待付款后安排派送
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-26 07:00:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]快件滞留－等待付款后安排派送
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-26 20:58:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BOGOTA - COLOMBIA]DHL转交第三方派送，等待签收结果
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-27 14:40:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [CUCUTA ]已派送并签收: CLAUDIA ALVAREZ
+            </td>
+        </tr>
+        <tr>
+            <td width="163" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                2014-08-27 14:41:00
+            </td>
+            <td width="354" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                [BUENAVENTURA - COLOMBIA]快件正在派送中
+            </td>
+        </tr>
+    </tbody>
+</table>
+<else />
+<div style="margin:10px; font-size:14px; color#64AADB">抱歉，您查询的运单号不存在，请查正后再查询，谢谢！</div>
+</if>

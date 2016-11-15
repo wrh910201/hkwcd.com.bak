@@ -1,0 +1,9 @@
+<if condition="<yang:adauto /> eq '1' "> 
+<div class="swipe" style="width:100%;overflow:hidden;">
+  <ul id='slider'>
+   <yang:adlink typeid='0'  >
+       <li style="display: table-cell; padding: 0px; margin: 0px; float: left; vertical-align: top; <if condition='$autoindex neq 0'>display:none;</if>"><a href="#" title="{$adlink.name}"><img   src="<yang:cdn/>{$adlink.logo}"></a></li>
+     </yang:adlink>  
+  </ul>
+</div>
+</if>

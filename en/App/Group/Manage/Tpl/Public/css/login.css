@@ -1,0 +1,43 @@
+@charset "utf-8";
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}
+body,button,input,select,textarea{font:12px/26px 'Microsoft Yahei','Simsun';color:#555;}
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+address,cite,dfn,em,var{font-style:normal;}
+code,kbd,pre,samp{font-family:courier new,courier,monospace;}
+small{font-size:12px;}
+ul,ol{list-style:none;}
+a{text-decoration:none;color:#666;}
+a:hover{color:#d00;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+legend{color:#000;}
+fieldset,img{border:0;}
+button,input,select,textarea{font-size:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+
+
+.clearfix:after{content:'\20';display:block;height:0;clear:both;}
+.clearfix,.col-sub,.col-extra{*zoom:1;}
+
+:focus { outline:0;}
+body { background-color:#212121;}
+.content { background:#f3f3f3;}
+.header,.header .subLogo,.login .username,.login .password,.login .authcode,.login .btn .l_btn,.header .logo a { background:url(../images/login.png) no-repeat 0 0;}
+.header { height:69px; overflow:hidden; background-repeat:repeat-x;}
+.header .logo { float:left; display:inline; margin:0 0 0 20px;}
+.header .logo a { display:block; width:226px; height:69px; overflow:hidden; text-indent:-999em; background-position:0 -277px;}
+.header .subLogo { float:right; display:inline; margin:19px 20px 0 0; width:134px; height:32px; background-position:0 -70px; overflow:hidden; text-indent:-999em;}
+
+.login { padding:50px 0; text-align:center;}
+.login .username,.login .password,.login .authcode { height:49px; width:350px; margin:20px auto; text-align:left; padding:17px 0 0 77px;}
+.login .username { background-position:0 -103px;}
+.login .password { background-position:0 -169px;}
+.login .authcode { background-position:0 -347px; position:relative; *zoom:1; z-index:2; vertical-align:top;}
+.login .authcode .img { display:block; position:absolute; top:20px; right:15px;}
+.login .authcode .img img{ vertical-align:top;}
+.login .btn { width:225px; height:42px; margin:0 auto;}
+.login .btn .l_btn { display:block; background-position:-1px -236px; border:0 none; width:225px; height:41px; cursor:pointer; overflow:hidden; text-indent:-999em;}
+.login .l_ipt { background-color:#fff; border:0 none; width:340px; vertical-align:middle; font-size:18px; color:#aaa;}
+
+.footer { text-align:center; padding:5px 0; line-height:30px; color:#666;}
+.footer .sq { color:#aaa;}

@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理中心</title>
+<link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+ <script language="JavaScript">
+    <!--
+    var URL = '__URL__';
+    var APP	 = '__APP__';
+    var SELF='__SELF__';
+    var PUBLIC='__PUBLIC__';
+    //-->
+</script>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+</head>
+<body> 
+<div class="main"  > 
+  <div class="pos">网站基本信息</div>
+  	<div class="form">
+     <div class="h3">我的个人信息</div>
+		<dl> 
+			<dd>
+				您好，{$Think.session.yang_adm_username}<br/>
+				<div class="clear"></div>
+				上次登录时间：{$Think.session.yang_adm_logintime}<br/>
+                <div class="clear"></div>
+				上次登录IP：{$Think.session.yang_adm_loginip} <br/>
+			</dd> 
+		</dl> 
+         <div class="h3">系统基本信息</div>
+		<dl> 
+			<dd> 
+                网站名称： {$Think.config.cfg_webname}<br />
+                网站域名： {$Think.config.cfg_weburl}  <br /> 
+                联系电话： {$Think.config.cfg_phone} <br />
+                客户QQ： {$Think.config.cfg_qq}<br />
+                电子邮箱： {$Think.config.cfg_email}<br />
+                程序版本：HXCMS V{$yycms_info.HXCMS_VER} [{$yycms_info.HXCMS_TIME}] <br />
+			</dd> 
+		</dl>  
+       <div class="h3">服务器信息</div>
+		<dl> 
+			<dd> 
+	            操作系统：{$os} <br />
+	            服务器软件：{$software}<br />
+	            MySQL 版本：{$mysql_ver}<br /> 
+			</dd> 
+		</dl>  
+   </div> 
+</div>
+</body>
+</html>

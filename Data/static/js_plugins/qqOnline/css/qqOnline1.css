@@ -1,0 +1,17 @@
+.qq_online_view {width:130px; display:none; overflow:hidden; padding-bottom:15px;font-size:12px; color:#666666;z-index:1000;}
+.qq_online_view dl,.qq_online_view dd,.qq_online_view dt{padding:0px; margin:0px; list-style:none;}
+.qq_online_view span{padding: 0px; margin: 0px;}
+.qq_online_view a {color: #00a0e9}
+.qq_online_view a:hover {color: #ff6600; text-decoration:none;}
+.qq_online_view .top_b { height:10px; overflow:hidden}
+.qq_online_view .body {}
+.qq_online_view .body dl {padding:0px 14px;}
+.qq_online_view .body dd { border-bottom:#e6e5e4 1px solid; height: 36px; text-align: center;line-height:36px; word-wrap:break-word; word-break:normal; overflow:hidden;}
+.qq_online_view .title {height:36px; line-height:36px; color:#00a0e9; font-size:14px; font-weight:bold; text-align: center;overflow:hidden}
+.qq_online_view .msg { height:36px; line-height:36px; text-align: center;}
+.qq_online_view .msg a:link, .qq_online_view .msg a:visited{ display:block; color:#ff6600; text-decoration:none;}
+.qq_online_view .ico_zx{padding-left: 25px; margin: 0px; display: block;}
+.qq_online_view .ico_tel {padding-left:15px;margin: 0px; display: block;}
+.qq_online_view .qq{text-align: center;}
+.qq_online_view .qq a{display:block;margin:6px 0px 0px 0px;}
+.qq_online_view dd.noborder { border:none;}

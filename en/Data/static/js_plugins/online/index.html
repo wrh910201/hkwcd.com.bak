@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>白色简洁jQuery右侧在线客服 - 网站源码</title>
+<!-- css样式begin -->
+<style>
+#kefu{ width:120px; height:auto; position:fixed; top:50%; right:5px;z-index:8888; background:#fff; border:1px solid #d1d1d1;border-top:2px solid #ca2d25; display:none; margin-top:-240px;}
+#kefu .top{ width:100%; height:35px; line-height:35px;font-family:"Microsoft YaHei"; font-size:14px; color:#333; font-weight:bold; text-align:center;}
+#kefu .middle{ font-size:12px; width:100%; text-align:center;}
+#kefu .middle p{ color:#991C0A;}
+#kefu .close{float:right; margin-right:10px; margin-top:10px; cursor:pointer;}
+.right_bar{ width:28px; height:95px; position:fixed; top:50%; right:0; margin-top:-242px; z-index:9999;}
+.right_bar img{cursor:pointer;}
+</style>
+<!-- css样式end -->
+</head>
+<body style="height:2000px;"  >
+<!-- html以及js begin -->
+<div id="kefu">
+	<div class="top">
+		在线客服<img src="images/close.gif" class="close" />
+	</div>
+<div class="middle">
+	<a target="_blank" href="http://wpa.qq.com/msgrd@v=3&uin=123456&site=qq&menu=yes"><img src="images/qq.png" /></a><br />
+	<a target="_blank" href="http://wpa.qq.com/msgrd@v=3&uin=123456&site=qq&menu=yes"><img src="images/qq.png" /></a><br />
+	<a target="_blank" href="http://wpa.qq.com/msgrd@v=3&uin=123456&site=qq&menu=yes"><img src="images/qq.png" /></a><br />
+	<b style="padding-top:8px;display:block;">客服电话</b>
+	<p style="padding-bottom:6px;">4006-123-123</p>
+	<b style="padding-top:6px;">售后投诉</b>
+	<a target="_blank" href="http://wpa.qq.com/msgrd@v=3&uin=123456&site=qq&menu=yes"><img src="images/qq.png" /></a><br />
+	<b style="padding-top:8px;display:block;">阿里旺旺</b>
+	<p>
+	<a target="_blank" href="http://sc.admin5.com/"><img border="0" src="http://amos.alicdn.com/realonline.aw?v=2&uid=123456&site=cntaobao&s=1&charset=utf-8" alt="点击这里给我发消息" /></a>
+	</p>
+</div>
+</div>
+<div class="right_bar">
+	<img src="images/right_bar.jpg" />
+</div>
+<script src="js/jquery.min.js"></script>
+<script>
+$(function(){
+	$('.right_bar').click(function(){
+		$(this).hide();
+		$('#kefu').show();
+	});
+	$('#kefu .close').click(function(){
+		$('.right_bar').show();
+		$('#kefu').hide();
+	});
+});
+</script>
+<!-- html以及js end -->
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+</div>
+</body>
+</html>

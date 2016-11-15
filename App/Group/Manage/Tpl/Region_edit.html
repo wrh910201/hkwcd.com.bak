@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.form.min.js"></script>
+</head>
+<body>
+<div class="main">
+    <div class="pos">{$type}</div>
+    <div class="form">
+        <form method='post' name="form_do" action="{:U(GROUP_NAME. '/Region/doEdit')}">
+            <dl>
+                <dt>名称：</dt>
+                <dd>
+                    <input readonly type="text" name="name" class="inp_one" value="{$region.alias}" />
+                </dd>
+            </dl>
+            <!--<div class="form_b">-->
+                <!--<input type="hidden" name="id" value="{$region.id}" />-->
+                <!--<input type="submit" class="btn_blue" id="submit" value="提 交">-->
+                <!--<input type="button" class="btn_blue" id="country" value="添加国家">-->
+            <!--</div>-->
+        </form>
+    </div>
+
+</div>
+<div class="list">
+    <div class="operate">
+        <div class="left">
+            <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Region/multiDelCountry', array('rid' => $region['id']))}', '确实要删除选择项吗？')" class="btn_blue" value="批量删除">
+        </div>
+    </div>
+    <form action="{:U(GROUP_NAME.'/Region/multiDelCountry')}" method="post" id="form_do" name="form_do">
+        <input type="hidden" name="region_id" value="{$region.id}" />
+        <table width="100%">
+            <tr>
+                <th><input type="checkbox" id="check"></th>
+                <th>国家</th>
+                <th>操作</th>
+            </tr>
+            <foreach name='country_list' item='v'>
+                <tr>
+                    <td><input type="checkbox" name="key[]" value="{$v.id}"></td>
+                    <td>{$v.name}&nbsp;/&nbsp;{$v.ename}</td>
+                    <td>
+                        <a href="javascript:void(0)" onclick="doConfirm('{:U(GROUP_NAME.'/Region/delCountry', array('rid' => $region['id'], 'id' => $v['id']))}', '确定删除该下属国家？')">删除</a>
+                    </td>
+                </tr>
+            </foreach>
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('#country').click(function() {
+        window.location.href = '{:U(GROUP_NAME.'/Region/country', array('rid' => $region['id']))}';
+    });
+</script>
+</body>
+</html>

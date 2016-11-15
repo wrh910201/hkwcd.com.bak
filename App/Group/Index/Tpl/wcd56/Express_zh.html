@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>快递单号获取接口API</title>  
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>  
+ </head>
+ 
+<body>
+<if condition="$data neq '' ">   
+  <table width="820px" border="0" cellspacing="0" cellpadding="0"  style="border-collapse: collapse; border-spacing: 0;">
+    <tbody> 
+        <tr>
+            <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                运单号
+            </td>
+           <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                快递类型
+            </td> 
+            <td width="80" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                目的国家
+            </td>
+            <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                省/城市
+            </td>
+             <td width="75" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                邮编号
+            </td>
+           <td width="85" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                取件日期
+            </td>
+        </tr>
+        <tr>
+            <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                {$data.dda}  
+            </td>  
+            
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.leix} 
+            </td>
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.gjj} 
+            </td>
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.lmdd} 
+            </td>
+              <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.ckh} 
+            </td>
+             <td width="85" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
+                padding: 3px 5px;">
+                  {$data.qjrq} 
+            </td>
+        </tr>
+    </tbody>
+ </table> 
+  <div style="margin:10px; font-size:14px; color#64AADB">运单号：{$data.dda} 跟踪进度列表</div>
+  <if condition="$vlist neq '' ">    
+    <table width="820px" border="0" cellspacing="0" cellpadding="0" id="showtablecontext"
+    style="border-collapse: collapse; border-spacing: 0;">
+    <tbody>
+        <tr>
+            <td width="123" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                时间
+            </td>
+            <td width="404" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                地点和跟踪进度
+            </td>
+			<td   style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
+                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
+                备注
+            </td>
+        </tr>
+
+       <foreach name='vlist' item='v'> 
+        <tr>
+            <td width="123" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;padding: 3px 5px;">
+                {$v.sj}
+            </td>
+            <td width="404" style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;padding: 3px 5px;">
+                [{$v.chs} - {$v.gj}] {$v.hwz}  
+            </td>
+			 <td style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;padding: 3px 5px;">
+                {$v.info} 
+            </td>
+        </tr> 
+        </foreach>
+
+    </tbody>
+</table>
+  <else /> 
+   <script language="javascript">
+       $(document).ready(function () { 
+               $("#retData").html('loading...');
+               var expressid = "{$data.leix}";
+               var expressno = "{$data.dda}";
+               $.get("/api/kuaidi100/get.php", { com: expressid, nu: expressno },
+				function (data) {
+				    $("#retData").html(data); 
+				}
+			); 
+               return false;
+           }); 
+	</script>
+    <div id="retData"></div>
+  </if>
+<else />
+  <div style="margin:10px; font-size:14px; color#64AADB">抱歉，您查询的运单号不存在，请查正后再查询，谢谢！</div>
+</if>
+</body> 
+</html>

@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<style type="text/css">
+dd.desc{width: 150px; height: 30px; padding: 0px 10px;}
+</style>
+</head>
+<body>
+<div class="main">
+    <div class="pos">形象图参数设置</div>
+	<div class="form">
+		<form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME.'/System/adset')}"> 
+        <div class="h3">参数设置</div>
+		<dl>
+			<dt>显示状态：</dt>
+			<dd>
+				<input type="radio" name="cfg_ad_auto" value="1" <if condition="C('cfg_ad_auto') eq 1">checked="checked"</if>>开启 
+				<input type="radio" name="cfg_ad_auto" value="0" <if condition="C('cfg_ad_auto') eq 0">checked="checked"</if>>关闭
+			</dd>
+			<dd class="desc"></dd>
+			<dd>cfg_ad_auto</dd>
+		</dl>  
+         <dl>
+			<dt>显示条数：</dt>
+			<dd>
+             <input type="text" name="cfg_ad_num" class="inp_one inp_w250" value="{$Think.config.cfg_ad_num}" />条
+			</dd>
+			<dd class="desc">如：3</dd>
+			<dd>cfg_ad_num</dd>
+		</dl>
+        <dl>
+			<dt>形象图宽度：</dt>
+			<dd>
+             <input type="text" name="cfg_ad_width" class="inp_one inp_w250" value="{$Think.config.cfg_ad_width}" />px
+			</dd>
+			<dd class="desc">如：900</dd>
+			<dd>cfg_ad_width</dd>
+		</dl>	
+       	
+        <dl>
+			<dt>形象图高度：</dt>
+			<dd>
+             <input type="text" name="cfg_ad_height" class="inp_one inp_w250" value="{$Think.config.cfg_ad_height}" />px
+			</dd>
+			<dd class="desc">如：300</dd>
+			<dd>cfg_ad_height</dd>
+		</dl>	
+         <dl>
+			<dt>链接目标：</dt>
+			<dd>
+				<input type="radio" name="cfg_ad_target" value="1" <if condition="C('cfg_ad_target') eq 1">checked="checked"</if>>新窗口 
+				<input type="radio" name="cfg_ad_target" value="0" <if condition="C('cfg_ad_target') eq 0">checked="checked"</if>>原窗口
+			</dd>
+			<dd class="desc"></dd>
+			<dd>cfg_ad_target</dd>
+		</dl> 
+		</div>
+		<div class="form_b">
+			<input type="submit" class="btn_blue" id="submit" value="提 交">
+		</div>
+	   </form>
+	</div>
+
+
+</body>
+</html>

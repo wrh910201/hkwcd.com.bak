@@ -1,0 +1,49 @@
+  <div class="top">
+  <div class="m_1100">
+    <div class="conne">  
+      <div class="c_l"> <include file="Public:announce" /></div> 
+      <div class="c_r">
+	   <a href="/index.php"  >Chinese</a> | <a href="/en/"  >English</a> | <a href="#" onclick="AddFavorite('<yang:siteurl />', '<yang:sitename />')">AddFavorite</a> | <a href="/en/sitemap.xml" target="_blank" >sitemap</a> | <a href="{:U(GROUP_NAME.'/Guestbook/index')}">Guestbook</a> | <yang:type typeid='10'><a href="{$type.url}">Contact</a></yang:type>
+      </div> 
+    </div>
+	<div class="min">
+    	<div class="logo"><a href="<yang:siteurl />"><img src="__PUBLIC__/images/t_b.gif"></a></div>
+        <div class="navi">
+          <div class="serch"><font style="font-family:Georgia; font-size:23px; font-style:italic; color:#005dab;">Tel:+<yang:phone /></font><br>
+          <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>  
+           <form id="SearchForm" name="SearchForm" method="post"  action="<yang:searchurl />"> 
+	       <select name="cid" class="selectcss" style="float: left; height:23px;">
+	  	    <yang:catlist typeid='0' flag='0' limit='30'>
+	        <option value="{$catlist.id}" <if condition='$catlist.id eq $cid'>selected="selected"</if>>{$catlist.name}</option>
+		    </yang:catlist>
+	      </select> 
+          <input name="keyword" type="text" class="sinput" id="keyword" size="15" height="21"   value="<if condition='empty($keyword)'>Enter a keyword<else/>{$keyword}</if>" onfocus="if(this.value=='Enter a keyword'){this.value='';}" onblur="if(this.value==''){this.value='Enter a keyword';}" />
+	      <input type="submit" value="Query"  style="padding-left: 1px; width:40px" class="sbtn"/> 
+        </form>
+
+        </div>
+
+         
+          <div class="nav">
+            <ul>
+            <li><a href="<yang:siteurl />">Home</a></li>
+            <yang:navlist typeid='0'>
+		        <li><a href='{$navlist.url}' target="{$navlist.target}"  >{$navlist.name}</a>
+                <table cellpadding="0" cellspacing="0"><tr><td>
+                    <ul>
+                     <yang:catlist typeid='$navlist[id]' type='son' flag='1'>
+                      <li><a href="{$catlist.url}" target="{$catlist.target}"  >{$catlist.name}</a></li>
+                     </yang:catlist>
+                    </ul>
+                  </td></tr>
+             </table>
+            </li>
+		  </yang:navlist>
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+    

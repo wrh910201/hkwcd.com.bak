@@ -1,0 +1,1 @@
+<?php	return array ( 'id' => '2', 'name' => 'index_contact', 'remark' => '简写联系方式', 'content' => '<p>Hotline：+86-15919628991<br/>Telephone：+86-20-36311406-804<br/>Phone：+86-18928799840<br/>E-mail：<a href="mailto:wcd012@163.com">wcd003@hkwcd.com</a></p>', 'blocktype' => '3', );?>

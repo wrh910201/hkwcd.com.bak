@@ -1,0 +1,1 @@
+<?php	return array ( 'cfg_qq_auto' => '1', 'cfg_qq_lr' => '-1', 'cfg_qq_more' => '252003071|874802107', 'cfg_ww_more' => 'huadu56', 'cfg_qq_phone' => '1', 'cfg_qq_guestbook' => '1', );?>

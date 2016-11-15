@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.form.min.js"></script>
+</head>
+<body>
+<div class="main">
+    <div class="pos">订单发货</div>
+    <div class="form">
+        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Order/doDelivery')}">
+            <dl>
+                <dt> 下家：</dt>
+                <dd>
+                    <select name="express_type_id" >
+                        <foreach name='express_type' item='v'>
+                            <option value="{$v.id}">{$v.name}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt> 转运单号 ：</dt>
+                <dd>
+                    <input type="text" name="express_order_num"  id="express_order_num"  class="inp_w250" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 发票号 ：</dt>
+                <dd>
+                    <input type="text" name="invoice_num"  id="invoice_num"  class="inp_w250" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 原产地 ：</dt>
+                <dd>
+                    <input type="text" name="origin"  id="origin"  class="inp_w250" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 付款条款 ：</dt>
+                <dd>
+                    <input type="text" name="payment_term"  id="payment_term"  class="inp_w250" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 运输方式 ：</dt>
+                <dd>
+                    <input type="text" name="transportation_mode"  id="transportation_mode"  class="inp_w250" />
+                </dd>
+            </dl>
+            <div class="list">
+                <div class="operate">订单详情</div>
+                <table width="100%" style=" margin-bottom:20px;">
+                    <tr>
+                        <th>品名</th>
+                        <th>商品编号</th>
+                        <th>数量</th>
+                        <th>单件申报价值</th>
+                        <th>总申报价值</th>
+                        <th>原产地</th>
+                        <th>箱数</th>
+                        <th>过磅重量（kg）</th>
+                        <th>材积重量（kg）</th>
+                    </tr>
+                    <volist name="order_detail" id="v">
+                        <tr>
+                            <td>{$v.product_name}</td>
+                            <td>{$v.goods_code}</td>
+                            <td>{$v.count}</td>
+                            <td>{$v.single_declared}</td>
+                            <td>{$v.declared}</td>
+                            <td>{$v.origin}</td>
+                            <td><input type="text" style=" width:60px;" name="quantity_{$v.id}" value="" /></td>
+                            <td><input type="text" style=" width:60px;" name="weight_{$v.id}" value="" /></td>
+                            <td><input type="text" style=" width:60px;" name="volume_weight_{$v.id}" value="" /></td>
+                        </tr>
+                    </volist>
+                </table>
+            </div>
+
+            <div class="form_b">
+                <input type="hidden" name="id" value="{$order.id}"/>
+                <input type="submit" class="btn_blue" id="submit" value="提 交">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

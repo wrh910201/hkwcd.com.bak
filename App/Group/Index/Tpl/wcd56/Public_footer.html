@@ -1,0 +1,53 @@
+<include file="Public:qqOnline" /> 
+<include file="Public:wbShare" /> 
+<div class="footer">
+   <div class="m_1100">
+	<div class="link_b">
+     <div class="f_top">
+    	<div class="ttab">
+            <li>新手指南</li>
+            <li>帮助支持</li>
+            <li>了解华度</li>
+            <li>联系我们</li>
+        </div>
+        <div class="xx_li">
+             <yang:catlist typeid='13'  flag='1'  limit='5' >
+                <li><a href="{$catlist.url}">·{$catlist.name}</a><li>
+            </yang:catlist>
+         </div>
+        <div class="xx_li">
+            <yang:catlist typeid='5'  flag='1' limit='5' >
+                <li><a href="{$catlist.url}">·{$catlist.name}</a><li>
+            </yang:catlist>
+        </div>
+        <div class="xx_li" style=" padding-left:20px">
+            <yang:catlist typeid='1'  flag='1' limit='5'>
+                      <li><a href="{$catlist.url}">·{$catlist.name}</a></li>
+             </yang:catlist>
+        </div>
+        <div class="xx_li" style="width:270px;">
+           <yang:catlist typeid='10' flag='1' limit='5'>
+                   <li><a href="{$catlist.url}">·{$catlist.name}</a></li>
+             </yang:catlist>
+        </div> 
+      </div> 
+      <div class="bei">服务条款　隐私声明　<a href="<yang:siteurl />/sitemap.xml" target="_blank" >网站地图</a>
+	   <br>友情链接:
+	   <yang:flink typeid='0' limit='12' > 
+        <a href="{$flink.url}" title="{$flink.name}" target="_blank">{$flink.name}</a> | 
+       </yang:flink> 
+	  <br><yang:copyright /><span style="float:right">技术支持：<a href="http://www.hoxinit.com"  target="_blank"  >宏信网络</a></span></div>     
+	</div>
+   <yang:countcode /> <yang:sharecode /> <yang:swturl />
+  </div> 
+</div>
+<script type="text/javascript">
+    function win_login() {
+        url = "/User/login";
+        tipsWindown("登录", "iframe:" + url, "420", "225", "true", "", "false", "leotheme");
+    }
+</script>
+
+
+
+

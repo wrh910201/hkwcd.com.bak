@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.form.min.js"></script>
+</head>
+<body>
+<div class="main">
+    <div class="pos">编辑客户</div>
+    <div class="form">
+        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Client/doEdit')}">
+            <dl>
+                <dt>用户名/username：</dt>
+                <dd>
+                    <input type="text" name="username" disabled class="inp_one" id="username" value="{$client.username}"/>
+                    <span id="username-alert"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>用户组/User Group：</dt>
+                <dd>
+                    <select name="group_id">
+                        <foreach name='group_list' item='v'>
+                            <if condition="$v.id eq $client.group_id">
+                            <option value="{$v.id}" selected>{$v.name}/{$v.en_name}</option>
+                            <else />
+                            <option value="{$v.id}">{$v.name}/{$v.en_name}</option>
+                            </if>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>姓名：</dt>
+                <dd>
+                    <input type="text" name="full_name" class="inp_one" value="{$client.full_name}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>公司名称/Company：</dt>
+                <dd>
+                    <input type="text" name="company" class="inp_one inp_large" value="{$client.company}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>C/O：</dt>
+                <dd>
+                    <input type="text" name="care_of" class="inp_one" value="{$client.care_of}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>地址/Address：</dt>
+                <dd>
+                    <input type="text" name="address" class="inp_one inp_large" value="{$client.address}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>地址2/Address 2：</dt>
+                <dd>
+                    <input type="text" name="address2" class="inp_one inp_large" value="{$client.address2}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>国家/Country：</dt>
+                <dd>
+                    <select name="country">
+                        <foreach name='country_list' item='v'>
+                            <if condition="$v.id eq v.country_id">
+                            <option value="{$v.id}" selected>{$v.name}/{$v.ename}</option>
+                            <else />
+                            <option value="{$v.id}">{$v.name}/{$v.ename}</option>
+                            </if>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>城市/City：</dt>
+                <dd>
+                    <input type="text" name="city" class="inp_one" value="{$client.city}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>省/State：</dt>
+                <dd>
+                    <input type="text" name="state" class="inp_one" value="{$client.state}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮编/Zip Postal Code：</dt>
+                <dd>
+                    <input type="text" name="postal_code" class="inp_one" value="{$client.postal_code}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>座机/Phone：</dt>
+                <dd>
+                    <input type="text" name="phone" class="inp_one" value="{$client.phone}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>手机/Mobile：</dt>
+                <dd>
+                    <input type="text" name="mobile" class="inp_one" value="{$client.mobile}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>传真/Fax：</dt>
+                <dd>
+                    <input type="text" name="fax" class="inp_one" value="{$client.fax}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮箱/Email：</dt>
+                <dd>
+                    <input type="text" name="email" class="inp_one" value="{$client.email}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>代理/Agent：</dt>
+                <dd>
+                    <input type="text" name="agent" class="inp_one" value="{$client.agent}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>备注/Remark：</dt>
+                <dd>
+                    <input type="text" name="remark" class="inp_one inp_large" value="{$client.remark}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 状态：</dt>
+                <dd>
+                    <input type="radio" name="islock" value="0" <if condition="$client.is_locked eq 0">checked="checked"</if>  />正常
+                    &nbsp;&nbsp;
+                    <input type="radio" name="islock" value="1" <if condition="$client.is_locked eq 1">checked="checked"</if> />锁定
+                </dd>
+            </dl>
+            <div class="form_b">
+                <input type="hidden" name="id" value="{$client.id}" />
+                <input type="submit" class="btn_blue" id="submit" value="提 交">
+                <input type="button" class="btn_blue" id="button" value="返回">
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#button').click(function() {
+        window.history.go(-1);
+    });
+
+//    $('#username').blur(function() {
+//        var url = "{:U(GROUP_NAME. '/Client/checkUsername')}";
+//        var username = $(this).val();
+//        if( username == '' ) {
+//            return;
+//        }
+//        var param = { "username":username };
+//        $.post(url, param, check_name_handler, 'json');
+//    });
+//
+//    function check_name_handler(response) {
+//        $('#username-alert').text(response.msg);
+//    }
+</script>
+
+</body>
+</html>

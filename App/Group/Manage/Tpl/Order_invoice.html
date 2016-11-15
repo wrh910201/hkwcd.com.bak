@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title></title>
+    <script type="text/javascript" src="/Public/wcd56/usercenter/js/jquery.js"></script>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link href="/Public/wcd56/usercenter/css/print_table.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="delivery_notice_table">
+    <div class="delivery_notice_header">
+        <div class="delivery_notice_title">
+            <h3>香港华度货运有限公司</h3>
+            <h3>HONG KONG WCD EXPRESS COMPANY LIMITED</h3>
+            <h4>商业发票/COMMERCIAL INVOICE</h4>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr style="font-size: 15px;">
+                <td>收件人详情/RECEIVER DETAIL</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>日期/DATA:{$today}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table class="receiver-detail">
+            <thead>
+            <tr>
+                <td class="w340">公司名称/Company Name：<br />{$order.receive_company}</td>
+                <td class="w340">快件号码/Shipment No.：<br />{$order.order_num}</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>地址/add：<br />{$order.receive_detail_address}</td>
+                <td>联系人电话/Telephone：<br />{$order.receive_mobile_phone}</td>
+            </tr>
+            <tr>
+                <td>省、市/province、city：<br />{$order.receive_state} {$order.receive_city}</td>
+                <td>发票号/ Invoice number：<br />{$order.invoice_num}</td>
+            </tr>
+            <tr>
+                <td>国家/Country：<br />{$order.receive_country}</td>
+                <td>原产地/Origin：<br />{$order.origin}</td>
+            </tr>
+            <tr>
+                <td>邮政编码/Post code：<br />{$order.receive_postal_code}</td>
+                <td>付款条款/ Terms of payment：<br />{$order.payment_term}</td>
+            </tr>
+            <tr>
+                <td>联系人/Contact name：<br />{$order.receive_addressee}</td>
+                <td>运输方式/ Mode of transportation：<br />{$order.transportation_mode}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr style="font-size: 15px;">
+                <td>快件详情/SHIPMENT DETAILS</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table class="receiver-detail">
+            <tbody>
+            <tr>
+                <th class="w190">内件详细说明/Full description of Goods</th>
+                <th class="w100">件数/No.of Items</th>
+                <th class="w100">箱数/ PACK.QTY</th>
+                <th class="w100">商品编码/ HS CODE</th>
+                <th class="w100">Weighing weight/过磅重量 （KG）</th>
+                <th class="w100">Volume weight/材积重量 （CBM）</th>
+            </tr>
+            <volist name="order_detail" id="v">
+                <tr>
+                    <td>{$v.product_name}</td>
+                    <td>{$v.count}</td>
+                    <td>{$v.quantity}</td>
+                    <td>{$v.goods_code}</td>
+                    <td>{$v.weight}</td>
+                    <td>{$v.volume_weight}</td>
+                </tr>
+            </volist>
+            <tr>
+                <td>总/Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <!--<td>总/Total</td>-->
+                <!--<td>{$total.count}</td>-->
+                <!--<td>{$total.quantity}</td>-->
+                <!--<td>{$total.goods_code}</td>-->
+                <!--<td>{$total.weight}</td>-->
+                <!--<td>{$total.volume_weight}</td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr style="font-size: 15px;">
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+
+        <table class="receiver-detail">
+            <tbody>
+            <tr style="font-size: 14px;">
+                <th class="w680">制造商或出口商名称及地址/Name and AddressOf Manufacturer ：<br /></th>
+            </tr>
+            <tr style="font-size: 14px;">
+                <th class="w680">出口原因/Reason of ExportReason  for  Export : <br />{$order.export_reason}</th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr style="font-size: 15px;">
+                <td>寄件人情况/SHIPPER DETAILS</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+
+        <table class="receiver-detail">
+            <tbody>
+            <tr>
+                <th  style="font-size: 12px;" class="w680">我证明并保证本文件中所填写的各项内容与向海关部门申报的情况及快件内装物品的实际情况相符/I certify and pledge that all information filled in this document is conformed to the details declared to the customs and conformed to the actual conditions of the goods in the shipment.</th>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr style="font-size: 15px;">
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+
+        <table class="receiver-detail">
+            <tbody>
+            <tr>
+                <th class="w300">公司或单位名称/Name of Company / Firm</th>
+                <th class="w380">公司或单位地址/Address of Company / Firm</th>
+            </tr>
+            <td>{$order.delivery_company}</td>
+            <td>{$order.delivery_detail_address}</td>
+            </tbody>
+        </table>
+    </div>
+    <div class="clear"></div>
+    <div class="operate">
+        <button type="button" id="print_button" class="btn"><i class="icon">&#xe61f;</i>&nbsp;打印</button>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#print_button").click(function(){
+        $(".operate").hide();
+        window.print();
+        $(".operate").show();
+    })
+</script>
+</body>
+</html>

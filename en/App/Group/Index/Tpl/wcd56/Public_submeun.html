@@ -1,0 +1,60 @@
+ 
+              
+ 
+           <if condition="$flag_son">
+           <div class="sidebar" >  
+	        <div class="titl">Navigation</div>
+	         <ul class="navbar list-none">  
+		       <yang:catlist typeid='$cid' type='son' flag='1'>
+		        <li>
+                 <h4><a href="{$catlist.url}">{$catlist.name}</a></h4>
+                 <div class="list"> 
+                 <yang:catlistsub typeid="$catlist['id']"  >
+		           <a href="{$catlistsub.url}">{$catlistsub.name}</a>
+		         </yang:catlistsub>
+                 </div>
+               </li> 
+		      </yang:catlist> 
+            </ul>  
+	       </div>
+            <else/>
+	        <if condition = "$cate['pid'] gt 0">
+	        <div class="sidebar" >  
+             <div class="titl">Navigation</div> 
+              <ul class="navbar list-none">  
+		        <yang:catlist typeid="$cate['pid']" type='son' flag='1'>
+		         <li>
+                 <h4><a href="{$catlist.url}">{$catlist.name}</a></h4>
+                <div class="list"> 
+                 <yang:catlistsub typeid="$catlist['id']"  >
+		           <a href="{$catlistsub.url}">{$catlistsub.name}</a>
+		        </yang:catlistsub>
+                 </div>
+                </li>
+		       </yang:catlist> 
+            </ul> 
+	       </div>
+           </if>
+	      </if>  
+            <div class="huoy">
+                	<div class="ttl_la">｜Import Express Services</div>
+                    <div class="text_la" style="padding:5px;">
+                     <yang:list typeid='14'  limit='3' titlelen='20' orderby="id" >
+                       <li><a href="{$list.url}">{$list.title}</a></li>
+                    </yang:list> 
+                    </div>
+              	</div> 
+                <div class="huoy">
+                	<div class="ttl_la">｜Export Express Services</div>
+                    <div class="text_la" style="padding:5px;"> 
+                     <yang:list typeid='6'  limit='3' titlelen='20' orderby="id" >
+                       <li><a href="{$list.url}">{$list.title}</a></li>
+                    </yang:list>
+                    </div>
+              	</div>
+                <div class="huoy" style="background:url(__PUBLIC__/images/con_img.jpg) no-repeat right bottom;">
+                	<div class="ttl_la">｜Customer Service Center</div>
+                    <div class="text_la" style="padding:4px 0 126px 40px; background:url(__PUBLIC__/images/tel_img.jpg) no-repeat 6px 0px; color:#575757; line-height:28px;">
+                    <yang:block name='index_contact' />
+                    </div>
+              	</div>

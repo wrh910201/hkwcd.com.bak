@@ -1,0 +1,110 @@
+@charset "utf-8";
+/* CSS Document */
+.img_div{ background:url(../images/ab_img.jpg) no-repeat center bottom; height:160px; width:100%; float:left; margin-bottom:15px;}
+.img_div1{ background:url(../images/ab_img1.jpg) no-repeat center bottom; height:160px; width:100%; float:left; margin-bottom:15px;}
+.img_div2{ background:url(../images/ab_img2.jpg) no-repeat center bottom; height:160px; width:100%; float:left; margin-bottom:15px;}
+.x_nav a{ color:#f00;}
+.x_nav{ border-bottom:1px solid #ccc; margin-bottom:15px; width:100%; float:left}
+.neiy{ border-top:6px solid #005daa; width:254px; float:left; margin-bottom:15px;}
+.neiy li{ line-height:30px; font-size:14px; width:254px; height:30px; margin:1px 0px;}
+.neiy li a{ color:#333; display:block;background:#f5f5f5; width:234px; padding-left:20px;}
+.neiy li a.act{ background:#00a443; color:#fff; width:234px;padding-left:20px;}
+
+.ser_nav{ font-size:20px; color:#005daa;width: 100%; float:left; margin-bottom:15px;} 
+.zgwen{ line-height:22px; width: 100%; float:left;word-break:normal;}
+.zgwen ul li{ line-height:30px;list-style-image:url(../images/litt.jpg); list-style-position:inside; padding-left:10px; border-bottom:#CCC 1px dashed;}
+.zgwen ul li a{ color:#005daa;}
+.zgwen ul li span{ float:right}
+
+.zgwen ul li:hover{ line-height:30px;list-style-image:url(../images/litt.jpg); list-style-position:inside; padding-left:10px; border-bottom:#000 1px dashed;}
+
+
+
+.sidebar
+{
+    border-top: 6px solid #005DAA;
+width: 254px;
+float: left;
+margin-bottom: 15px;
+ }
+
+.titl
+{
+border-top: 1px solid #fff;
+background: #00A443;
+color: white;
+width: 234px;
+height: 30px;
+padding-left: 20px;
+font-size: 16px;
+padding-top: 5px;  
+    }
+.sidebar ul li h4 a{ 
+ color: #333;
+display: block;
+background: whiteSmoke;
+width: 234px;
+height: 30px;
+padding-left: 20px;
+padding-top: 5px;
+font-size: 13px;
+}
+
+.sidebar ul li{
+line-height: 30px;
+font-size: 14px;
+width: 254px;
+height: 30px;
+margin: 2px 0px;
+border-top: 1px solid #fff;
+}
+
+.sidebar ul li h4 a:hover{
+color: #000;
+display: block;
+background: #CECEFF;
+width: 234px;
+height: 30px;
+padding-left: 20px;
+padding-top: 5px;
+font-size: 13px;
+}
+
+
+
+.scott{height:30px; overflow:hidden; text-align:center; padding-top:9px;  line-height:21px; width:100%; }
+.scott A{BORDER:#58affe 1px solid; PADDING:2px 5px; MARGIN-RIGHT: 5px;  TEXT-DECORATION: none; background:#fff;}
+.scott A:hover{border:1px solid #58affe; text-decoration:none; BACKGROUND-COLOR:#237ac7; color:#FFF;}
+.scott A:active{border:1px solid #58affe; text-decoration:none; BACKGROUND-COLOR:#237ac7;}
+.scott SPAN.current{BORDER: #237ac7 1px solid; PADDING:1px 5px;  FONT-WEIGHT: bold;  COLOR: #fff; MARGIN-RIGHT: 2px; BACKGROUND-COLOR: #237ac7;MARGIN-RIGHT: 5px;}
+.scott SPAN.disabled{BORDER:#237ac7 1px solid; PADDING:2px 5px; COLOR:#237ac7; MARGIN-RIGHT: 5px; background:#d8f1ff;}
+.fenye1{text-align: center; clear:both; font-size:12px; line-height:28px; height:56px; border:1px solid #9cceec; background:#e9f7ff; padding:0 5px; margin-top:5px;}
+.mt{margin-top:10px;}
+
+
+
+.cpshow{ width: 100%; float: left; margin-right:10px;}
+.imgli ul{ padding-left:10px;}
+.imgli ul li{ width: 240px;height: 240px;padding-top: 20px; float:left; margin-right:8px; list-style:none; text-align:center; font-size:12px; font-weight:normal; margin-bottom:30px; line-height:24px; border:1px solid #ccc; border-radius:5px; background:#fff;}
+.imgli ul li h3 {padding: 2px 0px 5x;} 
+.imgli ul li a{color:#777; text-decoration:none;} 
+
+
+
+.imgli ul li:hover{
+width: 240px;
+height: 240px;
+padding-top: 20px;
+float: left;
+margin-right: 8px;
+list-style: none;
+text-align: center;
+font-size: 12px;
+font-weight: normal;
+margin-bottom: 30px;
+line-height: 24px;
+border: 1px solid #000;
+border-radius: 5px;
+background: white;
+}
+

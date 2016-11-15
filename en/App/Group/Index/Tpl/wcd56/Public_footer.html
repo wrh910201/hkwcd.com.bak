@@ -1,0 +1,47 @@
+<include file="Public:qqOnline" /> 
+<include file="Public:wbShare" /> 
+<div class="footer">
+   <div class="m_1100">
+	<div class="link_b">
+    <div class="f_top">
+    	<div class="ttab">
+            <li><yang:type typeid='29'>{$type.name}</yang:type></li>
+            <li><yang:type typeid='30'>{$type.name}</yang:type></li>
+            <li><yang:type typeid='1'>{$type.name}</yang:type></li>
+            <li><yang:type typeid='10'>{$type.name}</yang:type></li>
+        </div>
+        <div class="xx_li">
+             <yang:artlist typeid='29' flag='d'  limit='5' >
+                <li><a href="{$artlist.url}">·{$artlist.title}</a><li>
+            </yang:artlist>
+         </div>
+        <div class="xx_li">
+            <yang:artlist typeid='30' flag='d'  limit='5' >
+                <li><a href="{$artlist.url}">·{$artlist.title}</a><li>
+            </yang:artlist>
+        </div>
+        <div class="xx_li" style=" padding-left:20px">
+            <yang:catlist typeid='1' type='son' flag='1'>
+                      <li><a href="{$catlist.url}">·{$catlist.name}</a></li>
+             </yang:catlist>
+        </div>
+        <div class="xx_li" style="width:270px;">
+            <yang:catlist typeid='10' type='son' flag='1' limit='5'>
+                   <li><a href="{$catlist.url}">·{$catlist.name}</a></li>
+             </yang:catlist>
+        </div>
+    </div>
+    <div class="bei">Terms of Service.　Privacy Statement.　<a href="<yang:siteurl />/sitemap.xml" target="_blank" >Site Map.</a>
+	<br>Links:
+	   <yang:flink typeid='0' limit='12' > 
+        <a href="{$flink.url}" title="{$flink.name}" target="_blank">{$flink.name}</a> | 
+       </yang:flink> 
+	<br><yang:copyright /><span style="float:right">Technical Support：<a href="http://www.hoxinit.com" target="_blank" >Hoxinit tech</a></span></div>
+    </div>
+   </div>
+   <yang:countcode /> <yang:sharecode /> <yang:swturl />
+</div>
+
+
+
+

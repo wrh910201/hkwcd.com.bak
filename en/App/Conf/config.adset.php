@@ -1,0 +1,1 @@
+<?php	return array ( 'cfg_ad_auto' => '1', 'cfg_ad_num' => '4', 'cfg_ad_width' => '1924', 'cfg_ad_height' => '400', 'cfg_ad_target' => '1', );?>

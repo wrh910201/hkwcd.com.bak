@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+ <script language="JavaScript">
+        <!--
+        var URL = '__URL__';
+        var APP	 = '__APP__';
+        var SELF='__SELF__';
+        var PUBLIC='__PUBLIC__';
+        //-->
+        </script>
+</head>
+<body>
+<div class="main">
+    <div class="pos">{$type} </div> 
+    <div class="sub"><span>说明：</span> 
+        Sitemaps 服务旨在使用 Feed 文件 sitemap.xml 通知 Google、Yahoo! 以及 Microsoft 等 Crawler(爬虫)网站上哪些文件需要索引、这些文件的最后修订时间、更改频度、文件位置、相对优先索引权，这些信息将帮助他们建立索引范围和索引的行为习惯。详细信息请查看 sitemaps.org 网站上的说明。
+        通过Sitemaps，您可以获得： <br />
+        1、更大的抓取范围，更新的搜索结果 – 帮助网友找到更多您的网页。<br />
+        2、更为智能的抓取 – 因为我们可以得知您网页的最新修改时间或网页的更改频率。<br />
+        3、详细的报告 – 详细说明 Google 如何将网友的点击指向您的网站及 Googlebot 如何看到您的网页。<br />
+        互联网新闻开放协议： <br />
+        1、互联网新闻开放协议》是百度新闻搜索制定的搜索引擎新闻源收录标准，网站可将发布的新闻内容制作成遵循此开放协议的XML格式的网页（独立于原有的新闻发布形式）供搜索引擎索引。 PHPCMS可自动生成网站的Sitemaps，但是您还需要向google或者baidu提交Sitemaps的访问地址。
+        您的网站的Sitemaps 访问地址为：sitemaps.xml<br />
+        可自动生成网站的<<互联网新闻开放协议>>，但是您还需要向baidu提交访问地址。<br />
+        您的网站的Sitemaps 访问地址为：baidunews.xml<br />
+        更多关于Google Sitemaps的信息：https://www.google.com/webmasters/sitemaps/login?hl=zh_CN<br />
+        更多关于<<互联网新闻开放协议>>的信息：http://news.baidu.com/newsop.html#kg<br />
+    </div> 
+    <div class="operate">
+        <div class="left">
+            <form action="" method="post" id="form_do" name="form_do">
+                <input type="button" onclick="doGoSubmit('{:U(GROUP_NAME. '/Sitemap/go')}', 'form_do')" class="btn_green" value="生成Sitemap">
+            </form> 
+        </div>   
+    </div>  
+
+</div>
+</body>
+</html>

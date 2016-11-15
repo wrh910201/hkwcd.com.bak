@@ -1,0 +1,61 @@
+<!--侧栏-->
+<div class="aside">
+    <div class="aside_wrapper">
+        <!-- Logo (200px wide) -->
+        <a href="#"><img class="logo" src="__PUBLIC__/images/t_b.gif" alt="华度物流" /></a>
+
+        <ul class="main_nav">  <!-- main Menu -->
+            <!--<li class="coin_1">-->
+                <!--<a href="index.html" class="nav_top_item">-->
+                    <!--<em class="icon">&#xe60b;</em>系统设置-->
+                <!--</a>-->
+                <!--<ul class="sub_menu hide" id="ud1">-->
+                    <!--<li><a href="profile.html">个人信息</a></li>-->
+                    <!--<li><a href="change_pwd.html">密码修改</a></li>-->
+                <!--</ul>-->
+            <!--</li>-->
+
+            <li class="coin_1">
+                <a href="{:U('Profile/index')}" class="nav_top_item" >
+                    <em class="icon">&#xe604;</em>账号管理
+                </a>
+                <ul class="sub_menu hide" id="ud1">
+                    <li><a href="{:U('Profile/index')}">帐号信息</a></li>
+                    <li><a href="{:U('Profile/password')}">修改密码</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_3">
+                <a href="{:U('Delivery/index')}" class="nav_top_item">
+                    <em class="icon">&#xe607;</em>发货地址
+                </a>
+                <ul class="sub_menu hide" id="ud3">
+                    <li><a href="{:U('Delivery/index')}">发货地址列表</a></li>
+                    <li><a href="{:U('Delivery/add')}">添加发货地址</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_4">
+                <a href="{:U('Receive/index')}" class="nav_top_item">
+                    <em class="icon">&#xe605;</em>收货地址
+                </a>
+                <ul class="sub_menu hide" id="ud4">
+                    <li><a href="{:U('Receive/index')}">收货地址列表</a></li>
+                    <li><a href="{:U('Receive/add')}">添加收货地址</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_5">
+                <a href="{:U('Order/index')}" class="nav_top_item">
+                    <em class="icon">&#xe603;</em>订单
+                </a>
+                <ul class="sub_menu hide" id="ud5">
+                    <li><a href="{:U('Order/index')}">订单列表</a></li>
+                    <li><a href="{:U('Order/add')}">添加订单</a></li>
+                </ul>
+            </li>
+
+        </ul> <!-- End #main-nav -->
+    </div>
+</div>
+<!--END 侧栏-->

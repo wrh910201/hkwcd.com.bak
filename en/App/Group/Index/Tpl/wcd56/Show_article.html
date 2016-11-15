@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title><yang:sitetitle/></title>
+<meta name="keywords" content="<yang:sitekeywords/>" />
+<meta name="description" content="<yang:sitedescription/>" /> 
+<link href="__PUBLIC__/css/hd.css" rel="stylesheet" type="text/css">
+<link href="__PUBLIC__/css/zy.css" rel="stylesheet" type="text/css"> 
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>  
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script> 
+</head> 
+<body> 
+<include file="Public:header" /> 
+<div id="sbanner" class="img_div1"></div> 
+
+ <div class="main_a">
+  <div class="m_1100">
+  <div class="b_block">
+    <div class="midd" style="width:831px;">
+    	<div class="x_nav"><yang:position /></div>
+        <div class="zgwen">　　
+             <h1  style="text-align: center; border-bottom:1px dashed #CCC; line-height:36px; font-size:18px; color:#005daa">{$title | str2sub=40, true}</h1>
+              <div style="border:1px solid #FFE0B4; background:#ffeed5; font-size:12px; text-align:center;margin-bottom: 30px;">Their type：{$cate.name} 丨 Published:{$content.publishtime|date='Y-m-d',###} 丨 Reads:<yang:click /> </div>
+               <if condition="$content.litpic neq '' "><div style=" text-align:center"> <img alt="{$title}" src="{$content.litpic}" style="max-width:660px; margin-bottom:15px;"   /> </div>  </if> 
+                {$content.content}
+                <div class="addthis"> 
+                   <include file="Public:share" /> 
+		        </div> 
+
+                <div class="fenye1" style="text-align:left;">↑Prev：<yang:prev /><br/>↓Next：<yang:next /> </div>
+
+        </div>
+    </div>
+        <div class="rig">
+            <include file="Public:submeun" /> 
+        </div>
+	</div>
+ </div>
+</div>
+
+<include file="Public:footer" /> 
+</body>
+</html>

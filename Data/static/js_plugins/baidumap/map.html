@@ -1,0 +1,35 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="css/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=EuydDOWYPHnfmU3VB8MWeais"></script>
+    <script src="css/js/jquery.bdMap.js"></script>
+	<style>
+		body,ol,ul,h1,h2,h3,h4,h5,h6,p,th,td,dl,dd,form,fieldset,legend,input,textarea,select{margin:0;padding:0}
+		body{font:12px 'Microsoft YaHei', Arial,'宋体',Helvetica,sans-serif,'Arial Narrow',HELVETICA;background:#fff;-webkit-text-size-adjust:100%;}
+		a{color:#000;text-decoration:none;display:inline-block;}
+		a:hover{color:#3468F1;text-decoration:none}
+		em{font-style:normal}
+		li{list-style:none}
+		img{border:0;vertical-align:middle}
+		table{border-collapse:collapse;border-spacing:0}
+		p{word-wrap:break-word}
+	</style>
+    <script>
+        $(function(){
+           $('#form22').JQMap(
+			{
+				m_longitude: '116.404',//经度
+				m_latitude:'39.915',//纬度
+				isShowNav:false, //显示缩放平移控件 true :显示，false 不显示
+				isShow2D:false, //2D图，卫星图
+				markerLabel:'南昌市火炬大'
+			}
+		   );
+        })
+    </script>
+</head>
+ <body >
+	<div id="form22"></div>
+</body>
+</html>

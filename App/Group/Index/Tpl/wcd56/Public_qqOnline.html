@@ -1,0 +1,22 @@
+<if condition="<yang:qqauto /> eq '1' ">   
+<link href="__ROOT__/Data/static/js_plugins/qqOnline/css/qqOnline.css" rel="stylesheet" type="text/css" />
+<div id="qqOnlineView" class="qq_online_view">
+	<div class="top_b"></div>
+	<div class="body">
+	 <dl>
+         <dd class="title">QQ在线客服</dd>
+         <dd><span class="ico_zx">在线咨询</span></dd>
+         <div id="qqshow"></div>
+     </dl>
+	 <dl>
+        <dd class="title bborder">Email服务</dd><dd><a href="mailto:<yang:email />"><yang:email /></a></dd> 
+     </dl> 
+     <dl>
+     <if condition="<yang:qqphone /> eq '1' ">   <dd class="title bborder">电话咨询</dd><dd><span class="ico_tel"><yang:phone /></span></dd></if>
+     <if condition="<yang:qqguestbook /> eq '1' ">   <dd class="msg noborder"><a href="{:U('Guestbook/index')}">给我们留言</a></dd></if>
+     </dl>
+	</div>
+</div>
+<script type="text/javascript">    var str = "<yang:qqmore />"; var strww = "<yang:wwmore />"; var lr = <yang:qqlr />;</script>
+<script src="__ROOT__/Data/static/js_plugins/qqOnline/js/qqOnline.js" type="text/javascript" language="JavaScript"></script>
+</if>

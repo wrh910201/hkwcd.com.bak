@@ -1,0 +1,81 @@
+<include file="Usercenter:header" />
+<body>
+<include file="Usercenter:aside" />
+<!-- main -->
+<div class="main">
+    <include file="Usercenter:top" />
+
+    <!--content-->
+    <div class="content">
+        <!--{$title}-->
+        <div class="profile">
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3>{$title}</h3>
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c box_c_reset">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>发件人</th>
+                            <th>发货地址</th>
+                            <th>默认</th>
+                            <th class="text-right">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name='delivery_list' item='v'>
+                            <tr>
+                                <td>{$v.index}</td>
+                                <td>{$v.consignor}</td>
+                                <td>{$v.detail_address}</td>
+                                <td>
+                                    <if condition="$v.is_default eq 1">
+                                        是
+                                        <else />
+                                        否
+                                    </if>
+                                </td>
+                                <td class="text-right">
+                                    <if condition="$v.is_default eq 0">
+                                        <a href="javascript:void(0);" onclick="set_default({$v.id})">设为默认</a> |
+                                    </if>
+                                    <a href="{:U('Delivery/edit', array('id' => $v['id']))}">编辑</a> | <a href="javascript:void(0);" onclick="remove({$v.id})">删除</a>
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        </div>
+        <!--END 个人信息-->
+    </div>
+    <!--END content-->
+</div>
+<!-- END main -->
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript">
+    $(function () {
+        menu1("#ud3", "#ud3 a", ".coin_3 a.nav_top_item");
+    })
+
+    function set_default(id) {
+        if( confirm('确认将该地址设为默认？') ) {
+            window.location.href = "/Delivery/setDefault/id/" + id;
+        }
+    }
+
+    function remove(id) {
+        if( confirm('确认删除该地址？') ) {
+            window.location.href = "/Delivery/del/id/" + id;
+        }
+    }
+
+</script>
+</body>
+</html>

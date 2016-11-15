@@ -1,0 +1,15 @@
+@charset "utf-8"; 
+div.slideBox{ position:relative; margin:0px auto; overflow:hidden;}
+div.slideBox ul.items{ position:absolute; float:left; background:none; list-style:none; padding:0px; margin:0px;}
+div.slideBox ul.items li{ float:left; background:none; list-style:none; padding:0px; margin:0px;}
+div.slideBox ul.items li a{ float:left; line-height:normal !important; padding:0px !important; border:none;}
+div.slideBox ul.items li a img{ margin:0px !important; padding:0px !important; display:block; border:none;}
+div.slideBox div.tips{ position:absolute; bottom:0px; width:100%; height:40px; overflow:hidden;}
+div.slideBox div.tips div.titles{ position:absolute; left:0px; top:0px; height:100%;}
+div.slideBox div.tips div.titles a{ color:#FFF;  font-weight:bold;font-size:15px; line-height:40px; margin-left:10px; text-decoration:none;}
+div.slideBox div.tips div.titles a:hover{ text-decoration:underline !important;}
+div.slideBox div.tips div.nums{ position:absolute; right:0px; top:0px; height:100%;}
+div.slideBox div.tips div.nums a{ display:inline-block; float:left; width:10px; height:10px; background-color:#033; text-indent:-99999px; margin:15px 10px 0px 0px;}
+div.slideBox div.tips div.nums a.active{ background-color:#093;}
+
+
