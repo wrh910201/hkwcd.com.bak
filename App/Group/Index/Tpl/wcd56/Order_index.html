@@ -32,11 +32,14 @@
                                 <td>{$v.add_time}</td>
                                 <td>{$v.status_str}</td>
                                 <td class="text-right">
-                                    <a href="{:U('Delivery/detail', array('id' => $v['id']))}">详情</a>
+                                    <a href="{:U('Order/detail', array('id' => $v['id']))}">详情</a>
                                     <if condition="$v.client_status eq 0">
                                         | <a href="javascript:void(0);" onclick="commit_order({$v.id})">提交</a>
-                                        | <a href="{:U('Delivery/edit', array('id' => $v['id']))}">编辑</a>
-                                        | <a href="javascript:void(0);" onclick="remove({$v.id})">删除</a>
+                                        | <a href="{:U('Order/edit', array('id' => $v['id']))}">编辑</a>
+                                        | <a href="javascript:void(0);" onclick="remove_order({$v.id})">删除</a>
+                                        <if condition="$v.is_rejected eq 1">
+                                            | <a href="javascript:void(0);" onclick="reject_history({$v.id})">驳回日志</a>
+                                        </if>
                                     </if>
                                     <if condition="$v.express_status eq 1">
                                         | <a href="javascript:void(0);" onclick="trace_order({$v.id})">跟踪</a>
@@ -64,6 +67,92 @@
     $(function () {
         menu1("#ud5", "#ud5 a", ".coin_5 a.nav_top_item");
     });
+
+    function commit_order(id) {
+        layer.confirm('确定提交订单吗（提交后无法编辑和删除订单）？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            do_commit_order(id);
+        }, function(){
+
+        });
+    }
+
+    function do_commit_order(id) {
+        show_loading();
+        var url = '/Order/commit';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+    function ajax_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                if( response.url ) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.reload();
+                }
+            } );
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
+        }
+    }
+
+    function remove_order(id) {
+        layer.confirm('确定删除订单吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            do_remove_order(id);
+        }, function(){
+
+        });
+    }
+
+    function do_remove_order(id) {
+        show_loading();
+        var url = '/Order/delete';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+    function reject_history(id) {
+        show_loading();
+        var url = '/Order/reject';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+    function trace_order(id) {
+        show_loading();
+        var url = '/Order/trace';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+    function complete_order(id) {
+        layer.confirm('确认订单已完成吗（确认之后无法再对订单进行操作）？', {
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            do_complete_order(id);
+        }, function(){
+
+        });
+    }
+
+    function do_complete_order(id) {
+        show_loading();
+        var url = '/Order/complete';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+
 </script>
 </body>
 </html>

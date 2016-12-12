@@ -249,6 +249,11 @@ class OrderAction extends BaseAction  {
 
         $data['client_status'] = $commit == 0 ? 0 : 1;
         $msg = $commit == 0 ? '添加订单成功' : '订单添加成功，并已提交';
+        if( $commit == 1 ) {
+            $time = time();
+            $data['commit_time'] = date('Y-m-d H:i:s', $time);
+            $data['add_time'] = date('Y-m-d H:i:s', $time);
+        }
         $data['client_id'] = $client_id;
 
         //事务开始，插入订单
@@ -275,6 +280,7 @@ class OrderAction extends BaseAction  {
         if( $transaction ) {
             foreach( $order_detail as $k => $v ) {
                 $v['order_num'] = $order_num;
+                $v['order_id'] = $order_id;
                 $temp_result = M('ClientOrderDetail')->add($v);
                 if( !$temp_result ) {
                     $transaction = false;
@@ -286,6 +292,7 @@ class OrderAction extends BaseAction  {
         if( $transaction ) {
             foreach( $order_specifications as $k => $v ) {
                 $v['order_num'] = $order_num;
+                $v['order_id'] = $order_id;
                 $temp_result = M('ClientOrderSpecifications')->add($v);
                 if( !$temp_result ) {
                     $transaction = false;
@@ -315,6 +322,117 @@ class OrderAction extends BaseAction  {
         }
         echo json_encode($this->response);
         exit;
+    }
+
+
+    public function edit() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->error('当前订单不是可编辑状态');
+        }
+
+        $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
+        $order_specifications = M('ClientOrderSpecifications')->where(['order_id' => $id])->select();
+
+        $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order_specifications', $order_specifications);
+
+        $this->display();
+    }
+
+    public function ajaxEdit() {
+
+    }
+
+    public function ajaxAddDetail() {
+
+    }
+
+    public function ajaxEditDetail() {
+
+    }
+
+    public function ajaxDeleteDetail() {
+
+    }
+
+    public function ajaxAddSpecifications() {
+
+    }
+
+    public function ajaxEditSpecifications() {
+
+    }
+
+    public function ajaxDeleteSpecifications() {
+
+    }
+
+    public function detail() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+        $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
+        $order_specifications = M('ClientOrderSpecifications')->where(['order_id' => $id])->select();
+
+        $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order_specifications', $order_specifications);
+
+        $this->display();
+    }
+
+    public function commit() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+    }
+
+    public function reject() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+    }
+
+    public function trace() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+    }
+
+    public function delete() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+    }
+
+    public function complete() {
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
     }
 
     public function getDeliveryList() {
