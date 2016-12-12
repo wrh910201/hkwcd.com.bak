@@ -32,10 +32,18 @@
                                 <td>{$v.add_time}</td>
                                 <td>{$v.status_str}</td>
                                 <td class="text-right">
-                                    <if condition="$v.is_default eq 0">
-                                        <a href="javascript:void(0);" onclick="set_default({$v.id})">设为默认</a> |
+                                    <a href="{:U('Delivery/detail', array('id' => $v['id']))}">详情</a>
+                                    <if condition="$v.client_status eq 0">
+                                        | <a href="javascript:void(0);" onclick="commit_order({$v.id})">提交</a>
+                                        | <a href="{:U('Delivery/edit', array('id' => $v['id']))}">编辑</a>
+                                        | <a href="javascript:void(0);" onclick="remove({$v.id})">删除</a>
                                     </if>
-                                    <a href="{:U('Delivery/edit', array('id' => $v['id']))}">编辑</a> | <a href="javascript:void(0);" onclick="remove({$v.id})">删除</a>
+                                    <if condition="$v.express_status eq 1">
+                                        | <a href="javascript:void(0);" onclick="trace_order({$v.id})">跟踪</a>
+                                        <if condition="$v.receive_status eq 0">
+                                            | <a href="javascript:void(0);" onclick="complete_order({$v.id})">完成</a>
+                                        </if>
+                                    </if>
                                 </td>
                             </tr>
                         </foreach>

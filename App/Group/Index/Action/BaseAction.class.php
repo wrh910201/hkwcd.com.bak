@@ -8,6 +8,11 @@
 
 class BaseAction extends Action {
 
+    protected $response = [
+        'code' => -1,
+        'msg' => '',
+    ];
+
     public function _initialize() {
         if( IS_AJAX ) {
             if (empty(session('hkwcd_user'))) {

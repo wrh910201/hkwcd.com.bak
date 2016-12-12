@@ -1344,14 +1344,15 @@
     function add_order_handler(response) {
         hide_loading();
         if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
         } else if( response.code == 1 ) {
             layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
                 window.location.href = response.url;
             } );
         } else if( response.code == -1 ) {
-            layer.msg(response.msg);
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
         }
     }
 </script>
