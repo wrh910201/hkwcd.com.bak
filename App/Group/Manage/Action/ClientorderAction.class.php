@@ -44,7 +44,34 @@ class ClientorderAction extends CommonAction {
     }
 
     public function exam() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['client_status'] == 1 && $order['exam_status'] == 0) ) {
+            $this->error('当前订单不是待审核状态');
+        }
+        $data = [
+            'exam_status' => 1,
+            'exam_time' => date('Y-m-d H:i:s', time()),
+        ];
+        $result = M('ClientOrder')->where(['id' => $id])->save($data);
+        if( is_numeric($result) ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
+                'content' => '通过订单审核',
+            ];
+            M('ClientOrderLog')->add($log_data);
 
+            $this->success('订单已审核通过');
+        } else {
+            $this->error('系统繁忙，请稍后重试');
+        }
     }
 
     public function detail() {
@@ -52,11 +79,75 @@ class ClientorderAction extends CommonAction {
     }
 
     public function reject() {
-
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['client_status'] == 1 && $order['exam_status'] == 0) ) {
+            $this->error('当前订单不是待审核状态');
+        }
+        $this->type = '驳回客户订单';
+        $this->assign('order', $order);
+        $this->display();
     }
 
     public function doReject() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['client_status'] == 1 && $order['exam_status'] == 0) ) {
+            $this->error('当前订单不是待审核状态');
+        }
+        $reject_reason = I('reject_reason', '', 'trim');
+        if( empty($reject_reason) ) {
+            $this->error('请输入驳回原因');
+        }
 
+        $map = [
+            'id' => $id,
+            'client_status' => 1,
+            'exam_status' => 0
+        ];
+
+        $data = [
+            'client_status' => 0,
+            'is_rejected' => 1,
+        ];
+
+        $message_data = [
+            'content' => $reject_reason,
+            'order_num' => $order['order_num'],
+            'order_id' => $order['id'],
+            'user_id' => $order['client_id'],
+            'status' => 1,
+        ];
+        $model = new Model();
+        $model->startTrans();
+        $transaction = true;
+
+        $result = M('ClientOrder')->where($map)->save($data);
+        if( is_numeric($result) ) {
+            $transaction = true;
+        } else {
+            $transaction = false;
+        }
+
+        if( $transaction ) {
+            $result = M('ClientOrderMessage')->add($message_data);
+            if( !$result ) {
+                $transaction = false;
+            }
+        }
+        if( $transaction ) {
+            $model->commit();
+            $this->success('订单驳回成功', U('Clientorder/index'));
+        } else{
+            $model->rollback();
+            $this->error('系统繁忙，请稍后重试');
+        }
     }
 
     public function trace() {

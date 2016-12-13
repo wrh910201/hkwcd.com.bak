@@ -374,8 +374,11 @@ class OrderAction extends BaseAction  {
     }
 
     public function detail() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
@@ -391,17 +394,53 @@ class OrderAction extends BaseAction  {
     }
 
     public function commit() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
         if( empty($order) ) {
-            $this->error('订单不存在');
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
         }
+
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单无法提交';
+            echo json_encode($this->response);
+            exit;
+        }
+        $data = [
+            'client_status' => 1,
+            'commit_time' => date('Y-m-d H:i:s', time()),
+        ];
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
+        if( is_numeric($result) ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '提交订单',
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->response['code'] = 1;
+            $this->response['msg'] = '提交订单成功';
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
+
 
     }
 
     public function reject() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
