@@ -442,21 +442,47 @@ class OrderAction extends BaseAction  {
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
         if( empty($order) ) {
-            $this->error('订单不存在');
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
         }
-
+        $message_List = M('ClientOrderMessage')->where(['user_id' => $client_id, 'order_id' => $id])
+            ->order('status desc, created_at desc')
+            ->select();
+        $this->response['data'] = $message_List;
+        $this->response['code'] = 1;
+        echo json_encode($this->response);
+        exit;
     }
 
     public function trace() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
-            $this->error('订单不存在');
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
         }
-
+        if( $order['express_status'] == 0 ) {
+            $this->response['msg'] = '订单未发出';
+            echo json_encode($this->response);
+            exit;
+        }
+        $express_type = M('ExpressType')->where(['id' => $order['express_type_id']])->find();
+        if( empty($express_type) ) {
+            $this->response['msg'] = '运单异常';
+            echo json_encode($this->response);
+            exit;
+        }
+        $result = query_express($express_type['type'], $order['express_order_num']);
+        var_dump($result);exit;
     }
 
     public function delete() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -466,6 +492,8 @@ class OrderAction extends BaseAction  {
     }
 
     public function complete() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {

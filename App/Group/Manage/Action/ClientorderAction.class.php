@@ -154,6 +154,15 @@ class ClientorderAction extends CommonAction {
 
     }
 
+    public function delivery() {
+
+    }
+
+    public function doDelivery() {
+
+    }
+
+
     private function _order_status($order) {
         $status = '';
         if( $order['error_status'] == 1 ) {
