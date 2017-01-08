@@ -270,11 +270,12 @@ class OrderAction extends BaseAction  {
         $order_num = 'HD'.date('Ymd', time()).$client_id.rand(1000, 9999);
         $data['order_num'] = $order_num;
         $add_order_result = M('ClientOrder')->add($data);
-        $order_id = M('ClientOrder')->getLastInsID();
 //        $this->response['msg'] = $order_num;
 //        echo json_encode($this->response);exit;
         if( !$add_order_result ) {
             $transaction = false;
+        } else {
+            $order_id = M('ClientOrder')->getLastInsID();
         }
 
         if( $transaction ) {
@@ -326,6 +327,8 @@ class OrderAction extends BaseAction  {
 
 
     public function edit() {
+        $client_id = session('hkwcd_user.user_id');
+
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -383,12 +386,12 @@ class OrderAction extends BaseAction  {
             $this->error('订单不存在');
         }
 
-        $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
-        $order_specifications = M('ClientOrderSpecifications')->where(['order_id' => $id])->select();
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
 
         $this->assign('order', $order);
-        $this->assign('order_detail', $order_detail);
-        $this->assign('order_specifications', $order_specifications);
+        $this->assign('order_detail', json_encode($order_detail));
+        $this->assign('order_specifications', json_encode($order_specifications));
 
         $this->display();
     }
