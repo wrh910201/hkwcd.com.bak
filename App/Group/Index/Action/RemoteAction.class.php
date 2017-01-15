@@ -10,6 +10,9 @@ class RemoteAction extends Action {
     public $key_prefix = 'hkwcd_remote_country_';
 
     public function index() {
+        $cate['pid'] = '13';
+        $this->assign('cate', $cate);
+
         $this->title = '偏远地区查询';
         $country_list = S($this->key_prefix.'ch');
         if( $country_list ) {
@@ -24,7 +27,8 @@ class RemoteAction extends Action {
     }
 
     public function query() {
-
+        $cate['pid'] = '13';
+        $this->assign('cate', $cate);
         $country_list = S($this->key_prefix.'ch');
         if( $country_list ) {
             $this->assign('country_list', $country_list);
@@ -45,7 +49,7 @@ class RemoteAction extends Action {
             'code' => $code,
             'city' => $city,
         ];
-        $query_result = S($this->key_prefix.'_result_'.md5(json_encode($param)));
+        $query_result = S($this->key_prefix.'_result_'.md5(json_encode($param)), 3600 * 24 * 3);
         if( !$query_result ) {
 //        var_dump($param);exit;
             $url = 'http://exp.hecny.com/serch_remot.action';
