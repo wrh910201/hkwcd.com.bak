@@ -45,14 +45,17 @@ class RemoteAction extends Action {
             'code' => $code,
             'city' => $city,
         ];
+        $query_result = S($this->key_prefix.'_result_'.md5(json_encode($param)));
+        if( !$query_result ) {
 //        var_dump($param);exit;
-        $url = 'http://exp.hecny.com/serch_remot.action';
-        $result = post($url, $param);
-        $pattern = '#<table width="100%" border="0" align="left" cellpadding="1" cellspacing="1" class="tablelistcontent ">(.*)<\/table>#s';
-        preg_match($pattern, $result, $matches);
-        $query_result = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
-        if( $query_result ) {
-//            S($this->key_prefix.'_rm')
+            $url = 'http://exp.hecny.com/serch_remot.action';
+            $result = post($url, $param);
+            $pattern = '#<table width="100%" border="0" align="left" cellpadding="1" cellspacing="1" class="tablelistcontent ">(.*)<\/table>#s';
+            preg_match($pattern, $result, $matches);
+            $query_result = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
+            if ($query_result) {
+                S($this->key_prefix . '_result_' . md5(json_encode($param)), $query_result);
+            }
         }
         $this->assign('query_result',$query_result);
         $this->is_result = true;
