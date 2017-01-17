@@ -795,15 +795,87 @@ class OrderAction extends BaseAction  {
             exit;
         }
 
+        $weight = floatval(I('weight'));
+        $length = floatval(I('length'));
+        $width = floatval(I('width'));
+        $height = floatval(I('height'));
+        $count = floatval(I('count'));
+        $remark = trim(I('remark'));
+
         $has_error = false;
         $error_msg = '';
+
+        if( $weight <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入重量' : '请输入重量';
+        }
+
+        if( $length <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入长度' : '请输入长度';
+        }
+
+        if( $width <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入宽度' : '请输入宽度';
+        }
+
+        if( $height <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入高度' : '请输入高度';
+        }
+
+        if( $count <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入数量' : '请输入数量';
+        }
+
+        if( $has_error ) {
+            $this->response['msg'] = $error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+
+        $data = [
+            'weight' => $weight,
+            'length' => $length,
+            'width' => $width,
+            'height' => $height,
+            'count' => $count,
+            'remark' => $remark,
+            'order_id' => $order_id,
+            'order_num' => $order['order_num'],
+        ];
+
+        $result = M('ClientOrderSpecifications')->add($data);
+        if( $result ) {
+            $data['id'] = M('ClientOrderSpecifictions')->getLastInsID();
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '添加订单规格成功',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '添加订单规格成功';
+            $this->response['url'] = U('Order/edit', ['id' => $order_id]);
+            $this->response['data'] = $data;
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function ajaxEditSpecifications() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
-        $specifications_id = I('specifications_id');
+        $specifications_id = I('id');
         $order_id = I('order_id');
 
         $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
@@ -820,14 +892,88 @@ class OrderAction extends BaseAction  {
 
         $has_error = false;
         $error_msg = '';
+
+        $weight = floatval(I('weight'));
+        $length = floatval(I('length'));
+        $width = floatval(I('width'));
+        $height = floatval(I('height'));
+        $count = floatval(I('count'));
+        $remark = trim(I('remark'));
+
+        $has_error = false;
+        $error_msg = '';
+
+        if( $weight <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入重量' : '请输入重量';
+        }
+
+        if( $length <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入长度' : '请输入长度';
+        }
+
+        if( $width <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入宽度' : '请输入宽度';
+        }
+
+        if( $height <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入高度' : '请输入高度';
+        }
+
+        if( $count <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入数量' : '请输入数量';
+        }
+
+        if( $has_error ) {
+            $this->response['msg'] = $error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+
+        $data = [
+            'weight' => $weight,
+            'length' => $length,
+            'width' => $width,
+            'height' => $height,
+            'count' => $count,
+            'remark' => $remark,
+        ];
+
+        $result = M('ClientOrderSpecifications')->where(['order_id' => $order_id, 'id' => $specifications_id])->save($data);
+        if( $result ) {
+            $data['order_id'] = $order_id;
+            $data['order_num'] = $order['order_num'];
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '编辑订单规格成功',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '编辑订单规格成功';
+            $this->response['url'] = U('Order/edit', ['id' => $order_id]);
+            $this->response['data'] = $data;
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function ajaxDeleteSpecifications() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
-        $specifications_id = I('specifications_id');
-        $order_id = I('id');
+        $specifications_id = I('id');
+        $order_id = I('order_id');
         $index = I('index');
 
         $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();

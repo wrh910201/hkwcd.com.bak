@@ -810,7 +810,7 @@
 
     function ajax_add_order_specifications(param) {
         show_loading();
-        var url = "{:U('Order/addSpecifications')}";
+        var url = "{:U('Order/ajaxAddSpecifications')}";
         param['order_id'] = order_id;
         $.post(url, param, ajax_add_order_specifications_handler, 'json');
     }
@@ -835,7 +835,7 @@
 
     function ajax_edit_order_specifications(param) {
         show_loading();
-        var url = "{:U('Order/editSpecifications')}";
+        var url = "{:U('Order/ajaxEditSpecifications')}";
         $.post(url, param, ajax_edit_order_specifications_handler, 'json');
     }
 
