@@ -123,7 +123,7 @@
                                 <label class="l_title">币种：</label>
                                 <select class=" text_input " style="width:316px;" id="currency" name="currency">
                                     <volist name="currency_list" id="v">
-                                        <option value="{$v.id}" <if condition="$v.id eq $order.currency_id">selected="selected"</if>>{$v.name}（{$v.code}）</option>
+                                        <option value="{$v.id}" <if condition="$v.id eq $order['currency_id']">selected="selected"</if>>{$v.name}（{$v.code}）</option>
                                     </volist>
                                 </select>
                                 <div class="clear"></div>
@@ -142,7 +142,7 @@
                                 <select class=" text_input " style="width:316px;" id="channel" name="channel">
                                     <!--<option value="0">华度自行安排</option>-->
                                     <volist name="channel_list" id="v">
-                                        <option value="{$v.id}" <if condition="$v.id eq $order.channel_id">selected="selected"</if>>{$v.name} / {$v.en_name}</option>
+                                        <option value="{$v.id}" <if condition="$v.id eq $order['channel_id']">selected="selected"</if>>{$v.name} / {$v.en_name}</option>
                                     </volist>
                                 </select>
                                 <div class="clear"></div>
@@ -635,7 +635,7 @@
     var order_specifications = {$order_specifications};
     var order_detail = {$order_detail};
     var s_editing = null;
-    var s_cursor = {$s_curosr};
+    var s_cursor = {$s_cursor};
     var d_editing = null;
     var d_cursor = {$d_cursor};
 
@@ -687,6 +687,7 @@
     });
 
     $('#show_order_detail').click(function() {
+        empty_order_detail_form();
         show_order_detail_form();
     });
 
@@ -858,7 +859,7 @@
 
     function ajax_remove_order_specifications(index) {
         show_loading();
-        var url = "{:U('Order/delSpecifications')}";
+        var url = "{:U('Order/ajaxDeleteSpecifications')}";
         var id = order_specifications[index].id;
         var param = { 'order_id':order_id, 'id':id, 'index':index };
         $.post(url, param, ajax_remove_order_specifications_handler, 'json');
@@ -1002,7 +1003,7 @@
 
     function ajax_add_order_detail(param) {
         show_loading();
-        var url = "{:U('Order/addDetail')}";
+        var url = "{:U('Order/ajaxAddDetail')}";
         param['order_id'] = order_id;
         $.post(url, param, ajax_add_order_detail_handler, 'json');
     }
@@ -1027,7 +1028,7 @@
 
     function ajax_edit_order_detail(param) {
         show_loading();
-        var url = "{:U('Order/editDetail')}";
+        var url = "{:U('Order/ajaxEditDetail')}";
         $.post(url, param, ajax_edit_order_detail_handler, 'json');
     }
 
@@ -1091,7 +1092,7 @@
 
     function ajax_remove_order_detail(index) {
         show_loading();
-        var url = "{:U('Order/delDetail')}";
+        var url = "{:U('Order/ajaxDeleteDetail')}";
         var id = order_detail[index].id;
         var param = { 'order_id':order_id, 'id':id, 'index':index };
         $.post(url, param, ajax_remove_order_detail_handler, 'json');
@@ -1231,7 +1232,6 @@
             return;
         }
         var id = $('.delivery-check-item:checked').val();
-        id = "'" + id + "'";
         var data = delivery_list[id];
         set_delivery(data);
         layer.close(tips);
@@ -1381,7 +1381,6 @@
             return;
         }
         var id = $('.receive-check-item:checked').val();
-        id = "'" + id + "'";
         var data = receive_list[id];
         set_receive(data);
         layer.close(tips);

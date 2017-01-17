@@ -330,7 +330,7 @@ class OrderAction extends BaseAction  {
         $client_id = session('hkwcd_user.user_id');
 
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
@@ -339,41 +339,536 @@ class OrderAction extends BaseAction  {
         }
 
         $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
+        if( $order_detail ) {
+            $temp = [];
+            foreach( $order_detail as $k => $v ) {
+                $temp['item-'.$k] = $v;
+            }
+            $order_detail = $temp;
+        }
         $order_specifications = M('ClientOrderSpecifications')->where(['order_id' => $id])->select();
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                $temp['item-'.$k] = $v;
+            }
+            $order_specifications = $temp;
+        }
+        $selected_delivery = M('Delivery')->where(['id' => $order['delivery_id']])->find();
+        $selected_receive = M('Receive')->where(['id' => $order['receive_id']])->find();
+
+        //国家
+        $where = array('pid' => 0,'types'=>0);
+        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $this->assign('country_list', $country_list);
+
+        //货币
+        $where = ['status' => 1];
+        $currency_list = M('Currency')->where($where)->select();
+        $this->assign('currency_list', $currency_list);
+
+        $channel_list = M('Channel')->where($where)->select();
+        $this->assign('channel_list', $channel_list);
 
         $this->assign('order', $order);
-        $this->assign('order_detail', $order_detail);
-        $this->assign('order_specifications', $order_specifications);
+        $this->assign('order_detail', json_encode($order_detail));
+        $this->assign('order_specifications', json_encode($order_specifications));
+
+        $this->assign('has_default_delivery', true);
+        $this->assign('has_default_receive', true);
+        $this->assign('json_delivery', json_encode($selected_delivery));
+        $this->assign('json_receive', json_encode($selected_receive));
+        $this->assign('s_cursor', count($order_specifications));
+        $this->assign('d_cursor', count($order_detail));
 
         $this->display();
     }
 
     public function ajaxEdit() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
+        $id = I('order_id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+
+        $has_error = false;
+        $error_msg = '';
+
+        $delivery_id = I('post.delivery_id', 0, 'intval');
+        $receive_id = I('post.receive_id', 0, 'intval');
+        $spare_addressee = I('post.spare_receive_addressee', '', 'trim');
+        $spare_detail_address = I('post.spare_receive_detail_address', '', 'trim');
+        $spare_mobile = I('post.spare_receive_mobile', '', 'trim');
+        $spare_phone = I('post.spare_receive_phone', '', 'trim');
+        $spare_postal_code = I('post.spare_receive_postal_code', '', 'trim');
+        $currency_id = I('post.currency', 1, 'intval');
+        $declared_value = I('post.declared_value', 0, 'floatval');
+        $channel_id = I('post.channel', 0, 'intval');
+        $package_type = I('post.package_type', 0, 'intval');
+        $export_reason = I('post.export_reason', '', 'trim');
+        $remark = I('post.remark', '', 'trim');
+        $commit = I('post.commit', 0, 'intval');
+
+        $commit = $commit == 1 ? 1 : 0;
+
+        //构造发货数据
+        $where = ['status' => 1, 'client_id' => $client_id, 'id' => $delivery_id];
+        $delivery = M('DeliveryAddress')->where($where)->find();
+        if( empty($delivery) ) {
+            $has_error = true;
+            $error_msg = '请输入发货信息';
+        } else {
+            $data['delivery_id'] = $delivery_id;
+            $data['delivery_company'] = $client['company'];
+            $data['delivery_consignor'] = $delivery['consignor'];
+            $data['delivery_country_id'] = $delivery['country_id'];
+            $data['delivery_state'] = $delivery['state'];
+            $data['delivery_city'] = $delivery['city'];
+            $data['delivery_phone'] = $delivery['phone'];
+            $data['delivery_mobile'] = $delivery['mobile'];
+            $data['delivery_detail_address'] = $delivery['detail_address'];
+            $data['delivery_postal_code'] = $delivery['postal_code'];
+        }
+        //构造收货数据
+        $where = ['status' => 1, 'client_id' => $client_id, 'id' => $receive_id];
+        $receive = M('ReceiveAddress')->where($where)->find();
+        if( empty($receive) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入发货信息' : '请输入发货信息';
+        } else {
+            $data['receive_id'] = $receive_id;
+            $data['receive_company'] = $client['company'];
+            $data['receive_addressee'] = $receive['addressee'];
+            $data['receive_country_id'] = $receive['country_id'];
+            $data['receive_state'] = $receive['state'];
+            $data['receive_city'] = $receive['city'];
+            $data['receive_phone'] = $receive['phone'];
+            $data['receive_mobile'] = $receive['mobile'];
+            $data['receive_detail_address'] = $receive['detail_address'];
+            $data['receive_postal_code'] = $receive['postal_code'];
+        }
+        //构造备用收货数据
+        $data['spare_addressee'] = $spare_addressee;
+        $data['spare_detail_address'] = $spare_detail_address;
+        $data['spare_phone'] = $spare_phone;
+        $data['spare_mobile'] = $spare_mobile;
+        $data['spare_postal_code'] = $spare_postal_code;
+
+        if( $has_error ) {
+            $this->response['msg'] = $error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+
+        //构造其他信息
+        $currency = M('Currency')->where(['status' => 1, 'id' => $currency_id])->find();
+        if( empty($currency) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择币种' : '请选择币种';
+        }
+        $data['currency_id'] = $currency_id;
+        $data['currency_name'] = $currency['name'];
+        $data['currency_rate'] = $currency['rate'];
+
+        $data['declared_value'] = $declared_value;
+
+        $channel = M('Channel')->where(['status' => 1, 'id' => $channel_id])->find();
+        if( empty($channel) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择渠道' : '请选择渠道';
+        }
+        $data['channel_name'] = $channel['name'].'/'.$channel['en_name'];
+
+        $data['package_type'] = $package_type;
+        if( empty($export_reason) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入出口原因' : '请输入出口原因';
+        }
+        $data['export_reason'] = $export_reason;
+        $data['remark'] = $remark;
+
+        if( $has_error ) {
+            $this->response['msg'] = $error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+        $data['client_status'] = $commit == 0 ? 0 : 1;
+        $msg = $commit == 0 ? '修改订单成功' : '订单修改成功，并已提交';
+        if( $commit == 1 ) {
+            $time = time();
+            $data['commit_time'] = date('Y-m-d H:i:s', $time);
+        }
+        $data['client_id'] = $client_id;
+        //修改订单
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
+        if( $result ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => $msg,
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = $msg;
+            $this->response['url'] = U('Order/index');
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
 
     }
 
     public function ajaxAddDetail() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
+        $order_id = I('order_id');
+
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+        $has_error = false;
+        $error_msg = '';
+
+        $product_name = trim(I('product_name'));
+        $goods_code = trim(I('goods_code'));
+        $count = intval(I('count'));
+        $single_declared = floatval(I('single_declared'));
+        $declared = floatval(I('declared'));
+        $origin = trim(I('origin'));
+
+        if( $product_name == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入品名' : '请输入品名';
+        }
+
+        if( $goods_code == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入商品编码' : '请输入商品编码';
+        }
+
+        if( $count <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入数量' : '请输入数量';
+        }
+
+        if( $single_declared <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入单件申报价值' : '请输入单件申报价值';
+        }
+
+        if( $declared <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入总申报价值' : '请输入总申报价值';
+        }
+
+        if( $origin == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入原产地' : '请输入原产地';
+        }
+
+        if( $has_error ) {
+            $this->response['msg'] = $error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+        $data = [
+            'product_name' => $product_name,
+            'goods_code' => $goods_code,
+            'count' => $count,
+            'single_declared' => $single_declared,
+            'declared' => $declared,
+            'origin' => $origin,
+            'order_id' => $order_id,
+            'order_num' => $order['order_num'],
+        ];
+        $result = M('ClientOrderDetail')->add($data);
+        if( $result ) {
+            $data['id'] = M('ClientOrderDetail')->getLastInsID();
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '添加订单详情成功',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '添加订单详情成功';
+            $this->response['url'] = U('Order/edit', ['id' => $order_id]);
+            $this->response['data'] = $data;
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function ajaxEditDetail() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
+        $detail_id = I('id');
+        $order_id = I('order_id');
+
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+        $has_error = false;
+        $error_msg = '';
+
+        $product_name = trim(I('product_name'));
+        $goods_code = trim(I('goods_code'));
+        $count = intval(I('count'));
+        $single_declared = floatval(I('single_declared'));
+        $declared = floatval(I('declared'));
+        $origin = trim(I('origin'));
+
+        if( $product_name == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入品名' : '请输入品名';
+        }
+
+        if( $goods_code == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入商品编码' : '请输入商品编码';
+        }
+
+        if( $count <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入数量' : '请输入数量';
+        }
+
+        if( $single_declared <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入单件申报价值' : '请输入单件申报价值';
+        }
+
+        if( $declared <= 0 ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入总申报价值' : '请输入总申报价值';
+        }
+
+        if( $origin == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入原产地' : '请输入原产地';
+        }
+
+        if( $has_error ) {
+            $this->response['msg'] = $error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+        $data = [
+            'product_name' => $product_name,
+            'goods_code' => $goods_code,
+            'count' => $count,
+            'single_declared' => $single_declared,
+            'declared' => $declared,
+            'origin' => $origin,
+        ];
+
+        $result = M('ClientOrderDetail')->where(['id' => $detail_id, 'order_id' => $order_id])->save($data);
+        if( $result ) {
+            $data['id'] = $detail_id;
+            $data['order_id'] = $order_id;
+            $data['order_num'] = $order['order_num'];
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '编辑订单详情成功',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '编辑订单详情成功';
+            $this->response['url'] = U('Order/edit', ['id' => $order_id]);
+            $this->response['data'] = $data;
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
 
     }
 
     public function ajaxDeleteDetail() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
+        $detail_id = I('id');
+        $order_id = I('order_id');
+        $index = I('index');
+
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+        $temp = M('ClientOrderDetail')->where(['order_id' => $order_id])->select();
+        $remain_count = count($temp);
+        if( $remain_count <= 1 ) {
+            $this->response['msg'] = '至少保留一项订单详情';
+            echo json_encode($this->response);
+            exit;
+        }
+        $result = M('ClientOrderDetail')->where(['order_id' => $order_id, 'id' => $detail_id])->delete();
+        if( $result ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '删除订单详情成功',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '删除订单详情成功';
+            $this->response['url'] = U('Order/edit', ['id' => $order_id]);
+            $this->response['data']['index'] = $index;
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function ajaxAddSpecifications() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
+        $order_id = I('order_id');
+
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+
+        $has_error = false;
+        $error_msg = '';
     }
 
     public function ajaxEditSpecifications() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
+        $specifications_id = I('specifications_id');
+        $order_id = I('order_id');
+
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+
+        $has_error = false;
+        $error_msg = '';
     }
 
     public function ajaxDeleteSpecifications() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
+        $specifications_id = I('specifications_id');
+        $order_id = I('id');
+        $index = I('index');
+
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['client_status'] != 0 ) {
+            $this->response['msg'] = '当前订单不是可编辑状态';
+            echo json_encode($this->response);
+            exit;
+        }
+        $temp = M('ClientOrderSpecifications')->where(['order_id' => $order_id])->select();
+        $remain_count = count($temp);
+        if( $remain_count <= 1 ) {
+            $this->response['msg'] = '至少保留一项订单规格';
+            echo json_encode($this->response);
+            exit;
+        }
+        $result = M('ClientOrderSpecifications')->where(['order_id' => $order_id, 'id' => $specifications_id])->delete();
+        if( $result ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '删除订单规格成功',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '删除订单规格成功';
+            $this->response['url'] = U('Order/edit', ['id' => $order_id]);
+            $this->response['data']['index'] = $index;
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function detail() {
@@ -512,6 +1007,13 @@ class OrderAction extends BaseAction  {
             'status' => 1,
         ];
         $delivery_list = M('DeliveryAddress')->where($where)->order('is_default desc, id asc')->select();
+        if( $delivery_list ) {
+            $temp = [];
+            foreach($delivery_list as $k => $v) {
+                $temp[$v['id']] = $v;
+            }
+            $delivery_list = $temp;
+        }
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
         $this->response['data'] = $delivery_list;
@@ -527,6 +1029,13 @@ class OrderAction extends BaseAction  {
             'status' => 1,
         ];
         $receive_list = M('ReceiveAddress')->where($where)->order('is_default desc, id asc')->select();
+        if( $receive_list ) {
+            $temp = [];
+            foreach($receive_list as $k => $v) {
+                $temp[$v['id']] = $v;
+            }
+            $receive_list = $temp;
+        }
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
         $this->response['data'] = $receive_list;
@@ -536,7 +1045,8 @@ class OrderAction extends BaseAction  {
     }
 
     public function getDefaultDelivery() {
-        $default_delivery = M('DeliveryAddress')->where(['status' => 1, 'is_default' => 1])->find();
+        $client_id = session('hkwcd_user.user_id');
+        $default_delivery = M('DeliveryAddress')->where(['client_id' => $client_id, 'status' => 1, 'is_default' => 1])->find();
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
         $this->response['data'] = $default_delivery;
@@ -545,7 +1055,9 @@ class OrderAction extends BaseAction  {
     }
 
     public function getDefaultReceive() {
-        $default_receive = M('ReceiveAddress')->where(['status' => 1, 'is_default' => 1])->find();
+        $client_id = session('hkwcd_user.user_id');
+
+        $default_receive = M('ReceiveAddress')->where(['client_id' => $client_id, 'status' => 1, 'is_default' => 1])->find();
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
         $this->response['data'] = $default_receive;

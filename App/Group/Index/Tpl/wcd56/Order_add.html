@@ -1020,6 +1020,7 @@
     }
 
     function set_delivery(data) {
+        console.log(data);
         $('#consignor').val(data.consignor);
         $('#delivery_phone').val(data.phone);
         $('#delivery_mobile').val(data.mobile);
@@ -1051,6 +1052,7 @@
 
     function render_delivery_list(data) {
         delivery_list = data;
+//        console.log(delivery_list);
         var html = '';
         $('#select_delivery_items').empty();
         $.each(data, function (k, v) {
@@ -1094,7 +1096,8 @@
             return;
         }
         var id = $('.delivery-check-item:checked').val();
-        id = "'" + id + "'";
+//        id = "'" + id + "'";
+        console.log(id);
         var data = delivery_list[id];
         set_delivery(data);
         layer.close(tips);
@@ -1244,7 +1247,7 @@
             return;
         }
         var id = $('.receive-check-item:checked').val();
-        id = "'" + id + "'";
+//        id = "'" + id + "'";
         var data = receive_list[id];
         set_receive(data);
         layer.close(tips);
