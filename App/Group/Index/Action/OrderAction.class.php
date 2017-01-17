@@ -16,11 +16,13 @@ class OrderAction extends BaseAction  {
 
 
     public function index() {
+        $client_id = session('hkwcd_user.user_id');
 
         $where = [
             'status' => 1,
+            'client_id' => $client_id,
         ];
-        $order_list = M('ClientOrder')->where($where)->select();
+        $order_list = M('ClientOrder')->where($where)->order('id desc')->select();
         if( $order_list ) {
             foreach( $order_list as $k => $v ) {
                 $order_list[$k]['status_str'] = $this->_order_status($v);
@@ -330,7 +332,7 @@ class OrderAction extends BaseAction  {
         $client_id = session('hkwcd_user.user_id');
 
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
@@ -389,7 +391,7 @@ class OrderAction extends BaseAction  {
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
         $id = I('order_id');
-        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -539,7 +541,7 @@ class OrderAction extends BaseAction  {
 
         $order_id = I('order_id');
 
-        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -636,7 +638,7 @@ class OrderAction extends BaseAction  {
         $detail_id = I('id');
         $order_id = I('order_id');
 
-        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -736,7 +738,7 @@ class OrderAction extends BaseAction  {
         $order_id = I('order_id');
         $index = I('index');
 
-        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -783,7 +785,7 @@ class OrderAction extends BaseAction  {
 
         $order_id = I('order_id');
 
-        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -878,7 +880,7 @@ class OrderAction extends BaseAction  {
         $specifications_id = I('id');
         $order_id = I('order_id');
 
-        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -976,7 +978,7 @@ class OrderAction extends BaseAction  {
         $order_id = I('order_id');
         $index = I('index');
 
-        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $order_id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -1022,7 +1024,7 @@ class OrderAction extends BaseAction  {
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
@@ -1042,7 +1044,7 @@ class OrderAction extends BaseAction  {
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -1084,7 +1086,7 @@ class OrderAction extends BaseAction  {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -1103,7 +1105,7 @@ class OrderAction extends BaseAction  {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
             echo json_encode($this->response);
@@ -1128,18 +1130,33 @@ class OrderAction extends BaseAction  {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
-
+        if( $order['client_status'] != 0 ) {
+            $this->error('当前订单无法删除');
+        }
+        //软删除
+//        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->delete();
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save(['status' => 0]);
+        if( $result ) {
+//            M('ClientOrderDetail')->where(['order_id' => $id])->delete();
+//            M('ClientOrderSpecifications')->where(['order_id' => $id])->delete();
+            $this->response['code'] = 1;
+            $this->response['msg'] = '成功删除订单 '.$order['order_num'];
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function complete() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
         $id = I('id');
-        $order = M('ClientOrder')->where(['id' => $id])->find();
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->error('订单不存在');
         }
