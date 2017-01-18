@@ -59,6 +59,9 @@
                                 <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $v['id']), '')}', '确定该订单通过审核吗？')">通过</a>
                                 <a href="{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}">驳回</a>
                             </if>
+                            <if condition="$v.exam_status eq 1 && $v.express_status eq 0">
+                                <a href="{:U(GROUP_NAME. '/Clientorder/delivery',array('id' => $v['id']), '')}">装箱发货</a>
+                            </if>
                             <if condition="$v.express_status eq 1">
                                 <a href="javascript:void(0);" onclick="trace_order({$v.id})">跟踪</a>
                                 <if condition="$v.express_status eq 1">
@@ -74,4 +77,9 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    function trace_order(id) {
+        
+    }
+</script>
 </html>

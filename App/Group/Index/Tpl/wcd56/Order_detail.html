@@ -259,6 +259,7 @@
                 <if condition="$order.is_rejected eq 1">
                     <button class="btn btn_commit" type="button" onclick="reject_history({$order.id})">驳回日志</button> &nbsp;
                 </if>
+                </if>
                 <if condition="$order.express_status eq 1">
                 <button class="btn btn_commit" type="button" id="" onclick="trace_order({$order.id})">跟踪</button>
                     <if condition="$order.receive_status eq 0">
@@ -623,6 +624,31 @@
                 </tr>
                 </thead>
                 <tbody id="order_reject_item">
+                <!--
+                <tr>
+                    <td><input type="radio" class="ace" name="chkItem"></td>
+                    <td>WP15K081</td>
+                    <td>三只松鼠松籽</td>
+                    <td>T011</td>
+                    <td>500g</td>
+                    <td>9999</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <div id="order_trace_table" class="hide">
+        <fieldset>
+            <table class="table">
+                <thead>
+                <tr>
+                    <!--<th>选择</th>-->
+                    <th>时间</th>
+                    <th>地点和跟踪进度</th>
+                </tr>
+                </thead>
+                <tbody id="order_trace_item">
                 <!--
                 <tr>
                     <td><input type="radio" class="ace" name="chkItem"></td>
@@ -1371,6 +1397,47 @@
             closeBtn: 1,
             shadeClose: true,
             content: $("#order_reject_table")
+        });
+    }
+
+    function trace_order(id) {
+        show_loading();
+        var url = '/Order/trace';
+        var param = {'id':id};
+        $.post(url, param, trace_order_handler, 'json');
+    }
+
+    function trace_order_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            render_order_trace(response.data);
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
+        }
+    }
+
+    function render_order_trace(data) {
+        var html = '';
+        $.each(data.data, function(k,v) {
+            html += '<tr>'
+            html += '<td style="width: 20%">'+v.time+'</td>';
+            html += '<td>'+v.context+'</td>';
+            html += '</tr>';
+        });
+        $('#order_trace_item').empty();
+        $('#order_trace_item').append(html);
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '400px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: true,
+            content: $("#order_trace_table")
         });
     }
 

@@ -23,6 +23,7 @@
             <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index')}')" class="btn_blue" value="返回列表" />
         </div>
     </div>
+    <form action="{:U(GROUP_NAME. '/Clientorder/doDelivery')}" method="post" id="delivery_form">
     <div class="list">
         <table width="100%" style=" margin-bottom:20px;">
             <tr>
@@ -39,8 +40,14 @@
                 <td>{$order.package_type_name}</td>
                 <td>{$order.channel_name}</td>
                 <td>{$order.status_str}</td>
-                <td>{$order.express_type_name}</td>
-                <td>{$order.express_order_num}</td>
+                <td>
+                    <select name="express_type_id">
+                        <foreach name="express_type" item="v">
+                            <option value="{$v.id}" <if condition="$v.id eq $order['express_type_id']">selected</if>>{$v.name}</option>
+                        </foreach>
+                    </select>
+                </td>
+                <td><input name="express_order_num" value="{$order.express_order_num}"/></td>
                 <td>{$order.add_time}</td>
             </tr>
         </table>
@@ -87,25 +94,25 @@
             </tr>
         </table>
         <if condition="$order.spare_addressee neq ''">
-        <div class="operate">备用收货信息</div>
-        <table width="100%">
-            <tr>
-                <th></th>
-                <th>备用收货人</th>
-                <th>备用座机</th>
-                <th>备用手机</th>
-                <th>备用地址</th>
-                <th>备用邮编</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td>{$order.spare_addressee}</td>
-                <td>{$order.spare_phone}</td>
-                <td>{$order.spare_mobile}</td>
-                <td>{$order.spare_detail_address}</td>
-                <td>{$order.spare_postal_code}</td>
-            </tr>
-        </table>
+            <div class="operate">备用收货信息</div>
+            <table width="100%">
+                <tr>
+                    <th></th>
+                    <th>备用收货人</th>
+                    <th>备用座机</th>
+                    <th>备用手机</th>
+                    <th>备用地址</th>
+                    <th>备用邮编</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>{$order.spare_addressee}</td>
+                    <td>{$order.spare_phone}</td>
+                    <td>{$order.spare_mobile}</td>
+                    <td>{$order.spare_detail_address}</td>
+                    <td>{$order.spare_postal_code}</td>
+                </tr>
+            </table>
         </if>
     </div>
     <div class="list">
@@ -115,77 +122,50 @@
                 <th>品名</th>
                 <th>商品编码</th>
                 <th>数量</th>
-                <th>单件申报价值</th>
-                <th>总申报价值</th>
+                <!--<th>单件申报价值</th>-->
+                <!--<th>总申报价值</th>-->
                 <th>原产地</th>
+                <th>过磅重量</th>
+                <th>材积立方数</th>
                 <th>装箱数</th>
                 <th>每箱数量</th>
             </tr>
             <foreach name="order_detail" item="v">
-            <tr>
-                <td>{$v.product_name}</td>
-                <td>{$v.goods_code}</td>
-                <td>{$v.count}</td>
-                <td>{$v.single_declared}</td>
-                <td>{$v.declared}</td>
-                <td>{$v.origin}</td>
-                <td></td>
-                <td></td>
-            </tr>
-            </foreach>
-        </table>
-    </div>
-    <div class="list">
-        <div class="operate">订单规格</div>
-        <table width="100%">
-            <tr>
-                <th>重量</th>
-                <th>长度</th>
-                <th>宽度</th>
-                <th>高度</th>
-                <th>备注</th>
-            </tr>
-            <foreach name="order_specifications" item="v">
                 <tr>
-                    <td>{$v.weight}</td>
-                    <td>{$v.length}</td>
-                    <td>{$v.width}</td>
-                    <td>{$v.height}</td>
-                    <td>{$v.remark}</td>
+                    <td>{$v.product_name}</td>
+                    <td>{$v.goods_code}</td>
+                    <td>{$v.count}</td>
+                    <!--<td>{$v.single_declared}</td>-->
+                    <!--<td>{$v.declared}</td>-->
+                    <td>{$v.origin}</td>
+                    <td><input type="text" name="detail[{$v.id}][weighting_weight]" value="{$v.weighting_weight}"/> kg</td>
+                    <td><input type="text" name="detail[{$v.id}][cubic_of_volume]" value="{$v.cubic_of_volume}"/> kg</td>
+                    <td><input type="text" name="detail[{$v.id}][box]" value="{$v.box}"/></td>
+                    <td><input type="text" name="detail[{$v.id}][box_number]" value="{$v.box_number}"/></td>
                 </tr>
             </foreach>
         </table>
     </div>
-    <div class="list">
-        <div class="operate">其他</div>
-        <table width="100%">
-            <tr>
-                <td style="width:20%">出口原因</td>
-                <td style="text-align: left">{$order.export_reason}</td>
-            </tr>
-            <tr>
-                <td >备注</td>
-                <td style="text-align: left">{$order.remark}</td>
-            </tr>
-        </table>
-    </div>
-    <if condition="$order.exam_status eq 0">
-    <div class="form_b">
-        <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $v['id']), '')}', '确定该订单通过审核吗？')" value="通 过">
-        <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}';"value="驳 回">
-    </div>
-    </if>
-    <if condition="$order.exam_status eq 1 && $order.express_status eq 0">
-    <div class="form_b">
-        <input type="button" class="btn_blue" id="delivery" value="发 货">
-    </div>
-    </if>
-    <if condition="$order.express_status eq 1">
-    <div class="form_b">
-        <input type="button" class="btn_blue" id="trace" value="物 流">
-    </div>
-    </if>
 
+    <div class="form_b">
+        <input type="hidden" name="id" value="{$order.id}" />
+        <input type="hidden" name="delivery" id="delivery" value="0" />
+        <input type="button" class="btn_blue" id="save" value="保 存">
+        <input type="button" class="btn_blue" id="save_and_delivery" value="保 存 并 发 货">
+    </div>
+    </form>
 </div>
+<script type="text/javascript">
+    $('#save').click(function() {
+        document.forms[0].submit();
+    });
+
+    $('#save_and_delivery').click(function() {
+        if( confirm("发货之后无法再对装箱信息进行修改，确定发货？") ) {
+            $('#delivery').val(1);
+            document.forms[0].submit();
+        }
+    });
+</script>
 </body>
 </html>

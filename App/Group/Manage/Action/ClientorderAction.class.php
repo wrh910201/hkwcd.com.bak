@@ -183,14 +183,162 @@ class ClientorderAction extends CommonAction {
     }
 
     public function trace() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单未发货');
+        }
+        $trace_result = query_express($order['express_type'], $order['express_order_num']);
+        $trace_result_array = json_decode($trace_result, true);
+        $response = [
+            'code' => 0,
+            'msg' => '',
+        ];
+        if( $trace_result_array['message'] == 'ok' ) {
+            $response['code'] = 1;
+            $response['data'] = $trace_result_array;
+            $response['msg'] = '查询成功';
+        } else {
+            $response['msg'] = 'failed';
+            $response['data'] = [];
+        }
+        echo json_encode($response);
+        exit;
 
     }
 
     public function delivery() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['exam_status'] == 1 && $order['express_status'] == 0) ) {
+            $this->error('当前订单不是待发货状态');
+        }
+        $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
+        $order['status_str'] = $this->_order_status($order);
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+        if( $order_detail ){
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]['single_declared'] = sprintf('%.2f', $v['single_declared']);
+                $order_detail[$k]['declared'] = sprintf('%.2f', $v['declared']);
+            }
+        }
 
+        $express_type = M('ExpressType')->where(1)->select();
+
+        $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('express_type', $express_type);
+
+        $this->type = '订单装箱发货';
+        $this->display();
     }
 
     public function doDelivery() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['exam_status'] == 1 && $order['express_status'] == 0) ) {
+            $this->error('当前订单不是待发货状态');
+        }
+
+        $express_type_id = I('express_type_id', 0, 'intval');
+        $express_order_num = I('express_order_num', '', 'trim');
+        $order_detail = $_POST['detail'];
+        $delivery = I('delivery', 0, 'intval');
+        $delivery = $delivery == 1 ? 1 : 0;
+
+        $express_type_exists = M('ExpressType')->where(['id' => $express_type_id])->find();
+        if( empty($express_type_exists) ) {
+            $this->error('请选择下家');
+        }
+        if( empty($express_order_num) ) {
+            $this->error('请输入转运单号');
+        }
+        if( !is_array($order_detail) ) {
+            $this->error('参数错误');
+        }
+        foreach( $order_detail as $detail ) {
+            if( !is_array($detail) ) {
+                $this->error('参数错误');
+            }
+            if( !isset($detail['weighting_weight']) || floatval($detail['weighting_weight']) < 0 ) {
+                $this->error('请输入过磅重量');
+            }
+            if( !isset($detail['cubic_of_volume']) || floatval($detail['cubic_of_volume']) < 0 ) {
+                $this->error('请输入材积立方数');
+            }
+            if( !isset($detail['box']) || floatval($detail['box']) < 0 ) {
+                $this->error('请输入装箱数');
+            }
+            if( !isset($detail['box_number']) || floatval($detail['box_number']) < 0 ) {
+                $this->error('请输入每箱数量');
+            }
+        }
+        $data = [
+            'express_type_id' => $express_type_exists['id'],
+            'express_type' => $express_type_exists['type'],
+            'express_type_name' => $express_type_exists['name'],
+            'express_order_num' => $express_order_num,
+        ];
+        if( $delivery == 1 ) {
+            $data['express_status'] = 1;
+            $msg = '发货成功';
+        } else {
+            $msg = '装箱信息已保存';
+        }
+        //事务开始
+        $model = new Model;
+        $transaction = true;
+        $model->startTrans();
+
+        $result = M('ClientOrder')->where(['id' => $id, 'express_status' => 0])->save($data);
+        if( !is_numeric($result) ) {
+            $transaction = false;
+        }
+
+        if( $transaction ) {
+            foreach( $order_detail as $k => $v ) {
+                $detail_data = [
+                    'weighting_weight' => floatval($v['weighting_weight']),
+                    'cubic_of_volume' => floatval($v['cubic_of_volume']),
+                    'box' => intval($v['box']),
+                    'box_number' => intval($v['box_number']),
+                ];
+                $result = M('ClientOrderDetail')->where(['id' => intval($k), 'order_num' => $order['order_num']])->save($detail_data);
+                if( !is_numeric($result) ) {
+                    $transaction = false;
+                    break;
+                }
+            }
+        }
+
+        if( $transaction ) {
+            $model->commit();
+            if( $delivery ) {
+                //插入操作日志
+                $log_data = [
+                    'order_num' => $order['order_num'],
+                    'order_id' => $order['id'],
+                    'operator_id' => session('yang_adm_uid'),
+                    'type' => 2,
+                    'content' => '订单发货',
+                ];
+                M('ClientOrderLog')->add($log_data);
+            }
+            $this->success($msg, U('Clientorder/index'));
+        } else {
+            $model->rollback();
+            $this->error('系统繁忙，请稍后重试');
+        }
+
 
     }
 

@@ -1116,14 +1116,24 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
-        $express_type = M('ExpressType')->where(['id' => $order['express_type_id']])->find();
-        if( empty($express_type) ) {
-            $this->response['msg'] = '运单异常';
-            echo json_encode($this->response);
-            exit;
+//        $express_type = M('ExpressType')->where(['id' => $order['express_type_id']])->find();
+//        if( empty($express_type) ) {
+//            $this->response['msg'] = '运单异常';
+//            echo json_encode($this->response);
+//            exit;
+//        }
+        $trace_result = query_express($order['express_type'], $order['express_order_num']);
+        $trace_result_array = json_decode($trace_result, true);
+        if( $trace_result_array['message'] == 'ok' ) {
+            $this->response['code'] = 1;
+            $this->response['data'] = $trace_result_array;
+            $this->response['msg'] = '查询成功';
+        } else {
+            $this->response['msg'] = '抱歉，暂无查询记录';
+            $this->response['data'] = [];
         }
-        $result = query_express($express_type['type'], $order['express_order_num']);
-        var_dump($result);exit;
+        echo json_encode($this->response);
+        exit;
     }
 
     public function delete() {
