@@ -172,7 +172,7 @@
     <if condition="$order.exam_status eq 0">
     <div class="form_b">
         <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $v['id']), '')}', '确定该订单通过审核吗？')" value="通 过">
-        <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}';"value="驳 回">
+        <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}';" value="驳 回">
     </div>
     </if>
     <if condition="$order.exam_status eq 1 && $order.express_status eq 0">
@@ -182,7 +182,7 @@
     </if>
     <if condition="$order.express_status eq 1">
     <div class="form_b">
-        <input type="button" class="btn_blue" id="trace" value="物 流">
+        <input type="button" class="btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $v['id']), '')}';" value="物 流">
     </div>
     </if>
 

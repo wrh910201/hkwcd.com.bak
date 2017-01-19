@@ -63,7 +63,9 @@
                                 <a href="{:U(GROUP_NAME. '/Clientorder/delivery',array('id' => $v['id']), '')}">装箱发货</a>
                             </if>
                             <if condition="$v.express_status eq 1">
-                                <a href="javascript:void(0);" onclick="trace_order({$v.id})">跟踪</a>
+                                <a href="{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $v['id']), '')}">跟踪</a>
+                                <a href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $v['id']), '')}">装箱单</a>
+                                <a href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $v['id']), '')}">商业发票</a>
                                 <if condition="$v.express_status eq 1">
                                     <!--<a href="javascript:void(0);" onclick="">跟踪</a>-->
                                 </if>
@@ -77,9 +79,5 @@
     </div>
 </div>
 </body>
-<script type="text/javascript">
-    function trace_order(id) {
-        
-    }
-</script>
+
 </html>

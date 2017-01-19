@@ -191,22 +191,15 @@ class ClientorderAction extends CommonAction {
         if( !($order['express_status'] == 1) ) {
             $this->error('当前订单未发货');
         }
+        $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
+        $order['status_str'] = $this->_order_status($order);
         $trace_result = query_express($order['express_type'], $order['express_order_num']);
         $trace_result_array = json_decode($trace_result, true);
-        $response = [
-            'code' => 0,
-            'msg' => '',
-        ];
-        if( $trace_result_array['message'] == 'ok' ) {
-            $response['code'] = 1;
-            $response['data'] = $trace_result_array;
-            $response['msg'] = '查询成功';
-        } else {
-            $response['msg'] = 'failed';
-            $response['data'] = [];
-        }
-        echo json_encode($response);
-        exit;
+        $this->assign('order', $order);
+        $this->assign('trace_result', $trace_result_array);
+
+        $this->type = '订单跟踪';
+        $this->display();
 
     }
 
@@ -338,8 +331,35 @@ class ClientorderAction extends CommonAction {
             $model->rollback();
             $this->error('系统繁忙，请稍后重试');
         }
+    }
 
+    public function invoice() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印商业发票');
+        }
+        $this->assign('order', $order);
+        $this->type = '商业发票';
+        $this->display();
+    }
 
+    public function packing() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印装箱单');
+        }
+
+        $this->assign('order', $order);
+        $this->type = '装箱单';
+        $this->display();
     }
 
 
