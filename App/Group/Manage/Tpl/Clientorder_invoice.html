@@ -2,27 +2,136 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
-    <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
-    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
-    <script language="JavaScript">
-        <!--
-        var URL = '__URL__';
-        var APP = '__APP__';
-        var SELF = '__SELF__';
-        var PUBLIC = '__PUBLIC__';
-        //-->
-    </script>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>威顿印务ERP系统</title>
+    <script type="text/javascript" src="/Public/wcd56/usercenter/js/jquery.js"></script>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="/Public/wcd56/images/favicon.ico" type="image/x-icon">
+    <link href="/Public/wcd56/usercenter/css/print_table.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/Public/wcd56/usercenter/layer/layer.js"></script>
 </head>
 <body>
-<div class="main">
-    <div class="pos">{$type} | 订单号:{$order.order_num} </div>
-    <div class="operate">
-        <div class="left">
-            <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index')}')" class="btn_blue" value="返回列表" />
+<div class="delivery_notice_table">
+    <div class="delivery_notice_header">
+        <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
+        <div class="delivery_notice_title">
+            <h3>香港华度货运有限公司</h3>
+            <p>HONG KONG WCD EXPRESS COMPANY LIMITED</p>
         </div>
+        <div class="delivery_notice_no">
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr>
+                <td>地址：广州市花都区镜湖工业区邦盛三路8号</td>
+                <td>电话：020-86910222</td>
+                <td>传真：020-36956789</td>
+            </tr>
+            <tr>
+                <td>客户名称：{$delivery_notice.consignee}</td>
+                <td>电话：{$delivery_notice.mobile}</td>
+                <td>发货日期：{date('Y年m月d日', time())}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table>
+            <thead>
+            <tr>
+                <th class="w65">产品编号</th>
+                <th class="w150">产品全名</th>
+                <th class="w45">单位</th>
+                <th class="w65">数量</th>
+                <th class="w65">单价/元</th>
+                <th class="w65">金额/元</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach from=$delivery_notice_detail item=dd}
+            <tr>
+                <td>{$dd.product_sn}</td>
+                <td>{$dd.product_name}</td>
+                <td></td>
+                <td>{$dd.quantity}</td>
+                <td>{$dd.price}</td>
+                <td>{$dd.amount}</td>
+                <td>{$dd.remark}</td>
+            </tr>
+            {/foreach}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>（全部共&nbsp;&nbsp;件，每款给予1%的备品）</td>
+            </tr>
+            <tr class="total_tr">
+                <td colspan="5">
+                    合计（大写）：{cny($delivery_notice.total_amount)}
+                </td>
+                <td colspan="2">
+                    合计(小写)：{$delivery_notice.total_amount}
+                </td>
+            </tr>
+            <tr class="total_tr">
+                <td colspan="4">
+                    未付累计：
+                </td>
+                <td colspan="3">
+                    总计：
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_footer">
+        <table>
+            <tbody>
+            <tr>
+                <td class="w245">收货单位 {$delivery_notice.c_name}</td>
+                <td class="w270">送货单位 </td>
+                <td rowspan="2">制单人：{$smarty.session.name}</td>
+            </tr>
+            <tr>
+                <td class="w245">及经手人：</td>
+                <td class="w270">及经手人：</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="clear"></div>
+    <div class="operate">
+        <button type="button" id="print_button" class="btn"><i class="icon">&#xe61f;</i>&nbsp;打印</button>
     </div>
 </div>
+<script type="text/javascript">
+    $("#print_button").click(function(){
+        $(".operate").hide();
+        window.print();
+        $(".operate").show();
+
+        $.post("delivery_notice.php", { "opera":"confirm", "delivery_notice_sn":'{$delivery_notice.delivery_notice_sn}' }, print_handler, 'json');
+    });
+
+    function print_handler(response) {
+        if( response.errno == 0 ) {
+
+        } else {
+
+        }
+    }
+</script>
 </body>
 </html>
