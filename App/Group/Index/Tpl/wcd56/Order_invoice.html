@@ -20,7 +20,7 @@
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
         <div class="delivery_notice_title">
             <h3>香港华度货运有限公司<br />HONG KONG WCD EXPRESS COMPANY LIMITED</h3>
-            <p>装箱单 / PACKING LIST</p>
+            <p>商业发票 / COMMERCIAL INVOICE</p>
         </div>
         <div class="delivery_notice_no">
         </div>
@@ -41,35 +41,37 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司名称 / Company name<br />{$order.delivery_company}</td>
-                <td class="w340" colspan="2">快件号码 / Shipment No.<br />{$order.order_num}</td>
-                <td></td>
+                <td class="w226">公司名称 / Company name<br />{$order.delivery_company}</td>
+                <td class="w227">快件号码 / Shipment No.<br />{$order.order_num}</td>
+                <td class="w227">发票号 / Invoice number<br />{$order.invoice_num}</td>
             </tr>
             <tr>
-                <td class="w340">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
-                <td class="w170">发票号/ Invoice number<br />&nbsp;</td>
-                <td class="w170">合同号 / Contract No.<br />&nbsp;</td>
+                <td class="w226">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
+                <td class="w227">服务类型 / Services type<br />&nbsp;</td>
+                <td class="w227">装运参考 / Shipment Reference<br />&nbsp;</td>
             </tr>
             <tr>
-                <td class="w340">省、市 / province、city<br />&nbsp;</td>
-                <td class="w340" colspan="2">装运参考 / Shipment Reference<br />&nbsp;</td>
+                <td class="w226">省、市 / province、city<br />&nbsp;</td>
+                <td class="w227">出口商代码 / Exporter code<br />&nbsp;</td>
+                <td class="w227">进口商代码 / Receiver's VAT<br />&nbsp;</td>
             </tr>
             <tr>
-                <td class="w340">国家 / Country<br />&nbsp;</td>
-                <td class="w340" colspan="2">出口商代码 / Exporter code<br />&nbsp;</td>
+                <td class="w226">国家 / Country<br />&nbsp;</td>
+                <td class="w227">价格条款 / Price Terms<br />&nbsp;</td>
+                <td class="w227">关税支付 / Tariff Payment<br />&nbsp;</td>
             </tr>
             <tr>
-                <td class="w340">邮政编码 / Post code<br />&nbsp;</td>
-                <td class="w340"  colspan="2">进口商代码 / Receiver's VAT<br />&nbsp;</td>
+                <td class="w226">邮政编码 / Post code<br />&nbsp;</td>
+                <td class="w227">箱数 / Box number<br />&nbsp;</td>
+                <td class="w227">总重量 / Gross weight<br />&nbsp;</td>
             </tr>
             <tr>
-                <td class="w340">联系人电话 / Telephone<br />&nbsp;</td>
-                <td class="w170">价格条款 / Price Terms<br />&nbsp;</td>
-                <td class="w170">结汇方式 / Settlement<br />&nbsp;</td>
+                <td class="w226">联系人电话 / Telephone<br />&nbsp;</td>
+                <td class="w454" colspan="2">相关委托书 / Declaration of power attorney<br />&nbsp;</td>
             </tr>
             <tr>
-                <td class="w340">联系人 / Contact name<br />&nbsp;</td>
-                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />&nbsp;</td>
+                <td class="w226">联系人 / Contact name<br />&nbsp;</td>
+                <td class="w454" colspan="2">运输方式 / Mode of transportation<br />&nbsp;</td>
             </tr>
             </tbody>
         </table>
@@ -93,9 +95,8 @@
                 <td class="">件数 / No. of Items</td>
                 <td class="">商品编码 / HS CODE</td>
                 <td class="">原产地 / Origin</td>
-                <td class="">Weighing weight / 过磅重量 (KG) </td>
-                <td class="">材积立方数 / Cubage of volume (CBM)</td>
-                <td class="">箱数/ Box number (CTNS)</td>
+                <td class="">单件价值 / Value peritem </td>
+                <td class="">总价值 / Total Value</td>
             </tr>
             <tr>
                 <td></td>
@@ -104,10 +105,16 @@
                 <td></td>
                 <td></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
             </tr>
             <tr>
-                <td>总 / Total</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -116,8 +123,17 @@
                 <td></td>
             </tr>
             <tr>
-                <td>备注 / Remark</td>
-                <td colspan="6"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>总价值 / Total Value</td>
+                <td colspan="4"></td>
+                <td></td>
             </tr>
             </tbody>
         </table>

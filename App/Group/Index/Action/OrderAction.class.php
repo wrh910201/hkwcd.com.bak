@@ -1173,6 +1173,36 @@ class OrderAction extends BaseAction  {
 
     }
 
+    public function invoice() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印装箱单');
+        }
+        $this->assign('order', $order);
+        $this->display();
+    }
+
+    public function packing() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印装箱单');
+        }
+        $this->assign('order', $order);
+        $this->display();
+    }
+
     public function getDeliveryList() {
         $client_id = $client_id = session('hkwcd_user.user_id');
         $where = [

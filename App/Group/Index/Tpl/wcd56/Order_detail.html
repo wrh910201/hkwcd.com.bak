@@ -262,6 +262,8 @@
                 </if>
                 <if condition="$order.express_status eq 1">
                 <button class="btn btn_commit" type="button" id="" onclick="trace_order({$order.id})">跟踪</button>
+                    <a target="_blank" class="btn btn_commit" href="{:U('Order/packing', ['id' => $order['id']])}">装箱单</a>
+                    <a target="_blank" class="btn btn_commit" href="{:U('Order/invoice', ['id' => $order['id']])}">商业发票</a>
                     <if condition="$order.receive_status eq 0">
                         <a class="btn btn_commit" href="javascript:void(0);" onclick="complete_order({$order.id})">完成</a>
                     </if>

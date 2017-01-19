@@ -280,6 +280,7 @@ class ClientorderAction extends CommonAction {
             'express_type' => $express_type_exists['type'],
             'express_type_name' => $express_type_exists['name'],
             'express_order_num' => $express_order_num,
+            'express_time' => date('Y-m-d H:i:s', time()),
         ];
         if( $delivery == 1 ) {
             $data['express_status'] = 1;

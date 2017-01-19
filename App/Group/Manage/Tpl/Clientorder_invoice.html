@@ -19,8 +19,8 @@
     <div class="delivery_notice_header">
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
         <div class="delivery_notice_title">
-            <h3>香港华度货运有限公司</h3>
-            <p>HONG KONG WCD EXPRESS COMPANY LIMITED</p>
+            <h3>香港华度货运有限公司<br />HONG KONG WCD EXPRESS COMPANY LIMITED</h3>
+            <p>商业发票 / COMMERCIAL INVOICE</p>
         </div>
         <div class="delivery_notice_no">
         </div>
@@ -30,86 +30,194 @@
         <table>
             <tbody>
             <tr>
-                <td>地址：广州市花都区镜湖工业区邦盛三路8号</td>
-                <td>电话：020-86910222</td>
-                <td>传真：020-36956789</td>
-            </tr>
-            <tr>
-                <td>客户名称：{$delivery_notice.consignee}</td>
-                <td>电话：{$delivery_notice.mobile}</td>
-                <td>发货日期：{date('Y年m月d日', time())}</td>
+                <td style="width: 33%; font-size: 15px">收件人详情 / RECEIVER DETAILS</td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 15px">日期 / Date：{$order.express_time}</td>
             </tr>
             </tbody>
         </table>
     </div>
     <div class="delivery_notice_con">
         <table>
-            <thead>
-            <tr>
-                <th class="w65">产品编号</th>
-                <th class="w150">产品全名</th>
-                <th class="w45">单位</th>
-                <th class="w65">数量</th>
-                <th class="w65">单价/元</th>
-                <th class="w65">金额/元</th>
-                <th>备注</th>
-            </tr>
-            </thead>
             <tbody>
-            {foreach from=$delivery_notice_detail item=dd}
             <tr>
-                <td>{$dd.product_sn}</td>
-                <td>{$dd.product_name}</td>
-                <td></td>
-                <td>{$dd.quantity}</td>
-                <td>{$dd.price}</td>
-                <td>{$dd.amount}</td>
-                <td>{$dd.remark}</td>
+                <td class="w226">公司名称 / Company name<br />{$order.delivery_company}</td>
+                <td class="w227">快件号码 / Shipment No.<br />{$order.order_num}</td>
+                <td class="w227">发票号 / Invoice number<br />{$order.invoice_num}</td>
             </tr>
-            {/foreach}
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>（全部共&nbsp;&nbsp;件，每款给予1%的备品）</td>
+                <td class="w226">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
+                <td class="w227">服务类型 / Services type<br />&nbsp;</td>
+                <td class="w227">装运参考 / Shipment Reference<br />&nbsp;</td>
             </tr>
-            <tr class="total_tr">
-                <td colspan="5">
-                    合计（大写）：{cny($delivery_notice.total_amount)}
-                </td>
-                <td colspan="2">
-                    合计(小写)：{$delivery_notice.total_amount}
-                </td>
+            <tr>
+                <td class="w226">省、市 / province、city<br />&nbsp;</td>
+                <td class="w227">出口商代码 / Exporter code<br />&nbsp;</td>
+                <td class="w227">进口商代码 / Receiver's VAT<br />&nbsp;</td>
             </tr>
-            <tr class="total_tr">
-                <td colspan="4">
-                    未付累计：
-                </td>
-                <td colspan="3">
-                    总计：
-                </td>
+            <tr>
+                <td class="w226">国家 / Country<br />&nbsp;</td>
+                <td class="w227">价格条款 / Price Terms<br />&nbsp;</td>
+                <td class="w227">关税支付 / Tariff Payment<br />&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="w226">邮政编码 / Post code<br />&nbsp;</td>
+                <td class="w227">箱数 / Box number<br />&nbsp;</td>
+                <td class="w227">总重量 / Gross weight<br />&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="w226">联系人电话 / Telephone<br />&nbsp;</td>
+                <td class="w454" colspan="2">相关委托书 / Declaration of power attorney<br />&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="w226">联系人 / Contact name<br />&nbsp;</td>
+                <td class="w454" colspan="2">运输方式 / Mode of transportation<br />&nbsp;</td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div class="delivery_notice_footer">
+    <div class="delivery_notice_info">
         <table>
             <tbody>
             <tr>
-                <td class="w245">收货单位 {$delivery_notice.c_name}</td>
-                <td class="w270">送货单位 </td>
-                <td rowspan="2">制单人：{$smarty.session.name}</td>
-            </tr>
-            <tr>
-                <td class="w245">及经手人：</td>
-                <td class="w270">及经手人：</td>
+                <td style="width: 33%; font-size: 15px">快件详情 / SHIPMENT DETAILS</td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 15px"></td>
             </tr>
             </tbody>
         </table>
     </div>
+    <div class="delivery_notice_con">
+        <table>
+            <tbody>
+            <tr>
+                <td class="w180">内件详细说明 / Full description of goods</td>
+                <td class="">件数 / No. of Items</td>
+                <td class="">商品编码 / HS CODE</td>
+                <td class="">原产地 / Origin</td>
+                <td class="">单件价值 / Value peritem </td>
+                <td class="">总价值 / Total Value</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>总价值 / Total Value</td>
+                <td colspan="4"></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr>
+                <td style="width: 33%; font-size: 15px"></td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 15px"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="6">制造商或出口商名称及地址 / Name and Address<br >&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">出口原因 / Reason of Export<br />&nbsp;</td>
+                <td colspan="2">出口性质 / Export nature<br />&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr>
+                <td style="width: 33%; font-size: 15px">寄件人情况 / SHIPPER DETAILS</td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 15px"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="2">我证明并保证本文件中所填写的各项内容与向海关部门申报的情况及快件内装物品的实际情况相符/I certify and pledge that all information filled in this document is conformed to the details declared to the customs and conformed to the actual conditions of the goods in the shipment.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr>
+                <td style="width: 33%; font-size: 15px"></td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 15px"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table>
+            <tbody>
+            <tr>
+                <td class="w340">公司或单位名称/Name of Company / Firm<br />&nbsp;</td>
+                <td class="w340">公司或单位地址/Address of Company / Firm<br />&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--<div class="delivery_notice_footer">-->
+        <!--<table>-->
+            <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td class="w245">收货单位 {$delivery_notice.c_name}</td>-->
+                <!--<td class="w270">送货单位 </td>-->
+                <!--<td rowspan="2">制单人：{$smarty.session.name}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="w245">及经手人：</td>-->
+                <!--<td class="w270">及经手人：</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>-->
 
     <div class="clear"></div>
     <div class="operate">
