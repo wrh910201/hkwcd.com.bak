@@ -170,6 +170,7 @@ class ClientgroupAction extends CommonAction
         ];
         $price = M('ChannelMap')->where($where)->find();
 //        echo M('ChannelMap')->getLastSql();exit;
+//        var_dump($price);exit;
         $content = $price['content'] ? json_decode($price['content'], true) : null;
 //        var_dump($content);exit;
         $price = [];
