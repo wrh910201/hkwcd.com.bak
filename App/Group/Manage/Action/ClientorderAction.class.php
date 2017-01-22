@@ -244,9 +244,33 @@ class ClientorderAction extends CommonAction {
 
         $express_type_id = I('express_type_id', 0, 'intval');
         $express_order_num = I('express_order_num', '', 'trim');
+        $invoice_num = I('invoice_num', '', 'trim');
+        $services_type = I('services_type', '', 'trim');
+        $shipment_reference = I('shipment_reference', '', 'trim');
+        $exporter_code = I('exporter_code', '', 'trim');
+        $receiver_code = I('receiver_code', '', 'trim');
+        $price_terms = I('price_terms', '', 'trim');
+        $tariff_payment = I('tariff_payment', '', 'trim');
+        $declaration_of_power_attorney = I('declaration_of_power_attorney', '', 'trim');
+        $settlement = I('settlement', '', 'trim');
+        $mode_of_transportation = I('mode_of_transportation', '', 'trim');
+        $export_nature = I('export_nature', '', 'trim');
+        $contract_num = I('contract_num', '', 'trim');
         $order_detail = $_POST['detail'];
         $delivery = I('delivery', 0, 'intval');
         $delivery = $delivery == 1 ? 1 : 0;
+
+        if( empty($invoice_num) ) {
+            $this->error('请输入发票号码');
+        }
+
+        if( empty($services_type) ) {
+            $this->error('请输入服务类型');
+        }
+        if( empty($shipment_reference) ) {
+            $this->error('请输入装运参考');
+        }
+
 
         $express_type_exists = M('ExpressType')->where(['id' => $express_type_id])->find();
         if( empty($express_type_exists) ) {
@@ -255,6 +279,36 @@ class ClientorderAction extends CommonAction {
         if( empty($express_order_num) ) {
             $this->error('请输入转运单号');
         }
+        if( empty($exporter_code) ) {
+            $this->error('请输入出口商代码');
+        }
+        if( empty($receiver_code) ) {
+            $this->error('请输入进口商代码');
+        }
+        if( empty($price_terms) ) {
+            $this->error('请输入价格条款');
+        }
+        if( empty($tariff_payment) ) {
+            $this->error('请输入关税支付');
+        }
+        if( empty($declaration_of_power_attorney) ) {
+            $this->error('请输入相关委托书');
+        }
+        if( empty($settlement) ) {
+            $this->error('请输入结汇方式');
+        }
+        if( empty($mode_of_transportation) ) {
+            $this->error('请输入运输方式');
+        }
+
+        if( empty($export_nature) ) {
+            $this->error('请输入出口性质');
+        }
+
+        if( empty($contract_num) ) {
+            $this->error('请输入合同号');
+        }
+
         if( !is_array($order_detail) ) {
             $this->error('参数错误');
         }
@@ -280,10 +334,22 @@ class ClientorderAction extends CommonAction {
             'express_type' => $express_type_exists['type'],
             'express_type_name' => $express_type_exists['name'],
             'express_order_num' => $express_order_num,
-            'express_time' => date('Y-m-d H:i:s', time()),
+            'invoice_num' => $invoice_num,
+            'services_type' => $services_type,
+            'shipment_reference' => $shipment_reference,
+            'exporter_code' => $exporter_code,
+            'receiver_code' => $receiver_code,
+            'price_terms' => $price_terms,
+            'tariff_payment' => $tariff_payment,
+            'declaration_of_power_attorney' => $declaration_of_power_attorney,
+            'settlement' => $settlement,
+            'mode_of_transportation' => $mode_of_transportation,
+            'export_nature' => $export_nature,
+            'contract_num' => $contract_num,
         ];
         if( $delivery == 1 ) {
             $data['express_status'] = 1;
+            $data['express_time'] = date('Y-m-d H:i:s', time());
             $msg = '发货成功';
         } else {
             $msg = '装箱信息已保存';
@@ -343,7 +409,33 @@ class ClientorderAction extends CommonAction {
         if( !($order['express_status'] == 1) ) {
             $this->error('当前订单不能打印商业发票');
         }
+
+        $order['express_time'] = date('Y-m-d', strtotime($order['express_time']));
+        $country = M('Country')->where(['id' => $order['receive_country_id']])->find();
+        $order['country_name'] = $country['name'];
+        $order['country_ename'] = $country['ename'];
+
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+//        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+        $order['total_box_num'] = 0;
+        $order['total_weight'] = 0;
+        $order['total_declared'] = 0;
+        $order_detail_remain =  [];
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order['total_box_num'] += $v['box'];
+                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
+                $order['total_declared'] += $v['declared'];
+            }
+        }
+        for( $i = 0; $i < 4 - count($order_detail); $i++ ) {
+            $order_detail_remain[] = [];
+        }
+
+
         $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '商业发票';
         $this->display();
     }
@@ -357,8 +449,32 @@ class ClientorderAction extends CommonAction {
         if( !($order['express_status'] == 1) ) {
             $this->error('当前订单不能打印装箱单');
         }
+        $order['express_time'] = date('Y-m-d', strtotime($order['express_time']));
+        $country = M('Country')->where(['id' => $order['receive_country_id']])->find();
+        $order['country_name'] = $country['name'];
+        $order['country_ename'] = $country['ename'];
+
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+//        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+        $order['total_box_num'] = 0;
+        $order['total_weight'] = 0;
+        $order['total_declared'] = 0;
+        $order_detail_remain =  [];
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order['total_box_num'] += $v['box'];
+                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
+                $order['total_declared'] += $v['declared'];
+            }
+        }
+        for( $i = 0; $i < 4 - count($order_detail); $i++ ) {
+            $order_detail_remain[] = [];
+        }
+
 
         $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '装箱单';
         $this->display();
     }

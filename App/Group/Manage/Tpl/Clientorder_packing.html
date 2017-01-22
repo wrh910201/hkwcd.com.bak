@@ -47,29 +47,29 @@
             </tr>
             <tr>
                 <td class="w340">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
-                <td class="w170">发票号/ Invoice number<br />&nbsp;</td>
-                <td class="w170">合同号 / Contract No.<br />&nbsp;</td>
+                <td class="w170">发票号/ Invoice number<br />{$order.invoice_num}</td>
+                <td class="w170">合同号 / Contract No.<br />{$order.contract_num}</td>
             </tr>
             <tr>
-                <td class="w340">省、市 / province、city<br />&nbsp;</td>
-                <td class="w340" colspan="2">装运参考 / Shipment Reference<br />&nbsp;</td>
+                <td class="w340">省、市 / province、city<br />{$order.receive_state}&nbsp;{$order.receive_city}</td>
+                <td class="w340" colspan="2">装运参考 / Shipment Reference<br />{$order.shipment_reference}</td>
             </tr>
             <tr>
-                <td class="w340">国家 / Country<br />&nbsp;</td>
-                <td class="w340" colspan="2">出口商代码 / Exporter code<br />&nbsp;</td>
+                <td class="w340">国家 / Country<br />{$order.country_name}/{$order.country_ename}</td>
+                <td class="w340" colspan="2">出口商代码 / Exporter code<br />{$order.exporter_code}</td>
             </tr>
             <tr>
-                <td class="w340">邮政编码 / Post code<br />&nbsp;</td>
-                <td class="w340"  colspan="2">进口商代码 / Receiver's VAT<br />&nbsp;</td>
+                <td class="w340">邮政编码 / Post code<br />{$order.receive_postal_code}</td>
+                <td class="w340"  colspan="2">进口商代码 / Receiver's VAT<br />{$order.receiver_code}</td>
             </tr>
             <tr>
-                <td class="w340">联系人电话 / Telephone<br />&nbsp;</td>
-                <td class="w170">价格条款 / Price Terms<br />&nbsp;</td>
-                <td class="w170">结汇方式 / Settlement<br />&nbsp;</td>
+                <td class="w340">联系人电话 / Telephone<br />{$order.receive_phone} {$order.receive_mobile}</td>
+                <td class="w170">价格条款 / Price Terms<br />{$order.price_terms}</td>
+                <td class="w170">结汇方式 / Settlement<br />{$order.settlement}</td>
             </tr>
             <tr>
-                <td class="w340">联系人 / Contact name<br />&nbsp;</td>
-                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />&nbsp;</td>
+                <td class="w340">联系人 / Contact name<br />{$order.receive_addressee}</td>
+                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />{$order.mode_of_transportation}</td>
             </tr>
             </tbody>
         </table>
@@ -97,15 +97,28 @@
                 <td class="">材积立方数 / Cubage of volume (CBM)</td>
                 <td class="">箱数/ Box number (CTNS)</td>
             </tr>
+            <foreach name="order_detail" item="v">
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{$v.product_name}</td>
+                <td>{$v.count}</td>
+                <td>{$v.goods_code}</td>
+                <td>{$v.origin}</td>
+                <td>{$v.weighting_weight}</td>
+                <td>{$v.cubic_of_volume}</td>
+                <td>{$v.box}</td>
             </tr>
+            </foreach>
+            <foreach name="order_detail_remain" item="v">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </foreach>
             <tr>
                 <td>总 / Total</td>
                 <td></td>
@@ -117,7 +130,7 @@
             </tr>
             <tr>
                 <td>备注 / Remark</td>
-                <td colspan="6"></td>
+                <td colspan="6">{$order.remark}</td>
             </tr>
             </tbody>
         </table>
@@ -137,11 +150,11 @@
         <table>
             <tbody>
             <tr>
-                <td colspan="6">制造商或出口商名称及地址 / Name and Address<br >&nbsp;</td>
+                <td colspan="6">制造商或出口商名称及地址 / Name and Address<br >{$order.delivery_company}&nbsp;{$order.delivery_detail_address}</td>
             </tr>
             <tr>
-                <td colspan="4">出口原因 / Reason of Export<br />&nbsp;</td>
-                <td colspan="2">出口性质 / Export nature<br />&nbsp;</td>
+                <td colspan="4">出口原因 / Reason of Export<br />{$order.export_reason}</td>
+                <td colspan="2">出口性质 / Export nature<br />{$order.export_nature}</td>
             </tr>
             </tbody>
         </table>
@@ -181,8 +194,8 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司或单位名称/Name of Company / Firm<br />&nbsp;</td>
-                <td class="w340">公司或单位地址/Address of Company / Firm<br />&nbsp;</td>
+                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company} {$order.delivery_detail_address}</td>
+                <td class="w340">公司或单位地址/Address of Company / Firm<br />{$order.delivery_company} {$order.delivery_detail_address}</td>
             </tr>
             </tbody>
         </table>

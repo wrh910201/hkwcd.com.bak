@@ -28,18 +28,17 @@
         <table width="100%" style=" margin-bottom:20px;">
             <tr>
                 <th>订单号</th>
-                <th>寄件类型</th>
-                <th>渠道类型</th>
-                <th>状态</th>
+                <th>发票号码</th>
+                <th>服务类型</th>
+                <th>装运参考</th>
                 <th>下家</th>
                 <th>转运单号</th>
-                <th>添加时间</th>
             </tr>
             <tr>
                 <td>{$order.order_num}</td>
-                <td>{$order.package_type_name}</td>
-                <td>{$order.channel_name}</td>
-                <td>{$order.status_str}</td>
+                <td><input name="invoice_num" value="{$order.invoice_num}"/></td>
+                <td><input name="services_type" value="{$order.services_type}"/></td>
+                <td><input name="shipment_reference" value="{$order.shipment_reference}"/></td>
                 <td>
                     <select name="express_type_id">
                         <foreach name="express_type" item="v">
@@ -48,7 +47,41 @@
                     </select>
                 </td>
                 <td><input name="express_order_num" value="{$order.express_order_num}"/></td>
-                <td>{$order.add_time}</td>
+            </tr>
+            <tr>
+                <th>出口商代码</th>
+                <th>进口商代码</th>
+                <th>价格条款</th>
+                <th>关税支付</th>
+                <th>相关委托书</th>
+                <th>结汇方式</th>
+            </tr>
+            <tr>
+                <td><input type="text" name="exporter_code" value="{$order.exporter_code}" /></td>
+                <td><input type="text" name="receiver_code" value="{$order.receiver_code}" /></td>
+                <td><input type="text" name="price_terms" value="{$order.price_terms}" /></td>
+                <td><input type="text" name="tariff_payment" value="{$order.tariff_payment}" /></td>
+                <td><input type="text" name="declaration_of_power_attorney" value="{$order.declaration_of_power_attorney}" /></td>
+                <td><input type="text" name="settlement" value="{$order.settlement}" /></td>
+            </tr>
+            <tr>
+                <th colspan="2">运输方式</th>
+                <th colspan="2">出口性质</th>
+                <th colspan="2">合同号</th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input  style="width: 100%" type="text" name="mode_of_transportation" value="{$order.mode_of_transportation}" />
+                    <!--<textarea name="mode_of_transportation">{$order.mode_of_transportation}</textarea>-->
+                </td>
+                <td colspan="2">
+                    <input  style="width: 100%" type="text" name="export_nature" value="{$order.export_nature}" />
+                    <!--<textarea name="mode_of_transportation">{$order.mode_of_transportation}</textarea>-->
+                </td>
+                <td colspan="2">
+                    <input  style="width: 100%" type="text" name="contract_num" value="{$order.contract_num}" />
+                    <!--<textarea name="mode_of_transportation">{$order.mode_of_transportation}</textarea>-->
+                </td>
             </tr>
         </table>
     </div>
@@ -146,7 +179,6 @@
             </foreach>
         </table>
     </div>
-
     <div class="form_b">
         <input type="hidden" name="id" value="{$order.id}" />
         <input type="hidden" name="delivery" id="delivery" value="0" />

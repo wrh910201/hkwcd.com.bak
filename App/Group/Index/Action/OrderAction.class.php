@@ -1184,7 +1184,32 @@ class OrderAction extends BaseAction  {
         if( !($order['express_status'] == 1) ) {
             $this->error('当前订单不能打印装箱单');
         }
+        $order['express_time'] = date('Y-m-d', strtotime($order['express_time']));
+        $country = M('Country')->where(['id' => $order['receive_country_id']])->find();
+        $order['country_name'] = $country['name'];
+        $order['country_ename'] = $country['ename'];
+
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+//        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+        $order['total_box_num'] = 0;
+        $order['total_weight'] = 0;
+        $order['total_declared'] = 0;
+        $order_detail_remain =  [];
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order['total_box_num'] += $v['box'];
+                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
+                $order['total_declared'] += $v['declared'];
+            }
+        }
+        for( $i = 0; $i < 4 - count($order_detail); $i++ ) {
+            $order_detail_remain[] = [];
+        }
+
+
         $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order_detail_remain', $order_detail_remain);
         $this->display();
     }
 
@@ -1199,7 +1224,32 @@ class OrderAction extends BaseAction  {
         if( !($order['express_status'] == 1) ) {
             $this->error('当前订单不能打印装箱单');
         }
+        $order['express_time'] = date('Y-m-d', strtotime($order['express_time']));
+        $country = M('Country')->where(['id' => $order['receive_country_id']])->find();
+        $order['country_name'] = $country['name'];
+        $order['country_ename'] = $country['ename'];
+
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+//        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+        $order['total_box_num'] = 0;
+        $order['total_weight'] = 0;
+        $order['total_declared'] = 0;
+        $order_detail_remain =  [];
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order['total_box_num'] += $v['box'];
+                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
+                $order['total_declared'] += $v['declared'];
+            }
+        }
+        for( $i = 0; $i < 4 - count($order_detail); $i++ ) {
+            $order_detail_remain[] = [];
+        }
+
+
         $this->assign('order', $order);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order_detail_remain', $order_detail_remain);
         $this->display();
     }
 
