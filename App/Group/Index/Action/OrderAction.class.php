@@ -1122,7 +1122,12 @@ class OrderAction extends BaseAction  {
 //            echo json_encode($this->response);
 //            exit;
 //        }
-        $trace_result = query_express($order['express_type'], $order['express_order_num']);
+        $trace_result = S('hkwcd_trace_result');
+        if( !$trace_result ) {
+            $trace_result = query_express($order['express_type'], $order['express_order_num']);
+            S('hkwcd_trace_result', $trace_result, 7200);
+        }
+
         $trace_result_array = json_decode($trace_result, true);
         if( $trace_result_array['message'] == 'ok' ) {
             $this->response['code'] = 1;

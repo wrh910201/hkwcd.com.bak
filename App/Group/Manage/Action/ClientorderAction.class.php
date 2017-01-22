@@ -193,7 +193,11 @@ class ClientorderAction extends CommonAction {
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
         $order['status_str'] = $this->_order_status($order);
-        $trace_result = query_express($order['express_type'], $order['express_order_num']);
+        $trace_result = S('hkwcd_trace_result');
+        if( !$trace_result ) {
+            $trace_result = query_express($order['express_type'], $order['express_order_num']);
+            S('hkwcd_trace_result', $trace_result, 7200);
+        }
         $trace_result_array = json_decode($trace_result, true);
         $this->assign('order', $order);
         $this->assign('trace_result', $trace_result_array);
