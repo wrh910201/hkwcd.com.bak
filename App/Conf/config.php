@@ -10,7 +10,7 @@ define('B_OTHER',64);//其他
 return array(
 	//'配置项'=>'配置值'
 
-    'APP_STATUS' => 'local',
+    'APP_STATUS' => 'server',
 
 	'APP_GROUP_LIST' => 'Index,Manage,Mobile',//分组列表,Index:前台,Manage:后台
 	'DEFAULT_GROUP' => 'Index', //默认分组
