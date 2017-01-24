@@ -1302,7 +1302,7 @@ class OrderAction extends BaseAction  {
         }
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
-        $this->response['data'] = $delivery_list;
+        $this->response['data'] = empty($delivery_list) ? [] : $delivery_list;
         echo json_encode($this->response);
         exit;
 
@@ -1324,7 +1324,7 @@ class OrderAction extends BaseAction  {
         }
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
-        $this->response['data'] = $receive_list;
+        $this->response['data'] = empty($receive_list) ? [] : $receive_list;
         echo json_encode($this->response);
         exit;
 
