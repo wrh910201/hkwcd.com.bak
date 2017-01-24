@@ -1173,9 +1173,37 @@ class OrderAction extends BaseAction  {
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
-            $this->error('订单不存在');
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
         }
-
+        if( !($order['express_status'] == 1 && $order['receive_status'] == 0 ) ) {
+            $this->response['msg'] = '当前订单不是待收货状态';
+            echo json_encode($this->response);
+            exit;
+        }
+        $data = [
+            'receive_status' => 1,
+        ];
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])
+            ->save($data);
+        if( is_numeric($result) ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '订单完成',
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->response['code'] = 1;
+            $this->response['msg'] = '订单完成';
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function invoice() {

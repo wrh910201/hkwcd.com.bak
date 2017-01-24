@@ -91,16 +91,10 @@
                         <div class="box_c_item">
                             <div class="fl" style="width:456px">
                                 <label class="l_title"></label>
-                                <button id="get-default-delivery" class="btn btn_commit" type="button">使用默认</button>
-                                <button id="get-delivery-list" class="btn btn_commit" type="button">地址列表</button>
-                                <button id="delivery-form" class="btn btn_commit" type="button">新地址</button>
                                 <div class="clear"></div>
                             </div>
                             <div class="fl" >
                                 <label class="l_title"></label>
-                                <button id="get-default-receive" class="btn btn_commit" type="button">使用默认</button>
-                                <button id="get-receive-list" class="btn btn_commit" type="button">地址列表</button>
-                                <button id="receive-form" class="btn btn_commit" type="button">新地址</button>
                                 <button id="spare-receive" class="btn btn_commit" type="button">备用联系人</button>
                                 <div class="clear"></div>
                             </div>
@@ -149,7 +143,7 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">出口原因：</label>
-                                <input value="{$order.export_reason}" style="width:800px;" class="text_input" type="text" name="export_reason" id="export_reason" placeholder="请输入出口原因">
+                                <input disabled="disabled" value="{$order.export_reason}" style="width:800px;" class="text_input" type="text" name="export_reason" id="export_reason" placeholder="请输入出口原因">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -158,7 +152,7 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">备注：</label>
-                                <input value="{$order.remark}" style="width:800px;" class="text_input" type="text" name="remark" id="remark" placeholder="备注">
+                                <input disabled="disabled" value="{$order.remark}" style="width:800px;" class="text_input" type="text" name="remark" id="remark" placeholder="备注">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -493,30 +487,30 @@
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">备用联系人：</label>
-                    <input value="{$order.spare_addressee}" class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
+                    <input disabled value="{$order.spare_addressee}" class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">地址：</label>
-                    <input value="{$order.spare_detail_address}" class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址"/>
+                    <input disabled value="{$order.spare_detail_address}" class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址"/>
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">手机：</label>
-                <input value="{$order.spare_mobile}" class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
+                <input disabled value="{$order.spare_mobile}" class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">座机：</label>
-                <input value="{$order.spare_phone}" class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
+                <input disabled value="{$order.spare_phone}" class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">邮编：</label>
-                <input value="{$order.spare_postal_code}" class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
+                <input disabled value="{$order.spare_postal_code}" class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
@@ -1441,6 +1435,23 @@
             shadeClose: true,
             content: $("#order_trace_table")
         });
+    }
+
+    function complete_order(id) {
+        layer.confirm('确认订单已完成吗（确认之后无法再对订单进行操作）？', {
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            do_complete_order(id);
+        }, function(){
+
+        });
+    }
+
+    function do_complete_order(id) {
+        show_loading();
+        var url = '/Order/complete';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
     }
 
 </script>
