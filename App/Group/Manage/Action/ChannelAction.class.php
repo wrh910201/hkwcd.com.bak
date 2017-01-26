@@ -6,7 +6,7 @@
  * Time: 22:11
  */
 
-class ChannelAction extends CommonAction {
+class ChannelAction extends CommonContentAction {
 
     public function index() {
 

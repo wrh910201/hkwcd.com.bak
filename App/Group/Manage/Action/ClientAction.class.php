@@ -5,7 +5,7 @@
  * Date: 2016/9/25
  * Time: 12:23
  */
-class ClientAction extends CommonAction {
+class ClientAction extends CommonContentAction {
 
     /**
      * 列表

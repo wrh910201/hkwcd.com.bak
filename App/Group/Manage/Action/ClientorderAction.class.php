@@ -5,7 +5,7 @@
  * Date: 2016/12/12
  * Time: 21:02
  */
-class ClientorderAction extends CommonAction {
+class ClientorderAction extends CommonContentAction {
 
     public function index() {
         $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字

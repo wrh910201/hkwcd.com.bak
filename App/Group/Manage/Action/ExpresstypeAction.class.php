@@ -6,7 +6,7 @@
  * Time: 17:00
  */
 
-class ExpresstypeAction extends CommonAction {
+class ExpresstypeAction extends CommonContentAction {
 
     public function index() {
         $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字

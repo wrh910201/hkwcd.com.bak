@@ -6,7 +6,7 @@
  * Time: 16:07
  */
 
-class CurrencyAction extends CommonAction {
+class CurrencyAction extends CommonContentAction {
 
     public function index() {
         $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字

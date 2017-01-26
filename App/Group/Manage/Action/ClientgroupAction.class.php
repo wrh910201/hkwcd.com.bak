@@ -6,7 +6,7 @@
  * Time: 18:32
  */
 
-class ClientgroupAction extends CommonAction
+class ClientgroupAction extends CommonContentAction
 {
 
     public function index()

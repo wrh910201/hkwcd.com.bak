@@ -6,7 +6,7 @@
  * Time: 18:18
  */
 
-class RegionAction extends CommonAction {
+class RegionAction extends CommonContentAction {
 
     /**
      * 地区列表
