@@ -1269,8 +1269,9 @@
         var detail_address = $('#add_delivery_detail_address').val();
         var mobile = $('#add_delivery_mobile').val();
         var phone = $('#add_delivery_phone').val();
+        var postal_code = $('#add_delivery_postal_code').val();
         var is_default = $('input[name=add_delivery_default]:checked').val();
-        var param = { consignor:consignor,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,is_default:is_default };
+        var param = { postal_code:postal_code,consignor:consignor,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,is_default:is_default };
         $.post(url, param, add_delivery_handler, 'json');
     }
 

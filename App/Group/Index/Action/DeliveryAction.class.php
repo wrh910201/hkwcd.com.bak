@@ -111,6 +111,12 @@ class DeliveryAction extends BaseAction {
             $has_error = true;
             $errorMsg .= empty($errorMsg) ? '手机与座机至少输入一个' : '<br />手机与座机至少输入一个';
         }
+
+        if( empty($data['postal_code']) ) {
+            $has_error = true;
+            $errorMsg .= empty($errorMsg) ? '请输入邮编' : '<br />请输入邮编';
+        }
+
         if( $has_error ) {
             $response['msg'] = $errorMsg;
             echo json_encode($response);
