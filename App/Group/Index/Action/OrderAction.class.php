@@ -73,6 +73,7 @@ class OrderAction extends BaseAction  {
         $this->assign('has_default_receive', $has_default_receive);
 
         $this->assign('title', '添加订单');
+
         $this->display();
     }
 

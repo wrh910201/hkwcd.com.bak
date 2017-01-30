@@ -130,7 +130,7 @@
                             </div>
                             <div class="fl">
                                 <label class="l_title">总申报价值：</label>
-                                <input class="text_input w300" type="text" name="declared_value" id="declared_value" placeholder="请输入申报价值" value="{$order.declared_price}">
+                                <input readonly class="text_input w300" type="text" name="declared_value" id="declared_value" placeholder="请输入申报价值" value="{$order.declared_price}">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -1055,6 +1055,14 @@
         layer.close(tips);
     }
 
+    function calculate_declared_value() {
+        var temp_value = 0;
+        for( var id in order_detail ) {
+            temp_value += parseInt(order_detail[id].declared);
+        }
+        $('#declared_value').val(temp_value);
+    }
+
     function refresh_order_detail() {
         $('#detail-content').empty();
         var html = '';
@@ -1073,6 +1081,7 @@
             i++;
         }
         $('#detail-content').append(html);
+        calculate_declared_value();
     }
 
     function empty_order_detail_form() {
