@@ -1269,6 +1269,7 @@
     function add_receive() {
         show_loading();
         var url = "{:U('Receive/ajaxAdd')}";
+        var company = $('#add_receive_company').val();
         var addressee = $('#add_receive_addressee').val();
         var country = $('#add_receive_country').val();
         var state = $('#add_receive_state').val();
@@ -1278,7 +1279,7 @@
         var phone = $('#add_receive_phone').val();
         var is_default = $('input[name=add_receive_default]:checked').val();
         var postal_code = $('#add_receive_postal_code').val();
-        var param = { addressee:addressee,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,postal_code:postal_code,is_default:is_default };
+        var param = { company:company,addressee:addressee,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,postal_code:postal_code,is_default:is_default };
         $.post(url, param, add_receive_handler, 'json');
     }
 
