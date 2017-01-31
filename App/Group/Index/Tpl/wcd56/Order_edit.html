@@ -984,7 +984,8 @@
             temp['goods_code'] = goods_code;
             temp['count'] = count;
             temp['single_declared'] = single_declared;
-            temp['declared'] = declared;
+//            temp['declared'] = declared;
+            temp['declared'] = declared ? declared : (count * single_declared);
             temp['origin'] = origin;
             if( d_editing === null ) {
                 ajax_add_order_detail(temp);
