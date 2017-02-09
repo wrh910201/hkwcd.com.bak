@@ -886,6 +886,7 @@
         $('#specifications-content').empty();
         var html = '';
         var i = 1;
+        var total_weight = 0, total_length = 0, total_width = 0, total_height = 0, total_count = 0, total_rate = 0;
         for( var id in order_specifications ) {
             html += '<tr id="detail-'+id+'">';
             html += '<td>' + i + '</td>';
@@ -897,8 +898,29 @@
             html += '<td>' + order_specifications[id]['remark'] + '</td>';
             html += '<td class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
             html += '</tr>';
+            total_weight += order_specifications[id]['weight'] * order_specifications[id]['count'];
+            total_length += order_specifications[id]['length'];
+            total_width += order_specifications[id]['width'];
+            total_height += order_specifications[id]['height'];
+            total_count += order_specifications[id]['count'];
+            total_rate += (order_specifications[id]['length'] * order_specifications[id]['width'] * order_specifications[id]['height'] * order_specifications[id]['count'] / 1000);
             i++;
         }
+
+        html += '<tr>';
+        html += '<td class="table-total">合计</td>';
+        html += '<td>总过磅重量：' + total_weight + 'kg</td>';
+//        html += '<td>' + total_length + 'cm</td>';
+//        html += '<td>' + total_width + 'cm</td>';
+//        html += '<td>' + total_height + 'cm</td>';
+        html += '<td></td>';
+        html += '<td></td>';
+        html += '<td></td>';
+        html += '<td>总数量：' + total_count + '</td>';
+        html += '<td>' + '材积比：' + total_rate.toFixed(3) + '</td>';
+        html += '<td class="text-right">' + '参考运费：' + total_rate.toFixed(3) + '</td>';
+        html += '</tr>';
+
         $('#specifications-content').append(html);
     }
 
@@ -1068,19 +1090,36 @@
         $('#detail-content').empty();
         var html = '';
         var i = 1;
+        var total_count = 0;
+        var total_single_declared = 0;
+        var total_declared = 0;
         for( var id in order_detail ) {
             html += '<tr id="detail-'+id+'">';
             html += '<td>' + i + '</td>';
             html += '<td>' + order_detail[id]['product_name'] + '</td>';
             html += '<td>' + order_detail[id]['goods_code'] + '</td>';
             html += '<td>' + order_detail[id]['count'] + '</td>';
-            html += '<td>' + parseFloat(order_detail[id]['single_declared']).toFixed(2) + '</td>';
-            html += '<td>' + parseFloat(order_detail[id]['declared']).toFixed(2) + '</td>';
+            html += '<td>' + order_detail[id]['single_declared'].toFixed(2) + '</td>';
+            order_detail[id]['declared'] =  order_detail[id]['count'] * order_detail[id]['single_declared'];
+            html += '<td>' + order_detail[id]['declared'].toFixed(2) + '</td>';
             html += '<td>' + order_detail[id]['origin'] + '</td>';
             html += '<td class="text-right"><a href="javascript:edit_order_detail(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_detail(\''+id+'\');">删除</a></td>';
             html += '</tr>';
+            total_count += order_detail[id]['count'];
+            total_single_declared += order_detail[id]['single_declared'];
+            total_declared += order_detail[id]['declared'];
             i++;
         }
+        html += '<tr>';
+        html += '<td class="table-total">合计</td>';
+        html += '<td></td>';
+        html += '<td></td>';
+        html += '<td>' + total_count + '</td>';
+        html += '<td>' + total_single_declared.toFixed(2) + '</td>';
+        html += '<td>' + total_declared.toFixed(2) + '</td>';
+        html += '<td></td>';
+        html += '<td></td>';
+        html += '</tr>';
         $('#detail-content').append(html);
         calculate_declared_value();
     }

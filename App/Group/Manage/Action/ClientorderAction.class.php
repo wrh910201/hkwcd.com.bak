@@ -252,13 +252,13 @@ class ClientorderAction extends CommonContentAction {
         $services_type = I('services_type', '', 'trim');
         $shipment_reference = I('shipment_reference', '', 'trim');
         $exporter_code = I('exporter_code', '', 'trim');
-        $receiver_code = I('receiver_code', '', 'trim');
-        $price_terms = I('price_terms', '', 'trim');
-        $tariff_payment = I('tariff_payment', '', 'trim');
+//        $receiver_code = I('receiver_code', '', 'trim');
+//        $price_terms = I('price_terms', '', 'trim');
+//        $tariff_payment = I('tariff_payment', '', 'trim');
         $declaration_of_power_attorney = I('declaration_of_power_attorney', '', 'trim');
         $settlement = I('settlement', '', 'trim');
         $mode_of_transportation = I('mode_of_transportation', '', 'trim');
-        $export_nature = I('export_nature', '', 'trim');
+//        $export_nature = I('export_nature', '', 'trim');
         $contract_num = I('contract_num', '', 'trim');
         $order_detail = $_POST['detail'];
         $delivery = I('delivery', 0, 'intval');
@@ -286,15 +286,15 @@ class ClientorderAction extends CommonContentAction {
         if( empty($exporter_code) ) {
             $this->error('请输入出口商代码');
         }
-        if( empty($receiver_code) ) {
-            $this->error('请输入进口商代码');
-        }
-        if( empty($price_terms) ) {
-            $this->error('请输入价格条款');
-        }
-        if( empty($tariff_payment) ) {
-            $this->error('请输入关税支付');
-        }
+//        if( empty($receiver_code) ) {
+//            $this->error('请输入进口商代码');
+//        }
+//        if( empty($price_terms) ) {
+//            $this->error('请输入价格条款');
+//        }
+//        if( empty($tariff_payment) ) {
+//            $this->error('请输入关税支付');
+//        }
         if( empty($declaration_of_power_attorney) ) {
             $this->error('请输入相关委托书');
         }
@@ -305,9 +305,9 @@ class ClientorderAction extends CommonContentAction {
             $this->error('请输入运输方式');
         }
 
-        if( empty($export_nature) ) {
-            $this->error('请输入出口性质');
-        }
+//        if( empty($export_nature) ) {
+//            $this->error('请输入出口性质');
+//        }
 
         if( empty($contract_num) ) {
             $this->error('请输入合同号');

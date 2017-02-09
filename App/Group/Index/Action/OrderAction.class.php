@@ -94,8 +94,12 @@ class OrderAction extends BaseAction  {
         $spare_postal_code = I('post.spare_receive_postal_code', '', 'trim');
         $currency_id = I('post.currency', 1, 'intval');
         $declared_value = I('post.declared_value', 0, 'floatval');
+        $receiver_code = I('post.receiver_code', '', 'trim');
         $channel_id = I('post.channel', 0, 'intval');
         $package_type = I('post.package_type', 0, 'intval');
+        $price_terms = I('post.price_terms', '', 'trim');
+        $tariff_payment = I('post.tariff_payment', '', 'trim');
+        $export_nature = I('post.export_nature', '', 'trim');
         $export_reason = I('post.export_reason', '', 'trim');
         $remark = I('post.remark', '', 'trim');
         $commit = I('post.commit', 0, 'intval');
@@ -166,6 +170,12 @@ class OrderAction extends BaseAction  {
 
         $data['declared_value'] = $declared_value;
 
+        if( empty($receiver_code) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入进口商代码' : '请输入进口商代码';
+        }
+        $data['receiver_code'] = $receiver_code;
+
         $channel = M('Channel')->where(['status' => 1, 'id' => $channel_id])->find();
         if( empty($channel) ) {
             $has_error = true;
@@ -174,6 +184,29 @@ class OrderAction extends BaseAction  {
         $data['channel_name'] = $channel['name'].'/'.$channel['en_name'];
 
         $data['package_type'] = $package_type;
+
+        $price_terms_array = ['FOB', 'CIF', 'WCB'];
+        if( !in_array($price_terms, $price_terms_array) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择价格条款' : '请选择价格条款';
+        }
+        $data['price_terms'] = $price_terms;
+
+
+        $tariff_payment_array = ['Receiver', 'Consignor'];
+        if( !in_array($tariff_payment, $tariff_payment_array) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择关税支付' : '请选择关税支付';
+        }
+        $data['tariff_payment'] = $tariff_payment;
+
+        $export_nature_array = ['Provisional', 'Forever'];
+        if( !in_array($export_nature, $export_nature_array) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择出口性质' : '请选择出口性质';
+        }
+        $data['export_nature'] = $export_nature;
+
         if( empty($export_reason) ) {
             $has_error = true;
             $error_msg = $error_msg ? $error_msg.'<br />请输入出口原因' : '请输入出口原因';
@@ -417,8 +450,12 @@ class OrderAction extends BaseAction  {
         $spare_postal_code = I('post.spare_receive_postal_code', '', 'trim');
         $currency_id = I('post.currency', 1, 'intval');
         $declared_value = I('post.declared_value', 0, 'floatval');
+        $receiver_code = I('post.receiver_code', '', 'trim');
         $channel_id = I('post.channel', 0, 'intval');
         $package_type = I('post.package_type', 0, 'intval');
+        $price_terms = I('post.price_terms', '', 'trim');
+        $tariff_payment = I('post.tariff_payment', '', 'trim');
+        $export_nature = I('post.export_nature', '', 'trim');
         $export_reason = I('post.export_reason', '', 'trim');
         $remark = I('post.remark', '', 'trim');
         $commit = I('post.commit', 0, 'intval');
@@ -485,6 +522,11 @@ class OrderAction extends BaseAction  {
         $data['currency_rate'] = $currency['rate'];
 
         $data['declared_value'] = $declared_value;
+        if( empty($receiver_code) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入进口商代码' : '请输入进口商代码';
+        }
+        $data['receiver_code'] = $receiver_code;
 
         $channel = M('Channel')->where(['status' => 1, 'id' => $channel_id])->find();
         if( empty($channel) ) {
@@ -494,6 +536,29 @@ class OrderAction extends BaseAction  {
         $data['channel_name'] = $channel['name'].'/'.$channel['en_name'];
 
         $data['package_type'] = $package_type;
+
+        $price_terms_array = ['FOB', 'CIF', 'WCB'];
+        if( !in_array($price_terms, $price_terms_array) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择价格条款' : '请选择价格条款';
+        }
+        $data['price_terms'] = $price_terms;
+
+
+        $tariff_payment_array = ['Receiver', 'Consignor'];
+        if( !in_array($tariff_payment, $tariff_payment_array) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择关税支付' : '请选择关税支付';
+        }
+        $data['tariff_payment'] = $tariff_payment;
+
+        $export_nature_array = ['Provisional', 'Forever'];
+        if( !in_array($export_nature, $export_nature_array) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请选择出口性质' : '请选择出口性质';
+        }
+        $data['export_nature'] = $export_nature;
+
         if( empty($export_reason) ) {
             $has_error = true;
             $error_msg = $error_msg ? $error_msg.'<br />请输入出口原因' : '请输入出口原因';

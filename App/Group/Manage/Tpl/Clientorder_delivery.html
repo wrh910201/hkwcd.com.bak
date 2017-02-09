@@ -58,9 +58,9 @@
             </tr>
             <tr>
                 <td><input type="text" name="exporter_code" value="{$order.exporter_code}" /></td>
-                <td><input type="text" name="receiver_code" value="{$order.receiver_code}" /></td>
-                <td><input type="text" name="price_terms" value="{$order.price_terms}" /></td>
-                <td><input type="text" name="tariff_payment" value="{$order.tariff_payment}" /></td>
+                <td><input readonly type="text" name="receiver_code" value="{$order.receiver_code}" /></td>
+                <td><input readonly type="text" name="price_terms" value="{$order.price_terms}" /></td>
+                <td><input readonly type="text" name="tariff_payment" value="{$order.tariff_payment}" /></td>
                 <td><input type="text" name="declaration_of_power_attorney" value="{$order.declaration_of_power_attorney}" /></td>
                 <td><input type="text" name="settlement" value="{$order.settlement}" /></td>
             </tr>
@@ -75,7 +75,7 @@
                     <!--<textarea name="mode_of_transportation">{$order.mode_of_transportation}</textarea>-->
                 </td>
                 <td colspan="2">
-                    <input  style="width: 100%" type="text" name="export_nature" value="{$order.export_nature}" />
+                    <input  readonly style="width: 100%" type="text" name="export_nature" value="{$order.export_nature}" />
                     <!--<textarea name="mode_of_transportation">{$order.mode_of_transportation}</textarea>-->
                 </td>
                 <td colspan="2">
