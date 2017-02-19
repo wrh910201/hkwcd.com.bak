@@ -14,14 +14,26 @@
     <div class="form">
         <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Client/doAdd')}">
             <dl>
-                <dt>用户名/username：</dt>
+                <dt>客户帐号：</dt>
                 <dd>
                     <input type="text" name="username" class="inp_one" id="username"/>
                     <span id="username-alert"></span>
                 </dd>
             </dl>
             <dl>
-                <dt>用户组/User Group：</dt>
+                <dt>密码：</dt>
+                <dd>
+                    <input type="password" name="password" class="inp_one" id="password"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>公司名称：</dt>
+                <dd>
+                    <input type="text" name="company" class="inp_one inp_large" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>客户分组：</dt>
                 <dd>
                     <select name="group_id">
                         <foreach name='group_list' item='v'>
@@ -31,51 +43,49 @@
                 </dd>
             </dl>
             <dl>
-                <dt>姓名/Name：</dt>
+                <dt>姓名：</dt>
                 <dd>
                     <input type="text" name="full_name" class="inp_one" />
                 </dd>
             </dl>
-            <!--<dl>-->
-                <!--<dt>姓/Last Name：</dt>-->
-                <!--<dd>-->
-                    <!--<input type="text" name="last_name" class="inp_one" />-->
-                <!--</dd>-->
-            <!--</dl>-->
-            <!--<dl>-->
-                <!--<dt>名/First Name：</dt>-->
-                <!--<dd>-->
-                    <!--<input type="text" name="first_name" class="inp_one " />-->
-                <!--</dd>-->
-            <!--</dl>-->
+
             <dl>
-                <dt>公司名称/Company：</dt>
+                <dt>邮箱</dt>
                 <dd>
-                    <input type="text" name="company" class="inp_one inp_large" />
+                    <input type="text" name="email" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>C/O：</dt>
+                <dt>手机：</dt>
                 <dd>
-                    <input type="text" name="care_of" class="inp_one" />
+                    <input type="text" name="mobile" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>地址/Address：</dt>
+                <dt>备用手机：</dt>
                 <dd>
-                    <input type="text" name="address" class="inp_one inp_large" />
+                    <input type="text" name="spare_mobile" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>地址2/Address 2：</dt>
+                <dt>微信：</dt>
                 <dd>
-                    <input type="text" name="address2" class="inp_one inp_large" />
+                    <input type="text" name="wechat" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>国家/Country：</dt>
+                <dt>QQ：</dt>
                 <dd>
-                    <select name="country">
+                    <input type="text" name="qq" class="inp_one" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>地址2：</dt>
+            </dl>
+            <dl>
+                <dt>国家：</dt>
+                <dd>
+                    <select name="country_id">
                         <foreach name='country_list' item='v'>
                             <option value="{$v.id}">{$v.name}/{$v.ename}</option>
                         </foreach>
@@ -83,55 +93,80 @@
                 </dd>
             </dl>
             <dl>
-                <dt>城市/City：</dt>
-                <dd>
-                    <input type="text" name="city" class="inp_one" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>省/State：</dt>
+                <dt>省：</dt>
                 <dd>
                     <input type="text" name="state" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>邮编/Zip Postal Code：</dt>
+                <dt>城市：</dt>
+                <dd>
+                    <input type="text" name="city" class="inp_one" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>详细地址：</dt>
+                <dd>
+                    <input type="text" name="address" class="inp_one inp_large" value="" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮编：</dt>
                 <dd>
                     <input type="text" name="postal_code" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>座机/Phone：</dt>
+            <dt>地址2：</dt>
+            </dl>
+            <dl>
+                <dt>国家：</dt>
+                <dd>
+                    <select name="spare_country_id">
+                        <foreach name='country_list' item='v'>
+                            <option value="{$v.id}">{$v.name}/{$v.ename}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>省：</dt>
+                <dd>
+                    <input type="text" name="spare_state" class="inp_one" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>城市：</dt>
+                <dd>
+                    <input type="text" name="spare_city" class="inp_one" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>详细地址：</dt>
+                <dd>
+                    <input type="text" name="spare_address" class="inp_one inp_large" value="" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮编：</dt>
+                <dd>
+                    <input type="text" name="spare_postal_code" class="inp_one" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>座机：</dt>
                 <dd>
                     <input type="text" name="phone" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>手机/Mobile：</dt>
-                <dd>
-                    <input type="text" name="mobile" class="inp_one" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>传真/Fax：</dt>
+                <dt>传真：</dt>
                 <dd>
                     <input type="text" name="fax" class="inp_one" />
                 </dd>
             </dl>
             <dl>
-                <dt>邮箱/Email：</dt>
-                <dd>
-                    <input type="text" name="email" class="inp_one" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>代理/Agent：</dt>
-                <dd>
-                    <input type="text" name="agent" class="inp_one" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>备注/Remark：</dt>
+                <dt>备注：</dt>
                 <dd>
                     <input type="text" name="remark" class="inp_one inp_large" />
                 </dd>

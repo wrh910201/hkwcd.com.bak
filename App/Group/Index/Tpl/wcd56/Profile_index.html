@@ -17,48 +17,57 @@
                     <form action="{:U('Profile/edit')}" method="post">
                         <fieldset>
                             <div class="box_c_item">
+                                <label class="l_title">帐号：</label>
+                                <input disabled class="text_input w300" type="text" name="full_name" placeholder="" value="{$user.username}">
+                                <div class="clear"></div>
+                            </div>
+                            <if condition="$client.is_person eq 1">
+                            <div class="box_c_item">
+                                <label class="l_title">公司名：</label>
+                                <input disabled class="text_input w300" type="text" name="company" placeholder="" value="{$user.company}">
+                                <div class="clear"></div>
+                            </div>
+                            </if>
+                            <div class="box_c_item">
                                 <label class="l_title">姓名：</label>
-                                <input class="text_input w300" type="text" name="full_name" placeholder="请输入姓名" value="{$user.full_name}">
+                                <input disabled class="text_input w300" type="text" name="full_name" placeholder="" value="{$user.full_name}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">邮箱：</label>
-                                <input class="text_input w300" type="text" name="email" placeholder="请输入邮箱" value="{$user.email}">
+                                <input disabled class="text_input w300" type="text" name="email" placeholder="" value="{$user.email}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">手机：</label>
-                                <input class="text_input w300" type="text" name="mobile" placeholder="请输入手机号码" value="{$user.mobile}">
+                                <input disabled class="text_input w300" type="text" name="mobile" placeholder="" value="{$user.mobile}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">公司名：</label>
-                                <input class="text_input w300" type="text" name="company" placeholder="请输入公司名称" value="{$user.company}">
+                                <label class="l_title">备用手机：</label>
+                                <input disabled class="text_input w300" type="text" name="spare_mobile" placeholder="" value="{$user.spare_mobile}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">C/O：</label>
-                                <input class="text_input w300" type="text" name="care_of" placeholder="请输入C/O" value="{$user.care_of}">
+                                <label class="l_title">微信：</label>
+                                <input disabled class="text_input w300" type="text" name="care_of" placeholder="" value="{$user.care_of}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">地址：</label>
-                                <input class="text_input w300" type="text" name="address" placeholder="请输入地址" value="{$user.address}">
+                                <label class="l_title">QQ：</label>
+                                <input disabled class="text_input w300" type="text" name="address" placeholder="" value="{$user.address}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">地址2：</label>
-                                <input class="text_input w300" type="text" name="address2" placeholder="请输入地址2" value="{$user.address2}">
+                                <label class="l_title">地址1：</label>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">国家：</label>
-                                <select class="w300" name="country">
+                                <select disabled class="w300" name="country">
                                     <foreach name="country_list" item="v">
-                                    <if condition="$v.id eq $user.country_id">
+                                    <if condition="$v.id eq $user['country_id']">
                                     <option value="{$v.id}" selected="selected" >{$v.name} / {$v.ename}</option>
-                                    <else />
-                                    <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
                                     </if>
                                     </foreach>
                                 </select>
@@ -66,39 +75,77 @@
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">省：</label>
-                                <input class="text_input w300" type="text" name="state" placeholder="请输入省" value="{$user.state}">
+                                <input disabled class="text_input w300" type="text" name="state" placeholder="" value="{$user.state}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">城市：</label>
-                                <input class="text_input w300" type="text" name="city" placeholder="请输入城市" value="{$user.city}">
+                                <input disabled class="text_input w300" type="text" name="city" placeholder="" value="{$user.city}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">邮编：</label>
-                                <input class="text_input w300" type="text" name="postal_code" placeholder="请输入邮编" value="{$user.postal_code}">
+                                <input disabled class="text_input w300" type="text" name="postal_code" placeholder="" value="{$user.postal_code}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="box_c_item">
+                                <label class="l_title">地址2：</label>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="box_c_item">
+                                <label class="l_title">国家：</label>
+                                <select disabled class="w300" name="country">
+                                    <foreach name="country_list" item="v">
+                                        <if condition="$v.id eq $user['spare_country_id']">
+                                            <option value="{$v.id}" selected="selected" >{$v.name} / {$v.ename}</option>
+                                        </if>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="box_c_item">
+                                <label class="l_title">省：</label>
+                                <input disabled class="text_input w300" type="text" name="spare_state" placeholder="" value="{$user.spare_state}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="box_c_item">
+                                <label class="l_title">城市：</label>
+                                <input disabled class="text_input w300" type="text" name="spare_city" placeholder="" value="{$user.spare_city}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="box_c_item">
+                                <label class="l_title">邮编：</label>
+                                <input disabled class="text_input w300" type="text" name="spare_postal_code" placeholder="" value="{$user.spare_postal_code}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">座机：</label>
-                                <input class="text_input w300" type="text" name="phone" placeholder="请输入座机" value="{$user.phone}">
+                                <input disabled class="text_input w300" type="text" name="phone" placeholder="" value="{$user.phone}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">传真：</label>
-                                <input class="text_input w300" type="text" name="fax" placeholder="请输入传真" value="{$user.fax}">
+                                <input disabled class="text_input w300" type="text" name="fax" placeholder="" value="{$user.fax}">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">代理：</label>
-                                <input class="text_input w300" type="text" name="agent" placeholder="请输入代理" value="{$user.agent}">
+                                <label class="l_title">资料上传：</label>
+                                <if condition="$user.is_person && ($user.certificate1 eq '' || $user.certificate2 eq '')">
+                                <input disabled class="text_input w300" type="text" name="upload" placeholder="" value="未上传">
+                                <else />
+                                    <if condition="$user.is_person eq 0 && ($user.license eq '')">
+                                    <input disabled class="text_input w300" type="text" name="upload" placeholder="" value="未上传">
+                                    <else />
+                                    <input disabled class="text_input w300" type="text" name="upload" placeholder="" value="已上传">
+                                    </if>
+                                </if>
                                 <div class="clear"></div>
                             </div>
-                            <div class="box_c_item">
-                                <label class="l_title"></label>
-                                <button class="btn btn_commit" type="submit">提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>
-                                <div class="clear"></div>
-                            </div>
+                            <!--<div class="box_c_item">-->
+                                <!--<label class="l_title"></label>-->
+                                <!--<button class="btn btn_commit" type="submit">提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>-->
+                                <!--<div class="clear"></div>-->
+                            <!--</div>-->
                         </fieldset>
                     </form>
                     <div class="clear"></div>
@@ -116,9 +163,6 @@
         menu1("#ud1", "#ud1 a", ".coin_1 a.nav_top_item");
     });
 
-    $(function() {
-        $('select[name=country] option[value={$selected}]').attr('selected', 'selected');
-    });
 </script>
 </body>
 </html>

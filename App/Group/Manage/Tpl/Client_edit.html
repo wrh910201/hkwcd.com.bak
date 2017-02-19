@@ -14,22 +14,24 @@
     <div class="form">
         <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Client/doEdit')}">
             <dl>
-                <dt>用户名/username：</dt>
+                <dt>客户帐号：</dt>
                 <dd>
                     <input type="text" name="username" disabled class="inp_one" id="username" value="{$client.username}"/>
                     <span id="username-alert"></span>
                 </dd>
             </dl>
             <dl>
-                <dt>用户组/User Group：</dt>
+                <dt>公司名称：</dt>
+                <dd>
+                    <input type="text" name="company" class="inp_one inp_large" value="{$client.company}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>客户分组：</dt>
                 <dd>
                     <select name="group_id">
                         <foreach name='group_list' item='v'>
-                            <if condition="$v.id eq $client.group_id">
-                            <option value="{$v.id}" selected>{$v.name}/{$v.en_name}</option>
-                            <else />
-                            <option value="{$v.id}">{$v.name}/{$v.en_name}</option>
-                            </if>
+                            <option value="{$v.id}" <if condition="$v.id eq $client['group_id']">selected</if>>{$v.name}/{$v.en_name}</option>
                         </foreach>
                     </select>
                 </dd>
@@ -37,97 +39,128 @@
             <dl>
                 <dt>姓名：</dt>
                 <dd>
-                    <input type="text" name="full_name" class="inp_one" value="{$client.full_name}"/>
+                    <input type="text" name="full_name" class="inp_one" value="{$client.full_name}" />
                 </dd>
             </dl>
+
             <dl>
-                <dt>公司名称/Company：</dt>
-                <dd>
-                    <input type="text" name="company" class="inp_one inp_large" value="{$client.company}"/>
-                </dd>
-            </dl>
-            <dl>
-                <dt>C/O：</dt>
-                <dd>
-                    <input type="text" name="care_of" class="inp_one" value="{$client.care_of}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>地址/Address：</dt>
-                <dd>
-                    <input type="text" name="address" class="inp_one inp_large" value="{$client.address}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>地址2/Address 2：</dt>
-                <dd>
-                    <input type="text" name="address2" class="inp_one inp_large" value="{$client.address2}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>国家/Country：</dt>
-                <dd>
-                    <select name="country">
-                        <foreach name='country_list' item='v'>
-                            <if condition="$v.id eq v.country_id">
-                            <option value="{$v.id}" selected>{$v.name}/{$v.ename}</option>
-                            <else />
-                            <option value="{$v.id}">{$v.name}/{$v.ename}</option>
-                            </if>
-                        </foreach>
-                    </select>
-                </dd>
-            </dl>
-            <dl>
-                <dt>城市/City：</dt>
-                <dd>
-                    <input type="text" name="city" class="inp_one" value="{$client.city}"/>
-                </dd>
-            </dl>
-            <dl>
-                <dt>省/State：</dt>
-                <dd>
-                    <input type="text" name="state" class="inp_one" value="{$client.state}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>邮编/Zip Postal Code：</dt>
-                <dd>
-                    <input type="text" name="postal_code" class="inp_one" value="{$client.postal_code}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>座机/Phone：</dt>
-                <dd>
-                    <input type="text" name="phone" class="inp_one" value="{$client.phone}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>手机/Mobile：</dt>
-                <dd>
-                    <input type="text" name="mobile" class="inp_one" value="{$client.mobile}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>传真/Fax：</dt>
-                <dd>
-                    <input type="text" name="fax" class="inp_one" value="{$client.fax}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>邮箱/Email：</dt>
+                <dt>邮箱</dt>
                 <dd>
                     <input type="text" name="email" class="inp_one" value="{$client.email}" />
                 </dd>
             </dl>
             <dl>
-                <dt>代理/Agent：</dt>
+                <dt>手机：</dt>
                 <dd>
-                    <input type="text" name="agent" class="inp_one" value="{$client.agent}" />
+                    <input type="text" name="mobile" class="inp_one" value="{$client.mobile}" />
                 </dd>
             </dl>
             <dl>
-                <dt>备注/Remark：</dt>
+                <dt>备用手机：</dt>
+                <dd>
+                    <input type="text" name="spare_mobile" class="inp_one" value="{$client.spare_mobile}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>微信：</dt>
+                <dd>
+                    <input type="text" name="wechat" class="inp_one" value="{$client.wechat}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>QQ：</dt>
+                <dd>
+                    <input type="text" name="qq" class="inp_one" value="{$client.qq}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>地址2：</dt>
+            </dl>
+            <dl>
+                <dt>国家：</dt>
+                <dd>
+                    <select name="country_id">
+                        <foreach name='country_list' item='v'>
+                            <option value="{$v.id}" <if condition="$v.id eq $client['country_id']">selected</if>>{$v.name}/{$v.ename}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>省：</dt>
+                <dd>
+                    <input type="text" name="state" class="inp_one" value="{$client.state}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>城市：</dt>
+                <dd>
+                    <input type="text" name="city" class="inp_one" value="{$client.city}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>详细地址：</dt>
+                <dd>
+                    <input type="text" name="address" class="inp_one inp_large" value="{$client.address}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮编：</dt>
+                <dd>
+                    <input type="text" name="postal_code" class="inp_one" value="{$client.postal_code}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>地址2：</dt>
+            </dl>
+            <dl>
+                <dt>国家：</dt>
+                <dd>
+                    <select name="spare_country_id">
+                        <foreach name='country_list' item='v'>
+                            <option value="{$v.id}" <if condition="$v.id eq $client['spare_country_id']">selected</if>>{$v.name}/{$v.ename}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>省：</dt>
+                <dd>
+                    <input type="text" name="spare_state" class="inp_one" value="{$client.spare_state}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>城市：</dt>
+                <dd>
+                    <input type="text" name="spare_city" class="inp_one" value="{$client.spare_city}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>详细地址：</dt>
+                <dd>
+                    <input type="text" name="spare_address" class="inp_one inp_large" value="{$client.spare_address}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮编：</dt>
+                <dd>
+                    <input type="text" name="spare_postal_code" value="{$client.spare_postal_code}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>座机：</dt>
+                <dd>
+                    <input type="text" name="phone" class="inp_one" value="{$client.phone}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>传真：</dt>
+                <dd>
+                    <input type="text" name="fax" class="inp_one" value="{$client.fax}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>备注：</dt>
                 <dd>
                     <input type="text" name="remark" class="inp_one inp_large" value="{$client.remark}" />
                 </dd>
@@ -135,9 +168,9 @@
             <dl>
                 <dt> 状态：</dt>
                 <dd>
-                    <input type="radio" name="islock" value="0" <if condition="$client.is_locked eq 0">checked="checked"</if>  />正常
+                    <input type="radio" name="islock" value="0" <if condition="$client.islock eq 0">checked="checked"</if>  />正常
                     &nbsp;&nbsp;
-                    <input type="radio" name="islock" value="1" <if condition="$client.is_locked eq 1">checked="checked"</if> />锁定
+                    <input type="radio" name="islock" value="1" <if condition="$client.islock eq 1">checked="checked"</if> />锁定
                 </dd>
             </dl>
             <div class="form_b">

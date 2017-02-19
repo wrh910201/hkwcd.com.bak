@@ -71,35 +71,29 @@ class ClientAction extends CommonContentAction {
         if( IS_POST ) {
             //验证输入，生成用户名、帐号
             $data['username'] = I('post.username', '', 'htmlspecialchars,trim');
+            $data['password'] = I('post.password', '', 'htmlspecialchars,trim');
             $data['group_id'] = I('post.group_id', 0, 'intval');
-            $data['first_name'] = I('post.first_name', '', 'htmlspecialchars,trim');
-            $data['last_name'] = I('post.last_name', '', 'htmlspecialchars,trim');
             $data['full_name'] = I('post.full_name', '', 'htmlspecialchars,trim');
             $data['company'] = I('post.company', '', 'htmlspecialchars,trim');
-            $data['care_of'] = I('post.care_of', '', 'htmlspecialchars,trim');
-            $data['address'] = I('post.address', '', 'htmlspecialchars,trim');
-            $data['address2'] = I('post.address2', '', 'htmlspecialchars,trim');
-            $data['country_id'] = I('post.country', 0, 'intval');
-            $data['city'] = I('post.city', '', 'htmlspecialchars,trim');
-            $data['postal_code'] = I('post.postal_code', '', 'htmlspecialchars,trim');
-            $data['phone'] = I('post.phone', '', 'htmlspecialchars,trim');
-            $data['mobile'] = I('post.mobile', '', 'htmlspecialchars,trim');
-            $data['fax'] = I('post.fax', '', 'htmlspecialchars,trim');
             $data['email'] = I('post.email', '', 'htmlspecialchars,trim');
-            $data['agent'] = I('post.agent', '', 'htmlspecialchars,trim');
+            $data['mobile'] = I('post.mobile', '', 'htmlspecialchars,trim');
+            $data['spare_mobile'] = I('post.spare_mobile', '', 'htmlspecialchars,trim');
+            $data['wechat'] = I('post.wechat', '', 'htmlspecialchars,trim');
+            $data['qq'] = I('post.qq', '', 'htmlspecialchars,trim');
+            $data['country_id'] = I('post.country_id', '', 'htmlspecialchars,intval');
+            $data['state'] = I('post.state', '', 'htmlspecialchars,trim');
+            $data['city'] = I('post.city', '', 'htmlspecialchars,trim');
+            $data['address'] = I('post.address', '', 'htmlspecialchars,trim');
+            $data['postal_code'] = I('post.postal_code', '', 'htmlspecialchars,trim');
+            $data['spare_country_id'] = I('post.spare_country_id', '', 'htmlspecialchars,intval');
+            $data['spare_state'] = I('post.spare_state', '', 'htmlspecialchars,trim');
+            $data['spare_city'] = I('post.spare_city', '', 'htmlspecialchars,trim');
+            $data['spare_address'] = I('post.spare_address', '', 'htmlspecialchars,trim');
+            $data['spare_postal_code'] = I('post.spare_postal_code', '', 'htmlspecialchars,trim');
+            $data['phone'] = I('post.phone', '', 'htmlspecialchars,trim');
+            $data['fax'] = I('post.fax', '', 'htmlspecialchars,trim');
             $data['remark'] = I('post.remark', '', 'htmlspecialchars,trim');
             $data['is_locked'] = I('post.islock', 0, 'intval');
-
-            $validate = array(
-                array('username','require','请输入用户名'), // 内置正则验证邮箱
-                array('group_id', 'require', '请选择用户组'),
-                array('full_name','require','请输入姓名'), // 内置正则验证邮箱
-//                array('first_name','require','请输入名'), // 内置正则验证邮箱
-//                array('last_name','require','请输入姓'), // 内置正则验证邮箱
-                array('company','require','请输入公司名称'), // 内置正则验证邮箱
-                array('address','require', '请至少输入一个地址'),
-                array('country_id', 'require', '请选择国家')
-            );
 
             //检测用户名是否可以用
             if( empty($data['username']) ) {
@@ -117,27 +111,31 @@ class ClientAction extends CommonContentAction {
                 $this->error('请选择用户组');
                 exit;
             }
-
-            //检测国家是否合法
-            $country_exists = M('country')->where(['id' => $data['country_id']])->find();
-            if( empty($country_exists) ) {
-                $this->error('请选择国家');
+            //密码
+            $password = $data['password'];
+            if( empty($password) ) {
+                $this->error('请输入密码');
                 exit;
+            } elseif( strlen($password) < 6) {
+                $this->error('密码长度至少为6位');
             }
 
+
             //生成6位随机密码
-            $password = get_randomstr();
-            $data['real_password'] = $password;
+//            $password = get_randomstr();
             $data['encrypt'] = get_randomstr();
             $data['password'] = get_password($password, $data['encrypt']);
+
+            $data['is_person'] = 0;
+            if( empty($data['company']) ) {
+                $data['is_person'] = 1;
+            }
 
             //设置添加的管理员id
             $data['operator_id'] = session('yang_adm_uid');
 
             $db = M('client');
-            if (!$db->validate($validate)->create($data)) {
-                $this->error($db->getError());
-            }
+
             if( $id = $db->add($data) ) {
                 $this->success('添加客户成功', U(GROUP_NAME. '/Client/index'));
             } else {
@@ -159,12 +157,12 @@ class ClientAction extends CommonContentAction {
             }
             $username_exists = M('client')->where(['username' => $username])->find();
             if( $username_exists ) {
-                $response['msg'] = '用户名已存在，请更换用户名';
+                $response['msg'] = '帐号已存在，请更换帐号';
                 $response['code'] = 0;
                 echo json_encode($response);
                 exit;
             } else {
-                $response['msg'] = '用户名可用';
+                $response['msg'] = '帐号可用';
                 $response['code'] = 1;
                 echo json_encode($response);
                 exit;
@@ -204,34 +202,27 @@ class ClientAction extends CommonContentAction {
 
         //验证输入
         $data['group_id'] = I('post.group_id', 0, 'intval');
-        $data['first_name'] = I('post.first_name', '', 'htmlspecialchars,trim');
-        $data['last_name'] = I('post.last_name', '', 'htmlspecialchars,trim');
         $data['full_name'] = I('post.full_name', '', 'htmlspecialchars,trim');
         $data['company'] = I('post.company', '', 'htmlspecialchars,trim');
-        $data['care_of'] = I('post.care_of', '', 'htmlspecialchars,trim');
-        $data['address'] = I('post.address', '', 'htmlspecialchars,trim');
-        $data['address2'] = I('post.address2', '', 'htmlspecialchars,trim');
-        $data['country_id'] = I('post.country', 0, 'intval');
-        $data['city'] = I('post.city', '', 'htmlspecialchars,trim');
-        $data['postal_code'] = I('post.postal_code', '', 'htmlspecialchars,trim');
-        $data['phone'] = I('post.phone', '', 'htmlspecialchars,trim');
-        $data['mobile'] = I('post.mobile', '', 'htmlspecialchars,trim');
-        $data['fax'] = I('post.fax', '', 'htmlspecialchars,trim');
         $data['email'] = I('post.email', '', 'htmlspecialchars,trim');
-        $data['agent'] = I('post.agent', '', 'htmlspecialchars,trim');
+        $data['mobile'] = I('post.mobile', '', 'htmlspecialchars,trim');
+        $data['spare_mobile'] = I('post.spare_mobile', '', 'htmlspecialchars,trim');
+        $data['wechat'] = I('post.wechat', '', 'htmlspecialchars,trim');
+        $data['qq'] = I('post.qq', '', 'htmlspecialchars,trim');
+        $data['country_id'] = I('post.country_id', '', 'htmlspecialchars,intval');
+        $data['state'] = I('post.state', '', 'htmlspecialchars,trim');
+        $data['city'] = I('post.city', '', 'htmlspecialchars,trim');
+        $data['address'] = I('post.address', '', 'htmlspecialchars,trim');
+        $data['postal_code'] = I('post.postal_code', '', 'htmlspecialchars,trim');
+        $data['spare_country_id'] = I('post.spare_country_id', '', 'htmlspecialchars,intval');
+        $data['spare_state'] = I('post.spare_state', '', 'htmlspecialchars,trim');
+        $data['spare_city'] = I('post.spare_city', '', 'htmlspecialchars,trim');
+        $data['spare_address'] = I('post.spare_address', '', 'htmlspecialchars,trim');
+        $data['spare_postal_code'] = I('post.spare_postal_code', '', 'htmlspecialchars,trim');
+        $data['phone'] = I('post.phone', '', 'htmlspecialchars,trim');
+        $data['fax'] = I('post.fax', '', 'htmlspecialchars,trim');
         $data['remark'] = I('post.remark', '', 'htmlspecialchars,trim');
         $data['is_locked'] = I('post.islock', 0, 'intval');
-
-        $validate = array(
-            array('username','require','请输入用户名'), // 内置正则验证邮箱
-            array('group_id', 'require', '请选择用户组'),
-            array('full_name','require','请输入姓名'), // 内置正则验证邮箱
-//                array('first_name','require','请输入名'), // 内置正则验证邮箱
-//                array('last_name','require','请输入姓'), // 内置正则验证邮箱
-            array('company','require','请输入公司名称'), // 内置正则验证邮箱
-            array('address','require', '请至少输入一个地址'),
-            array('country_id', 'require', '请选择国家')
-        );
 
         //检测用户名是否可以用
 //        if( empty($data['username']) ) {
@@ -250,20 +241,10 @@ class ClientAction extends CommonContentAction {
             exit;
         }
 
-        //检测国家是否合法
-        $country_exists = M('country')->where(['id' => $data['country_id']])->find();
-        if( empty($country_exists) ) {
-            $this->error('请选择国家');
-            exit;
-        }
-
         //设置添加的管理员id
 //        $data['operator_id'] = session('yang_adm_uid');
 
         $db = M('client');
-        if (!$db->validate($validate)->create($data)) {
-            $this->error($db->getError());
-        }
         $result = $db->where(['id' => $id])->save($data);
         if( is_numeric($result) ) {
             $this->success('编辑客户成功', U(GROUP_NAME. '/Client/index'));
@@ -280,15 +261,33 @@ class ClientAction extends CommonContentAction {
         $id = I('get.id', 0, 'intval');
         $client = M('client')->where(['id' => $id])->find();
         if( $client ) {
-            //生成6位随机密码
-            $password = get_randomstr();
-            $data['real_password'] = $password;
-            $data['encrypt'] = get_randomstr();
-            $data['password'] = get_password($password, $data['encrypt']);
-            if( M('client')->where(['id' => $id])->save($data) ) {
-                $this->success('重置密码成功');
+            $this->assign('client', $client);
+            $this->display();
+        } else {
+            $this->error('客户不存在');
+            exit;
+        }
+    }
+
+    public function reset() {
+        $id = I('post.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( $client ) {
+            $password = I('post.password', '', 'htmlspecialchars,trim');
+            $confirm_password = I('post.confirm_password', '', 'htmlspecialchars,trim');
+            if( empty($password) ) {
+                $this->error('请输入新密码');
+            }
+            if( $confirm_password != $password ) {
+                $this->error('两次输入的密码不一致');
+            }
+            $where = ['id' => $id];
+            $data = ['password' => get_password($password, $client['encrypt'])];
+            $result = M('Client')->where($where)->save($data);
+            if( $result ) {
+                $this->success('密码重置成功');
             } else {
-                $this->error('重置密码失败');
+                $this->error('密码已重置失败');
             }
         } else {
             $this->error('客户不存在');
@@ -401,7 +400,7 @@ class ClientAction extends CommonContentAction {
         }
         $data['status'] = 0;
         if( M('client')->where(['id' => $id])->save($data) ) {
-            $this->success('客户已被移入回收站');
+            $this->success('客户已被删除');
         } else {
             $this->error('删除失败');
         }
