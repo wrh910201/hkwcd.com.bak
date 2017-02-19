@@ -43,7 +43,8 @@ class ClientorderAction extends CommonContentAction {
         $this->display();
     }
 
-    public function exam() {
+    public function doExam() {
+        exit;
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -102,12 +103,57 @@ class ClientorderAction extends CommonContentAction {
                 $order_detail[$k]['declared'] = sprintf('%.2f', $v['declared']);
             }
         }
+
+        $channel_list = M('Channel')->where(['status' => 1])->select();
+
+        $this->assign('channel_list', $channel_list);
         $this->assign('order', $order);
         $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail', $order_detail);
         $this->type = '客户订单详情';
         $this->display();
 
+    }
+
+    public function exam() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
+        $order['status_str'] = $this->_order_status($order);
+        $order_specifications = M('ClientOrderSpecifications')
+            ->where(['order_num' => $order['order_num']])
+            ->select();
+        if( $order_specifications ) {
+            foreach( $order_specifications as $k => $v ) {
+                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']).'kg';
+                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']).'cm';
+                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']).'cm';
+                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']).'cm';
+            }
+        }
+        $order_detail = M('ClientOrderDetail')
+            ->where(['order_num' => $order['order_num']])
+            ->select();
+        if( $order_detail ){
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]['single_declared'] = sprintf('%.2f', $v['single_declared']);
+                $order_detail[$k]['declared'] = sprintf('%.2f', $v['declared']);
+            }
+        }
+
+        $channel_list = M('Channel')->where(['status' => 1])->select();
+        $currency_list = M('Currency')->where(['status' => 1])->select();
+
+        $this->assign('channel_list', $channel_list);
+        $this->assign('currency_list', $currency_list);
+        $this->assign('order', $order);
+        $this->assign('order_specifications', $order_specifications);
+        $this->assign('order_detail', $order_detail);
+        $this->type = '客户订单详情';
+        $this->display();
     }
 
     public function reject() {

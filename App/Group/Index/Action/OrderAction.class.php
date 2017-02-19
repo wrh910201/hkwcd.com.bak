@@ -434,7 +434,7 @@ class OrderAction extends BaseAction  {
         }
         if( $order['client_status'] != 0 ) {
             $this->response['msg'] = '当前订单不是可编辑状态';
-            echo json_encode($this->response);
+            echo json_encode($this-d>response);
             exit;
         }
 
