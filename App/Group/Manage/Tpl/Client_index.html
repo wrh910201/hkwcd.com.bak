@@ -63,6 +63,11 @@
                             <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Client/lock',array('id' => $v['id']), '')}', '确实要<if condition="$v['is_locked']">解锁<else/>锁定</if>选择项吗？')"><if condition="$v['is_locked']">解锁<else/>锁定</if></a>
                             <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Client/del',array('id' => $v['id']), '')}', '确实要删除选择项吗？')">删除</a>
                             <a href="{:U(GROUP_NAME. '/Client/password',array('id' => $v['id']), '')}'">修改密码</a>
+                            <if condition="$v.is_person eq 0">
+                                <a href="{:U(GROUP_NAME. '/Client/license',array('id' => $v['id']), '')}">资料</a>
+                            <else />
+                                <a href="{:U(GROUP_NAME. '/Client/certificate',array('id' => $v['id']), '')}">资料</a>
+                            </if>
                         </td>
                     </tr>
                 </foreach>

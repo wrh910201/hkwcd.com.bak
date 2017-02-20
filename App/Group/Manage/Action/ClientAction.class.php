@@ -515,4 +515,140 @@ class ClientAction extends CommonContentAction {
         exit;
     }
 
+    public function uploadCertificate() {
+        $id = I('post.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( empty($client) ) {
+            $this->error('客户不存在');
+            exit;
+        }
+        import('ORG.Util.Image.ThinkImage');
+        $savename_prefix = THINK_PATH.'../uploads/client/'.$client['username'];
+
+        if( !file_exists($savename_prefix) ) {
+            mkdir($savename_prefix);
+        }
+
+        $certificate1 = I('post.certificate1', '', 'trim');
+        $ext_array = explode('.', $certificate1);
+        $certificate1 = realpath(THINK_PATH.'..'.$certificate1);
+        if( strpos($certificate1, '!') ) {
+            $ext = substr($ext_array[1], 0, 3);
+        } else {
+            $ext = $ext_array[1];
+        }
+        $ext1 = $ext;
+
+        $shuiyin = realpath(THINK_PATH.'../Public/config/images/shuiyin.png');
+        $savename = $savename_prefix.'/certificate1/'.$client['id'].'.'.$ext;
+        $savename1 = $savename;
+        if( !file_exists($savename_prefix.'/certificate1') ) {
+            mkdir($savename_prefix.'/certificate1');
+        }
+        $image = new ThinkImage(THINKIMAGE_GD, $certificate1);
+        $result = $image->water($shuiyin);
+        $result->save($savename);
+
+        $certificate2 = I('post.certificate2', '', 'trim');
+        $ext_array = explode('.', $certificate2);
+        $certificate2 = realpath(THINK_PATH.'..'.$certificate2);
+        if( strpos($certificate2, '!') ) {
+            $ext = substr($ext_array[1], 0, 3);
+        } else {
+            $ext = $ext_array[1];
+        }
+        $ext2 = $ext;
+        $shuiyin = realpath(THINK_PATH.'../Public/config/images/shuiyin.png');
+        $savename = $savename_prefix.'/certificate2/'.$client['id'].'.'.$ext;
+        $savename2 = $savename;
+        if( !file_exists($savename_prefix.'/certificate2') ) {
+            mkdir($savename_prefix.'/certificate2');
+        }
+        $image = new ThinkImage(THINKIMAGE_GD, $certificate2);
+        $result = $image->water($shuiyin);
+        $result->save($savename);
+
+
+        $map = [
+            'id' => $client['id'],
+        ];
+        $data = [
+            'certificate1' => '/uploads/client/'.$client['username'].'/certificate1/'.$client['id'].'.'.$ext1,
+            'certificate2' => '/uploads/client/'.$client['username'].'/certificate2/'.$client['id'].'.'.$ext2,
+        ];
+        $result = M('Client')->where($map)->save($data);
+        if( is_numeric($result) ) {
+            $this->success('资料上传成功');
+        } else {
+            $this->error('资料上传失败');
+        }
+    }
+
+    public function certificate() {
+        $id = I('get.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( empty($client) ) {
+            $this->error('客户不存在');
+            exit;
+        }
+        $this->assign('client', $client);
+        $this->assign('type', '身份证');
+        $this->display();
+    }
+
+    public function license() {
+        $id = I('get.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( empty($client) ) {
+            $this->error('客户不存在');
+            exit;
+        }
+        $this->assign('client', $client);
+        $this->assign('type', '营业执照');
+        $this->display();
+    }
+
+    public function uploadLicense() {
+        $id = I('post.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( empty($client) ) {
+            $this->error('客户不存在');
+            exit;
+        }
+        $license = I('post.license', '', 'trim');
+        $ext_array = explode('.', $license);
+        $license = realpath(THINK_PATH.'..'.$license);
+        if( strpos($license, '!') ) {
+            $ext = substr($ext_array[1], 0, 3);
+        } else {
+            $ext = $ext_array[1];
+        }
+        $shuiyin = realpath(THINK_PATH.'../Public/config/images/shuiyin.png');
+        $savename_prefix = THINK_PATH.'../uploads/client/'.$client['username'];
+        if( !file_exists($savename_prefix) ) {
+            mkdir($savename_prefix);
+        }
+        $savename = $savename_prefix.'/license/'.$client['id'].'.'.$ext;
+        if( !file_exists($savename_prefix.'/license') ) {
+            mkdir($savename_prefix.'/license');
+        }
+        import('ORG.Util.Image.ThinkImage');
+        $image = new ThinkImage(THINKIMAGE_GD, $license);
+        $result = $image->water($shuiyin);
+        $result->save($savename);
+
+        $map = [
+            'id' => $client['id'],
+        ];
+        $data = [
+            'license' => '/uploads/client/'.$client['username'].'/license/'.$client['id'].'.'.$ext,
+        ];
+        $result = M('Client')->where($map)->save($data);
+        if( is_numeric($result) ) {
+            $this->success('资料上传成功');
+        } else {
+            $this->error('资料上传失败');
+        }
+    }
+
 }
