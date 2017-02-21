@@ -651,4 +651,66 @@ class ClientAction extends CommonContentAction {
         }
     }
 
+    public function delivery() {
+        $id = I('get.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( empty($client) ) {
+            $this->error('客户不存在');
+            exit;
+        }
+        $map = [
+            'client_id' => $id
+        ];
+        //分页
+        import('ORG.Util.Page');
+        $count = M('DeliveryAddress')->where($map)->count();
+
+        $page = new Page($count, 10);
+        $limit = $page->firstRow. ',' .$page->listRows;
+
+        $delivery_list = M('DeliveryAddress')
+            ->alias('d')
+            ->field('d.*, c.name as country_name, c.ename as country_ename')
+            ->join('hx_country as c on d.country_id = c.id')
+            ->where($map)
+            ->limit($limit)
+            ->select();
+
+        $this->assign('type', $client['full_name'].'-发货地址列表');
+        $this->assign('delivery_list', $delivery_list);
+        $this->assign('page', $page->show());
+        $this->display();
+    }
+
+    public function receive() {
+        $id = I('get.id', 0, 'intval');
+        $client = M('client')->where(['id' => $id])->find();
+        if( empty($client) ) {
+            $this->error('客户不存在');
+            exit;
+        }
+        $map = [
+            'client_id' => $id
+        ];
+        //分页
+        import('ORG.Util.Page');
+        $count = M('ReceiveAddress')->where($map)->count();
+
+        $page = new Page($count, 10);
+        $limit = $page->firstRow. ',' .$page->listRows;
+
+        $receive_list = M('ReceiveAddress')
+            ->alias('d')
+            ->field('d.*, c.name as country_name, c.ename as country_ename')
+            ->join('hx_country as c on d.country_id = c.id')
+            ->where($map)
+            ->limit($limit)
+            ->select();
+
+        $this->assign('type', $client['full_name'].'-收货列表');
+        $this->assign('receive_list', $receive_list);
+        $this->assign('page', $page->show());
+        $this->display();
+    }
+
 }

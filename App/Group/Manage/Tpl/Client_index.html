@@ -80,6 +80,8 @@
                             <else />
                                 <a href="{:U(GROUP_NAME. '/Client/certificate',array('id' => $v['id']), '')}">资料</a>
                             </if>
+                            <a href="{:U(GROUP_NAME. '/Client/delivery',array('id' => $v['id']), '')}">发货地址</a>
+                            <a href="{:U(GROUP_NAME. '/Client/receive',array('id' => $v['id']), '')}">收货地址</a>
                         </td>
                     </tr>
                 </foreach>
