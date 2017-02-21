@@ -39,6 +39,8 @@ return array(
     'login_time_limit' => 1,    //登录次数限制
     'ip_expired_time' => 900,    //秒
 
+    'usercenter_page_count' => 15,
+
 );
 
 ?>

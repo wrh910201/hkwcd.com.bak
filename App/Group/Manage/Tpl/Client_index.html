@@ -45,6 +45,7 @@
                     <th>登录时间</th>
                     <th>登录ip</th>
                     <th>状态</th>
+                    <th>资料上传</th>
                     <th>操作</th>
                 </tr>
                 <foreach name='client_list' item='v'>
@@ -57,6 +58,17 @@
                         <td>{$v.last_login}</td>
                         <td>{$v.last_ip}</td>
                         <td><if condition="$v['is_locked']">锁定<else/>正常</if></td>
+                        <td>
+                            <if condition="$v.is_person && ($v.certificate1 eq '' || $v.certificate2 eq '')">
+                                未上传
+                                <else />
+                                <if condition="$v.is_person eq 0 && ($v.license eq '')">
+                                    未上传
+                                    <else />
+                                    已上传
+                                </if>
+                            </if>
+                        </td>
                         <td>
                             <a href="{:U(GROUP_NAME. '/Client/edit',array('id' => $v['id']), '')}">详情</a>
                             <a href="{:U(GROUP_NAME. '/Client/price',array('id' => $v['id']), '')}">查看价格表</a>

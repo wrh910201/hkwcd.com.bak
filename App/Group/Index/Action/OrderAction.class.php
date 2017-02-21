@@ -22,13 +22,20 @@ class OrderAction extends BaseAction  {
             'status' => 1,
             'client_id' => $client_id,
         ];
-        $order_list = M('ClientOrder')->where($where)->order('id desc')->select();
+        //分页
+        import('ORG.Util.Page');
+        $count = M('ClientOrder')->where($where)->count();
+
+        $page = new Page($count, C('usercenter_page_count'));
+        $limit = $page->firstRow. ',' .$page->listRows;
+
+        $order_list = M('ClientOrder')->where($where)->limit($limit)->order('id desc')->select();
         if( $order_list ) {
             foreach( $order_list as $k => $v ) {
                 $order_list[$k]['status_str'] = $this->_order_status($v);
             }
         }
-
+        $this->page = $page->show();
         $this->assign('order_list', $order_list);
         $this->assign('title', '订单列表');
         $this->display();
