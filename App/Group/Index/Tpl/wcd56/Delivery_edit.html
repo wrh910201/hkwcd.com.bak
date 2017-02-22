@@ -31,7 +31,7 @@
                             <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
-                                    <option value="{$v.id}" <if condition="$v.id eq $delivery.country_id">selected="selected"</if>>{$v.name}</option>
+                                    <option value="{$v.id}" <if condition="$v.id eq $delivery['country_id']">selected="selected"</if>>{$v.name}</option>
                                 </foreach>
                             </select>
                             <div class="clear"></div>
@@ -120,9 +120,6 @@
 <script type="text/javascript">
     $(function () {
         menu1("#ud3", "#ud3 a", ".coin_3 a.nav_top_item");
-    });
-    $(function() {
-        $('select[name=country] option[value={$selected}]').attr('selected', 'selected');
     });
 </script>
 </body>

@@ -233,7 +233,8 @@ class DeliveryAction extends BaseAction {
         if( empty($delivery) ) {
             $this->error('地址不存在');
         }
-        $result = M('DeliveryAddress')->where($where)->limit('1')->delete();
+        $data = ['status' => 0];
+        $result = M('DeliveryAddress')->where($where)->save($data);
         if( is_numeric($result) ) {
             $this->success('删除成功');
         } else {
