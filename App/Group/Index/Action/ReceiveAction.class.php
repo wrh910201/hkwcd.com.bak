@@ -53,11 +53,8 @@ class ReceiveAction extends BaseAction {
         $data['postal_code'] = I('post.postal_code', '', 'trim');
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
+        $data['receiver_code'] = I('post.receiver', '', 'trim');
         $data['is_default'] = I('post.default', 0, 'intval');
-
-        if( empty($data['company']) ) {
-            $this->error('请输入公司');
-        }
 
         if( empty($data['addressee']) ) {
             $this->error('请输入联系人');
@@ -65,18 +62,24 @@ class ReceiveAction extends BaseAction {
         if( $data['country_id'] <= 0 ) {
             $this->error('请选择国家');
         }
+        if( empty($data['city']) ) {
+            $this->error('请输入城市');
+        }
         if( empty($data['detail_address']) ) {
             $this->error('请输入具体地址');
         }
-        if( empty($data['mobile']) && empty($data['phone']) ) {
-            $this->error('手机与座机至少输入一个');
+        if( empty($data['postal_code']) ) {
+            $this->error('请输入邮编');
+        }
+        if( empty($data['mobile']) ) {
+            $this->error('请输入手机');
         }
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
         $data['client_id'] = session('hkwcd_user.user_id');
 
         if( $data['is_default'] ) {
-            $old_where = ['is_default' => 1, 'status' => 1, 'client_id' => $data['client_id']];
+            $old_where = ['is_default' => 1, 'client_id' => $client_id];
             M('ReceiveAddress')->where($old_where)->save(['is_default' => 0]);
         }
 
@@ -199,11 +202,8 @@ class ReceiveAction extends BaseAction {
         $data['postal_code'] = I('post.postal_code', '', 'trim');
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
+        $data['receiver_code'] = I('post.receiver', '', 'trim');
         $data['is_default'] = I('post.default', 0, 'intval');
-
-        if( empty($data['company']) ) {
-            $this->error('请输入公司');
-        }
 
         if( empty($data['addressee']) ) {
             $this->error('请输入联系人');
@@ -211,17 +211,23 @@ class ReceiveAction extends BaseAction {
         if( $data['country_id'] <= 0 ) {
             $this->error('请选择国家');
         }
+        if( empty($data['city']) ) {
+            $this->error('请输入城市');
+        }
         if( empty($data['detail_address']) ) {
             $this->error('请输入具体地址');
         }
-        if( empty($data['mobile']) && empty($data['phone']) ) {
-            $this->error('手机与座机至少输入一个');
+        if( empty($data['postal_code']) ) {
+            $this->error('请输入邮编');
+        }
+        if( empty($data['mobile']) ) {
+            $this->error('请输入手机');
         }
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
         $data['client_id'] = session('hkwcd_user.user_id');
         if( $data['is_default'] == 1 ) {
-            $old_where = ['is_default' => 1, 'status' => 1, 'client_id' => $client_id];
+            $old_where = ['is_default' => 1, 'client_id' => $client_id];
             M('ReceiveAddress')->where($old_where)->save(['is_default' => 0]);
         }
         $result = M('ReceiveAddress')->where($where)->save($data);
@@ -240,7 +246,8 @@ class ReceiveAction extends BaseAction {
         if( empty($receive) ) {
             $this->error('地址不存在');
         }
-        $result = M('ReceiveAddress')->where($where)->limit('1')->delete();
+        $data = ['status' => 0];
+        $result = M('ReceiveAddress')->where($where)->save($data);
         if( is_numeric($result) ) {
             $this->success('删除成功');
         } else {

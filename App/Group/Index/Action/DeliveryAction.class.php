@@ -33,11 +33,14 @@ class DeliveryAction extends BaseAction {
     }
 
     public function add() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['client_id' => $client_id])->find();
         $where = array('pid' => 0,'types'=>0);
         $country_list = M('country')->where($where)->order('sort,id')->select();
 
         $this->assign('country_list', $country_list);
         $this->assign('title', '添加发货地址');
+        $this->assign('client', $client);
         $this->display(); // 输出模板
     }
 

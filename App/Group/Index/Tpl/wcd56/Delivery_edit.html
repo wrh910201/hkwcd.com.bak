@@ -18,12 +18,17 @@
                 <form action="{:U('Delivery/doEdit')}" method="post">
                     <fieldset>
                         <div class="box_c_item">
-                            <label class="l_title">发货人：</label>
-                            <input class="text_input w300" type="text" name="consignor" placeholder="请输入发货人" value="{$delivery.consignor}">
+                            <label class="l_title">公司名：</label>
+                            <input class="text_input w300" type="text" name="consignor" placeholder="请输入公司名" value="{$delivery.company}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">国家：</label>
+                            <label class="l_title">* 联系人：</label>
+                            <input class="text_input w300" type="text" name="consignor" placeholder="请输入联系人" value="{$delivery.consignor}">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}" <if condition="$v.id eq $delivery.country_id">selected="selected"</if>>{$v.name}</option>
@@ -37,22 +42,22 @@
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">市：</label>
+                            <label class="l_title">* 市：</label>
                             <input class="text_input w300" type="text" name="city" placeholder="请输入市"  value="{$delivery.city}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">具体地址：</label>
+                            <label class="l_title">* 具体地址：</label>
                             <input class="text_input w300" type="text" name="address" placeholder="请输入具体地址"  value="{$delivery.detail_address}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">邮编：</label>
+                            <label class="l_title">* 邮编：</label>
                             <input class="text_input w300" type="text" name="postal_code" placeholder="请输入邮编" value="{$delivery.postal_code}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">手机：</label>
+                            <label class="l_title">* 手机：</label>
                             <input class="text_input w300" type="text" name="mobile" placeholder="请输入手机" value="{$delivery.mobile}">
                             <div class="clear"></div>
                         </div>
@@ -61,6 +66,34 @@
                             <input class="text_input w300" type="text" name="phone" placeholder="请输入座机" value="{$delivery.phone}">
                             <div class="clear"></div>
                         </div>
+                        <div class="box_c_item">
+                            <label class="l_title">出口商代码：</label>
+                            <input class="text_input w300" type="text" name="exporter_code" placeholder="请输入出口商代码" value="{$delivery.exporter_code}">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 身份证号码：</label>
+                            <input class="text_input w300" type="text" name="certificate_num" placeholder="请输入身份证号码" value="{$delivery.certificate_num}">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item" style="width: 900px;">
+                            <div class="fl add_product_img select-image" id="select-image-1" style="margin-top: 0px;margin-left: 50px;width: 400px; height: 240px">
+                                <i class="icon">&#xe629;</i>
+                                <p>上传身份证正面</p>
+                            </div>
+                            <div class="fl add_product_img select-image" id="select-image-2" style=" margin-top: 0px;margin-left: 10px;width: 400px; height: 240px">
+                                <i class="icon">&#xe629;</i>
+                                <p>上传身份证反面</p>
+                            </div>
+                            <div id="show-image-2" class="product_img_show select-image" style="display: none">
+                                <img src="" alt="身份证正面"/>
+                            </div>
+                            <div id="show-image-1" class="product_img_show select-image" style="display: none">
+                                <img src="" alt="身份证反面"/>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
                         <div class="box_c_item">
                             <label class="l_title">默认：</label>
                             <input type="radio" name="default" value="1"  <if condition="$delivery.is_default eq 1">checked="checked"</if>/>是&nbsp;

@@ -23,12 +23,12 @@
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">联系人：</label>
+                            <label class="l_title">* 联系人：</label>
                             <input class="text_input w300" type="text" name="addressee" placeholder="请输入发货人" value="{$receive.addressee}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">国家：</label>
+                            <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}">{$v.name}</option>
@@ -42,28 +42,33 @@
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">市：</label>
+                            <label class="l_title">* 市：</label>
                             <input class="text_input w300" type="text" name="city" placeholder="请输入市">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">具体地址：</label>
+                            <label class="l_title">* 具体地址：</label>
                             <input class="text_input w300" type="text" name="address" placeholder="请输入具体地址">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">邮编：</label>
+                            <label class="l_title">* 邮编：</label>
                             <input class="text_input w300" type="text" name="postal_code" placeholder="请输入邮编">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">手机：</label>
+                            <label class="l_title">* 手机：</label>
                             <input class="text_input w300" type="text" name="mobile" placeholder="请输入手机">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">座机：</label>
                             <input class="text_input w300" type="text" name="phone" placeholder="请输入座机">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">进口商代码：</label>
+                            <input class="text_input w300" type="text" name="receiver_code" placeholder="请输入进口商代码">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
@@ -74,7 +79,9 @@
                         </div>
                         <div class="box_c_item">
                             <label class="l_title"></label>
-                            <button class="btn btn_commit" type="submit">确认</button> &nbsp;<a href="{:U('Receive/index')}" class="btn btn_cancel">取消</a>
+                            <button class="btn btn_commit" type="submit">确认</button> &nbsp;
+                            <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
+                            <a href="{:U('Receive/index')}" class="btn btn_cancel">取消</a> &nbsp;
                             <div class="clear"></div>
                         </div>
                     </fieldset>
