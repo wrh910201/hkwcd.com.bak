@@ -19,7 +19,7 @@
                     <fieldset>
                         <div class="box_c_item">
                             <label class="l_title">公司名：</label>
-                            <input class="text_input w300" type="text" name="consignor" placeholder="请输入公司名" value="{$client.company}">
+                            <input class="text_input w300" type="text" name="company" placeholder="请输入公司名" value="{$client.company}">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
@@ -48,7 +48,7 @@
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">* 具体地址：</label>
-                            <input class="text_input w300" type="text" name="address" placeholder="请输入具体地址">
+                            <input class="text_input w300" type="text" name="detail_address" placeholder="请输入具体地址">
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
@@ -82,15 +82,17 @@
                                 <input type="hidden" name="certificate1_url" id="certificate1_url" />
                                 <input name="mypic" type="file" id="certificate-upload-1" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
                             </div>
-                            <div id="show-image-1" class="fl product_img_show select-image" style="display: none; width: 408px;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
-                                <img src="" alt="身份证正面"/>
+                            <div id="show-image-1" class="fl product_img_show select-image" style="position: relative;display: none; width: 408px;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
+                                <img src="" alt="身份证正面"  width='408' height='248'/>
+                                <input name="mypic" type="file" id="change-certificate-upload-1" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
                             </div>
                             <div class="fl add_product_img select-image" id="select-image-2" style="position: relative;position: relative;margin-top: 0px;margin-left: 10px;width: 400px; height: 240px">
                                 <input type="hidden" name="certificate2_url" id="certificate2_url" />
                                 <input name="mypic" type="file" id="certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;"/>
                             </div>
-                            <div id="show-image-2" class="fl product_img_show select-image" style="display: none; width: 408px;position: relative;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
-                                <img src="" alt="身份证反面"/>
+                            <div id="show-image-2" class="fl product_img_show select-image" style="position: relative;display: none; width: 408px;position: relative;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
+                                <img src="" alt="身份证反面"  width='408' height='248'/>
+                                <input name="mypic" type="file" id="change-certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
                             </div>
                         </div>
                         <div class="clear"></div>
@@ -132,79 +134,97 @@
         //上传
         $("#certificate-upload-1").wrap('<form id="myupload-1" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
         $('#myupload-1').append('<i class="icon">&#xe629;</i> <p>上传身份证正面</p>');
-        $("#certificate-upload-1").change(function(){
-//            console.log($("#certificate-upload-1").val());
-//            return;
-            if($("#certificate-upload-1").val() == "") return;
-            $("#myupload-1").ajaxSubmit({
-                dataType:  'json',
-                beforeSend: function() {
-                    $('#show-result-1 label').empty();
-//                    $('#show-result-1 label').html("上传中...");
-                    $('#show-result-1').show();
-                },
-                success: function(data) {
-                    //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
-                    if(data.state == 'SUCCESS'){
-                        $('#show-result-1 label').html("身份证正面 上传成功("+data.size+"k)");
-                        var img = data.url;
-                        var timg = data.turl;
-                        $('#show-image-1').empty();
-                        $('#show-image-1').html("<img src='"+img+"' width='408' height='248'>");
-                        $("#certificate1_url").val(img);
-                        $('#show-image-1').show();
-                        $('#select-image-1').hide();
-                    }else {
-                        $('#show-result-1 label').html(data.state);
-                    }
-//                    btn.html("上传");
-
-                },
-                error:function(xhr){
-                    btn.html("上传失败");
-                    litpic_tip.html(xhr);
-                }
-            });
+        $("#certificate-upload-1").change(function() {
+            upload_certificate_1('myupload-1');
         });
+
+        $('#change-certificate-upload-1').wrap('<form id="change-myupload-1" style="" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
+        $("#change-certificate-upload-1").change(function() {
+            upload_certificate_1('change-myupload-1');
+        });
+
 
         $("#certificate-upload-2").wrap('<form id="myupload-2" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
         $('#myupload-2').append('<i class="icon">&#xe629;</i> <p>上传身份证反面</p>');
-        $("#certificate-upload-2").change(function(){
-//            console.log($("#certificate-upload-1").val());
-//            return;
-            if($("#certificate-upload-2").val() == "") return;
-            $("#myupload-2").ajaxSubmit({
-                dataType:  'json',
-                beforeSend: function() {
-                    $('#show-result-1 label').empty();
-//                    $('#show-result-2 label').html("上传中...");
-                    $('#show-result-1').show();
-                },
-                success: function(data) {
-                    //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
-                    if(data.state == 'SUCCESS'){
-                        $('#show-result-1 label').html("身份证反面 上传成功("+data.size+"k)");
-                        var img = data.url;
-                        var timg = data.turl;
-                        $('#show-image-2').empty();
-                        $('#show-image-2').html("<img src='"+img+"' width='408' height='248'>");
-                        $("#certificate1_url").val(img);
-                        $('#show-image-2').show();
-                        $('#select-image-2').hide();
-                    }else {
-                        $('#show-result-1 label').html(data.state);
-                    }
-//                    btn.html("上传");
+        $("#certificate-upload-2").change(function() {
+            upload_certificate_2('myupload-2');
+        });
 
-                },
-                error:function(xhr){
-                    btn.html("上传失败");
-                    litpic_tip.html(xhr);
-                }
-            });
+        $('#change-certificate-upload-2').wrap('<form id="change-myupload-2" style="" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
+        $("#change-certificate-upload-2").change(function() {
+            upload_certificate_2('change-myupload-2');
         });
 
     });
+
+    function upload_certificate_1(key) {
+//            console.log($("#certificate-upload-1").val());
+//            return;
+        if($("#certificate-upload-1").val() == "") return;
+        $("#" + key).ajaxSubmit({
+            dataType:  'json',
+            beforeSend: function() {
+                $('#show-result-1 label').empty();
+//                    $('#show-result-1 label').html("上传中...");
+                $('#show-result-1').show();
+            },
+            success: function(data) {
+                //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
+                if(data.state == 'SUCCESS'){
+                    $('#show-result-1 label').html("身份证正面 上传成功("+data.size+"k)");
+                    var img = data.url;
+                    var timg = data.turl;
+//                        $('#show-image-1').empty();
+                    $('#show-image-1 img').attr("src", img);
+                    $("#certificate1_url").val(img);
+                    $('#show-image-1').show();
+                    $('#select-image-1').hide();
+                }else {
+                    $('#show-result-1 label').html(data.state);
+                }
+//                    btn.html("上传");
+
+            },
+            error:function(xhr){
+                btn.html("上传失败");
+                litpic_tip.html(xhr);
+            }
+        });
+    }
+
+    function upload_certificate_2(key){
+//            console.log($("#certificate-upload-1").val());
+//            return;
+        if($("#certificate-upload-2").val() == "") return;
+        $("#" + key).ajaxSubmit({
+            dataType:  'json',
+            beforeSend: function() {
+                $('#show-result-1 label').empty();
+//                    $('#show-result-2 label').html("上传中...");
+                $('#show-result-1').show();
+            },
+            success: function(data) {
+                //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
+                if(data.state == 'SUCCESS'){
+                    $('#show-result-1 label').html("身份证反面 上传成功("+data.size+"k)");
+                    var img = data.url;
+                    var timg = data.turl;
+                    $('#show-image-2 img').attr("src", img);
+                    $("#certificate2_url").val(img);
+                    $('#show-image-2').show();
+                    $('#select-image-2').hide();
+                }else {
+                    $('#show-result-1 label').html(data.state);
+                }
+//                    btn.html("上传");
+
+            },
+            error:function(xhr){
+                btn.html("上传失败");
+                litpic_tip.html(xhr);
+            }
+        });
+    }
 
 
 </script>

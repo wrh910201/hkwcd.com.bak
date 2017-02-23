@@ -662,8 +662,8 @@ fieldset .radio_inner {
     height: 80px;
 }
 .product_img_show img{
-    width: 180px;
-    height: 240px;
+    /*width: 180px;*/
+    /*height: 240px;*/
     border: 4px dotted #8D8D8D;
 }
 /*END 生产单录入*/
