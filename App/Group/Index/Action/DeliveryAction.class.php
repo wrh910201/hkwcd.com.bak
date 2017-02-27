@@ -250,37 +250,67 @@ class DeliveryAction extends BaseAction {
         if( empty($delivery) ) {
             $this->error('地址不存在');
         }
+        $data['company'] = I('post.company', '', 'trim');
         $data['consignor'] = I('post.consignor', '', 'trim');
         $data['country_id'] = I('post.country', 0, 'intval');
         $data['state'] = I('post.state', '', 'trim');
         $data['city'] = I('post.city', '', 'trim');
-        $data['detail_address'] = I('post.address', '', 'trim');
+        $data['detail_address'] = I('post.detail_address', '', 'trim');
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
         $data['postal_code'] = I('post.postal_code', '', 'trim');
-        $data['is_default'] = I('post.default', 0, 'intval');
+        $data['certificate_num'] = I('post.certificate_num', '', 'trim');
+        $data['certificate1_url'] = I('post.certificate1_url', '', 'trim');
+        $data['certificate2_url'] = I('post.certificate2_url', '', 'trim');
+        $data['is_default'] = I('post.is_default', 0, 'intval');
 
         if( empty($data['consignor']) ) {
-            $this->error('请输入发货人');
+            $this->error('请输入联系人');
         }
         if( $data['country_id'] <= 0 ) {
             $this->error('请选择国家');
         }
+        if( empty($data['city']) ) {
+            $this->error('请输入城市');
+        }
         if( empty($data['detail_address']) ) {
             $this->error('请输入具体地址');
         }
-        if( empty($data['mobile']) && empty($data['phone']) ) {
-            $this->error('手机与座机至少输入一个');
+        if( empty($data['postal_code']) ) {
+            $this->error('请输入邮编');
+        }
+        if( empty($data['mobile']) ) {
+            $this->error('请输入手机');
+        }
+
+        if( empty($data['certificate_num'])  ) {
+            $this->error('请输入身份证号码');
+        }
+
+        if( empty($data['certificate1_url'])  ) {
+            $this->error('请上传身份证正面');
+        }
+
+        if( empty($data['certificate2_url'])  ) {
+            $this->error('请上传身份证反面');
         }
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
         $data['client_id'] = session('hkwcd_user.user_id');
         if( $data['is_default'] == 1 ) {
-            $old_where = ['is_default' => 1, 'status' => 1, 'client_id' => $client_id];
+            $old_where = ['is_default' => 1, 'client_id' => $client_id];
             M('DeliveryAddress')->where($old_where)->save(['is_default' => 0]);
         }
         $result = M('DeliveryAddress')->where($where)->save($data);
         if( is_numeric($result) ) {
+            $data['id'] = $delivery['id'];
+            $result1 = $this->_certificate_water($data, true, $delivery);
+            if( $result1 ) {
+                $this->success('添加发货地址成功', U('Delivery/index'));
+            } else {
+                $this->error('系统繁忙，请稍后重试');
+            }
+
             $this->success('编辑成功');
         } else {
             $this->error('系统繁忙，请稍后重试');
@@ -326,7 +356,7 @@ class DeliveryAction extends BaseAction {
         }
     }
 
-    private function _certificate_water($data) {
+    private function _certificate_water($data, $is_update = false, $delivery = null) {
         $update_data = [];
         $delivery_id = $data['id'];
         $username = session('hkwcd_user.username');
@@ -337,28 +367,32 @@ class DeliveryAction extends BaseAction {
             mkdir(THINK_PATH.'../uploads/client/'.$username.'/delivery');
         }
         //正面
-        $url = realpath(THINK_PATH.'../'.$data['certificate1_url']);
-        $ext_array = explode('.', $data['certificate1_url']);
-        $ext1 = $ext_array[1];
-        $save_name_1 = THINK_PATH.'../uploads/client/'.$username.'/delivery/'.$delivery_id.'_front.'.$ext1;
-        $update_save_name_1 = '/uploads/client/'.$username.'/delivery/'.$delivery_id.'_front.'.$ext1;
-        $result = $this->_add_water($url, $save_name_1);
-        if( $result ) {
-            $update_data['certificate1_url'] = $update_save_name_1;
+        if( $is_update == false || ($is_update == true && $delivery['certificate1_url'] != $data['certificate1_url']) ) {
+            $url = realpath(THINK_PATH . '../' . $data['certificate1_url']);
+            $ext_array = explode('.', $data['certificate1_url']);
+            $ext1 = $ext_array[1];
+            $save_name_1 = THINK_PATH . '../uploads/client/' . $username . '/delivery/' . $delivery_id . '_front.' . $ext1;
+            $update_save_name_1 = '/uploads/client/' . $username . '/delivery/' . $delivery_id . '_front.' . $ext1;
+            $result = $this->_add_water($url, $save_name_1);
+            if ($result) {
+                $update_data['certificate1_url'] = $update_save_name_1;
+            }
+            @unlink($url);
         }
-        @unlink($url);
 
         //反面
-        $url = realpath(THINK_PATH.'../'.$data['certificate2_url']);
-        $ext_array = explode('.', $data['certificate2_url']);
-        $ext2 = $ext_array[1];
-        $save_name_2 = THINK_PATH.'../uploads/client/'.$username.'/delivery/'.$delivery_id.'_back.'.$ext1;
-        $update_save_name_2 = '/uploads/client/'.$username.'/delivery/'.$delivery_id.'_back.'.$ext2;
-        $result = $this->_add_water($url, $save_name_2);
-        if( $result ) {
-            $update_data['certificate2_url'] = $update_save_name_2;
+        if( $is_update == false || ($is_update == true && $delivery['certificate2_url'] != $data['certificate2_url']) ) {
+            $url = realpath(THINK_PATH . '../' . $data['certificate2_url']);
+            $ext_array = explode('.', $data['certificate2_url']);
+            $ext2 = $ext_array[1];
+            $save_name_2 = THINK_PATH . '../uploads/client/' . $username . '/delivery/' . $delivery_id . '_back.' . $ext1;
+            $update_save_name_2 = '/uploads/client/' . $username . '/delivery/' . $delivery_id . '_back.' . $ext2;
+            $result = $this->_add_water($url, $save_name_2);
+            if ($result) {
+                $update_data['certificate2_url'] = $update_save_name_2;
+            }
+            @unlink($url);
         }
-        @unlink($url);
         $map = [
             'id' => $delivery_id,
         ];
@@ -368,6 +402,8 @@ class DeliveryAction extends BaseAction {
             return true;
         } else {
             M('DeliveryAddress')->where($map)->delete();
+            @unlink($save_name_1);
+            @unlink($save_name_2);
             return false;
         }
     }
