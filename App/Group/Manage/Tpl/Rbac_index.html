@@ -19,7 +19,7 @@
 <div class="main">
     <div class="pos">用户列表</div>    
     <div class="operate">
-        <div class="left"><input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Rbac/addUser')}')" class="btn_blue" value="添加管理员">
+        <div class="left"><input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Rbac/newAdd')}')" class="btn_blue" value="添加管理员">
         <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Rbac/delUser', array('batchFlag' => 1))}','确实要删除选择项吗？')" class="btn_blue" value="删除选中"></div>
         <div class="left_pad">
             <form method="post" action="{:U(GROUP_NAME. '/Rbac/index')}">
@@ -33,9 +33,11 @@
         <table width="100%">
             <tr>
                 <th><input type="checkbox" id="check"></th>
-                <th>编号</th>
                 <th>用户名</th>
-                <th>权限组</th>
+                <th>姓名</th>
+                <th>部门</th>
+                <th>岗位</th>
+                <th>权限</th>
                 <th>上次登录ip</th>
                 <th>上次登录时间</th>
 				<th>锁定</th>
@@ -45,28 +47,40 @@
             <if condition="$v['usertype'] neq 9">
             <tr>
                 <td><input type="checkbox" name="key[]" <if condition="$v['usertype'] eq 9">disabled="disabled"</if> value="{$v.id}"></td>
-                <td>{$v.id}</td>
-                <td>{$v.username}</td>
-                <td>
+                <!--<td>{$v.id}</td>-->
+                <!--<td>{$v.username}</td>-->
+                <!--<td>-->
                 <if condition="$v['usertype'] eq 9">
-                超级管理员
+                <!--超级管理员-->
                 <else/>
 				<foreach name='v["role"]' item='value'>
-				{$value.name}|
+				<!--{$value.name}|-->
 				</foreach>
 
 				</if>
-				</td>
+				<!--</td>-->
+                <td>{$v.username}</td>
+                <td>{$v.realname}</td>
+                <td>{$v.department_name}</td>
+                <td>{$v.post}</td>
+                <td>
+                    <if condition="$v.access eq 0">管理</if>
+                    <if condition="$v.access eq 1">审核</if>
+                    <if condition="$v.access eq 2">收款</if>
+                    <if condition="$v.access eq 3">发货</if>
+                </td>
                 <td>{$v.loginip}</td>
                 <td>{$v.logintime|date='Y-m-d H:i:s',###}</td>
 				<td><if condition="$v['islock']">是<else/>否</if></td>
                 <td>
 				<if condition="$v['usertype'] eq 9">                
-				<a href="{:U(GROUP_NAME. '/Rbac/addUser',array('uid' => $v['id']),'')}">修改</a>
-				删除
+				<!--<a href="{:U(GROUP_NAME. '/Rbac/addUser',array('uid' => $v['id']),'')}">修改</a>-->
+                <a href="{:U(GROUP_NAME. '/Rbac/newEdit',array('id' => $v['id']),'')}">修改</a>
+                删除
                 <else />
-				<a href="{:U(GROUP_NAME. '/Rbac/addUser',array('uid' => $v['id']),'')}">修改</a>
-				<a href="{:U(GROUP_NAME. '/Rbac/delUser',array('uid' => $v['id']),'')}" onclick="del('{:U(GROUP_NAME. '/Rbac/delUser',array('uid' => $v['id']),'')}'); return false;">删除</a>
+				<!--<a href="{:U(GROUP_NAME. '/Rbac/addUser',array('uid' => $v['id']),'')}">修改</a>-->
+                <a href="{:U(GROUP_NAME. '/Rbac/newEdit',array('id' => $v['id']),'')}">修改</a>
+                <a href="{:U(GROUP_NAME. '/Rbac/delUser',array('uid' => $v['id']),'')}" onclick="del('{:U(GROUP_NAME. '/Rbac/delUser',array('uid' => $v['id']),'')}'); return false;">删除</a>
                 </if>
 				</td>
             </tr>

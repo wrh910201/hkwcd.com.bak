@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var uid = <if condition="$user['id'] gt 0">{$user.id}<else/>0</if>;
+            var validate={username:1,code:1};
+            $("input[name='username']").focus();//聚焦
+            //验证用户名
+            $("input[name='username']").blur(function(){
+                var username = $("input[name='username']");
+                if($.trim(username.val())==''){
+                    validate.username=1;
+                    username.parent().find("span").remove().end().append("<span class='error'>用户名不能为空</span>");
+                    return ;
+                }
+                $.post("{:U(GROUP_NAME.'/Login/checkusername')}",{username:$.trim(username.val()), id:uid},function(stat){
+                    if(stat==1){
+                        validate.username=1;
+                        username.parent().find("span").remove().end().append("<span class='error'>用户已经存在</span>");
+                    }else{
+                        validate.username=0;
+                        username.parent().find("span").remove();
+                    }
+
+                })
+            });
+
+            $("#form_do").submit(function(){
+                if(validate.username==0){
+                    return true;
+                }
+                //验证用户名
+                $("input[name='username']").trigger("blur");
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="main">
+    <div class="pos">{$type}</div>
+    <div class="form">
+        <form method='post' id="form_do" name="form_do" action="<if condition='$user'>{:U(GROUP_NAME. '/Rbac/doNewEdit')}<else/>{:U(GROUP_NAME. '/Rbac/doNewAdd')}</if>">
+            <dl>
+                <dt> 用户名：</dt>
+                <dd>
+                    <input type="text" name="username" class="inp_one" value="{$user.username}"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt> 部门：</dt>
+                <dd>
+                    <select name="department_id">
+                        <option value="0">请选择部门</option>
+                        <foreach name='department_list' item='v'>
+                            <option value="{$v.id}" <if condition="$user.department_id eq $v['id']">selected</if>>{$v.department_name}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt> 密码：</dt>
+                <dd>
+                    <input type="password" name="password" class="inp_one" value=""/>
+                </dd>
+            </dl>
+            <dl>
+                <dt> 真实姓名：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="realname" value="{$user.realname}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 性别：</dt>
+                <dd>
+                    <input type="radio" name="sex" value="1" <if condition='$user.sex eq 1'>checked="checked"</if> />男
+                    &nbsp;&nbsp;
+                    <input type="radio" name="sex" value="0" <if condition='$user.sex eq 2'>checked="checked"</if> />女
+                </dd>
+            </dl>
+            <dl>
+                <dt> 婚姻：</dt>
+                <dd>
+                    <input type="radio" name="marriage" value="1" <if condition='$user.marriage eq 1'>checked="checked"</if> />未婚
+                    &nbsp;&nbsp;
+                    <input type="radio" name="marriage" value="0" <if condition='$user.marriage eq 2'>checked="checked"</if> />已婚
+                </dd>
+            </dl>
+            <dl>
+                <dt> 出生日期：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="birthday" value="{$user.birthday}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 身份证号码：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="certificate_num" value="{$user.certificate_num}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 籍贯：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="place_of_origin" value="{$user.place_of_origin}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 岗位：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="station" value="{$user.post}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 工作日期：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="work_date" value="{$user.work_date}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 手机：</dt>
+                <dd>
+                    <input type="text" class="inp_one" name="mobile" value="{$user.mobile}" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 权限：</dt>
+                <dd>
+                    <input type="radio" name="access" value="1" <if condition="$user.access eq 1">checked="checked"</if> />审核
+                    <input type="radio" name="access" value="2" <if condition="$user.access eq 2">checked="checked"</if>/>收款
+                    <input type="radio" name="access" value="3" <if condition="$user.access eq 3">checked="checked"</if>/>发货
+                    <input type="radio" name="access" value="0" <if condition="$user.access eq 0">checked="checked"</if>/>管理
+                </dd>
+            </dl>
+            <dl>
+                <dt> 锁定：</dt>
+                <dd>
+                    <input type="radio" name="islock" value="1" <if condition='$user.islock eq 1'>checked="checked"</if> />是
+                    &nbsp;&nbsp;
+                    <input type="radio" name="islock" value="0" <if condition='$user.islock eq 0'>checked="checked"</if> />否
+                </dd>
+            </dl>
+    </div>
+    <div class="form_b">
+        <if condition="$user">
+            <input type="hidden" name="id" value="{$user.id}" />
+        </if>
+        <input type="submit" class="btn_blue" id="submit" value="提 交">
+    </div>
+    </form>
+</div>
+
+
+</body>
+</html>

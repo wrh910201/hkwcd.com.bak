@@ -10,7 +10,7 @@ class RbacAction extends CommonAction {
 		//$this->user = M('admin')->select();
 		
 		if (empty($keyword)) {
-			$where = array('id' => array('GT', '0'));
+			$where = array('a.id' => array('GT', '0'));
 		}else {
 			$where = array('username'=>array('like', "%$keyword%"));
 		}
@@ -21,7 +21,13 @@ class RbacAction extends CommonAction {
 		import('ORG.Util.Page');
 		$page = new Page($count, 10);
 		$limit = $page->firstRow. ',' .$page->listRows;
-		$user = M('admin')->field('password', true)->where($where)->limit($limit)->select() ;	//view
+		$user = M('admin')
+            ->alias('a')
+            ->join('left join hx_department as d on d.id = a.department_id')
+            ->field('a.*, d.department_name')
+            ->where($where)
+            ->limit($limit)
+            ->select() ;	//view
 		if ($user) {
 			foreach ($user as $k => $v) {
 				$user[$k]['role'] = D('RoleView')->where(array('user_id' => $v['id']))->select();
@@ -541,6 +547,143 @@ class RbacAction extends CommonAction {
 			$this->error('删除失败');
 		}
 	}
+
+	//==========================================
+    //新的增改
+
+	public function newAdd() {
+        $this->type = '添加用户';
+        $department_list = M('Department')->where(['status' => 1])->select();
+
+        $this->assign('department_list', $department_list);
+        $this->display();
+    }
+
+    public function doNewAdd() {
+        $data['username'] = I('username', '', 'trim');
+        $data['department_id'] = I('department_id', 0, 'intval');
+        $data['password'] = I('password', '', 'trim');
+        $data['realname'] = I('realname', '', 'trim');
+        $data['sex'] = I('sex', 0, 'intval');
+        $data['marriage'] = I('marriage', 0, 'intval');
+        $data['birthday'] = I('birthday', '', 'trim');
+        $data['certificate_num'] = I('certificate_num', '', 'trim');
+        $data['place_of_origin'] = I('place_of_origin', '', 'trim');
+        $data['post'] = I('station', '', 'trim');
+        $data['work_date'] = I('work_date', '', 'trim');
+        $data['mobile'] = I('mobile', '', 'trim');
+        $data['access'] = I('access', '', 'trim');
+        $data['islock'] = I('islock', 0, 'intval');
+
+        //M验证
+        $validate = array(
+            array('username','require','用户名必须填写！'),
+            array('username','','用户名已经存在！',0,'unique',1),
+        );
+        $model = M('admin');
+        if (!$model->validate($validate)->create()) {
+            $this->error($data->getError());
+        }
+
+        if( empty($data['password']) ) {
+            $this->error('请输入密码');
+        }
+
+        if( empty($data['department_id']) ) {
+            $this->error('请选择部门');
+        }
+
+        $data['logintime'] = time();
+        $data['loginip'] = get_client_ip();
+        $data['encrypt'] = get_randomstr();
+        $passwordinfo = get_password($data['password'], $data['encrypt']);
+        $data['password'] = $passwordinfo['password'];
+
+        $result = M('Admin')->add($data);
+        if(  $result ) {
+            $this->success('添加用户成功', U('Rbac/index'));
+        } else {
+            $this->error('添加用户失败');
+        }
+
+    }
+
+    public function newEdit() {
+        $id = I('id', 0, 'intval');
+        $user = M('Admin')
+            ->alias('a')
+            ->field('a.*, d.department_name')
+            ->join('hx_department as d on d.id = a.department_id')
+            ->where(['a.id' => $id])->find();
+        if( empty($user) ) {
+            $this->error('用户不存在');
+        }
+        $department_list = M('Department')->where(['status' => 1])->select();
+
+        $this->assign('department_list', $department_list);
+        $this->assign('user', $user);
+        $this->type = '编辑用户';
+        $this->display();
+
+    }
+
+    public function doNewEdit() {
+        $id = I('id', 0, 'intval');
+        $user = M('Admin')->where(['id' => $id])->find();
+        if( empty($user) ) {
+            $this->error('用户不存在');
+        }
+        $data['username'] = I('username', '', 'trim');
+        $data['department_id'] = I('department_id', 0, 'intval');
+        $data['password'] = I('password', '', 'trim');
+        $data['realname'] = I('realname', '', 'trim');
+        $data['sex'] = I('sex', 0, 'intval');
+        $data['marriage'] = I('marriage', 0, 'intval');
+        $data['birthday'] = I('birthday', '', 'trim');
+        $data['certificate_num'] = I('certificate_num', '', 'trim');
+        $data['place_of_origin'] = I('place_of_origin', '', 'trim');
+        $data['post'] = I('station', '', 'trim');
+        $data['work_date'] = I('work_date', '', 'trim');
+        $data['mobile'] = I('mobile', '', 'trim');
+        $data['access'] = I('access', '', 'trim');
+        $data['islock'] = I('islock', 0, 'intval');
+
+        //M验证
+        $validate = array(
+            array('username','require','用户名必须填写！'),
+            array('username','','用户名已经存在！',0,'unique',1),
+        );
+        $model = M('admin');
+        if (!$model->validate($validate)->create()) {
+            $this->error($data->getError());
+        }
+
+//        if( empty($data['password']) ) {
+//            $this->error('请输入密码');
+//        }
+
+        if( empty($data['department_id']) ) {
+            $this->error('请选择部门');
+        }
+
+//        $data['logintime'] = time();
+//        $data['loginip'] = get_client_ip();
+        if( $data['password'] ) {
+            $data['encrypt'] = get_randomstr();
+            $passwordinfo = get_password($data['password'], $data['encrypt']);
+            $data['password'] = $passwordinfo['password'];
+        } else {
+            unset($data['password']);
+        }
+
+        $result = M('Admin')->where(['id' => $id])->save($data);
+        if(  is_numeric($result) ) {
+            $this->success('编辑用户成功', U('Rbac/index'));
+        } else {
+            $this->error('编辑用户失败');
+        }
+
+    }
 
 
 }
