@@ -45,6 +45,7 @@ class ChannelAction extends CommonContentAction {
         $data['en_name'] = I('post.en_name', '', 'htmlspecialchars,trim');
         $data['extra_payment'] = I('post.extra_payment');
         $data['prescription'] = I('post.prescription', '', 'htmlspecialchars,trim');
+        $data['remark'] = I('post.remark', '', 'htmlspecialchars,trim');
         if( empty($data['name']) || empty($data['en_name']) ) {
             $this->error('请输入渠道名');
             exit;
@@ -83,6 +84,7 @@ class ChannelAction extends CommonContentAction {
         $data['en_name'] = I('post.en_name', '', 'htmlspecialchars,trim');
         $data['extra_payment'] = I('post.extra_payment');
         $data['prescription'] = I('post.prescription', '', 'htmlspecialchars,trim');
+        $data['remark'] = I('post.remark', '', 'htmlspecialchars,trim');
         if( empty($data['name']) || empty($data['en_name']) ) {
             $this->error('请输入渠道名');
             exit;
