@@ -16,9 +16,9 @@ class ClientAction extends CommonContentAction {
         $where = array();
         $condition = array();
         if (!empty($keyword)) {
-            $condition['username'] = ['like', $keyword];
-            $condition['full_name'] = ['like', $keyword];
-            $condition['company'] = ['like', $keyword];
+            $condition['username'] = ['like', '%'.$keyword.'%'];
+            $condition['full_name'] = ['like', '%'.$keyword.'%'];
+            $condition['company'] = ['like', '%'.$keyword.'%'];
             $condition['_logic'] = 'OR';
             $where['_complex'] = $condition;
         }

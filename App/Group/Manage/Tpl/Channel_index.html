@@ -24,6 +24,14 @@
             <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Channel/add')}')" class="btn_blue" value="添加渠道">
             <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Channel/del', array('batchFlag' => 1))}', '确实要删除选择项吗？')" class="btn_blue" value="删除">
         </div>
+        <if condition='ACTION_NAME eq "index"'>
+            <div class="left_pad">
+                <form method="post" action="{:U(GROUP_NAME. '/Channel/index')}">
+                    <input type="text" name="keyword" title="关键字" class="inp_default" value="{$keyword}">
+                    <input type="submit" class="btn_blue" value="查  询">
+                </form>
+            </div>
+        </if>
     </div>
     <div class="list">
         <form action="{:U(GROUP_NAME.'/Channel/delAll')}" method="post" id="form_do" name="form_do">
@@ -33,6 +41,8 @@
                     <th>编号</th>
                     <th>渠道名称</th>
                     <th>渠道英文名称</th>
+                    <th>燃油附加费</th>
+                    <th>时效</th>
                     <th>操作</th>
                 </tr>
                 <foreach name='vlist' item='v'>
@@ -43,6 +53,8 @@
                         <td>{$v.id}</td>
                         <td>{$v.name}</td>
                         <td>{$v.en_name}</td>
+                        <td>{$v.extra_payment}%</td>
+                        <td>{$v.prescription}个工作日</td>
                         <!--<td><if condition="$v['status'] eq 0">禁用<else/>正常</if></td>-->
                         <td>
                             <a href="{:U(GROUP_NAME. '/Channel/edit',array('id' => $v['id']), '')}">编辑</a>

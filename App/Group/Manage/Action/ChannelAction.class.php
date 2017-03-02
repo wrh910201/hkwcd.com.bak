@@ -11,17 +11,26 @@ class ChannelAction extends CommonContentAction {
     public function index() {
 
         //分页
-        import('ORG.Util.Page');
-        $count = M('channel')->count();
+        $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字
+        $where = array();
+        $condition = array();
 
-        $where = ['status' => 1];
+        if (!empty($keyword)) {
+            $condition['name'] = ['like', '%'.$keyword.'%'];
+            $condition['en_name'] = ['like', '%'.$keyword.'%'];
+            $condition['_logic'] = 'OR';
+            $where['_complex'] = $condition;
+        }
+        $where['status'] = 1;
+        import('ORG.Util.Page');
+        $count = M('Channel')->where($where)->count();
         $page = new Page($count, 10);
         $limit = $page->firstRow . ',' . $page->listRows;
-        $list = M('channel')->where($where)->order('id')->limit($limit)->select();
-
+        $list = M('Channel')->where($where)->order('id')->limit($limit)->select();
         $this->page = $page->show();
         $this->vlist = $list;
 
+        $this->keyword = $keyword;
         $this->type = '渠道列表';
         $this->display();
     }
@@ -34,7 +43,8 @@ class ChannelAction extends CommonContentAction {
     public function doAdd() {
         $data['name'] = I('post.name', '', 'htmlspecialchars,trim');
         $data['en_name'] = I('post.en_name', '', 'htmlspecialchars,trim');
-
+        $data['extra_payment'] = I('post.extra_payment');
+        $data['prescription'] = I('post.prescription', '', 'htmlspecialchars,trim');
         if( empty($data['name']) || empty($data['en_name']) ) {
             $this->error('请输入渠道名');
             exit;
@@ -71,7 +81,8 @@ class ChannelAction extends CommonContentAction {
         }
         $data['name'] = I('post.name', '', 'htmlspecialchars,trim');
         $data['en_name'] = I('post.en_name', '', 'htmlspecialchars,trim');
-
+        $data['extra_payment'] = I('post.extra_payment');
+        $data['prescription'] = I('post.prescription', '', 'htmlspecialchars,trim');
         if( empty($data['name']) || empty($data['en_name']) ) {
             $this->error('请输入渠道名');
             exit;

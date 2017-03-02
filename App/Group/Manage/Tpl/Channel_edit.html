@@ -25,6 +25,18 @@
                     <input type="text" name="en_name" class="inp_one" id="en_name" value="{$channel.en_name}"/>
                 </dd>
             </dl>
+            <dl>
+                <dt>燃油附加费：</dt>
+                <dd>
+                    <input type="text" name="extra_payment" class="inp_one" id="extra_payment" value="{$channel.extra_payment}"/>%
+                </dd>
+            </dl>
+            <dl>
+                <dt>时效：</dt>
+                <dd>
+                    <input type="text" name="prescription" class="inp_one" id="prescription" value="{$channel.prescription}"/>个工作日
+                </dd>
+            </dl>
 
             <div class="form_b">
                 <input type="hidden" name="id" value="{$channel.id}"/>
