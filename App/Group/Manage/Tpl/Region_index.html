@@ -23,16 +23,24 @@
             <input type="button" onclick="goUrl('{:U(GROUP_NAME.'/Region/add')}')" class="btn_blue" value="添加地区">
             <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Region/del', array('batchFlag' => 1))}', '确实要删除选择项吗？')" class="btn_blue" value="删除">
         </div>
+        <if condition='ACTION_NAME eq "index"'>
+            <div class="left_pad">
+                <form method="post" action="{:U(GROUP_NAME. '/Region/index')}">
+                    <input type="text" name="keyword" title="关键字" class="inp_default" value="{$keyword}">
+                    <input type="submit" class="btn_blue" value="查  询">
+                </form>
+            </div>
+        </if>
     </div>
 </div>
 <div class="list">
-    <form action="{:U(GROUP_NAME.'/Region/sort', array('pid' => $pid))}" method="post" id="form_do" name="form_do">
+    <form action="{:U(GROUP_NAME.'/Region/index', array('pid' => $pid))}" method="post" id="form_do" name="form_do">
         <table width="100%">
             <tr>
                 <th><input type="checkbox" id="check"></th>
                 <th>编号</th>
                 <th>地区别名</th>
-                <!--<th>排序</th>-->
+                <th>时效</th>
                 <th>操作</th>
             </tr>
             <foreach name='region_list' item='v'>
@@ -40,8 +48,10 @@
                     <td><input type="checkbox" name="key[]" value="{$v.id}"></td>
                     <td>{$v.id}</td>
                     <td>{$v.alias}</td>
+                    <td><if condition="$v.prescription neq ''">{$v.prescription}个工作日</if></td>
                     <td>
-                        <a href="{:U(GROUP_NAME.'/Region/edit',array('id' => $v['id']))}">详情</a>
+                        <a href="{:U(GROUP_NAME.'/Region/edit',array('id' => $v['id']))}">编辑</a>
+                        <a href="{:U(GROUP_NAME.'/Region/detail',array('id' => $v['id']))}">详情</a>
                         <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Region/del', array('id' => $v['id']))}', '确实要删除选择项吗？')">删除</a>
                     </td>
                 </tr>

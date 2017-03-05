@@ -15,7 +15,7 @@ class RegionAction extends CommonContentAction {
         $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字
         $where = array();
         if (!empty($keyword)) {
-            $where['alias'] = ['like', $keyword];
+            $where['alias'] = ['like', '%'.$keyword."%"];
         }
 
         $where['status'] = 1;
@@ -49,8 +49,12 @@ class RegionAction extends CommonContentAction {
     public function doAdd() {
         if( IS_POST ) {
             $data['alias'] = I('post.name', '', 'htmlspecialchars,trim');
+            $data['prescription'] = I('post.prescription', '', 'trim');
             if( empty($data['alias']) ) {
                 $this->error('请输入地区名称');
+            }
+            if( empty($data['prescription']) ) {
+                $this->error('请输入时效');
             }
             if( M('region')->add($data) ) {
                 $this->success('添加地区成功');
@@ -91,8 +95,12 @@ class RegionAction extends CommonContentAction {
             exit;
         }
         $data['alias'] = I('post.name', '', 'htmlspecialchars,trim');
+        $data['prescription'] = I('post.prescription', '', 'trim');
         if( empty($data['alias']) ) {
             $this->error('请输入地区名称');
+        }
+        if( empty($data['prescription']) ) {
+            $this->error('请输入时效');
         }
         if( M('region')->where(['id' => $id])->save($data) ) {
             $this->success('编辑地区成功');
