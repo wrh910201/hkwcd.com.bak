@@ -59,10 +59,6 @@ class OrderAction extends BaseAction  {
         $country_list = M('country')->where($where)->order('sort,id')->select();
         $this->assign('country_list', $country_list);
 
-        //货币
-        $where = ['status' => 1];
-        $currency_list = M('Currency')->where($where)->select();
-        $this->assign('currency_list', $currency_list);
 
         $channel_list = M('Channel')->where($where)->select();
         $this->assign('channel_list', $channel_list);
@@ -78,6 +74,11 @@ class OrderAction extends BaseAction  {
         $this->assign('json_receive', json_encode($default_receive));
         $this->assign('default_receive_id', $selected_receive_id);
         $this->assign('has_default_receive', $has_default_receive);
+        if( empty($client['company']) ) {
+            $this->assign('default_company', json_encode(''));
+        } else {
+            $this->assign('default_company', json_encode($client['company']));
+        }
 
         $this->assign('title', '添加订单');
 
@@ -1366,10 +1367,21 @@ class OrderAction extends BaseAction  {
             'client_id' => $client_id,
             'status' => 1,
         ];
-        $delivery_list = M('DeliveryAddress')->where($where)->order('is_default desc, id asc')->select();
+        $delivery_list = M('DeliveryAddress')
+            ->alias('d')
+            ->field('d.*, c.name as country_name, c.ename as en_country_name')
+            ->join("left join hx_country as c on d.country_id = c.id")
+            ->where($where)
+            ->order('is_default desc, id asc')
+            ->select();
         if( $delivery_list ) {
             $temp = [];
             foreach($delivery_list as $k => $v) {
+                if( mb_strlen($v['detail_address']) > 20 ) {
+                    $v['show_detail_address'] = mb_substr($v['detail_address'], 0, 20).'...';
+                } else {
+                    $v['show_detail_address'] = $v['detail_address'];
+                }
                 $temp[$v['id']] = $v;
             }
             $delivery_list = $temp;
@@ -1388,10 +1400,21 @@ class OrderAction extends BaseAction  {
             'client_id' => $client_id,
             'status' => 1,
         ];
-        $receive_list = M('ReceiveAddress')->where($where)->order('is_default desc, id asc')->select();
+        $receive_list = M('ReceiveAddress')
+            ->alias('d')
+            ->field('d.*, c.name as country_name, c.ename as en_country_name')
+            ->join("left join hx_country as c on d.country_id = c.id")
+            ->where($where)
+            ->order('is_default desc, id asc')
+            ->select();
         if( $receive_list ) {
             $temp = [];
             foreach($receive_list as $k => $v) {
+                if( mb_strlen($v['detail_address']) > 20 ) {
+                    $v['show_detail_address'] = mb_substr($v['detail_address'], 0, 20).'...';
+                } else {
+                    $v['show_detail_address'] = $v['detail_address'];
+                }
                 $temp[$v['id']] = $v;
             }
             $receive_list = $temp;
@@ -1406,10 +1429,25 @@ class OrderAction extends BaseAction  {
 
     public function getDefaultDelivery() {
         $client_id = session('hkwcd_user.user_id');
-        $default_delivery = M('DeliveryAddress')->where(['client_id' => $client_id, 'status' => 1, 'is_default' => 1])->find();
-        $this->response['code'] = 1;
-        $this->response['msg'] = 'success';
-        $this->response['data'] = $default_delivery;
+        $default_delivery = M('DeliveryAddress')
+            ->alias('d')
+            ->field('d.*, c.name as country_name, c.ename as en_country_name')
+            ->join("left join hx_country as c on d.country_id = c.id")
+            ->where(['client_id' => $client_id, 'status' => 1, 'is_default' => 1])
+            ->find();
+        if( empty($default_delivery) ) {
+            $this->response['code'] = -1;
+            $this->response['msg'] = '您没有设置默认的发货地址';
+        } else {
+            if( mb_strlen($default_delivery['detail_address']) > 20 ) {
+                $default_delivery['show_detail_address'] = mb_substr($default_delivery['detail_address'], 0, 20).'...';
+            } else {
+                $default_delivery['show_detail_address'] = $default_delivery['detail_address'];
+            }
+            $this->response['code'] = 1;
+            $this->response['msg'] = 'success';
+            $this->response['data'] = $default_delivery;
+        }
         echo json_encode($this->response);
         exit;
     }
@@ -1417,10 +1455,25 @@ class OrderAction extends BaseAction  {
     public function getDefaultReceive() {
         $client_id = session('hkwcd_user.user_id');
 
-        $default_receive = M('ReceiveAddress')->where(['client_id' => $client_id, 'status' => 1, 'is_default' => 1])->find();
-        $this->response['code'] = 1;
-        $this->response['msg'] = 'success';
-        $this->response['data'] = $default_receive;
+        $default_receive = M('ReceiveAddress')
+            ->alias('d')
+            ->field('d.*, c.name as country_name, c.ename as en_country_name')
+            ->join("left join hx_country as c on d.country_id = c.id")
+            ->where(['client_id' => $client_id, 'status' => 1, 'is_default' => 1])
+            ->find();
+        if( empty($default_receive) ) {
+            $this->response['code'] = -1;
+            $this->response['msg'] = '您没有设置默认的发货地址';
+        } else {
+            if( mb_strlen($default_receive['detail_address']) > 20 ) {
+                $default_receive['show_detail_address'] = mb_substr($default_receive['detail_address'], 0, 20).'...';
+            } else {
+                $default_receive['show_detail_address'] = $default_receive['detail_address'];
+            }
+            $this->response['code'] = 1;
+            $this->response['msg'] = 'success';
+            $this->response['data'] = $default_receive;
+        }
         echo json_encode($this->response);
         exit;
     }

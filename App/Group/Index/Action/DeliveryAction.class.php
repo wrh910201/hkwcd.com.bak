@@ -57,6 +57,7 @@ class DeliveryAction extends BaseAction {
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
         $data['postal_code'] = I('post.postal_code', '', 'trim');
+        $data['exporter_code'] = I('post.exporter_code', '', 'trim');
         $data['certificate_num'] = I('post.certificate_num', '', 'trim');
         $data['certificate1_url'] = I('post.certificate1_url', '', 'trim');
         $data['certificate2_url'] = I('post.certificate2_url', '', 'trim');
@@ -192,7 +193,8 @@ class DeliveryAction extends BaseAction {
 
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
-        $data['client_id'] = session('hkwcd_user.user_id');
+        $client_id = session('hkwcd_user.user_id');
+        $data['client_id'] = $client_id;
 
         if( $data['is_default'] ) {
             $old_where = ['is_default' => 1, 'client_id' => $data['client_id']];
@@ -207,7 +209,18 @@ class DeliveryAction extends BaseAction {
 
             if( $result1 ) {
                 $response['code'] = 1;
-                $data['id'] = $result;
+                $data = M('DeliveryAddress')
+                    ->alias('d')
+                    ->field('d.*, c.name as country_name, c.ename as en_country_name')
+                    ->join("left join hx_country as c on d.country_id = c.id")
+                    ->where(['client_id' => $client_id, 'status' => 1, 'd.id' => $result])
+                    ->find();
+                if( mb_strlen($data['detail_address']) > 20 ) {
+                    $default_delivery['show_detail_address'] = mb_substr($data['detail_address'], 0, 20).'...';
+                } else {
+                    $default_delivery['show_detail_address'] = $data['detail_address'];
+                }
+//                $data = M('DeliveryAddress')->getLastSql();
                 $response['data'] = $data;
             } else {
                 $response['msg'] = '系统繁忙，请稍后重试';
@@ -259,6 +272,7 @@ class DeliveryAction extends BaseAction {
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
         $data['postal_code'] = I('post.postal_code', '', 'trim');
+        $data['exporter_code'] = I('post.exporter_code', '', 'trim');
         $data['certificate_num'] = I('post.certificate_num', '', 'trim');
         $data['certificate1_url'] = I('post.certificate1_url', '', 'trim');
         $data['certificate2_url'] = I('post.certificate2_url', '', 'trim');
