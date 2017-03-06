@@ -6,9 +6,14 @@ class CountryAction extends Action{
 		$pid = I('pid', 0,'intval');
 		
 		$keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字	
-	
-		if (!empty($keyword)) {
-			$where = array('pid' => $pid,'types'=>0,'name'=>array('like','%'.$keyword.'%')); 
+        $condition = array();
+        if (!empty($keyword)) {
+            $condition['name'] = ['like', '%'.$keyword.'%'];
+            $condition['ename'] = ['like', '%'.$keyword.'%'];
+            $condition['_logic'] = 'OR';
+            $where['_complex'] = $condition;
+            $where = array('pid' => $pid,'types'=>0,'_complex'=>$condition);
+
 		}else{
 			 $where =array('pid' => $pid,'types'=>0);
 		}
