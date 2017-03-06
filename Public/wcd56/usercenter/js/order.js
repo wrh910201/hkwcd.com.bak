@@ -115,7 +115,7 @@ function get_delivery_list() {
 }
 
 function set_delivery(data) {
-    console.log(data);
+    // console.log(data);
     $('#delivery_company').text(data.company);
     $('#consignor').text(data.consignor);
     $('#delivery_country').text(data.country_name);
@@ -190,9 +190,12 @@ function select_delivery() {
         return;
     }
     var id = $('.delivery-check-item:checked').val();
-//        id = "'" + id + "'";
-    console.log(id);
-    var data = delivery_list[id];
+    var data = null;
+    $.each(delivery_list, function(k,v) {
+        if( v.id == id ) {
+            data = v;
+        }
+    });
     set_delivery(data);
     layer.close(tips);
 }
@@ -304,12 +307,18 @@ function get_default_receive_handler(response) {
 }
 
 function set_receive(data) {
-    $('#receive_company').val(data.company);
-    $('#addressee').val(data.addressee);
-    $('#receive_phone').val(data.phone);
-    $('#receive_mobile').val(data.mobile);
-    $('#receive_detail_address').val(data.detail_address);
-    $('#receive_postal_code').val(data.postal_code);
+    console.log(data);
+    $('#receive_company').text(data.company);
+    $('#addressee').text(data.addressee);
+    $('#receive_country').text(data.country_name);
+    $('#receive_state').text(data.state);
+    $('#receive_city').text(data.city);
+    $('#receive_phone').text(data.phone);
+    $('#receive_mobile').text(data.mobile);
+    $('#receive_detail_address').text(data.show_detail_address);
+    $('#receive_detail_address').attr('title', data.detail_address);
+    $('#receive_postal_code').text(data.postal_code);
+    $('#receiver_code').text(data.receiver_code);
     selected_receive_id = data.id;
     selected_receive_data = data;
 }
@@ -340,10 +349,10 @@ function render_receive_list(data) {
     $.each(data, function (k, v) {
         html += '<tr>';
         html += '<td><input type="radio" class="ace receive-check-item" name="receive-check-item" value="'+v.id+'"';
-        if( selected_receive_id && v.id == selected_receive_id) {
+        if( v.is_default == 1 && selected_receive_id == v.id ) {
             html += ' checked></td>';
         } else {
-            if (v.is_default == 1) {
+            if( selected_receive_id == v.id ) {
                 html += ' checked></td>';
             } else {
                 html += ' ></td>';
@@ -380,7 +389,13 @@ function select_receive() {
     }
     var id = $('.receive-check-item:checked').val();
 //        id = "'" + id + "'";
-    var data = receive_list[id];
+    var data = null;
+    $.each(receive_list, function(k,v) {
+        if( v.id == id ) {
+            data = v;
+        }
+    });
+    // var data = receive_list[id];
     set_receive(data);
     layer.close(tips);
 }
@@ -409,9 +424,10 @@ function add_receive() {
     var detail_address = $('#add_receive_detail_address').val();
     var mobile = $('#add_receive_mobile').val();
     var phone = $('#add_receive_phone').val();
+    var receiver_code = $('#receiver_code').val();
     var is_default = $('input[name=add_receive_default]:checked').val();
     var postal_code = $('#add_receive_postal_code').val();
-    var param = { company:company,addressee:addressee,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,postal_code:postal_code,is_default:is_default };
+    var param = { receiver_code:receiver_code, company:company,addressee:addressee,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,postal_code:postal_code,is_default:is_default };
     $.post(url, param, add_receive_handler, 'json');
 }
 

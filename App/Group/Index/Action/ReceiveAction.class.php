@@ -53,7 +53,7 @@ class ReceiveAction extends BaseAction {
         $data['postal_code'] = I('post.postal_code', '', 'trim');
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
-        $data['receiver_code'] = I('post.receiver', '', 'trim');
+        $data['receiver_code'] = I('post.receiver_code', '', 'trim');
         $data['is_default'] = I('post.default', 0, 'intval');
 
         if( empty($data['addressee']) ) {
@@ -76,7 +76,8 @@ class ReceiveAction extends BaseAction {
         }
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
-        $data['client_id'] = session('hkwcd_user.user_id');
+        $client_id = session('hkwcd_user.user_id');
+        $data['client_id'] = $client_id;
 
         if( $data['is_default'] ) {
             $old_where = ['is_default' => 1, 'client_id' => $client_id];
@@ -112,12 +113,13 @@ class ReceiveAction extends BaseAction {
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
         $data['postal_code'] = I('post.postal_code', '', 'trim');
+        $data['receiver_code'] = I('post.receiver_code', '', 'trim');
         $data['is_default'] = I('post.is_default', 0, 'intval');
 
-        if( empty($data['company']) ) {
-            $has_error = true;
-            $errorMsg .= empty($errorMsg) ? '请输入公司' : '<br />请输入公司';
-        }
+//        if( empty($data['company']) ) {
+//            $has_error = true;
+//            $errorMsg .= empty($errorMsg) ? '请输入公司' : '<br />请输入公司';
+//        }
 
         if( empty($data['addressee']) ) {
             $has_error = true;
@@ -127,13 +129,17 @@ class ReceiveAction extends BaseAction {
             $has_error = true;
             $errorMsg .= empty($errorMsg) ? '请选择国家' : '<br />请选择国家';
         }
+        if( empty($data['city']) ) {
+            $has_error = true;
+            $errorMsg .= empty($errorMsg) ? '请输入城市' : '<br />请输入城市';
+        }
         if( empty($data['detail_address']) ) {
             $has_error = true;
             $errorMsg .= empty($errorMsg) ? '请输入具体地址' : '<br />请输入具体地址';
         }
-        if( empty($data['mobile']) && empty($data['phone']) ) {
+        if( empty($data['mobile']) ) {
             $has_error = true;
-            $errorMsg .= empty($errorMsg) ? '手机与座机至少输入一个' : '<br />手机与座机至少输入一个';
+            $errorMsg .= empty($errorMsg) ? '请输入手机' : '<br />请输入手机';
         }
         if( $has_error ) {
             $response['msg'] = $errorMsg;
@@ -143,17 +149,30 @@ class ReceiveAction extends BaseAction {
 
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
+        $client_id = session('hkwcd_user.user_id');
         $data['client_id'] = session('hkwcd_user.user_id');
 
         if( $data['is_default'] ) {
-            $old_where = ['is_default' => 1, 'status' => 1, 'client_id' => $data['client_id']];
+            $old_where = ['is_default' => 1,'client_id' => $data['client_id']];
             M('ReceiveAddress')->where($old_where)->save(['is_default' => 0]);
         }
 
         $result = M('ReceiveAddress')->add($data);
         if( $result ) {
             $response['code'] = 1;
-            $data['id'] = $result;
+            $data = M('ReceiveAddress')
+                ->alias('d')
+                ->field('d.*, c.name as country_name, c.ename as en_country_name')
+                ->join("left join hx_country as c on d.country_id = c.id")
+                ->where(['client_id' => $client_id, 'status' => 1, 'd.id' => $result])
+                ->find();
+            if( mb_strlen($data['detail_address']) > 20 ) {
+                $data['show_detail_address'] = mb_substr($data['detail_address'], 0, 20).'...';
+            } else {
+                $data['show_detail_address'] = $data['detail_address'];
+            }
+            $response['code'] = 1;
+            $response['msg'] = 'success';
             $response['data'] = $data;
         } else {
             $response['msg'] = '系统繁忙，请稍后重试';
@@ -202,7 +221,7 @@ class ReceiveAction extends BaseAction {
         $data['postal_code'] = I('post.postal_code', '', 'trim');
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
-        $data['receiver_code'] = I('post.receiver', '', 'trim');
+        $data['receiver_code'] = I('post.receiver_code', '', 'trim');
         $data['is_default'] = I('post.default', 0, 'intval');
 
         if( empty($data['addressee']) ) {

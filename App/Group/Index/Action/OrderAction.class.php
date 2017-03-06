@@ -1382,7 +1382,7 @@ class OrderAction extends BaseAction  {
                 } else {
                     $v['show_detail_address'] = $v['detail_address'];
                 }
-                $temp[$v['id']] = $v;
+                $temp[] = $v;
             }
             $delivery_list = $temp;
         }
@@ -1407,6 +1407,7 @@ class OrderAction extends BaseAction  {
             ->where($where)
             ->order('is_default desc, id asc')
             ->select();
+//        var_dump($receive_list);exit;
         if( $receive_list ) {
             $temp = [];
             foreach($receive_list as $k => $v) {
@@ -1415,7 +1416,7 @@ class OrderAction extends BaseAction  {
                 } else {
                     $v['show_detail_address'] = $v['detail_address'];
                 }
-                $temp[$v['id']] = $v;
+                $temp[] = $v;
             }
             $receive_list = $temp;
         }
