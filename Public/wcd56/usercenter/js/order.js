@@ -455,3 +455,22 @@ function close_receive_form() {
 
 //==========收货地址结束============================================
 
+//==========备用收货地址开始============================================
+
+function show_spare_form() {
+    tips = layer.open({
+        type: 1,
+        skin: 'layui-layer-rim', //加上边框
+        area: ['750px', '550px'], //宽高
+        title: false,
+        closeBtn: 1,
+        shadeClose: false,
+        content: $('#spare_receive_form')
+    });
+}
+
+function hide_spare_form() {
+    layer.close(tips);
+}
+
+//==========备用收货地址结束============================================
