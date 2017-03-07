@@ -36,7 +36,7 @@ return array(
 
 
 	//加载其他配置文件　
-	'LOAD_EXT_CONFIG' => 'config.site,config.adset,config.qqset,config.url',//加载扩展配置文件
+	'LOAD_EXT_CONFIG' => 'config.site,config.adset,config.qqset,config.url,config.other',//加载扩展配置文件
 
 	//设置URL_MODEL ,0普通模式 ,1:PATHINFO模式（默认模式）,2:REWRITE模式,
 	//'URL_MODEL' =>0,//2\U方法生成的去掉了index.php

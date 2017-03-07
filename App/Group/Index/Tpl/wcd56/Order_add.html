@@ -381,8 +381,8 @@
                             <th>品名</th>
                             <th>商品编码</th>
                             <th>数量</th>
-                            <th>单件申报价值</th>
-                            <th>总申报价值</th>
+                            <th>单件申报价值(USD)</th>
+                            <th>总申报价值(USD)</th>
                             <th>原产地</th>
                             <th class="text-right">操作</th>
                         </tr>
@@ -800,36 +800,44 @@
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">品名：</label>
-                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_product_name" placeholder="请输入品名">&nbsp;
+                    <label class="l_title">* 中文品名：</label>
+                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_product_name" placeholder="请输入中文品名">&nbsp;
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">商品编码：</label>
-                    <input class="text_input w300" type="text" id="order_detail_goods_code" name="order_detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
+                    <label class="l_title">* 英文品名：</label>
+                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_en_product_name" placeholder="请输入英文品名">&nbsp;
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">数量：</label>
-                <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count" placeholder="请输入数量"/>&nbsp;
+                <div class="fl">
+                    <label class="l_title">* 商品编码：</label>
+                    <input class="text_input w300" type="text" id="order_detail_goods_code" name="order_detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
+                    <a class="btn btn_commit" href="javascript:void(0);" target="_blank">编码查询</a>
+                </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">单件申报价值：</label>
+                <label class="l_title">* 数量：</label>
+                <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count" placeholder="请输入数量"/>&nbsp;
+                <select name="order_detail_unit" id="order_detail_unit">
+                <foreach name="order_detail_unit" item="v" key="k">
+                    <option value="{$k}">{$k}/{$v}</option>
+                </foreach>
+                </select>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">* 单件申报价值：</label>
                 <input class="text_input w300" type="text" name="order_detail_single_declared" id="order_detail_single_declared" placeholder="请输入单件申报价值"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">总申报价值：</label>
-                <input class="text_input w300" type="text" name="order_detail_declared" id="order_detail_declared" placeholder="请输入总申报价值"/>&nbsp;
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">原产地：</label>
-                <input class="text_input w300" type="text" name="order_detail_origin" id="order_detail_origin" placeholder="请输入原产地"/>&nbsp;
+                <label class="l_title">* 原产地：</label>
+                <input class="text_input w300" type="text" name="order_detail_origin" id="order_detail_origin" placeholder="请输入原产地, 如 CHINA"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
@@ -844,36 +852,45 @@
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">重量：</label>
+                    <label class="l_title">* 重量：</label>
                     <input class="text_input w300" type="text" name="order_specifications_weight" id="order_specifications_weight" placeholder="请输入重量">&nbsp;kg
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">长度：</label>
+                    <label class="l_title">* 长度：</label>
                     <input class="text_input w300" type="text" id="order_specifications_length" name="order_specifications_length" placeholder="请输入长度"/>&nbsp;cm
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">宽度：</label>
+                <label class="l_title">* 宽度：</label>
                 <input class="text_input w300" type="text" name="order_specifications_width" id="order_specifications_width" placeholder="请输入宽度"/>&nbsp;cm
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">高度：</label>
+                <label class="l_title">* 高度：</label>
                 <input class="text_input w300" type="text" name="order_specifications_height" id="order_specifications_height" placeholder="请输入高度"/>&nbsp;cm
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">数量：</label>
-                <input class="text_input w300" type="text" name="order_specifications_count" id="order_specifications_count" placeholder="请输入数量"/>&nbsp;
-                <div class="clear"></div>
+                <label class="l_title"></label>
+                <span class="w150 l_con">中文品名</span>
+                <span class="w150 l_con">英文品名</span>
+                <span class="w150 l_con">数量</span>
+                <a class="btn btn_commit" href="javascript:void(0)" onclick="add_order_specification_detail();">添加商品</a>
+            </div>
+            <div class="box_c_item add_order_specification_detail_wrap">
+                <label class="l_title"></label>
+                <select class="w150 order_specification_detail">
+                </select>
+                <input readonly class="text_input w150" type="text" name="order_specifications_height" id="" placeholder=""/>
+                <input readonly class="text_input w150" type="text" name="order_specifications_height" id="" placeholder=""/>
             </div>
             <div class="box_c_item">
-                <label class="l_title">备注：</label>
-                <input class="text_input w450" type="text" name="order_specifications_remark" id="order_specifications_remark" placeholder="请输入备注"/>
+                <label class="l_title">箱数：</label>
+                <input class="text_input w300" type="text" name="order_specifications_count" id="order_specifications_count" placeholder="请输入箱数"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
@@ -914,29 +931,7 @@
     var d_cursor = 0;
     var default_company = {$default_company};
 
-    function show_order_specifications_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '350px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#order_specifications_form')
-        });
-    }
 
-    function show_order_detail_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '380px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#order_detail_form')
-        });
-    }
 
 
     function hide_order_specifications_form() {
@@ -1040,9 +1035,7 @@
         $('#specifications-content').append(html);
     }
 
-    function empty_order_specifications_form() {
-        $('#order_specifications_form input').val('');
-    }
+
 
     function edit_order_specifications(id) {
         s_editing = id.split('-')[1];
@@ -1055,16 +1048,7 @@
         show_order_specifications_form();
     }
 
-    function edit_order_detail(id) {
-        s_editing = id.split('-')[1];
-        $('#order_detail_product_name').val(order_detail[id]['product_name']);
-        $('#order_detail_goods_code').val(order_detail[id]['goods_code']);
-        $('#order_detail_count').val(order_detail[id]['count']);
-        $('#order_detail_single_declared').val(order_detail[id]['single_declared']);
-        $('#order_detail_declared').val(order_detail[id]['declared']);
-        $('#order_detail_origin').val(order_detail[id]['origin']);
-        show_order_detail_form();
-    }
+
 
     function save_order_specifications(id) {
 
@@ -1084,70 +1068,6 @@
         });
     }
 
-    function add_order_detail() {
-        var product_name = $('#order_detail_product_name').val().trim();
-        var goods_code = $('#order_detail_goods_code').val().trim();
-        var count = parseInt($('#order_detail_count').val());
-        var single_declared = parseFloat($('#order_detail_single_declared').val());
-        var declared = parseFloat($('#order_detail_declared').val());
-        var origin = $('#order_detail_origin').val().trim();
-        var flag = true;
-        var msg = '';
-
-        if( product_name == '' ) {
-            msg += '请输入品名<br />';
-            flag = false;
-        }
-        if( goods_code == '' ) {
-//            msg += '请输入商品编号<br />';
-//            flag = false;
-        }
-
-        if( isNaN(count) || count <= 0 ) {
-//            msg += '请输入数量<br />';
-//            flag = false;
-            count = 0;
-        }
-        if( isNaN(single_declared) || single_declared <= 0 ) {
-//            msg += '请输入单件申报价值<br />';
-//            flag = false;
-            single_declared = 0;
-        }
-        if( isNaN(declared) || declared <= 0 ) {
-//            msg += '请输入总申报价值<br />';
-//            flag = false;
-            declared = 0;
-        }
-        if( origin == '' ) {
-//            msg += '请输入原产地<br />';
-//            flag = false;
-        }
-        if( flag ) {
-            var temp = { };
-            temp['product_name'] = product_name;
-            temp['goods_code'] = goods_code;
-            temp['count'] = count;
-            temp['single_declared'] = single_declared;
-            temp['declared'] = declared ? declared : (count * single_declared);
-            temp['origin'] = origin;
-            if( d_editing === null ) {
-                order_detail['item-' + d_cursor] = temp;
-                d_cursor ++;
-            } else {
-                order_detail['item-' + d_editing] = temp;
-                d_editing = null;
-            }
-            hide_order_detail_form();
-            refresh_order_detail();
-            empty_order_detail_form();
-
-            return true;
-        } else {
-            layer.msg(msg);
-            return false;
-        }
-    }
-
     function calculate_declared_value() {
         var temp_value = 0;
         for( var id in order_detail ) {
@@ -1156,65 +1076,13 @@
         $('#declared_value').val(temp_value);
     }
 
-    function hide_order_detail_form() {
-        layer.close(tips);
-    }
 
-    function refresh_order_detail() {
-        $('#detail-content').empty();
-        var html = '';
-        var i = 1;
-        var total_count = 0;
-        var total_single_declared = 0;
-        var total_declared = 0;
-        for( var id in order_detail ) {
-            html += '<tr id="detail-'+id+'">';
-            html += '<td>' + i + '</td>';
-            html += '<td>' + order_detail[id]['product_name'] + '</td>';
-            html += '<td>' + order_detail[id]['goods_code'] + '</td>';
-            html += '<td>' + order_detail[id]['count'] + '</td>';
-            html += '<td>' + order_detail[id]['single_declared'].toFixed(2) + '</td>';
-            order_detail[id]['declared'] =  order_detail[id]['count'] * order_detail[id]['single_declared'];
-            html += '<td>' + order_detail[id]['declared'].toFixed(2) + '</td>';
-            html += '<td>' + order_detail[id]['origin'] + '</td>';
-            html += '<td class="text-right"><a href="javascript:edit_order_detail(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_detail(\''+id+'\');">删除</a></td>';
-            html += '</tr>';
-            total_count += order_detail[id]['count'];
-            total_single_declared += order_detail[id]['single_declared'];
-            total_declared += order_detail[id]['declared'];
-            i++;
-        }
-        html += '<tr>';
-        html += '<td class="table-total">合计</td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '<td>' + total_count + '</td>';
-        html += '<td>' + total_single_declared.toFixed(2) + '</td>';
-        html += '<td>' + total_declared.toFixed(2) + '</td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '</tr>';
-        $('#detail-content').append(html);
-        calculate_declared_value();
-    }
 
-    function empty_order_detail_form() {
-        $('#order_detail_form input').val('');
-    }
 
-    function remove_order_detail(id) {
-        layer.confirm('确定删除该项订单详情？', {
-            btn: ['确定', '取消'],
-            btn1: function () {
-                delete order_detail[id];
-//                s_cursor--;
-                refresh_order_detail();
-            },
-            btn2: function () {
-                return false;
-            }
-        });
-    }
+
+
+
+
 
 
     function add_order(commit) {

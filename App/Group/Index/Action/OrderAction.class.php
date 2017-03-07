@@ -74,6 +74,7 @@ class OrderAction extends BaseAction  {
         $this->assign('json_receive', json_encode($default_receive));
         $this->assign('default_receive_id', $selected_receive_id);
         $this->assign('has_default_receive', $has_default_receive);
+        $this->assign('order_detail_unit', C('order_detail_unit'));
         if( empty($client['company']) ) {
             $this->assign('default_company', json_encode(''));
         } else {
