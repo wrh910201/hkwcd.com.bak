@@ -311,10 +311,18 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">* 运输方式：</label>
-                                <input style="width:800px;" class="text_input" type="text" name="mode_of_transportation" id="mode_of_transportation" placeholder="请输入运输方式">
+                                <input class="text_input w300" type="text" name="mode_of_transportation" id="mode_of_transportation" placeholder="请输入运输方式">
                                 <div class="clear"></div>
                             </div>
-                            <div class="clear"></div>
+                            <div class="fl">
+                                <label class="l_title"></label>
+                                <select class=" text_input w300" id="express_service" name="express_service">
+                                    <option value="express service">快件</option>
+                                    <option value="air">空运</option>
+                                    <option value="sea shipping">海运</option>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
                         </div>
                         <div class="clear"></div>
                         <div class="box_c_item">
@@ -335,7 +343,7 @@
                             </div>
                             <div class="fl">
                                 <label class="l_title">* 出口性质：</label>
-                                <select class=" text_input " style="width:316px;" id="export_nature" name="export_nature">
+                                <select class="text_input " style="width:316px;" id="export_nature" name="export_nature">
                                     <option value="Permanent">永久</option>
                                     <option value="Temporarily">暂时</option>
                                 </select>
@@ -450,7 +458,7 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">托运备注：</label>
-                                <input style="width:800px;" class="text_input" type="text" name="specifications_remark" id="specifications_remark" placeholder="备注">
+                                <input style="width:800px;" class="text_input" type="text" name="specifications_remark" id="specifications_remark" placeholder="请填写国内物流信息或工厂联系人信息">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -466,33 +474,13 @@
                 <span>1110</span>
             </div>
             <div class="clear"></div>
-            <div class="box">
-                <div class="box_c">
-                    <fieldset>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>备注：</th>
-                                <th colspan="2"></th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <foreach name="clause_list" item="v">
-                                <tr>
-                                    <td>&nbsp;&nbsp;&nbsp;*</td>
-                                    <td colspan="2">{$v}</td>
-                                </tr>
-                            </foreach>
-                            </tbody>
-                        </table>
-                        <div class="clear"></div>
-                    </fieldset>
-                </div>
-            </div>
             <div class="fr">
                 <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add_order_button">添加</button> &nbsp;<button class="btn btn_commit" type="button" id="commit_order_button">添加并提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>
+                <button class="btn btn_commit" type="button" id="add_order_button">添加</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="commit_order_button">添加并提交</button> &nbsp;
+                <a href="javascript:;" class="btn btn_cancel">取消</a>
+                <input type="hidden" name="delivery_id" id="delivery_id"/>
+                <input type="hidden" name="receive_id" id="receive_id"/>
             </div>
             <div class="clear"></div>
         </div>
@@ -926,8 +914,8 @@
                 <label class="l_title"></label>
                 <select class="w150 order_specification_detail" onchange="select_order_specification_detail(this);">
                 </select>
-                <input readonly class="text_input w150" type="text" name="order_specifications_height" id="" placeholder=""/>
-                <input readonly class="text_input w150" type="text" name="order_specifications_height" id="" placeholder=""/>
+                <input readonly class="text_input w150" type="text" name="" placeholder=""/>
+                <input readonly class="text_input w150" type="text" name=""  placeholder=""/>
             </div>
             <div class="box_c_item">
                 <label class="l_title">箱数：</label>
@@ -960,8 +948,10 @@
     var is_default_receive = {$has_default_receive};
     var selected_delivery_id = {$default_delivery_id};
     var selected_receive_id = {$default_receive_id};
-    var selected_delivery_data = {$json_delivery};
-    var selected_receive_data = {$json_receive};
+//    var selected_delivery_data = {$json_delivery};
+//    var selected_receive_data = {$json_receive};
+    var selected_delivery_data;
+    var selected_receive_data;
     var delivery_list = [];
     var receive_list = [];
     var order_specifications = { };
@@ -971,69 +961,9 @@
     var d_editing = null;
     var d_cursor = 0;
     var default_company = {$default_company};
+    var country_list = {$json_country_list};
 
-    function add_order(commit) {
-        var url = "{:U('Order/ajaxAdd')}";
-        //发货地址 js
-        //收货地址 js
-        //备用地址
-        var spare_receive_addressee = $('#spare_receive_addressee').val();
-        var spare_receive_detail_address = $('#spare_receive_detail_address').val();
-        var spare_receive_phone = $('#spare_receive_phone').val();
-        var spare_receive_mobile = $('#spare_receive_mobile').val();
-        var spare_receive_postal_code = $('#spare_receive_postal_code').val();
-        //其他信息
-        var currency = $('#currency').val();
-        var declared_value = $('#declared_value').val();
-        var receiver_code = $('#receiver_code').val();
-        var channel = $('#channel').val();
-        var package_type = $('#package_type').val();
-        var price_terms = $('#price_terms').val();
-        var tariff_payment = $('#tariff_payment').val();
-        var export_nature = $('#export_nature').val();
-        var export_reason = $('#export_reason').val();
-        var remark = $('#remark').val();
-        //订单详情 js
-        var param = {
-            'delivery_id':selected_delivery_id,
-            'receive_id':selected_receive_id,
-            'order_specifications':order_specifications,
-            'order_detail': order_detail,
-            'spare_receive_addressee':spare_receive_addressee,
-            'spare_receive_detail_address': spare_receive_detail_address,
-            'spare_receive_phone': spare_receive_phone,
-            'spare_receive_mobile': spare_receive_mobile,
-            'spare_receive_postal_code' : spare_receive_postal_code,
-            'currency': currency,
-            'declared_value': declared_value,
-            'receiver_code' : receiver_code,
-            'price_terms' : price_terms,
-            'tariff_payment' : tariff_payment,
-            'export_nature' : export_nature,
-            'channel': channel,
-            'package_type': package_type,
-            'export_reason': export_reason,
-            'remark': remark,
-            'commit': commit
-        };
-        show_loading();
-        $.post(url, param, add_order_handler, 'json');
-    }
 
-    function add_order_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
-                window.location.href = '/';
-            } );
-        } else if( response.code == 1 ) {
-            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
-                window.location.href = response.url;
-            } );
-        } else if( response.code == -1 ) {
-            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
-        }
-    }
 </script>
 <script type="text/javascript">
     $(function () {

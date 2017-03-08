@@ -58,6 +58,14 @@ class OrderAction extends BaseAction  {
         $where = array('pid' => 0,'types'=>0);
         $country_list = M('country')->where($where)->order('sort,id')->select();
         $this->assign('country_list', $country_list);
+        if( $country_list ) {
+            $temp = [];
+            foreach( $country_list as $k => $v ) {
+                $temp['item-'.$v['id']] = $v;
+            }
+            $country_list = $temp;
+        }
+        $this->assign('json_country_list', json_encode($country_list));
 
 
         $channel_list = M('Channel')->where($where)->select();
@@ -87,7 +95,7 @@ class OrderAction extends BaseAction  {
     }
 
     public function ajaxAdd() {
-
+        $this->_get_order_params();
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
@@ -1507,6 +1515,14 @@ class OrderAction extends BaseAction  {
         }
         $status = '' == $status ? '订单异常' : $status;
         return $status;
+    }
+
+    private function _get_order_params() {
+        var_dump($_POST);exit;
+        $data = [];
+
+
+        return $data;
     }
 
 }

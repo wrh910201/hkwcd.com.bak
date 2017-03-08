@@ -131,8 +131,10 @@ function set_delivery(data) {
     $('#delivery_detail_address').attr('title', data.detail_address);
     $('#delivery_postal_code').text(data.postal_code);
     $('#exporter_code').text(data.exporter_code);
+    $('#delivery_id').val(data.id);
     selected_delivery_id = data.id;
     selected_delivery_data = data;
+    set_mode_of_transportation();
 }
 
 function get_delivery_list_handler(response) {
@@ -287,6 +289,26 @@ function add_delivery_handler(response) {
     }
 }
 
+function set_mode_of_transportation() {
+    var str = '';
+    if( selected_delivery_data && selected_receive_data ) {
+        var key = selected_delivery_data.country_id;
+        var country;
+        for( var id in country_list ) {
+            if( country_list[id].id == key ) {
+                country = country_list[id];
+            }
+        }
+        if( selected_receive_data.type == 0 ) {
+            str += 'From '+ country.ename + ' to Guangzhou';
+        } else {
+            str += 'From Guangzhou to ' + country.ename;
+        }
+    }
+    // console.log(str);
+    $('#mode_of_transportation').val(str);
+}
+
 //==========发货地址结束============================================
 
 //==========收货地址开始============================================
@@ -323,8 +345,11 @@ function set_receive(data) {
     $('#receive_detail_address').attr('title', data.detail_address);
     $('#receive_postal_code').text(data.postal_code);
     $('#receiver_code').text(data.receiver_code);
+    $('#receive_id').val(data.id);
     selected_receive_id = data.id;
     selected_receive_data = data;
+
+    set_mode_of_transportation();
 }
 
 function get_receive_list() {
@@ -785,7 +810,7 @@ function refresh_order_specifications() {
     $('#specifications-content').empty();
     var html = '';
     var i = 1;
-    var total_weight = 0, total_length = 0, total_width = 0, total_height = 0, total_count = 0, total_rate = 0;
+    var total_weight = 0, total_charging_weight = 0, total_count = 0, total_rate = 0;
     for( var id in order_specifications ) {
         var j = 1;
         var rowspan = order_specifications[id].detail.length;
@@ -801,11 +826,11 @@ function refresh_order_specifications() {
             html += '<td>' + order_detail[detail_index]['origin'] + '</td>';
             break;
         }
-        html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['weight'] + 'kg</td>';
+        html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['weight'] + 'KG</td>';
         html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['length'] + '*' + order_specifications[id]['width'] + '*' + order_specifications[id]['height'] + '</td>';
-        html += '<td rowspan="'+rowspan+'">' + temp_rate + '</td>';
+        html += '<td rowspan="'+rowspan+'">' + temp_rate + 'KG</td>';
         html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['count'] + '</td>';
-        html += '<td rowspan="'+rowspan+'">' + charging_weight + 'kg</td>';
+        html += '<td rowspan="'+rowspan+'"></td>';
         html += '<td rowspan="'+rowspan+'" class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
         html += '</tr>';
         for( var y in order_specifications[id].detail ) {
@@ -813,6 +838,8 @@ function refresh_order_specifications() {
             var detail_index = order_specifications[id].detail[y];
             var temp_rate = order_specifications[id]['length'] *　order_specifications[id]['width'] * order_specifications[id]['height'] / 5000;
             var charging_weight = order_specifications[id]['weight'] > temp_rate ? order_specifications[id]['weight'] : temp_rate;
+            order_specifications[id].rate = temp_rate;
+            order_specifications[id].charging_weight = charging_weight;
             charging_weight *= order_specifications[id]['count'];
             order_detail[detail_index].is_locked = true;
             if( j == 1 ) {
@@ -826,27 +853,24 @@ function refresh_order_specifications() {
             html += '</tr>';
         }
         total_weight += order_specifications[id]['weight'] * order_specifications[id]['count'];
-        total_length += order_specifications[id]['length'];
-        total_width += order_specifications[id]['width'];
-        total_height += order_specifications[id]['height'];
         total_count += order_specifications[id]['count'];
-        total_rate += (order_specifications[id]['length'] * order_specifications[id]['width'] * order_specifications[id]['height'] * order_specifications[id]['count'] / 1000);
+        total_rate += order_specifications[id]['rate'] * order_specifications[id]['count'];
+        total_charging_weight += order_specifications[id]['charging_weight'] * order_specifications[id]['count'];
         i += order_specifications[id]['count'];
     }
 
-//     html += '<tr>';
-//     html += '<td class="table-total">合计</td>';
-//     html += '<td>总过磅重量：' + total_weight + 'kg</td>';
-// //        html += '<td>' + total_length + 'cm</td>';
-// //        html += '<td>' + total_width + 'cm</td>';
-// //        html += '<td>' + total_height + 'cm</td>';
-//     html += '<td></td>';
-//     html += '<td></td>';
-//     html += '<td></td>';
-//     html += '<td>总数量：' + total_count + '</td>';
-//     html += '<td>' + '材积比：' + total_rate.toFixed(3) + '</td>';
-//     html += '<td class="text-right">' + '参考运费：' + total_rate.toFixed(3) + '</td>';
-//     html += '</tr>';
+    html += '<tr>';
+    html += '<td class="table-total">合计</td>';
+    html += '<td></td>';
+    html += '<td></td>';
+    html += '<td></td>';
+    html += '<td>' + total_weight + 'KG</td>';
+    html += '<td></td>';
+    html += '<td>' + total_rate + 'KG</td>';
+    html += '<td></td>';
+    html += '<td>' + total_charging_weight  + 'KG</td>';
+    html += '<td class="text-right"></td>';
+    html += '</tr>';
 
     $('#specifications-content').append(html);
 }
@@ -864,13 +888,15 @@ function edit_order_specifications(id) {
         add_order_specification_detail();
     }
     show_order_specifications_form();
-    set_selected_detail();
+    set_selected_detail(id);
 }
 
 function set_selected_detail(id) {
     var id = 'item-0';
     var j = 0;
-    var list = $('.order_specification_detail');
+    var list = $('.order_specification_detail').each(function(k, v) {
+        console.log(k);
+    });
     for(var i in order_specifications[id].detail) {
         $(list[j]).val(order_specifications[id].detail[i]);
         select_order_specification_detail(list[j]);
@@ -898,3 +924,93 @@ function remove_order_specifications(id) {
 
 
 //==========规格详情结束============================================
+
+
+//==========ajax开始============================================
+
+function add_order(commit) {
+    var url = "/Order/ajaxAdd";
+
+    var delivery_id = $('#delivery_id').val();
+    var receive_id = $('#receive_id').val();
+    //备用收货地址
+    var spare_receive_company = $('#spare_receive_company').val();
+    var spare_receive_addressee = $('#spare_receive_addressee').val();
+    var spare_country = $('#spare_country').val();
+    var spare_state = $('#spare_state').val();
+    var spare_city = $('#spare_city').val();
+    var spare_receive_detail_address = $('#spare_receive_detail_address').val();
+    var spare_receive_phone = $('#spare_receive_phone').val();
+    var spare_receive_mobile = $('#spare_receive_mobile').val();
+    var spare_receive_postal_code = $('#spare_receive_postal_code').val();
+    var spare_receiver_code = $('#spare_receiver_code').val();
+    var enable_spare = $('input[name=enable_spare]:checked').val();
+    //订单信息
+    var channel = $('#channel').val();
+    var package_type = $('#package_type').val();
+    var price_terms = $('#price_terms').val();
+    var tariff_payment = $('#tariff_payment').val();
+    var shipment_reference = $('#shipment_reference').val();
+    var settlement = $('#settlement').val();
+    var declaration_of_power_attorney = $('#declaration_of_power_attorney').val();
+    var contract_num = $('#contract_num').val();
+    var mode_of_transportation = $('#mode_of_transportation').val();
+    var express_service = $('#express_service').val();
+    var export_nature = $('#export_nature').val();
+    var export_reason = $('#export_reason').val();
+    var manufacturer = $('#manufacturer').val();
+    var remark = $('#remark').val();
+    //订单详情 js
+    var param = {
+        'delivery_id':delivery_id,
+        'receive_id':receive_id,
+        'order_specifications':order_specifications,
+        'order_detail': order_detail,
+        'spare_receive_company': spare_receive_company,
+        'spare_receive_addressee':spare_receive_addressee,
+        'spare_country': spare_country,
+        'spare_state' : spare_state,
+        'spare_city' : spare_city,
+        'spare_receive_detail_address': spare_receive_detail_address,
+        'spare_receive_phone': spare_receive_phone,
+        'spare_receive_mobile': spare_receive_mobile,
+        'spare_receive_postal_code': spare_receive_postal_code,
+        'spare_receiver_code': spare_receiver_code,
+        'enable_spare': enable_spare,
+        'channel': channel,
+        'package_type': package_type,
+        'price_terms' : price_terms,
+        'tariff_payment' : tariff_payment,
+        'shipment_reference': shipment_reference,
+        'settlement': settlement,
+        'declaration_of_power_attorney': declaration_of_power_attorney,
+        'contract_num': contract_num,
+        'mode_of_transportation': mode_of_transportation,
+        'express_service': express_service,
+        'manufacturer': manufacturer,
+        'export_nature' : export_nature,
+        'export_reason': export_reason,
+        'remark': remark,
+        'commit': commit
+    };
+    console.log(param);
+    show_loading();
+    $.post(url, param, add_order_handler, 'json');
+}
+
+function add_order_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+            window.location.href = '/';
+        } );
+    } else if( response.code == 1 ) {
+        layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+            window.location.href = response.url;
+        } );
+    } else if( response.code == -1 ) {
+        layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
+    }
+}
+
+//==========ajax结束============================================
