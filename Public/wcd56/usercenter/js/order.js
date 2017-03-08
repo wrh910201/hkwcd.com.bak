@@ -85,9 +85,9 @@ $('#commit_order_button').click(function() {
     });
 });
 
-$('.order_specification_detail').change(function() {
-    select_order_specification_detail(this);
-});
+// $('.order_specification_detail').change(function() {
+//     select_order_specification_detail(this);
+// });
 
 //==========时间监听器结束============================================
 //==========发货地址开始============================================
@@ -541,6 +541,7 @@ function add_order_detail() {
         } else {
             order_detail['item-' + d_editing] = temp;
             d_editing = null;
+            refresh_order_specifications();
         }
         hide_order_detail_form();
         refresh_order_detail();
@@ -596,7 +597,7 @@ function refresh_order_detail() {
         html += '</tr>';
     }
     $('#detail-content').append(html);
-    calculate_declared_value();
+    // calculate_declared_value();
 }
 
 function empty_order_detail_form() {
@@ -628,9 +629,13 @@ function edit_order_detail(id) {
 }
 
 function remove_order_detail(id) {
-    layer.confirm('确定删除该项订单详情？', {
+    layer.confirm('确定删除该项商品信息？', {
         btn: ['确定', '取消'],
         btn1: function () {
+            if( order_detail[id].is_locked ) {
+                layer.msg('当前商品信息已被使用，无法删除');
+                return;
+            }
             delete order_detail[id];
 //                s_cursor--;
             refresh_order_detail();
@@ -646,7 +651,7 @@ function remove_order_detail(id) {
 //==========规格详情开始============================================
 
 function fill_order_specification_detail() {
-    $('.order_specification_detail').empty();
+    $('.order_specification_detail').last().empty();
     var html = '<option></option>';
     for( var id in order_detail ) {
         html += '<option value="'+ id +'">'+order_detail[id]['product_name']+'</option>';
@@ -678,6 +683,14 @@ function remove_order_specification_detail(obj) {
 }
 
 function show_order_specifications_form() {
+    var has_detail = false;
+    for( var id in order_detail ) {
+        has_detail = true;
+    }
+    if( !has_detail ) {
+        layer.msg('请先至少录入一个商品信息');
+        return;
+    }
     fill_order_specification_detail();
     tips = layer.open({
         type: 1,
@@ -698,5 +711,190 @@ function empty_order_specifications_form() {
         }
     });
 }
+
+function hide_order_specifications_form() {
+    layer.close(tips);
+}
+
+function add_order_specifications() {
+    var weight = parseFloat($('#order_specifications_weight').val());
+    var length = parseFloat($('#order_specifications_length').val());
+    var width = parseFloat($('#order_specifications_width').val());
+    var height = parseFloat($('#order_specifications_height').val());
+    var count = parseInt($('#order_specifications_count').val());
+    var detail = [];
+    $('.order_specification_detail').each(function(k, v) {
+        var temp = $(v).val();
+        if( temp && order_detail[temp] ) {
+            detail.push(temp);
+        }
+    });
+    // var remark = $('#order_specifications_remark').val().trim();
+    var flag = true;
+    var msg = '';
+    if( isNaN(weight) || weight <= 0 ) {
+        msg += '请输入重量<br />';
+        flag = false;
+    }
+    if( isNaN(length) || length <= 0 ) {
+        msg += '请输入长度<br />';
+        flag = false;
+    }
+    if( isNaN(width) || width <= 0 ) {
+        msg += '请输入宽度<br />';
+        flag = false;
+    }
+    if( isNaN(height) || height <= 0 ) {
+        msg += '请输入高度<br />';
+        flag = false;
+    }
+    if( detail.length < 1 ) {
+        msg += '请至少选择一个商品<br />';
+        flag = false;
+    }
+    if( isNaN(count) || count <= 0 ) {
+        msg += '请输入箱数<br />';
+        flag = false;
+    }
+    if( flag ) {
+        var temp = { };
+        temp['weight'] = weight;
+        temp['length'] = length;
+        temp['width'] = width;
+        temp['height'] = height;
+        temp['count'] = count;
+        temp['detail'] = detail;
+        if( s_editing === null ) {
+            order_specifications['item-' + s_cursor] = temp;
+            s_cursor ++;
+        } else {
+            order_specifications['item-' + s_editing] = temp;
+            s_editing = null;
+        }
+        hide_order_specifications_form();
+        refresh_order_specifications();
+        empty_order_specifications_form();
+        return true;
+    } else {
+        layer.msg(msg);
+        return false;
+    }
+}
+
+function refresh_order_specifications() {
+    $('#specifications-content').empty();
+    var html = '';
+    var i = 1;
+    var total_weight = 0, total_length = 0, total_width = 0, total_height = 0, total_count = 0, total_rate = 0;
+    for( var id in order_specifications ) {
+        var j = 1;
+        var rowspan = order_specifications[id].detail.length;
+        html += '<tr id="detail-'+id+'">';
+        html += '<td rowspan="'+rowspan+'">' + i + '-' + (i+order_specifications[id]['count'] - 1) + '</td>';
+        for( var y in order_specifications[id].detail ) {
+            var detail_index = order_specifications[id].detail[y];
+            var temp_rate = order_specifications[id]['length'] *　order_specifications[id]['width'] * order_specifications[id]['height'] / 5000;
+            var charging_weight = order_specifications[id]['weight'] > temp_rate ? order_specifications[id]['weight'] : temp_rate;
+            charging_weight *= order_specifications[id]['count']
+            html += '<td>' + order_detail[detail_index]['product_name'] + ' ' + order_detail[detail_index]['en_product_name'] +'</td>';
+            html += '<td>' + order_detail[detail_index]['goods_code'] + '</td>';
+            html += '<td>' + order_detail[detail_index]['origin'] + '</td>';
+            break;
+        }
+        html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['weight'] + 'kg</td>';
+        html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['length'] + '*' + order_specifications[id]['width'] + '*' + order_specifications[id]['height'] + '</td>';
+        html += '<td rowspan="'+rowspan+'">' + temp_rate + '</td>';
+        html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['count'] + '</td>';
+        html += '<td rowspan="'+rowspan+'">' + charging_weight + 'kg</td>';
+        html += '<td rowspan="'+rowspan+'" class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
+        html += '</tr>';
+        for( var y in order_specifications[id].detail ) {
+
+            var detail_index = order_specifications[id].detail[y];
+            var temp_rate = order_specifications[id]['length'] *　order_specifications[id]['width'] * order_specifications[id]['height'] / 5000;
+            var charging_weight = order_specifications[id]['weight'] > temp_rate ? order_specifications[id]['weight'] : temp_rate;
+            charging_weight *= order_specifications[id]['count'];
+            order_detail[detail_index].is_locked = true;
+            if( j == 1 ) {
+                j++;
+                continue;
+            }
+            html += '<tr>';
+            html += '<td>' + order_detail[detail_index]['product_name'] + ' ' + order_detail[detail_index]['en_product_name'] +'</td>';
+            html += '<td>' + order_detail[detail_index]['goods_code'] + '</td>';
+            html += '<td>' + order_detail[detail_index]['origin'] + '</td>';
+            html += '</tr>';
+        }
+        total_weight += order_specifications[id]['weight'] * order_specifications[id]['count'];
+        total_length += order_specifications[id]['length'];
+        total_width += order_specifications[id]['width'];
+        total_height += order_specifications[id]['height'];
+        total_count += order_specifications[id]['count'];
+        total_rate += (order_specifications[id]['length'] * order_specifications[id]['width'] * order_specifications[id]['height'] * order_specifications[id]['count'] / 1000);
+        i += order_specifications[id]['count'];
+    }
+
+//     html += '<tr>';
+//     html += '<td class="table-total">合计</td>';
+//     html += '<td>总过磅重量：' + total_weight + 'kg</td>';
+// //        html += '<td>' + total_length + 'cm</td>';
+// //        html += '<td>' + total_width + 'cm</td>';
+// //        html += '<td>' + total_height + 'cm</td>';
+//     html += '<td></td>';
+//     html += '<td></td>';
+//     html += '<td></td>';
+//     html += '<td>总数量：' + total_count + '</td>';
+//     html += '<td>' + '材积比：' + total_rate.toFixed(3) + '</td>';
+//     html += '<td class="text-right">' + '参考运费：' + total_rate.toFixed(3) + '</td>';
+//     html += '</tr>';
+
+    $('#specifications-content').append(html);
+}
+
+function edit_order_specifications(id) {
+    s_editing = id.split('-')[1];
+    $('#order_specifications_weight').val(order_specifications[id]['weight']);
+    $('#order_specifications_length').val(order_specifications[id]['length']);
+    $('#order_specifications_width').val(order_specifications[id]['width']);
+    $('#order_specifications_height').val(order_specifications[id]['height']);
+    $('#order_specifications_count').val(order_specifications[id]['count']);
+    var length = order_specifications[id].detail.length - 1;
+    for( var i = 0; i < length ; i++ ) {
+        fill_order_specification_detail();
+        add_order_specification_detail();
+    }
+    show_order_specifications_form();
+    set_selected_detail();
+}
+
+function set_selected_detail(id) {
+    var id = 'item-0';
+    var j = 0;
+    var list = $('.order_specification_detail');
+    for(var i in order_specifications[id].detail) {
+        $(list[j]).val(order_specifications[id].detail[i]);
+        select_order_specification_detail(list[j]);
+        j++;
+    }
+}
+
+function remove_order_specifications(id) {
+    layer.confirm('确定删除该项订单规格？', {
+        btn: ['确定', '取消'],
+        btn1: function () {
+            for(var index in order_specifications[id].detail ) {
+                var detail_index = order_specifications[id].detail[index];
+                order_detail[detail_index].is_locked = false;
+            }
+            delete order_specifications[id];
+//                s_cursor--;
+            refresh_order_specifications();
+        },
+        btn2: function () {
+            return false;
+        }
+    });
+}
+
 
 //==========规格详情结束============================================

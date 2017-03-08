@@ -405,20 +405,61 @@
                         <thead>
                         <tr>
                             <th>编号</th>
+                            <th>品名</th>
+                            <th>商品编码</th>
+                            <th>原产地</th>
                             <th>重量</th>
-                            <th>长度</th>
-                            <th>宽度</th>
-                            <th>高度</th>
-                            <th>数量</th>
-                            <th>备注</th>
+                            <th>长 宽 高</th>
+                            <th>材积重</th>
+                            <th>箱数</th>
+                            <th>计费重量</th>
                             <th class="text-right">操作</th>
                         </tr>
                         </thead>
                         <tbody id="specifications-content">
+                            <!--<tr>-->
+                                <!--<td rowspan="2">1-2</td>-->
+                                <!--<td>1 1</td>-->
+                                <!--<td>2</td>-->
+                                <!--<td>2</td>-->
+                                <!--<td>2</td>-->
+                                <!--<td rowspan="2">1</td>-->
+                                <!--<td rowspan="2">1</td>-->
+                                <!--<td rowspan="2">1</td>-->
+                                <!--<td rowspan="2">1</td>-->
+                                <!--<td rowspan="2">1</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>2 2</td>-->
+                                <!--<td>2</td>-->
+                                <!--<td>2</td>-->
+                                <!--<td>2</td>-->
+                            <!--</tr>-->
                         </tbody>
                     </table>
                     <div class="clear"></div>
                 </div>
+            </div>
+            <div class="box">
+                <!--<div class="box_t box_t_bottom">-->
+                    <!--<h3 class="fl">订单信息</h3>-->
+                    <!--<div class="clear"></div>-->
+                <!--</div>-->
+                <div class="box_c">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">托运备注：</label>
+                                <input style="width:800px;" class="text_input" type="text" name="specifications_remark" id="specifications_remark" placeholder="备注">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </fieldset>
+                    <div class="clear"></div>
+                </div>
+
             </div>
             <div class="fr" style="display: none">
                 <label class="l_title">总运费（参考）：</label>
@@ -883,7 +924,7 @@
             </div>
             <div class="box_c_item add_order_specification_detail_wrap">
                 <label class="l_title"></label>
-                <select class="w150 order_specification_detail">
+                <select class="w150 order_specification_detail" onchange="select_order_specification_detail(this);">
                 </select>
                 <input readonly class="text_input w150" type="text" name="order_specifications_height" id="" placeholder=""/>
                 <input readonly class="text_input w150" type="text" name="order_specifications_height" id="" placeholder=""/>
@@ -930,160 +971,6 @@
     var d_editing = null;
     var d_cursor = 0;
     var default_company = {$default_company};
-
-
-
-
-    function hide_order_specifications_form() {
-        layer.close(tips);
-    }
-
-    function add_order_specifications() {
-        var weight = parseFloat($('#order_specifications_weight').val());
-        var length = parseFloat($('#order_specifications_length').val());
-        var width = parseFloat($('#order_specifications_width').val());
-        var height = parseFloat($('#order_specifications_height').val());
-        var count = parseInt($('#order_specifications_count').val());
-        var remark = $('#order_specifications_remark').val().trim();
-        var flag = true;
-        var msg = '';
-        if( isNaN(weight) || weight <= 0 ) {
-            msg += '请输入重量<br />';
-            flag = false;
-        }
-        if( isNaN(length) || length <= 0 ) {
-            msg += '请输入长度<br />';
-            flag = false;
-        }
-        if( isNaN(width) || width <= 0 ) {
-            msg += '请输入宽度<br />';
-            flag = false;
-        }
-        if( isNaN(height) || height <= 0 ) {
-            msg += '请输入高度<br />';
-            flag = false;
-        }
-
-        if( isNaN(count) || count <= 0 ) {
-            msg += '请输入数量<br />';
-            flag = false;
-        }
-        if( flag ) {
-            var temp = { };
-            temp['weight'] = weight;
-            temp['length'] = length;
-            temp['width'] = width;
-            temp['height'] = height;
-            temp['count'] = count;
-            temp['remark'] = remark;
-            if( s_editing === null ) {
-                order_specifications['item-' + s_cursor] = temp;
-                s_cursor ++;
-            } else {
-                order_specifications['item-' + s_editing] = temp;
-                s_editing = null;
-            }
-            hide_order_specifications_form();
-            refresh_order_specifications();
-            empty_order_specifications_form();
-            return true;
-        } else {
-            layer.msg(msg);
-            return false;
-        }
-    }
-
-    function refresh_order_specifications() {
-        $('#specifications-content').empty();
-        var html = '';
-        var i = 1;
-        var total_weight = 0, total_length = 0, total_width = 0, total_height = 0, total_count = 0, total_rate = 0;
-        for( var id in order_specifications ) {
-            html += '<tr id="detail-'+id+'">';
-            html += '<td>' + i + '</td>';
-            html += '<td>' + order_specifications[id]['weight'] + 'kg</td>';
-            html += '<td>' + order_specifications[id]['length'] + 'cm</td>';
-            html += '<td>' + order_specifications[id]['width'] + 'cm</td>';
-            html += '<td>' + order_specifications[id]['height'] + 'cm</td>';
-            html += '<td>' + order_specifications[id]['count'] + '</td>';
-            html += '<td>' + order_specifications[id]['remark'] + '</td>';
-            html += '<td class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
-            html += '</tr>';
-            total_weight += order_specifications[id]['weight'] * order_specifications[id]['count'];
-            total_length += order_specifications[id]['length'];
-            total_width += order_specifications[id]['width'];
-            total_height += order_specifications[id]['height'];
-            total_count += order_specifications[id]['count'];
-            total_rate += (order_specifications[id]['length'] * order_specifications[id]['width'] * order_specifications[id]['height'] * order_specifications[id]['count'] / 1000);
-            i++;
-        }
-
-        html += '<tr>';
-        html += '<td class="table-total">合计</td>';
-        html += '<td>总过磅重量：' + total_weight + 'kg</td>';
-//        html += '<td>' + total_length + 'cm</td>';
-//        html += '<td>' + total_width + 'cm</td>';
-//        html += '<td>' + total_height + 'cm</td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '<td>总数量：' + total_count + '</td>';
-        html += '<td>' + '材积比：' + total_rate.toFixed(3) + '</td>';
-        html += '<td class="text-right">' + '参考运费：' + total_rate.toFixed(3) + '</td>';
-        html += '</tr>';
-
-        $('#specifications-content').append(html);
-    }
-
-
-
-    function edit_order_specifications(id) {
-        s_editing = id.split('-')[1];
-        $('#order_specifications_weight').val(order_specifications[id]['weight']);
-        $('#order_specifications_length').val(order_specifications[id]['length']);
-        $('#order_specifications_width').val(order_specifications[id]['width']);
-        $('#order_specifications_height').val(order_specifications[id]['height']);
-        $('#order_specifications_count').val(order_specifications[id]['count']);
-        $('#order_specifications_remark').val(order_specifications[id]['remark']);
-        show_order_specifications_form();
-    }
-
-
-
-    function save_order_specifications(id) {
-
-    }
-
-    function remove_order_specifications(id) {
-        layer.confirm('确定删除该项订单规格？', {
-            btn: ['确定', '取消'],
-            btn1: function () {
-                delete order_specifications[id];
-//                s_cursor--;
-                refresh_order_specifications();
-            },
-            btn2: function () {
-                return false;
-            }
-        });
-    }
-
-    function calculate_declared_value() {
-        var temp_value = 0;
-        for( var id in order_detail ) {
-            temp_value += order_detail[id].declared
-        }
-        $('#declared_value').val(temp_value);
-    }
-
-
-
-
-
-
-
-
-
 
     function add_order(commit) {
         var url = "{:U('Order/ajaxAdd')}";
