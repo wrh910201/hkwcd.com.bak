@@ -46,11 +46,11 @@ $('#spare-receive').click(function() {
 });
 
 $('#show_order_detail').click(function() {
-    show_order_detail_form();
+    add_order_detail_form();
 });
 
 $('#show_order_specifications').click(function() {
-    show_order_specifications_form();
+    add_order_specifications_form();
 });
 
 $('#add_order_specifications').click(function() {
@@ -645,6 +645,12 @@ function show_order_detail_form() {
     });
 }
 
+function add_order_detail_form() {
+    d_editing = null;
+    empty_order_detail_form();
+    show_order_detail_form();
+}
+
 function edit_order_detail(id) {
     d_editing = id.split('-')[1];
     $('#order_detail_product_name').val(order_detail[id]['product_name']);
@@ -885,6 +891,12 @@ function refresh_order_specifications(no_operate) {
     $('#specifications-content').append(html);
 }
 
+function add_order_specifications_form() {
+    s_cursor = null;
+    empty_order_specifications_form();
+    show_order_specifications_form();
+}
+
 function edit_order_specifications(id) {
     s_editing = id.split('-')[1];
     $('#order_specifications_weight').val(order_specifications[id]['weight']);
@@ -902,7 +914,7 @@ function edit_order_specifications(id) {
 }
 
 function set_selected_detail(id) {
-    var id = 'item-0';
+    // var id = 'item-0';
     var j = 0;
     var list = $('.order_specification_detail').each(function(k, v) {
         console.log(k);

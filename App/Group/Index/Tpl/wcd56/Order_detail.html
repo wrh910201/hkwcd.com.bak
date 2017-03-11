@@ -758,67 +758,67 @@
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">公司：</label>
-                    <input class="text_input w300" type="text" name="spare_receive_company" id="spare_receive_company" placeholder="请输入公司">
+                    <input readonly value="{$order.spare_company}" class="text_input w300" type="text" name="spare_receive_company" id="spare_receive_company" placeholder="请输入公司">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">备用联系人：</label>
-                    <input class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
+                    <input readonly value="{$order.spare_addressee}" class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">国家：</label>
-                <select class="w300" id="spare_country" name="spare_country">
+                <select disabled class="w300" id="spare_country" name="spare_country">
                     <foreach name="country_list" item="v">
-                        <option value="{$v.id}">{$v.name}</option>
+                        <option value="{$v.id}" <if condition="$order.spare_country_id eq $v['id']">selected</if>{$v.name}</option>
                     </foreach>
                 </select>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">省：</label>
-                <input class="text_input w300" type="text" name="spare_state" id="spare_state" placeholder="请输入省">
+                <input readonly value="{$order.spare_state}" class="text_input w300" type="text" name="spare_state" id="spare_state" placeholder="请输入省">
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">市：</label>
-                <input class="text_input w300" type="text" name="spare_city" id="spare_city" placeholder="请输入市">
+                <input readonly value="{$order.spare_city}" class="text_input w300" type="text" name="spare_city" id="spare_city" placeholder="请输入市">
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">具体地址：</label>
-                    <input class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
+                    <input readonly value="{$order.spare_detail_address}" class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">邮编：</label>
-                <input class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
+                <input readonly value="{$order.spare_postal_code}" class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">手机：</label>
-                <input class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
+                <input readonly value="{$order.spare_mobile}" class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">座机：</label>
-                <input class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
+                <input readonly value="{$order.spare_phone}" class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">进口商代码：</label>
-                <input class="text_input w300" type="text" name="spare_receiver_code" id="spare_receiver_code" placeholder="请输入进口商代码">
+                <input readonly value="{$order.spare_receiver_code}" class="text_input w300" type="text" name="spare_receiver_code" id="spare_receiver_code" placeholder="请输入进口商代码">
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">启用：</label>
-                <input type="radio" name="enable_spare" id="enable_spare" value="1"  />是&nbsp;
-                <input type="radio" name="enable_spare" id="disable_spare" value="0" checked="checked" />否
+                <input diabled type="radio" name="enable_spare" id="enable_spare" value="1" <if condition="$order.enable_spare eq 1">checked</if>  />是&nbsp;
+                <input diabled type="radio" name="enable_spare" id="disable_spare" value="0" <if condition="$order.enable_spare eq 0">checked</if> />否
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">

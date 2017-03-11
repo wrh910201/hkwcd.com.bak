@@ -15,143 +15,242 @@
                     <div class="clear"></div>
                 </div>
                 <div class="box_c">
-                    <fieldset>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">公司：</label>
-                                <input readonly class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$order.delivery_company}">
-                                <div class="clear"></div>
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">公司：</label>
-                                <input readonly class="text_input w300" type="text" name="receive_company" id="receive_company" placeholder="请输入收货公司" value="{$order.receive_company}">
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">联系人：</label>
-                                <input readonly class="text_input w300" type="text" name="consignor" id="consignor" placeholder="请输入联系人" value="{$order.delivery_consignor}">
-                                <div class="clear"></div>
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">联系人：</label>
-                                <input readonly  class="text_input w300" type="text" name="addressee" id="addressee" placeholder="请输入联系人" value="{$order.receive_addressee}">
+                    <div class="box_c_item fl">
+                        <fieldset>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">发货公司：</label>
+                                    <span id="delivery_company" class="w300 l_con">{$order.delivery_company}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">座机：</label>
-                                <input readonly  class="text_input w300" type="text" name="delivery_phone" id="delivery_phone" placeholder="请输入座机" value="{$order.delivery_phone}">
-                                <div class="clear"></div>
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">座机：</label>
-                                <input readonly  class="text_input w300" type="text" name="receive_phone" id="receive_phone" placeholder="请输入座机" value="{$order.receive_phone}">
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">联系人：</label>
+                                    <span id="consignor" class="w300 l_con">{$order.delivery_consignor}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="consignor" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">手机：</label>
-                                <input readonly  class="text_input w300" type="text" name="delivery_mobile" id="delivery_mobile" placeholder="请输入手机" value="{$order.delivery_mobile}">
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">手机：</label>
-                                <input readonly  class="text_input w300" type="text" name="receive_mobile" id="receive_mobile" placeholder="请输入手机" value="{$order.receive_mobile}">
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">国家：</label>
+                                    <span id="delivery_country" class="w300 l_con">{$order.delivery_country_name}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">地址：</label>
-                                <input readonly  class="text_input w300" type="text" name="delivery_address" id="delivery_address" placeholder="请输入地址" value="{$order.delivery_detail_address}">
-                                <div class="clear"></div>
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">地址：</label>
-                                <input readonly  class="text_input w300" type="text" name="receive_address" id="receive_address" placeholder="请输入地址" value="{$order.receive_detail_address}">
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">省：</label>
+                                    <span id="delivery_state" class="w300 l_con">{$order.delivery_state}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">邮编：</label>
-                                <input readonly class="text_input w300" type="text" name="delivery_postal_code" id="delivery_postal_code" placeholder="请输入邮编" value="{$order.delivery_postal_code}">
-                                <div class="clear"></div>
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">邮编：</label>
-                                <input readonly class="text_input w300" type="text" name="receive_postal_code" id="receive_postal_code" placeholder="请输入邮编" value="{$order.receive_postal_code}">
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">市：</label>
+                                    <span id="delivery_city" class="w300 l_con">{$order.delivery_city}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-
-                        <div class="box_c_item">
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">具体地址：</label>
+                                    <span id="delivery_detail_address" class="w300 l_con" title="">{$order.delivery_detail_address}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">邮编：</label>
+                                    <span id="delivery_postal_code" class="w300 l_con">{$order.delivery_postal_code}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">手机：</label>
+                                    <span id="delivery_mobile" class="w300 l_con">{$order.delivery_mobile}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">座机：</label>
+                                    <span id="delivery_phone" class="w300 l_con">{$order.delivery_phone}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">出口商代码：</label>
+                                    <span id="exporter_code" class="w300 l_con">{$order.exporter_code}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
                             <div class="fl" style="width:456px">
-                                <label class="l_title"></label>
-                                <button id="get-default-delivery" class="btn btn_commit" type="button">使用默认</button>
-                                <button id="get-delivery-list" class="btn btn_commit" type="button">地址列表</button>
-                                <button id="delivery-form" class="btn btn_commit" type="button">新地址</button>
-                                <div class="clear"></div>
+                            <label class="l_title"></label>
+                            <button id="get-default-delivery" class="btn btn_commit" type="button">使用默认</button>
+                            <button id="get-delivery-list" class="btn btn_commit" type="button">地址列表</button>
+                            <button id="delivery-form" class="btn btn_commit" type="button">新地址</button>
+                            <div class="clear"></div>
                             </div>
-                            <div class="fl" >
-                                <label class="l_title"></label>
-                                <button id="get-default-receive" class="btn btn_commit" type="button">使用默认</button>
-                                <button id="get-receive-list" class="btn btn_commit" type="button">地址列表</button>
-                                <button id="receive-form" class="btn btn_commit" type="button">新地址</button>
-                                <button id="spare-receive" class="btn btn_commit" type="button">备用联系人</button>
-                                <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-
-                    </fieldset>
-                    <div class="clear"></div>
+                        </fieldset>
+                    </div>
+                    <div class="box_c_item fl">
+                        <fieldset>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">收货公司：</label>
+                                    <span id="receive_company" class="w300 l_con">{$order.receive_company}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">联系人：</label>
+                                    <span id="addressee" class="w300 l_con">{$order.receive_addressee}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="consignor" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">国家：</label>
+                                    <span id="receive_country" class="w300 l_con">{$order.receive_country_name}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">省：</label>
+                                    <span id="receive_state" class="w300 l_con">{$order.receive_state}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">市：</label>
+                                    <span id="receive_city" class="w300 l_con">{$order.receive_city}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">具体地址：</label>
+                                    <span id="receive_detail_address" class="w300 l_con" title="">{$order.receive_detail_address}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">邮编：</label>
+                                    <span id="receive_postal_code" class="w300 l_con">{$order.receive_postal_code}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">手机：</label>
+                                    <span id="receive_mobile" class="w300 l_con">{$order.receive_mobile}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">座机：</label>
+                                    <span id="receive_phone" class="w300 l_con">{$order.receive_phone}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="box_c_item">
+                                <div class="fl">
+                                    <label class="l_title">进口商代码：</label>
+                                    <span id="receiver_code" class="w300 l_con">{$order.receiver_code}</span>
+                                    <!--<input  class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                                <div class="box_c_item">
+                                    <div class="fl" style="width:516px">
+                                        <label class="l_title"></label>
+                                        <button id="get-default-receive" class="btn btn_commit" type="button">使用默认</button>
+                                        <button id="get-receive-list" class="btn btn_commit" type="button">地址列表</button>
+                                        <button id="receive-form" class="btn btn_commit" type="button">新地址</button>
+                                        <button id="spare-receive" class="btn btn_commit" type="button">备用联系人</button>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                        </fieldset>
+                    </div>
                 </div>
+                <div class="clear"></div>
             </div>
             <div class="box">
                 <div class="box_t box_t_bottom">
-                    <h3 class="fl">其他信息</h3>
+                    <h3 class="fl">订单信息</h3>
                     <div class="clear"></div>
                 </div>
                 <div class="box_c">
                     <fieldset>
                         <div class="box_c_item">
                             <div class="fl">
-                                <label class="l_title">币种：</label>
-                                <select class=" text_input " style="width:316px;" id="currency" name="currency">
-                                    <volist name="currency_list" id="v">
-                                        <option value="{$v.id}" <if condition="$v.id eq $order['currency_id']">selected="selected"</if>>{$v.name}（{$v.code}）</option>
-                                    </volist>
-                                </select>
-                                <div class="clear"></div>
-                            </div>
-                            <div class="fl">
-                                <label class="l_title">总申报价值：</label>
-                                <input readonly class="text_input w300" type="text" name="declared_value" id="declared_value" placeholder="请输入申报价值" value="{$order.declared_price}">
-                                <div class="clear"></div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="clear"></div>
-                        <div class="box_c_item">
-                            <div class="fl">
-                                <label class="l_title">渠道类型：</label>
-                                <select class=" text_input " style="width:316px;" id="channel" name="channel">
+                                <label class="l_title">* 渠道类型：</label>
+                                <select  class=" text_input " style="width:316px;" id="channel" name="channel">
                                     <!--<option value="0">华度自行安排</option>-->
-                                    <volist name="channel_list" id="v">
-                                        <option value="{$v.id}" <if condition="$v.id eq $order['channel_id']">selected="selected"</if>>{$v.name} / {$v.en_name}</option>
-                                    </volist>
+                                    <foreach name="channel_list" item="v">
+                                        <option value="{$v.id}" <if condition="$order.channel_id eq $v['id']">selected</if>>{$v.name} / {$v.en_name}</option>
+                                    </foreach>
                                 </select>
                                 <div class="clear"></div>
                             </div>
                             <div class="fl">
-                                <label class="l_title">寄件类型：</label>
-                                <select class=" text_input " style="width:316px;" id="package_type" name="package_type">
-                                    <option value="1" <if condition="$order.package_type eq 1">selected="selected"</if>>文件</option>
-                                    <option value="2" <if condition="$order.package_type eq 2">selected="selected"</if>>包裹</option>
+                                <label class="l_title">* 寄件类型：</label>
+                                <select  class=" text_input " style="width:316px;" id="package_type" name="package_type">
+                                    <foreach name="package_type" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.package_type eq $v">selected</if>>{$v}</option>
+                                    </foreach>
                                 </select>
                                 <div class="clear"></div>
                             </div>
@@ -160,8 +259,98 @@
                         <div class="clear"></div>
                         <div class="box_c_item">
                             <div class="fl">
-                                <label class="l_title">出口原因：</label>
-                                <input value="{$order.export_reason}" style="width:800px;" class="text_input" type="text" name="export_reason" id="export_reason" placeholder="请输入出口原因">
+                                <label class="l_title">* 价格条款：</label>
+                                <select  class=" text_input " style="width:316px;" id="price_terms" name="price_terms">
+                                    <foreach name="price_terms" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.price_terms eq $v">selected</if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">* 关税支付：</label>
+                                <select  class=" text_input " style="width:316px;" id="tariff_payment" name="tariff_payment">
+                                    <foreach name="tariff_payment" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.tariff_payment eq $v">selected</if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">装运参考：</label>
+                                <input  value="{$order.shipment_reference}" class="text_input w300" type="text" name="shipment_reference" id="shipment_reference" placeholder="货物上的标记，例如 WCD">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">* 结汇方式：</label>
+                                <select  class=" text_input " style="width:316px;" id="settlement" name="settlement">
+                                    <foreach name="settlement" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.settlement eq $v">selected</if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">相关委托书：</label>
+                                <input  value="{$order.declaration_of_power_attorney}" class="text_input w300" type="text" name="declaration_of_power_attorney" id="declaration_of_power_attorney" placeholder="正式报关需填写，默认为 快件报关">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">合同号：</label>
+                                <input  value="{$order.contract_num}" class="text_input w300" type="text" name="contract_num" id="contract_num" placeholder="">
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 运输方式：</label>
+                                <input  value="{$order.mode_of_transportation}" class="text_input w300" type="text" name="mode_of_transportation" id="mode_of_transportation" placeholder="请输入运输方式">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title"></label>
+                                <select  class=" text_input w300" id="express_service" name="express_service">
+                                    <foreach name="express_service" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.express_service eq $v">selected</if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 出口原因：</label>
+                                <select  class=" text_input " style="width:316px;" id="export_reason" name="export_reason">
+                                    <foreach name="export_reason" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.export_reason eq $v">selected</if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">* 出口性质：</label>
+                                <select  class="text_input " style="width:316px;" id="export_nature" name="export_nature">
+                                    <foreach name="export_nature" item="v" key="k">
+                                        <option value="{$k}" <if condition="$order.export_nature eq $v">selected</if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">制造商或出口商及地址：</label>
+                                <input  value="{$order.manufacturer}" style="width:800px;" class="text_input" type="text" name="manufacturer" id="manufacturer" placeholder="不能填写物流公司">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -170,7 +359,7 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">备注：</label>
-                                <input value="{$order.remark}" style="width:800px;" class="text_input" type="text" name="remark" id="remark" placeholder="备注">
+                                <input  value="{$order.remark}" style="width:800px;" class="text_input" type="text" name="remark" id="remark" placeholder="备注">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -183,7 +372,7 @@
             </div>
             <div class="box">
                 <div class="box_t box_t_bottom">
-                    <h3 class="fl">订单详情</h3>
+                    <h3 class="fl">商品信息（为了确保您的货物能够顺利通关，请一定要提供具体的商品名称）</h3>
                     <button id="show_order_detail" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入</button>
                     <div class="clear"></div>
                 </div>
@@ -195,10 +384,10 @@
                             <th>品名</th>
                             <th>商品编码</th>
                             <th>数量</th>
-                            <th>单件申报价值</th>
-                            <th>总申报价值</th>
+                            <th>单件申报价值(USD)</th>
+                            <th>总申报价值(USD)</th>
                             <th>原产地</th>
-                            <th class="text-right">操作</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody id="detail-content">
@@ -209,7 +398,7 @@
             </div>
             <div class="box">
                 <div class="box_t box_t_bottom">
-                    <h3 class="fl">规格详情（计重方式：重量，长度×宽度×高度÷1000，两者取其大）</h3>
+                    <h3 class="fl">规格详情（材积重=长*宽*高/5000，重量与材积重两者取大收费）</h3>
                     <!--<button id="calculate" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;计费</button>-->
                     <button id="show_order_specifications" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入</button>
                     <div class="clear"></div>
@@ -219,53 +408,68 @@
                         <thead>
                         <tr>
                             <th>编号</th>
+                            <th>品名</th>
+                            <th>商品编码</th>
+                            <th>原产地</th>
                             <th>重量</th>
-                            <th>长度</th>
-                            <th>宽度</th>
-                            <th>高度</th>
-                            <th>数量</th>
-                            <th>备注</th>
+                            <th>长 宽 高</th>
+                            <th>材积重</th>
+                            <th>箱数</th>
+                            <th>计费重量</th>
                             <th class="text-right">操作</th>
                         </tr>
                         </thead>
                         <tbody id="specifications-content">
+                        <!--<tr>-->
+                        <!--<td rowspan="2">1-2</td>-->
+                        <!--<td>1 1</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td rowspan="2">1</td>-->
+                        <!--<td rowspan="2">1</td>-->
+                        <!--<td rowspan="2">1</td>-->
+                        <!--<td rowspan="2">1</td>-->
+                        <!--<td rowspan="2">1</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                        <!--<td>2 2</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>2</td>-->
+                        <!--<td>2</td>-->
+                        <!--</tr>-->
                         </tbody>
                     </table>
                     <div class="clear"></div>
                 </div>
             </div>
-            <div class="fr" style="display: none">
-                <label class="l_title">总运费（参考）：</label>
-                <span>1110</span>
-            </div>
-            <div class="clear"></div>
             <div class="box">
+                <!--<div class="box_t box_t_bottom">-->
+                <!--<h3 class="fl">订单信息</h3>-->
+                <!--<div class="clear"></div>-->
+                <!--</div>-->
                 <div class="box_c">
                     <fieldset>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>备注：</th>
-                                <th colspan="2"></th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <foreach name="clause_list" item="v">
-                                <tr>
-                                    <td>&nbsp;&nbsp;&nbsp;*</td>
-                                    <td colspan="2">{$v}</td>
-                                </tr>
-                            </foreach>
-                            </tbody>
-                        </table>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">托运备注：</label>
+                                <input  value="{$order.specifications_remark}" style="width:800px;" class="text_input" type="text" name="specifications_remark" id="specifications_remark" placeholder="请填写国内物流信息或工厂联系人信息">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
                         <div class="clear"></div>
                     </fieldset>
+                    <div class="clear"></div>
                 </div>
+
             </div>
+            <div class="clear"></div>
             <div class="fr">
                 <label class="l_title"></label>
                 <button class="btn btn_commit" type="button" id="edit_order_button">确定</button> &nbsp;<button class="btn btn_commit" type="button" id="commit_order_button">确定并提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>
+                <input type="hidden" name="delivery_id" id="delivery_id" value="{$order.delivery_id}"/>
+                <input type="hidden" name="receive_id" id="receive_id" value="{$order.receive_id}"/>
             </div>
             <div class="clear"></div>
         </div>
@@ -279,6 +483,7 @@
                 <thead>
                 <tr>
                     <th>选择</th>
+                    <th>公司</th>
                     <th>联系人</th>
                     <th>地址</th>
                     <th>邮编</th>
@@ -342,14 +547,21 @@
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">联系人：</label>
+                    <label class="l_title">发货公司：</label>
+                    <input class="text_input w300" type="text" name="add_delivery_company" id="add_delivery_company" placeholder="请输入公司">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">* 联系人：</label>
                     <input class="text_input w300" type="text" name="add_delivery_consignor" id="add_delivery_consignor" placeholder="请输入联系人">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">国家：</label>
+                    <label class="l_title">* 国家：</label>
                     <select class="w300" id="add_delivery_country">
                         <foreach name="country_list" item="v">
                             <option value="{$v.id}">{$v.name} / {$v.ename}</option>
@@ -367,27 +579,27 @@
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">市：</label>
+                    <label class="l_title">* 市：</label>
                     <input class="text_input w300" type="text" id="add_delivery_city" name="add_delivery_city" placeholder="请输入市">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">具体地址：</label>
-                    <input class="text_input w450" type="text" id="add_delivery_detail_address" name="add_delivery_detail_address" placeholder="请输入具体地址"/>
+                    <label class="l_title">* 具体地址：</label>
+                    <input class="text_input w450" type="text" id="add_delivery_detail_address" name="add_delivery_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">邮编：</label>
+                    <label class="l_title">* 邮编：</label>
                     <input class="text_input w450" type="text" id="add_delivery_postal_code" name="add_delivery_postal_code" placeholder="请输入邮编"/>
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">手机：</label>
+                <label class="l_title">* 手机：</label>
                 <input class="text_input w300" type="text" name="add_delivery_mobile" id="add_delivery_mobile" placeholder="请输入手机"/>
                 <div class="clear"></div>
             </div>
@@ -396,6 +608,41 @@
                 <input class="text_input w300" type="text" name="add_delivery_phone" id="add_delivery_phone" placeholder="请输入座机"/>
                 <div class="clear"></div>
             </div>
+            <div class="box_c_item">
+                <label class="l_title">出口商代码：</label>
+                <input class="text_input w300" type="text" name="add_exporter_code" id="add_exporter_code" placeholder="请输入出口商代码"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">* 身份证号码：</label>
+                <input class="text_input w300" type="text" id="certificate_num" name="certificate_num" placeholder="请输入身份证号码">
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <div class="box_c_item" style="width: 980px;">
+                <div class="fl add_product_img select-image" id="select-image-1" style="position: relative;margin-top: 0px;margin-left: 50px;width: 400px; height: 240px">
+                    <input type="hidden" name="certificate1_url" id="certificate1_url" />
+                    <input name="mypic" type="file" id="certificate-upload-1" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
+                </div>
+                <div id="show-image-1" class="fl product_img_show show-image" style="position: relative;display: none; width: 408px;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
+                    <img src="" alt="身份证正面"  width='408' height='248'/>
+                    <input name="mypic" type="file" id="change-certificate-upload-1" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
+                </div>
+                <div class="fl add_product_img select-image" id="select-image-2" style="position: relative;position: relative;margin-top: 0px;margin-left: 10px;width: 400px; height: 240px">
+                    <input type="hidden" name="certificate2_url" id="certificate2_url" />
+                    <input name="mypic" type="file" id="certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;"/>
+                </div>
+                <div id="show-image-2" class="fl product_img_show show-image" style="position: relative;display: none; width: 408px;position: relative;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
+                    <img src="" alt="身份证反面"  width='408' height='248'/>
+                    <input name="mypic" type="file" id="change-certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="box_c_item" id="show-result-1" style="display: none;">
+                <label class="l_title">上传中...</label>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
             <div class="box_c_item">
                 <label class="l_title">默认：</label>
                 <input type="radio" name="add_delivery_default" id="add_delivery_is_default" value="1"  />是&nbsp;
@@ -453,7 +700,7 @@
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">具体地址：</label>
-                    <input class="text_input w450" type="text" id="add_receive_detail_address" name="add_receive_detail_address" placeholder="请输入具体地址"/>
+                    <input class="text_input w450" type="text" id="add_receive_detail_address" name="add_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -473,6 +720,11 @@
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
+                <label class="l_title">进口商代码：</label>
+                <input class="text_input w300" type="text" name="receiver_code" placeholder="请输入进口商代码">
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
                 <label class="l_title">默认：</label>
                 <input type="radio" name="add_receive_default" id="add_receive_is_default" value="1"  />是&nbsp;
                 <input type="radio" name="add_receive_default" id="add_receive_not_default" value="0" checked="checked" />否
@@ -481,6 +733,7 @@
             <div class="box_c_item">
                 <label class="l_title"></label>
                 <button class="btn btn_commit" type="button" id="add-new-receive">保存</button>
+                <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
                 <div class="clear"></div>
             </div>
         </fieldset>
@@ -489,36 +742,74 @@
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">备用联系人：</label>
-                    <input value="{$order.spare_addressee}" class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
+                    <label class="l_title">公司：</label>
+                    <input  value="{$order.spare_company}" class="text_input w300" type="text" name="spare_receive_company" id="spare_receive_company" placeholder="请输入公司">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">地址：</label>
-                    <input value="{$order.spare_detail_address}" class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址"/>
+                    <label class="l_title">备用联系人：</label>
+                    <input  value="{$order.spare_addressee}" class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">手机：</label>
-                <input value="{$order.spare_mobile}" class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
+                <label class="l_title">国家：</label>
+                <select  class="w300" id="spare_country" name="spare_country">
+                    <foreach name="country_list" item="v">
+                        <option value="{$v.id}" <if condition="$order.spare_country_id eq $v['id']">selected</if>>{$v.name}</option>
+                    </foreach>
+                </select>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">座机：</label>
-                <input value="{$order.spare_phone}" class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
+                <label class="l_title">省：</label>
+                <input  value="{$order.spare_state}" class="text_input w300" type="text" name="spare_state" id="spare_state" placeholder="请输入省">
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">市：</label>
+                <input  value="{$order.spare_city}" class="text_input w300" type="text" name="spare_city" id="spare_city" placeholder="请输入市">
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">具体地址：</label>
+                    <input  value="{$order.spare_detail_address}" class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
+                </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">邮编：</label>
-                <input value="{$order.spare_postal_code}" class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
+                <input  value="{$order.spare_postal_code}" class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">手机：</label>
+                <input  value="{$order.spare_mobile}" class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">座机：</label>
+                <input  value="{$order.spare_phone}" class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">进口商代码：</label>
+                <input  value="{$order.spare_receiver_code}" class="text_input w300" type="text" name="spare_receiver_code" id="spare_receiver_code" placeholder="请输入进口商代码">
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">启用：</label>
+                <input diabled type="radio" name="enable_spare" id="enable_spare" value="1" <if condition="$order.enable_spare eq 1">checked</if>  />是&nbsp;
+                <input diabled type="radio" name="enable_spare" id="disable_spare" value="0" <if condition="$order.enable_spare eq 0">checked</if> />否
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title"></label>
                 <button class="btn btn_commit" type="button" id="add-spare-receive" onclick="hide_spare_form();">确认</button>
+                <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
                 <div class="clear"></div>
             </div>
         </fieldset>
@@ -527,36 +818,44 @@
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">品名：</label>
-                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_product_name" placeholder="请输入品名">&nbsp;
+                    <label class="l_title">* 中文品名：</label>
+                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_product_name" placeholder="请输入中文品名">&nbsp;
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">商品编码：</label>
-                    <input class="text_input w300" type="text" id="order_detail_goods_code" name="order_detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
+                    <label class="l_title">* 英文品名：</label>
+                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_en_product_name" placeholder="请输入英文品名">&nbsp;
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">数量：</label>
-                <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count" placeholder="请输入数量"/>&nbsp;
+                <div class="fl">
+                    <label class="l_title">* 商品编码：</label>
+                    <input class="text_input w300" type="text" id="order_detail_goods_code" name="order_detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
+                    <a class="btn btn_commit" href="javascript:void(0);" target="_blank">编码查询</a>
+                </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">单件申报价值：</label>
+                <label class="l_title">* 数量：</label>
+                <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count" placeholder="请输入数量"/>&nbsp;
+                <select name="order_detail_unit" id="order_detail_unit">
+                    <foreach name="order_detail_unit" item="v" key="k">
+                        <option value="{$k}">{$k}/{$v}</option>
+                    </foreach>
+                </select>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">* 单件申报价值：</label>
                 <input class="text_input w300" type="text" name="order_detail_single_declared" id="order_detail_single_declared" placeholder="请输入单件申报价值"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">总申报价值：</label>
-                <input class="text_input w300" type="text" name="order_detail_declared" id="order_detail_declared" placeholder="请输入总申报价值"/>&nbsp;
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">原产地：</label>
-                <input class="text_input w300" type="text" name="order_detail_origin" id="order_detail_origin" placeholder="请输入原产地"/>&nbsp;
+                <label class="l_title">* 原产地：</label>
+                <input class="text_input w300" type="text" name="order_detail_origin" id="order_detail_origin" placeholder="请输入原产地, 如 CHINA"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
@@ -571,36 +870,45 @@
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">重量：</label>
+                    <label class="l_title">* 重量：</label>
                     <input class="text_input w300" type="text" name="order_specifications_weight" id="order_specifications_weight" placeholder="请输入重量">&nbsp;kg
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
-                    <label class="l_title">长度：</label>
+                    <label class="l_title">* 长度：</label>
                     <input class="text_input w300" type="text" id="order_specifications_length" name="order_specifications_length" placeholder="请输入长度"/>&nbsp;cm
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">宽度：</label>
+                <label class="l_title">* 宽度：</label>
                 <input class="text_input w300" type="text" name="order_specifications_width" id="order_specifications_width" placeholder="请输入宽度"/>&nbsp;cm
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">高度：</label>
+                <label class="l_title">* 高度：</label>
                 <input class="text_input w300" type="text" name="order_specifications_height" id="order_specifications_height" placeholder="请输入高度"/>&nbsp;cm
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
-                <label class="l_title">数量：</label>
-                <input class="text_input w300" type="text" name="order_specifications_count" id="order_specifications_count" placeholder="请输入数量"/>&nbsp;
-                <div class="clear"></div>
+                <label class="l_title"></label>
+                <span class="w150 l_con">中文品名</span>
+                <span class="w150 l_con">英文品名</span>
+                <span class="w150 l_con">数量</span>
+                <a class="btn btn_commit" href="javascript:void(0)" onclick="add_order_specification_detail();">添加商品</a>
+            </div>
+            <div class="box_c_item add_order_specification_detail_wrap">
+                <label class="l_title"></label>
+                <select class="w150 order_specification_detail" onchange="select_order_specification_detail(this);">
+                </select>
+                <input  class="text_input w150" type="text" name="" placeholder=""/>
+                <input  class="text_input w150" type="text" name=""  placeholder=""/>
             </div>
             <div class="box_c_item">
-                <label class="l_title">备注：</label>
-                <input class="text_input w450" type="text" name="order_specifications_remark" id="order_specifications_remark" placeholder="请输入备注"/>
+                <label class="l_title">箱数：</label>
+                <input class="text_input w300" type="text" name="order_specifications_count" id="order_specifications_count" placeholder="请输入箱数"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
@@ -611,10 +919,12 @@
             </div>
         </fieldset>
     </form>
+
 </div>
 <!-- END main -->
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/order.js"></script>
 <script type="text/javascript">
     $(function () {
         menu1("#ud5", "#ud5 a", ".coin_5 a.nav_top_item");
@@ -638,909 +948,12 @@
     var s_cursor = {$s_cursor};
     var d_editing = null;
     var d_cursor = {$d_cursor};
+    var default_company = {$default_company};
+    var country_list = {$json_country_list};
 
     refresh_order_detail();
     refresh_order_specifications();
 
-    $('#get-default-delivery').click(function() {
-        get_default_delivery();
-    });
-
-    $('#get-delivery-list').click(function(){
-        get_delivery_list();
-    });
-
-    $('#delivery-form').click(function() {
-        show_delivery_form();
-    });
-
-    $('#get-default-receive').click(function() {
-        get_default_receive();
-    });
-
-    $('#get-receive-list').click(function(){
-        get_receive_list();
-    });
-
-    $('#receive-form').click(function() {
-        show_receive_form()
-    });
-
-    $('#select-delivery-btn').click(function() {
-        select_delivery();
-    });
-
-    $('#select-receive-btn').click(function() {
-        select_receive();
-    });
-
-    $('#add-new-delivery').click(function() {
-        add_delivery();
-    });
-
-    $('#add-new-receive').click(function() {
-        add_receive();
-    });
-
-    $('#spare-receive').click(function() {
-        show_spare_form();
-    });
-
-    $('#show_order_detail').click(function() {
-        empty_order_detail_form();
-        show_order_detail_form();
-    });
-
-    $('#show_order_specifications').click(function() {
-        empty_order_specifications_form();
-        show_order_specifications_form();
-    });
-
-    $('#add_order_specifications').click(function() {
-        add_order_specifications();
-    });
-
-    $('#add_order_detail').click(function() {
-        add_order_detail();
-    });
-
-    $('#edit_order_button').click(function() {
-        layer.confirm('确定修改订单？', {
-            btn: ['确定', '取消'],
-            btn1: function () {
-                edit_order(0);
-            },
-            btn2: function () {
-                return false;
-            }
-        });
-    });
-
-    $('#commit_order_button').click(function() {
-        layer.confirm('确定修改订单并提交？（订单提交之后进入待审核状态，无法编辑）', {
-            btn: ['确定', '取消'],
-            btn1: function () {
-                edit_order(1);
-            },
-            btn2: function () {
-                return false;
-            }
-        });
-    });
-
-    function show_order_specifications_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '350px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#order_specifications_form')
-        });
-    }
-
-    function show_order_detail_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '380px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#order_detail_form')
-        });
-    }
-
-
-    function hide_order_specifications_form() {
-        layer.close(tips);
-    }
-
-    function add_order_specifications() {
-        var weight = parseFloat($('#order_specifications_weight').val());
-        var length = parseFloat($('#order_specifications_length').val());
-        var width = parseFloat($('#order_specifications_width').val());
-        var height = parseFloat($('#order_specifications_height').val());
-        var count = parseInt($('#order_specifications_count').val());
-        var remark = $('#order_specifications_remark').val().trim();
-        var flag = true;
-        var msg = '';
-        if( isNaN(weight) || weight <= 0 ) {
-            msg += '请输入重量<br />';
-            flag = false;
-        }
-        if( isNaN(length) || length <= 0 ) {
-            msg += '请输入长度<br />';
-            flag = false;
-        }
-        if( isNaN(width) || width <= 0 ) {
-            msg += '请输入宽度<br />';
-            flag = false;
-        }
-        if( isNaN(height) || height <= 0 ) {
-            msg += '请输入高度<br />';
-            flag = false;
-        }
-        if( isNaN(count) || count <= 0 ) {
-            msg += '请输入数量<br />';
-            flag = false;
-        }
-        if( flag ) {
-            var temp = { };
-            temp['weight'] = weight;
-            temp['length'] = length;
-            temp['width'] = width;
-            temp['height'] = height;
-            temp['count'] = count;
-            temp['remark'] = remark;
-            if( s_editing === null ) {
-                ajax_add_order_specifications(temp);
-            } else {
-                temp['order_id'] = order_specifications['item-' + s_editing].order_id;
-                temp['id'] = order_specifications['item-' + s_editing].id;
-                ajax_edit_order_specifications(temp);
-            }
-
-            return true;
-        } else {
-            layer.msg(msg);
-            return false;
-        }
-    }
-
-    function ajax_add_order_specifications(param) {
-        show_loading();
-        var url = "{:U('Order/ajaxAddSpecifications')}";
-        param['order_id'] = order_id;
-        $.post(url, param, ajax_add_order_specifications_handler, 'json');
-    }
-
-    function ajax_add_order_specifications_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-            return;
-        }
-        if( response.code == 1 ) {
-            order_specifications['item-' + s_cursor] = response.data;
-            s_cursor ++;
-        } else {
-            layer.msg(response.msg);
-        }
-        hide_order_specifications_form();
-        refresh_order_specifications();
-        empty_order_specifications_form();
-    }
-
-    function ajax_edit_order_specifications(param) {
-        show_loading();
-        var url = "{:U('Order/ajaxEditSpecifications')}";
-        $.post(url, param, ajax_edit_order_specifications_handler, 'json');
-    }
-
-    function ajax_edit_order_specifications_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-            return;
-        }
-        if( response.code == 1 ) {
-            order_specifications['item-' + s_editing] = response.data;
-        } else {
-            layer.msg(response.msg);
-        }
-        s_editing = null;
-        hide_order_specifications_form();
-        refresh_order_specifications();
-        empty_order_specifications_form();
-    }
-
-    function ajax_remove_order_specifications(index) {
-        show_loading();
-        var url = "{:U('Order/ajaxDeleteSpecifications')}";
-        var id = order_specifications[index].id;
-        var param = { 'order_id':order_id, 'id':id, 'index':index };
-        $.post(url, param, ajax_remove_order_specifications_handler, 'json');
-    }
-
-    function ajax_remove_order_specifications_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-            return;
-        }
-        if( response.code == 1 ) {
-            var index = response.data.index;
-            delete order_specifications[index];
-        } else {
-            layer.msg(response.msg);
-        }
-        refresh_order_specifications();
-    }
-
-    function refresh_order_specifications() {
-        $('#specifications-content').empty();
-        var html = '';
-        var i = 1;
-        var total_weight = 0, total_length = 0, total_width = 0, total_height = 0, total_count = 0, total_rate = 0;
-        for( var id in order_specifications ) {
-            html += '<tr id="detail-'+id+'">';
-            html += '<td>' + i + '</td>';
-            html += '<td>' + order_specifications[id]['weight'] + 'kg</td>';
-            html += '<td>' + order_specifications[id]['length'] + 'cm</td>';
-            html += '<td>' + order_specifications[id]['width'] + 'cm</td>';
-            html += '<td>' + order_specifications[id]['height'] + 'cm</td>';
-            html += '<td>' + order_specifications[id]['count'] + '</td>';
-            html += '<td>' + order_specifications[id]['remark'] + '</td>';
-            html += '<td class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
-            html += '</tr>';
-            total_weight += order_specifications[id]['weight'] * order_specifications[id]['count'];
-            total_length += order_specifications[id]['length'];
-            total_width += order_specifications[id]['width'];
-            total_height += order_specifications[id]['height'];
-            total_count += order_specifications[id]['count'];
-            total_rate += (order_specifications[id]['length'] * order_specifications[id]['width'] * order_specifications[id]['height'] * order_specifications[id]['count'] / 1000);
-            i++;
-        }
-
-        html += '<tr>';
-        html += '<td class="table-total">合计</td>';
-        html += '<td>总过磅重量：' + total_weight + 'kg</td>';
-//        html += '<td>' + total_length + 'cm</td>';
-//        html += '<td>' + total_width + 'cm</td>';
-//        html += '<td>' + total_height + 'cm</td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '<td>总数量：' + total_count + '</td>';
-        html += '<td>' + '材积比：' + total_rate.toFixed(3) + '</td>';
-        html += '<td class="text-right">' + '参考运费：' + total_rate.toFixed(3) + '</td>';
-        html += '</tr>';
-
-        $('#specifications-content').append(html);
-    }
-
-    function empty_order_specifications_form() {
-        $('#order_specifications_form input').val('');
-    }
-
-    function edit_order_specifications(id) {
-        s_editing = id.split('-')[1];
-        $('#order_specifications_weight').val(order_specifications[id]['weight']);
-        $('#order_specifications_length').val(order_specifications[id]['length']);
-        $('#order_specifications_width').val(order_specifications[id]['width']);
-        $('#order_specifications_height').val(order_specifications[id]['height']);
-        $('#order_specifications_count').val(order_specifications[id]['count']);
-        $('#order_specifications_remark').val(order_specifications[id]['remark']);
-        show_order_specifications_form();
-    }
-
-    function edit_order_detail(id) {
-        d_editing = id.split('-')[1];
-        $('#order_detail_product_name').val(order_detail[id]['product_name']);
-        $('#order_detail_goods_code').val(order_detail[id]['goods_code']);
-        $('#order_detail_count').val(order_detail[id]['count']);
-        $('#order_detail_single_declared').val(order_detail[id]['single_declared']);
-        $('#order_detail_declared').val(order_detail[id]['declared']);
-        $('#order_detail_origin').val(order_detail[id]['origin']);
-        show_order_detail_form();
-    }
-
-    function remove_order_specifications(id) {
-        layer.confirm('确定删除该项订单规格？', {
-            btn: ['确定', '取消'],
-            btn1: function () {
-                ajax_remove_order_specifications(id);
-            },
-            btn2: function () {
-                return false;
-            }
-        });
-    }
-
-    function add_order_detail() {
-        var product_name = $('#order_detail_product_name').val().trim();
-        var goods_code = $('#order_detail_goods_code').val().trim();
-        var count = parseInt($('#order_detail_count').val());
-        var single_declared = parseFloat($('#order_detail_single_declared').val());
-        var declared = parseFloat($('#order_detail_declared').val());
-        var origin = $('#order_detail_origin').val().trim();
-        var flag = true;
-        var msg = '';
-
-        if( product_name == '' ) {
-            msg += '请输入品名<br />';
-            flag = false;
-        }
-        if( goods_code == '' ) {
-//            msg += '请输入商品编号<br />';
-//            flag = false;
-        }
-
-        if( isNaN(count) || count <= 0 ) {
-//            msg += '请输入数量<br />';
-//            flag = false;
-            count = 0;
-        }
-        if( isNaN(single_declared) || single_declared <= 0 ) {
-//            msg += '请输入单件申报价值<br />';
-//            flag = false;
-            single_declared = 0;
-        }
-        if( isNaN(declared) || declared <= 0 ) {
-//            msg += '请输入总申报价值<br />';
-//            flag = false;
-            declared = 0;
-        }
-        if( origin == '' ) {
-//            msg += '请输入原产地<br />';
-//            flag = false;
-        }
-        if( flag ) {
-            var temp = { };
-            temp['product_name'] = product_name;
-            temp['goods_code'] = goods_code;
-            temp['count'] = count;
-            temp['single_declared'] = single_declared;
-//            temp['declared'] = declared;
-            temp['declared'] = declared ? declared : (count * single_declared);
-            temp['origin'] = origin;
-            if( d_editing === null ) {
-                ajax_add_order_detail(temp);
-
-            } else {
-                temp['order_id'] = order_detail['item-' + d_editing].order_id;
-                temp['id'] = order_detail['item-' + d_editing].id;
-                ajax_edit_order_detail(temp);
-            }
-
-            return true;
-        } else {
-            layer.msg(msg);
-            return false;
-        }
-    }
-
-    function ajax_add_order_detail(param) {
-        show_loading();
-        var url = "{:U('Order/ajaxAddDetail')}";
-        param['order_id'] = order_id;
-        $.post(url, param, ajax_add_order_detail_handler, 'json');
-    }
-
-    function ajax_add_order_detail_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-            return;
-        }
-        if( response.code == 1 ) {
-            order_detail['item-' + d_cursor] = response.data;
-            d_cursor++;
-        } else {
-            layer.msg(response.msg);
-        }
-        hide_order_detail_form();
-        refresh_order_detail();
-        empty_order_detail_form();
-    }
-
-    function ajax_edit_order_detail(param) {
-        show_loading();
-        var url = "{:U('Order/ajaxEditDetail')}";
-        $.post(url, param, ajax_edit_order_detail_handler, 'json');
-    }
-
-    function ajax_edit_order_detail_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-            return;
-        }
-        if( response.code == 1 ) {
-            order_detail['item-' + d_editing] = response.data;
-        } else {
-            layer.msg(response.msg);
-        }
-        d_editing = null;
-        hide_order_detail_form();
-        refresh_order_detail();
-        empty_order_detail_form();
-    }
-
-    function hide_order_detail_form() {
-        layer.close(tips);
-    }
-
-    function calculate_declared_value() {
-        var temp_value = 0;
-        for( var id in order_detail ) {
-            temp_value += parseInt(order_detail[id].declared);
-        }
-        $('#declared_value').val(temp_value);
-    }
-
-    function refresh_order_detail() {
-        $('#detail-content').empty();
-        var html = '';
-        var i = 1;
-        var total_count = 0;
-        var total_single_declared = 0;
-        var total_declared = 0;
-        for( var id in order_detail ) {
-            html += '<tr id="detail-'+id+'">';
-            html += '<td>' + i + '</td>';
-            html += '<td>' + order_detail[id]['product_name'] + '</td>';
-            html += '<td>' + order_detail[id]['goods_code'] + '</td>';
-            html += '<td>' + order_detail[id]['count'] + '</td>';
-            html += '<td>' + order_detail[id]['single_declared'].toFixed(2) + '</td>';
-            order_detail[id]['declared'] =  order_detail[id]['count'] * order_detail[id]['single_declared'];
-            html += '<td>' + order_detail[id]['declared'].toFixed(2) + '</td>';
-            html += '<td>' + order_detail[id]['origin'] + '</td>';
-            html += '<td class="text-right"><a href="javascript:edit_order_detail(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_detail(\''+id+'\');">删除</a></td>';
-            html += '</tr>';
-            total_count += order_detail[id]['count'];
-            total_single_declared += order_detail[id]['single_declared'];
-            total_declared += order_detail[id]['declared'];
-            i++;
-        }
-        html += '<tr>';
-        html += '<td class="table-total">合计</td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '<td>' + total_count + '</td>';
-        html += '<td>' + total_single_declared.toFixed(2) + '</td>';
-        html += '<td>' + total_declared.toFixed(2) + '</td>';
-        html += '<td></td>';
-        html += '<td></td>';
-        html += '</tr>';
-        $('#detail-content').append(html);
-        calculate_declared_value();
-    }
-
-    function empty_order_detail_form() {
-        $('#order_detail_form input').val('');
-    }
-
-    function remove_order_detail(id) {
-        layer.confirm('确定删除该项订单详情？', {
-            btn: ['确定', '取消'],
-            btn1: function () {
-                ajax_remove_order_detail(id);
-            },
-            btn2: function () {
-                return false;
-            }
-        });
-    }
-
-    function ajax_remove_order_detail(index) {
-        show_loading();
-        var url = "{:U('Order/ajaxDeleteDetail')}";
-        var id = order_detail[index].id;
-        var param = { 'order_id':order_id, 'id':id, 'index':index };
-        $.post(url, param, ajax_remove_order_detail_handler, 'json');
-    }
-
-    function ajax_remove_order_detail_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-            return;
-        }
-        if( response.code == 1 ) {
-            var index = response.data.index;
-            delete order_detail[index];
-        } else {
-            layer.msg(response.msg);
-        }
-        refresh_order_detail();
-    }
-
-    function show_spare_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '300px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#spare_receive_form')
-        });
-    }
-
-    function hide_spare_form() {
-        layer.close(tips);
-    }
-
-    //    function show_loading() {
-    //        loading = layer.load(0, { shade: 0.3 });
-    //    }
-    //
-    //    function hide_loading() {
-    //        layer.close(loading);
-    //    }
-
-    function get_default_delivery() {
-        show_loading();
-        var url = "{:U('Order/getDefaultDelivery')}";
-        var param = { };
-        $.post(url, param, get_default_delivery_handler, 'json');
-    }
-
-    function get_default_delivery_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            set_delivery(response.data);
-        } else if( response.code == -1 ) {
-            alert(response.msg);
-        }
-    }
-
-    function set_delivery(data) {
-        $('#consignor').val(data.consignor);
-        $('#delivery_phone').val(data.phone);
-        $('#delivery_mobile').val(data.mobile);
-        $('#delivery_detail_address').val(data.detail_address);
-        $('#delivery_postal_code').val(data.postal_code);
-        selected_delivery_id = data.id;
-        selected_delivery_data = data;
-
-    }
-
-    function get_delivery_list() {
-        show_loading();
-        var url = "{:U('Order/getDeliveryList')}";
-        var param = { };
-        $.post(url, param, get_delivery_list_handler, 'json');
-    }
-
-    function get_delivery_list_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            render_delivery_list(response.data);
-        } else if( response.code == -1 ) {
-            alert(response.msg);
-        }
-    }
-
-    function render_delivery_list(data) {
-        delivery_list = data;
-        var html = '';
-        $('#select_delivery_items').empty();
-        $.each(data, function (k, v) {
-            html += '<tr>';
-            html += '<td><input type="radio" class="ace delivery-check-item" name="delivery-check-item" value="'+v.id+'"';
-            if( selected_delivery_id && v.id == selected_delivery_id) {
-                html += ' checked></td>';
-            } else {
-                if (v.is_default == 1) {
-                    html += ' checked></td>';
-                } else {
-                    html += ' ></td>';
-                }
-            }
-            html += '<td>' + v.consignor + '</td>';
-            html += '<td>' + v.detail_address + '</td>';
-            html += '<td>' + v.postal_code + '</td>';
-            if (v.is_default == 1) {
-                html += '<td>是</td>';
-            } else {
-                html += '<td>否</td>';
-            }
-            html += '</tr>';
-        });
-        $('#select_delivery_items').append(html);
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '400px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#delivery-list')
-        });
-    }
-
-    function select_delivery() {
-        var obj = $('#delivery-check-item:checked');
-        if( !obj ) {
-            layer.msg('请选择一个发货地址');
-            return;
-        }
-        var id = $('.delivery-check-item:checked').val();
-        var data = delivery_list[id];
-        set_delivery(data);
-        layer.close(tips);
-    }
-
-    function show_delivery_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '480px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#add_delivery_form')
-        });
-    }
-
-    function close_delivery_form() {
-        $('#add_delivery_form input[type=text]').val('');
-        $('#add_delivery_country option:selected').removeAttr('selected');
-        $('#add_delivery_country option:first').attr('selected');
-        $('input[name=add_delivery_default]').removeAttr('checked');
-        $('#add_delivery_not_default').attr('checked', 'checked');
-        layer.close(tips);
-    }
-
-    function add_delivery() {
-        show_loading();
-        var url = "{:U('Delivery/ajaxAdd')}";
-        var consignor = $('#add_delivery_consignor').val();
-        var country = $('#add_delivery_country').val();
-        var state = $('#add_delivery_state').val();
-        var city = $('#add_delivery_city').val();
-        var detail_address = $('#add_delivery_detail_address').val();
-        var mobile = $('#add_delivery_mobile').val();
-        var phone = $('#add_delivery_phone').val();
-        var postal_code = $('#add_delivery_postal_code').val();
-        var is_default = $('input[name=add_delivery_default]:checked').val();
-        var param = { postal_code:postal_code,consignor:consignor,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,is_default:is_default };
-        $.post(url, param, add_delivery_handler, 'json');
-    }
-
-    function add_delivery_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            set_delivery(response.data);
-            close_delivery_form();
-        } else if( response.code == -1 ) {
-            alert(response.msg);
-        }
-    }
-
-    function get_default_receive() {
-        show_loading();
-        var url = "{:U('Order/getDefaultReceive')}";
-        var param = { };
-        $.post(url, param, get_default_receive_handler, 'json');
-    }
-
-    function get_default_receive_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            set_receive(response.data);
-        } else if( response.code == -1 ) {
-            alert(response.msg);
-        }
-    }
-
-    function set_receive(data) {
-        $('#receive_company').val(data.company);
-        $('#addressee').val(data.addressee);
-        $('#receive_phone').val(data.phone);
-        $('#receive_mobile').val(data.mobile);
-        $('#receive_detail_address').val(data.detail_address);
-        $('#receive_postal_code').val(data.postal_code);
-        selected_receive_id = data.id;
-        selected_receive_data = data;
-    }
-
-    function get_receive_list() {
-        show_loading();
-        var url = "{:U('Order/getReceiveList')}";
-        var param = { };
-        $.post(url, param, get_receive_list_handler, 'json');
-    }
-
-    function get_receive_list_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            render_receive_list(response.data);
-        } else if( response.code == -1 ) {
-            alert(response.msg);
-        }
-    }
-
-    function render_receive_list(data) {
-        receive_list = data;
-        var html = '';
-        $('#select_receive_items').empty();
-        $.each(data, function (k, v) {
-            html += '<tr>';
-            html += '<td><input type="radio" class="ace receive-check-item" name="receive-check-item" value="'+v.id+'"';
-            if( selected_receive_id && v.id == selected_receive_id) {
-                html += ' checked></td>';
-            } else {
-                if (v.is_default == 1) {
-                    html += ' checked></td>';
-                } else {
-                    html += ' ></td>';
-                }
-            }
-            html += '<td>' + v.company + '</td>';
-            html += '<td>' + v.addressee + '</td>';
-            html += '<td>' + v.detail_address + '</td>';
-            html += '<td>' + v.postal_code + '</td>';
-            if (v.is_default == 1) {
-                html += '<td>是</td>';
-            } else {
-                html += '<td>否</td>';
-            }
-            html += '</tr>';
-        });
-        $('#select_receive_items').append(html);
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '400px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#receive-list')
-        });
-    }
-
-    function select_receive() {
-        var obj = $('#receive-check-item:checked');
-        if( !obj ) {
-            layer.msg('请选择一个收货地址');
-            return;
-        }
-        var id = $('.receive-check-item:checked').val();
-        var data = receive_list[id];
-        set_receive(data);
-        layer.close(tips);
-    }
-
-
-    function show_receive_form() {
-        tips = layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['750px', '550px'], //宽高
-            title: false,
-            closeBtn: 1,
-            shadeClose: false,
-            content: $('#add_receive_form')
-        });
-    }
-
-    function add_receive() {
-        show_loading();
-        var url = "{:U('Receive/ajaxAdd')}";
-        var company = $('#add_receive_company').val();
-        var addressee = $('#add_receive_addressee').val();
-        var country = $('#add_receive_country').val();
-        var state = $('#add_receive_state').val();
-        var city = $('#add_receive_city').val();
-        var detail_address = $('#add_receive_detail_address').val();
-        var mobile = $('#add_receive_mobile').val();
-        var phone = $('#add_receive_phone').val();
-        var is_default = $('input[name=add_receive_default]:checked').val();
-        var postal_code = $('#add_receive_postal_code').val();
-        var param = { company:company,addressee:addressee,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,postal_code:postal_code,is_default:is_default };
-        $.post(url, param, add_receive_handler, 'json');
-    }
-
-    function add_receive_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            set_receive(response.data);
-            close_receive_form();
-        } else if( response.code == -1 ) {
-            layer.msg(response.msg);
-        }
-    }
-
-    function close_receive_form() {
-        $('#add_receive_form input[type=text]').val('');
-        $('#add_receive_country option:selected').removeAttr('selected');
-        $('#add_receive_country option:first').attr('selected');
-        $('input[name=add_receive_default]').removeAttr('checked');
-        $('#add_receive_not_default').attr('checked', 'checked');
-        layer.close(tips);
-    }
-
-    function edit_order(commit) {
-        var url = "{:U('Order/ajaxEdit')}";
-        //发货地址 js
-        //收货地址 js
-        //备用地址
-        var spare_receive_addressee = $('#spare_receive_addressee').val();
-        var spare_receive_detail_address = $('#spare_receive_detail_address').val();
-        var spare_receive_phone = $('#spare_receive_phone').val();
-        var spare_receive_mobile = $('#spare_receive_mobile').val();
-        var spare_receive_postal_code = $('#spare_receive_postal_code').val();
-        //其他信息
-        var currency = $('#currency').val();
-        var declared_value = $('#declared_value').val();
-        var channel = $('#channel').val();
-        var package_type = $('#package_type').val();
-        var export_reason = $('#export_reason').val();
-        var remark = $('#remark').val();
-        //订单详情 js
-        var param = {
-            'order_id': order_id,
-            'delivery_id':selected_delivery_id,
-            'receive_id':selected_receive_id,
-            'spare_receive_addressee':spare_receive_addressee,
-            'spare_receive_detail_address': spare_receive_detail_address,
-            'spare_receive_phone': spare_receive_phone,
-            'spare_receive_mobile': spare_receive_mobile,
-            'spare_receive_postal_code' : spare_receive_postal_code,
-            'currency': currency,
-            'declared_value': declared_value,
-            'channel': channel,
-            'package_type': package_type,
-            'export_reason': export_reason,
-            'remark': remark,
-            'commit': commit
-        };
-        show_loading();
-        $.post(url, param, add_order_handler, 'json');
-    }
-
-    function add_order_handler(response) {
-        hide_loading();
-        if( response.code == 0 ) {
-            alert(response.msg);
-            window.location.href = '/';
-        } else if( response.code == 1 ) {
-            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
-                window.location.href = response.url;
-            } );
-        } else if( response.code == -1 ) {
-            layer.msg(response.msg);
-        }
-    }
 
 </script>
 </body>
