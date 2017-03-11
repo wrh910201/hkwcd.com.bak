@@ -33,6 +33,18 @@ class OrderAction extends BaseAction  {
         $this->client_id = session('hkwcd_user.user_id');
         $this->client = M('Client')->where(['status' => 1, 'id' => $this->client_id])->find();
 
+        $this->assign('order_detail_unit', C('order_detail_unit'));
+        $this->assign('package_type', C('package_type'));
+        $this->assign('price_terms', C('price_terms'));
+        $this->assign('tariff_payment', C('tariff_payment'));
+        $this->assign('settlement', C('settlement'));
+        $this->assign('express_service', C('express_service'));
+        $this->assign('export_reason', C('export_reason'));
+        $this->assign('export_nature', C('export_nature'));
+        $channel_list = M('Channel')->where(['status' => 1])->select();
+        $this->assign('channel_list', $channel_list);
+
+
     }
 
 
@@ -89,8 +101,7 @@ class OrderAction extends BaseAction  {
         $this->assign('json_country_list', json_encode($country_list));
 
 
-        $channel_list = M('Channel')->where($where)->select();
-        $this->assign('channel_list', $channel_list);
+
 
         $this->assign('client', $client);
 
@@ -103,7 +114,6 @@ class OrderAction extends BaseAction  {
         $this->assign('json_receive', json_encode($default_receive));
         $this->assign('default_receive_id', $selected_receive_id);
         $this->assign('has_default_receive', $has_default_receive);
-        $this->assign('order_detail_unit', C('order_detail_unit'));
         if( empty($client['company']) ) {
             $this->assign('default_company', json_encode(''));
         } else {
@@ -179,15 +189,26 @@ class OrderAction extends BaseAction  {
          * 4、插入详情和规格的映射
          */
         $order_id = 0;
-        $order_num = 'HD'.date('Ymd', time()).$this->client_id.rand(1000, 9999);
-        $data['order_num'] = $order_num;
-        $add_order_result = M('ClientOrder')->add($data);
-//        $this->response['msg'] = $order_num;
-//        echo json_encode($this->response);exit;
-        if( !$add_order_result ) {
-            $transaction = false;
-        } else {
-            $order_id = M('ClientOrder')->getLastInsID();
+        $order_num = '';
+        $today_time = strtotime(date('Y-m-d', time()));
+        $total_map = [
+            'client_id' => $this->client_id,
+            'add_time' => ['gt', date('Y-m-d H:i:s', $today_time)],
+        ];
+        for( $i = 0; $i < 5; $i++ ) {
+            $total = M('ClientOrder')->where($total_map)->count();
+            $total++;
+            $total_number = $this->_total_to_str($total);
+//            $order_num = 'HD' . date('Ymd', time()) . $this->client_id . $total_number;
+            $order_num = date('Ymd', time()) . $this->client_id . $total_number;
+            $data['order_num'] = $order_num;
+            $add_order_result = M('ClientOrder')->add($data);
+            if (!$add_order_result) {
+                $transaction = false;
+            } else {
+                $order_id = M('ClientOrder')->getLastInsID();
+                break;
+            }
         }
 
         if( $transaction ) {
@@ -198,6 +219,8 @@ class OrderAction extends BaseAction  {
                 if( !$temp_result ) {
                     $transaction = false;
                     break;
+                } else {
+                    $order_detail[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
                 }
             }
         }
@@ -209,6 +232,27 @@ class OrderAction extends BaseAction  {
                 $temp_result = M('ClientOrderSpecifications')->add($v);
                 if( !$temp_result ) {
                     $transaction = false;
+                    break;
+                } else {
+                    $order_specifications[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
+                }
+            }
+        }
+
+        if( $transaction ) {
+            foreach( $order_specifications as $k => $v ) {
+                foreach( $v['detail'] as $d ) {
+                    $temp = [
+                        'specifications_id' => $v['id'],
+                        'detail_id' => $order_detail[$d]['id'],
+                    ];
+                    $temp_result = M('ClientOrderMap')->add($temp);
+                    if( !$temp_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
                     break;
                 }
             }
@@ -236,6 +280,7 @@ class OrderAction extends BaseAction  {
         echo json_encode($this->response);
         exit;
     }
+
     private function _get_order_params() {
         $data = [];
         $data['delivery_id'] = I('post.delivery_id', 0, 'intval');
@@ -348,19 +393,20 @@ class OrderAction extends BaseAction  {
             $data['spare_receiver_code'] = '';
             $data['spare_country_name'] = '';
             $data['spare_country_en_name'] = '';
-        }
-        foreach( $this->spare_info_array as $v ) {
-            if( empty($data[$v]) ) {
-                $this->has_error = true;
-                $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请完善备用信息,*为必填' : '请完善备用信息,*为必填';
-                break;
+        } else {
+            foreach ($this->spare_info_array as $v) {
+                if (empty($data[$v])) {
+                    $this->has_error = true;
+                    $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请完善备用信息,*为必填' : '请完善备用信息,*为必填';
+                    break;
+                }
             }
-        }
 
-        $country = M('Country')->where(['id' => $data['spare_country_id']])->find();
-        if( $country ) {
-            $data['spare_country_name'] = $country['name'];
-            $data['spare_country_en_name'] = $country['ename'];
+            $country = M('Country')->where(['id' => $data['spare_country_id']])->find();
+            if ($country) {
+                $data['spare_country_name'] = $country['name'];
+                $data['spare_country_en_name'] = $country['ename'];
+            }
         }
         return $data;
     }
@@ -442,6 +488,7 @@ class OrderAction extends BaseAction  {
                 }
             }
         }
+        return $order_specifications;
     }
 
     public function edit() {
@@ -1178,7 +1225,30 @@ class OrderAction extends BaseAction  {
         }
 
         $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
-        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+        if( $order_detail ) {
+            $temp = [];
+            foreach( $order_detail as $k => $v ) {
+                $temp[$v['id']] = $v;
+            }
+            $order_detail = $temp;
+        }
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id')
+            ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
+//        echo M('ClientOrderSpecifications')->getLastSql();exit;
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp[$v['id']]) ) {
+                    $temp[$v['id']] = $v;
+                }
+                $temp[$v['id']]['detail'][] = $v['detail_id'];
+            }
+            $order_specifications = $temp;
+        }
 
         $this->assign('order', $order);
         $this->assign('order_detail', json_encode($order_detail));
@@ -1581,6 +1651,17 @@ class OrderAction extends BaseAction  {
         return $status;
     }
 
-
+    private function _total_to_str($total) {
+        $temp_total = '000'.$total;
+        $length = strlen($temp_total);
+        $number = '';
+        switch($length) {
+            case 4: $number = $temp_total;break;
+            case 5: $number = '00'.$total;break;
+            case 6: $number = '0'.$total;break;
+            case 7: $number = $temp_total;break;
+        }
+        return $number;
+    }
 
 }

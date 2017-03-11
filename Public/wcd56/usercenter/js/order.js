@@ -583,7 +583,7 @@ function hide_order_detail_form() {
     layer.close(tips);
 }
 
-function refresh_order_detail() {
+function refresh_order_detail(no_operate) {
     $('#detail-content').empty();
     var html = '';
     var i = 1;
@@ -596,11 +596,15 @@ function refresh_order_detail() {
         html += '<td>' + order_detail[id]['product_name'] + ' '+ order_detail[id]['en_product_name'] +'</td>';
         html += '<td>' + order_detail[id]['goods_code'] + '</td>';
         html += '<td>' + order_detail[id]['count'] + order_detail[id]['unit'] + '</td>';
-        html += '<td>' + order_detail[id]['single_declared'].toFixed(2) + '</td>';
+        html += '<td>' + parseInt(order_detail[id]['single_declared']).toFixed(2) + '</td>';
         order_detail[id]['declared'] =  order_detail[id]['count'] * order_detail[id]['single_declared'];
         html += '<td>' + order_detail[id]['declared'].toFixed(2) + '</td>';
         html += '<td>' + order_detail[id]['origin'] + '</td>';
-        html += '<td class="text-right"><a href="javascript:edit_order_detail(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_detail(\''+id+'\');">删除</a></td>';
+        if( !no_operate ) {
+            html += '<td class="text-right"><a href="javascript:edit_order_detail(\'' + id + '\');">编辑</a> | <a href="javascript:remove_order_detail(\'' + id + '\');">删除</a></td>';
+        } else {
+            html += '<td></td>';
+        }
         html += '</tr>';
         total_count += order_detail[id]['count'];
         total_single_declared += order_detail[id]['single_declared'];
@@ -806,7 +810,7 @@ function add_order_specifications() {
     }
 }
 
-function refresh_order_specifications() {
+function refresh_order_specifications(no_operate) {
     $('#specifications-content').empty();
     var html = '';
     var i = 1;
@@ -814,8 +818,9 @@ function refresh_order_specifications() {
     for( var id in order_specifications ) {
         var j = 1;
         var rowspan = order_specifications[id].detail.length;
+        var i_end = i + parseInt(order_specifications[id]['count']) - 1;
         html += '<tr id="detail-'+id+'">';
-        html += '<td rowspan="'+rowspan+'">' + i + '-' + (i+order_specifications[id]['count'] - 1) + '</td>';
+        html += '<td rowspan="'+rowspan+'">' + i + '-' + i_end + '</td>';
         for( var y in order_specifications[id].detail ) {
             var detail_index = order_specifications[id].detail[y];
             var temp_rate = order_specifications[id]['length'] *　order_specifications[id]['width'] * order_specifications[id]['height'] / 5000;
@@ -827,11 +832,15 @@ function refresh_order_specifications() {
             break;
         }
         html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['weight'] + 'KG</td>';
-        html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['length'] + '*' + order_specifications[id]['width'] + '*' + order_specifications[id]['height'] + '</td>';
+        html += '<td rowspan="'+rowspan+'">' + parseInt(order_specifications[id]['length']).toFixed(2) + '*' + parseInt(order_specifications[id]['width']).toFixed(2) + '*' + parseInt(order_specifications[id]['height']).toFixed(2) + '</td>';
         html += '<td rowspan="'+rowspan+'">' + temp_rate + 'KG</td>';
         html += '<td rowspan="'+rowspan+'">' + order_specifications[id]['count'] + '</td>';
         html += '<td rowspan="'+rowspan+'"></td>';
-        html += '<td rowspan="'+rowspan+'" class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
+        if( !no_operate ) {
+            html += '<td rowspan="' + rowspan + '" class="text-right"><a href="javascript:edit_order_specifications(\'' + id + '\');">编辑</a> | <a href="javascript:remove_order_specifications(\'' + id + '\');">删除</a></td>';
+        } else {
+            html += '<td></td>';
+        }
         html += '</tr>';
         for( var y in order_specifications[id].detail ) {
 
@@ -857,6 +866,7 @@ function refresh_order_specifications() {
         total_rate += order_specifications[id]['rate'] * order_specifications[id]['count'];
         total_charging_weight += order_specifications[id]['charging_weight'] * order_specifications[id]['count'];
         i += order_specifications[id]['count'];
+        console.log(order_specifications[id]['count']);
     }
 
     html += '<tr>';
@@ -1010,6 +1020,42 @@ function add_order_handler(response) {
         } );
     } else if( response.code == -1 ) {
         layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
+    }
+}
+
+function commit_order(id) {
+    layer.confirm('确定提交订单吗（提交后无法编辑和删除订单）？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        do_commit_order(id);
+    }, function(){
+
+    });
+}
+
+function do_commit_order(id) {
+    show_loading();
+    var url = '/Order/commit';
+    var param = {'id':id};
+    $.post(url, param, ajax_handler, 'json');
+}
+
+function ajax_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+            window.location.href = '/';
+        } );
+    } else if( response.code == 1 ) {
+        layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+            if( response.url ) {
+                window.location.href = response.url;
+            } else {
+                window.location.reload();
+            }
+        } );
+    } else if( response.code == -1 ) {
+        layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
     }
 }
 

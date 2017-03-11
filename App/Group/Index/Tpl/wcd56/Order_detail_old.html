@@ -1,0 +1,1459 @@
+<include file="Usercenter:header" />
+<body>
+<include file="Usercenter:aside" />
+<!-- main -->
+<div class="main">
+    <include file="Usercenter:top" />
+
+    <!--content-->
+    <div class="content">
+        <!--{$title}-->
+        <div class="profile">
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3>{$title} | 订单号：{$order.order_num}</h3>
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">公司：</label>
+                                <input readonly class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$order.delivery_company}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">公司：</label>
+                                <input readonly class="text_input w300" type="text" name="receive_company" id="receive_company" placeholder="请输入收货公司" value="{$order.receive_company}">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">联系人：</label>
+                                <input readonly class="text_input w300" type="text" name="consignor" id="consignor" placeholder="请输入联系人" value="{$order.delivery_consignor}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">联系人：</label>
+                                <input readonly  class="text_input w300" type="text" name="addressee" id="addressee" placeholder="请输入联系人" value="{$order.receive_addressee}">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">座机：</label>
+                                <input readonly  class="text_input w300" type="text" name="delivery_phone" id="delivery_phone" placeholder="请输入座机" value="{$order.delivery_phone}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">座机：</label>
+                                <input readonly  class="text_input w300" type="text" name="receive_phone" id="receive_phone" placeholder="请输入座机" value="{$order.receive_phone}">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">手机：</label>
+                                <input readonly  class="text_input w300" type="text" name="delivery_mobile" id="delivery_mobile" placeholder="请输入手机" value="{$order.delivery_mobile}">
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">手机：</label>
+                                <input readonly  class="text_input w300" type="text" name="receive_mobile" id="receive_mobile" placeholder="请输入手机" value="{$order.receive_mobile}">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">地址：</label>
+                                <input readonly  class="text_input w300" type="text" name="delivery_address" id="delivery_address" placeholder="请输入地址" value="{$order.delivery_detail_address}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">地址：</label>
+                                <input readonly  class="text_input w300" type="text" name="receive_address" id="receive_address" placeholder="请输入地址" value="{$order.receive_detail_address}">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">邮编：</label>
+                                <input readonly class="text_input w300" type="text" name="delivery_postal_code" id="delivery_postal_code" placeholder="请输入邮编" value="{$order.delivery_postal_code}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">邮编：</label>
+                                <input readonly class="text_input w300" type="text" name="receive_postal_code" id="receive_postal_code" placeholder="请输入邮编" value="{$order.receive_postal_code}">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                        <div class="box_c_item">
+                            <div class="fl" style="width:456px">
+                                <label class="l_title"></label>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl" >
+                                <label class="l_title"></label>
+                                <button id="spare-receive" class="btn btn_commit" type="button">备用联系人</button>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3 class="fl">其他信息</h3>
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">币种：</label>
+                                <input readonly class="text_input w300" type="text" name="receive_postal_code" placeholder="" value="{$order.currency_name}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">总申报价值：</label>
+                                <input class="text_input w300" type="text" name="declared_value" id="declared_value" placeholder="请输入申报价值" value="{$order.declared_price}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">渠道类型：</label>
+                                <input readonly class="text_input w300" type="text" name="receive_postal_code"  placeholder="" value="{$order.channel_name}">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="fl">
+                                <label class="l_title">寄件类型：</label>
+                                <input readonly class="text_input w300" type="text" name="receive_postal_code"  placeholder="" value="<if condition="$order.package_type eq 1">文件<else />包裹</if>">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">出口原因：</label>
+                                <input disabled="disabled" value="{$order.export_reason}" style="width:800px;" class="text_input" type="text" name="export_reason" id="export_reason" placeholder="请输入出口原因">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">备注：</label>
+                                <input disabled="disabled" value="{$order.remark}" style="width:800px;" class="text_input" type="text" name="remark" id="remark" placeholder="备注">
+                                <div class="clear"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </fieldset>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3 class="fl">订单详情</h3>
+                    <!--<button id="show_order_detail" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入</button>-->
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c box_c_reset">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>品名</th>
+                            <th>商品编码</th>
+                            <th>数量</th>
+                            <th>单件申报价值</th>
+                            <th>总申报价值</th>
+                            <th>原产地</th>
+                            <!--<th class="text-right">操作</th>-->
+                        </tr>
+                        </thead>
+                        <tbody id="detail-content">
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3 class="fl">规格详情（计重方式：重量，长度×宽度×高度÷1000，两者取其大）</h3>
+                    <!--<button id="calculate" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;计费</button>-->
+                    <!--<button id="show_order_specifications" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入</button>-->
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c box_c_reset">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>重量</th>
+                            <th>长度</th>
+                            <th>宽度</th>
+                            <th>高度</th>
+                            <th>数量</th>
+                            <th>备注</th>
+                            <!--<th class="text-right">操作</th>-->
+                        </tr>
+                        </thead>
+                        <tbody id="specifications-content">
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="fr" style="display: none">
+                <label class="l_title">总运费（参考）：</label>
+                <span>1110</span>
+            </div>
+            <div class="clear"></div>
+            <div class="box">
+                <div class="box_c">
+                    <fieldset>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>备注：</th>
+                                <th colspan="2"></th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name="clause_list" item="v">
+                                <tr>
+                                    <td>&nbsp;&nbsp;&nbsp;*</td>
+                                    <td colspan="2">{$v}</td>
+                                </tr>
+                            </foreach>
+                            </tbody>
+                        </table>
+                        <div class="clear"></div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="fr">
+                <label class="l_title"></label>
+                <if condition="$order.client_status eq 0">
+                <a class="btn btn_commit" href="/Order/edit/id/{$order.id}" id="edit_order_button">编辑</a> &nbsp;
+                <button class="btn btn_commit" type="button" id="commit_order_button" onclick="commit_order({$order.id})">提交</button> &nbsp;
+                <if condition="$order.is_rejected eq 1">
+                    <button class="btn btn_commit" type="button" onclick="reject_history({$order.id})">驳回日志</button> &nbsp;
+                </if>
+                </if>
+                <if condition="$order.express_status eq 1">
+                <button class="btn btn_commit" type="button" id="" onclick="trace_order({$order.id})">跟踪</button>
+                    <a target="_blank" class="btn btn_commit" href="{:U('Order/packing', ['id' => $order['id']])}">装箱单</a>
+                    <a target="_blank" class="btn btn_commit" href="{:U('Order/invoice', ['id' => $order['id']])}">商业发票</a>
+                    <if condition="$order.receive_status eq 0">
+                        <a class="btn btn_commit" href="javascript:void(0);" onclick="complete_order({$order.id})">完成</a>
+                    </if>
+                </if>
+                <a href="javascript:window.history.go(-1);" class="btn btn_cancel">返回</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--END 个人信息-->
+    </div>
+    <!--END content-->
+
+    <div id="delivery-list" class="hide">
+        <fieldset>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>联系人</th>
+                    <th>地址</th>
+                    <th>邮编</th>
+                    <th>默认</th>
+                </tr>
+                </thead>
+                <tbody id="select_delivery_items">
+                <!--
+                <tr>
+                    <td><input type="radio" class="ace" name="chkItem"></td>
+                    <td>WP15K081</td>
+                    <td>三只松鼠松籽</td>
+                    <td>T011</td>
+                    <td>500g</td>
+                    <td>9999</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <button class="btn btn_commit" type="button" id="select-delivery-btn">确认</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </div>
+    <div id="receive-list" class="hide">
+        <fieldset>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>公司</th>
+                    <th>联系人</th>
+                    <th>地址</th>
+                    <th>邮编</th>
+                    <th>默认</th>
+                </tr>
+                </thead>
+                <tbody id="select_receive_items">
+                <!--
+                <tr>
+                    <td><input type="radio" class="ace" name="chkItem"></td>
+                    <td>WP15K081</td>
+                    <td>三只松鼠松籽</td>
+                    <td>T011</td>
+                    <td>500g</td>
+                    <td>9999</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <button class="btn btn_commit" type="button" id="select-receive-btn">确认</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </div>
+    <form action="" method="post" id="add_delivery_form" class="box_c hide">
+        <fieldset>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">联系人：</label>
+                    <input class="text_input w300" type="text" name="add_delivery_consignor" id="add_delivery_consignor" placeholder="请输入联系人">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">国家：</label>
+                    <select class="w300" id="add_delivery_country">
+                        <foreach name="country_list" item="v">
+                            <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                        </foreach>
+                    </select>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">省：</label>
+                    <input class="text_input w300" type="text" id="add_delivery_state" name="add_delivery_state" placeholder="请输入省">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">市：</label>
+                    <input class="text_input w300" type="text" id="add_delivery_city" name="add_delivery_city" placeholder="请输入市">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">具体地址：</label>
+                    <input class="text_input w450" type="text" id="add_delivery_detail_address" name="add_delivery_detail_address" placeholder="请输入具体地址"/>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">邮编：</label>
+                    <input class="text_input w450" type="text" id="add_delivery_postal_code" name="add_delivery_postal_code" placeholder="请输入邮编"/>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">手机：</label>
+                <input class="text_input w300" type="text" name="add_delivery_mobile" id="add_delivery_mobile" placeholder="请输入手机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">座机：</label>
+                <input class="text_input w300" type="text" name="add_delivery_phone" id="add_delivery_phone" placeholder="请输入座机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">默认：</label>
+                <input type="radio" name="add_delivery_default" id="add_delivery_is_default" value="1"  />是&nbsp;
+                <input type="radio" name="add_delivery_default" id="add_delivery_not_default" value="0" checked="checked" />否
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <button class="btn btn_commit" type="button" id="add-new-delivery">保存</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </form>
+    <form action="" method="post" id="add_receive_form" class="box_c hide">
+        <fieldset>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">公司：</label>
+                    <input class="text_input w300" type="text" name="add_receive_company" id="add_receive_company" placeholder="请输入公司">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">联系人：</label>
+                    <input class="text_input w300" type="text" name="add_receive_addressee" id="add_receive_addressee" placeholder="请输入联系人">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">国家：</label>
+                    <select class="w300" id="add_receive_country">
+                        <foreach name="country_list" item="v">
+                            <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                        </foreach>
+                    </select>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">省：</label>
+                    <input class="text_input w300" type="text" id="add_receive_state" name="add_receive_state" placeholder="请输入省">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">市：</label>
+                    <input class="text_input w300" type="text" id="add_receive_city" name="add_receive_city" placeholder="请输入市">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">具体地址：</label>
+                    <input class="text_input w450" type="text" id="add_receive_detail_address" name="add_receive_detail_address" placeholder="请输入具体地址"/>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">手机：</label>
+                <input class="text_input w300" type="text" name="add_receive_mobile" id="add_receive_mobile" placeholder="请输入手机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">座机：</label>
+                <input class="text_input w300" type="text" name="add_receive_phone" id="add_receive_phone" placeholder="请输入座机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">邮编：</label>
+                <input class="text_input w300" type="text" name="add_receive_postal_code" id="add_receive_postal_code" placeholder="请输入邮编"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">默认：</label>
+                <input type="radio" name="add_receive_default" id="add_receive_is_default" value="1"  />是&nbsp;
+                <input type="radio" name="add_receive_default" id="add_receive_not_default" value="0" checked="checked" />否
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <button class="btn btn_commit" type="button" id="add-new-receive">保存</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </form>
+    <form action="" method="post" id="spare_receive_form" class="box_c hide">
+        <fieldset>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">备用联系人：</label>
+                    <input disabled value="{$order.spare_addressee}" class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">地址：</label>
+                    <input disabled value="{$order.spare_detail_address}" class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址"/>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">手机：</label>
+                <input disabled value="{$order.spare_mobile}" class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">座机：</label>
+                <input disabled value="{$order.spare_phone}" class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">邮编：</label>
+                <input disabled value="{$order.spare_postal_code}" class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <button class="btn btn_commit" type="button" id="add-spare-receive" onclick="hide_spare_form();">确认</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </form>
+    <form action="" method="post" id="order_detail_form" class="box_c hide">
+        <fieldset>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">品名：</label>
+                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_product_name" placeholder="请输入品名">&nbsp;
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">商品编码：</label>
+                    <input class="text_input w300" type="text" id="order_detail_goods_code" name="order_detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">数量：</label>
+                <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count" placeholder="请输入数量"/>&nbsp;
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">单件申报价值：</label>
+                <input class="text_input w300" type="text" name="order_detail_single_declared" id="order_detail_single_declared" placeholder="请输入单件申报价值"/>&nbsp;
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">总申报价值：</label>
+                <input class="text_input w300" type="text" name="order_detail_declared" id="order_detail_declared" placeholder="请输入总申报价值"/>&nbsp;
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">原产地：</label>
+                <input class="text_input w300" type="text" name="order_detail_origin" id="order_detail_origin" placeholder="请输入原产地"/>&nbsp;
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <input type="hidden" id="d_editing_id" value="0" />
+                <button class="btn btn_commit" type="button" id="add_order_detail">确认</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </form>
+    <form action="" method="post" id="order_specifications_form" class="box_c hide">
+        <fieldset>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">重量：</label>
+                    <input class="text_input w300" type="text" name="order_specifications_weight" id="order_specifications_weight" placeholder="请输入重量">&nbsp;kg
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">长度：</label>
+                    <input class="text_input w300" type="text" id="order_specifications_length" name="order_specifications_length" placeholder="请输入长度"/>&nbsp;cm
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">宽度：</label>
+                <input class="text_input w300" type="text" name="order_specifications_width" id="order_specifications_width" placeholder="请输入宽度"/>&nbsp;cm
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">高度：</label>
+                <input class="text_input w300" type="text" name="order_specifications_height" id="order_specifications_height" placeholder="请输入高度"/>&nbsp;cm
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">数量：</label>
+                <input class="text_input w300" type="text" name="order_specifications_count" id="order_specifications_count" placeholder="请输入数量"/>&nbsp;
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title">备注：</label>
+                <input class="text_input w450" type="text" name="order_specifications_remark" id="order_specifications_remark" placeholder="请输入备注"/>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <input type="hidden" id="s_editing_id" value="0" />
+                <button class="btn btn_commit" type="button" id="add_order_specifications">确认</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </form>
+    <!-- 产品选择弹窗 -->
+    <div id="order_reject_table" class="hide">
+        <fieldset>
+            <table class="table">
+                <thead>
+                <tr>
+                    <!--<th>选择</th>-->
+                    <th>驳回时间</th>
+                    <th>驳回原因</th>
+                </tr>
+                </thead>
+                <tbody id="order_reject_item">
+                <!--
+                <tr>
+                    <td><input type="radio" class="ace" name="chkItem"></td>
+                    <td>WP15K081</td>
+                    <td>三只松鼠松籽</td>
+                    <td>T011</td>
+                    <td>500g</td>
+                    <td>9999</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <div id="order_trace_table" class="hide">
+        <fieldset>
+            <table class="table">
+                <thead>
+                <tr>
+                    <!--<th>选择</th>-->
+                    <th>时间</th>
+                    <th>地点和跟踪进度</th>
+                </tr>
+                </thead>
+                <tbody id="order_trace_item">
+                <!--
+                <tr>
+                    <td><input type="radio" class="ace" name="chkItem"></td>
+                    <td>WP15K081</td>
+                    <td>三只松鼠松籽</td>
+                    <td>T011</td>
+                    <td>500g</td>
+                    <td>9999</td>
+                </tr>
+                -->
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+<!-- END main -->
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        menu1("#ud5", "#ud5 a", ".coin_5 a.nav_top_item");
+    });
+
+    var tips;
+    var loading;
+
+    var order_id = {$order.id};
+    var delivery_list = [];
+    var receive_list = [];
+    var order_specifications = {$order_specifications};
+    var order_detail = {$order_detail};
+    var s_editing = null;
+    var d_editing = null;
+
+    refresh_order_detail();
+    refresh_order_specifications();
+
+    $('#get-default-delivery').click(function() {
+        get_default_delivery();
+    });
+
+    $('#get-delivery-list').click(function(){
+        get_delivery_list();
+    });
+
+    $('#delivery-form').click(function() {
+        show_delivery_form();
+    });
+
+    $('#get-default-receive').click(function() {
+        get_default_receive();
+    });
+
+    $('#get-receive-list').click(function(){
+        get_receive_list();
+    });
+
+    $('#receive-form').click(function() {
+        show_receive_form()
+    });
+
+    $('#select-delivery-btn').click(function() {
+        select_delivery();
+    });
+
+    $('#select-receive-btn').click(function() {
+        select_receive();
+    });
+
+    $('#add-new-delivery').click(function() {
+        add_delivery();
+    });
+
+    $('#add-new-receive').click(function() {
+        add_receive();
+    });
+
+    $('#spare-receive').click(function() {
+        show_spare_form();
+    });
+
+    $('#show_order_detail').click(function() {
+        show_order_detail_form();
+    });
+
+    $('#show_order_specifications').click(function() {
+        show_order_specifications_form();
+    });
+
+    $('#add_order_specifications').click(function() {
+        add_order_specifications();
+    });
+
+    $('#add_order_detail').click(function() {
+        add_order_detail();
+    });
+
+
+    $('#commit_order_button').click(function() {
+        layer.confirm('确定修改订单并提交？（订单提交之后进入待审核状态，无法编辑）', {
+            btn: ['确定', '取消'],
+            btn1: function () {
+                edit_order(1);
+            },
+            btn2: function () {
+                return false;
+            }
+        });
+    });
+
+    function show_order_specifications_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '350px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#order_specifications_form')
+        });
+    }
+
+    function show_order_detail_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '380px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#order_detail_form')
+        });
+    }
+
+
+    function hide_order_specifications_form() {
+        layer.close(tips);
+    }
+
+    function add_order_specifications() {
+        var weight = parseFloat($('#order_specifications_weight').val());
+        var length = parseFloat($('#order_specifications_length').val());
+        var width = parseFloat($('#order_specifications_width').val());
+        var height = parseFloat($('#order_specifications_height').val());
+        var count = parseInt($('#order_specifications_count').val());
+        var remark = $('#order_specifications_remark').val().trim();
+        var flag = true;
+        var msg = '';
+        if( isNaN(weight) || weight <= 0 ) {
+            msg += '请输入重量<br />';
+            flag = false;
+        }
+        if( isNaN(length) || length <= 0 ) {
+            msg += '请输入长度<br />';
+            flag = false;
+        }
+        if( isNaN(width) || width <= 0 ) {
+            msg += '请输入宽度<br />';
+            flag = false;
+        }
+        if( isNaN(height) || height <= 0 ) {
+            msg += '请输入高度<br />';
+            flag = false;
+        }
+        if( isNaN(count) || count <= 0 ) {
+            msg += '请输入数量<br />';
+            flag = false;
+        }
+        if( flag ) {
+            var temp = { };
+            temp['weight'] = weight;
+            temp['length'] = length;
+            temp['width'] = width;
+            temp['height'] = height;
+            temp['count'] = count;
+            temp['remark'] = remark;
+            if( s_editing === null ) {
+                ajax_add_order_specifications(temp);
+            } else {
+                temp['order_id'] = order_specifications['item-' + s_editing].order_id;
+                temp['id'] = order_specifications['item-' + s_editing].id;
+                ajax_edit_order_specifications(temp);
+            }
+
+            return true;
+        } else {
+            layer.msg(msg);
+            return false;
+        }
+    }
+
+    function ajax_add_order_specifications(param) {
+        show_loading();
+        var url = "{:U('Order/addSpecifications')}";
+        param['order_id'] = order_id;
+        $.post(url, param, ajax_add_order_specifications_handler, 'json');
+    }
+
+    function ajax_add_order_specifications_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+            return;
+        }
+        if( response.code == 1 ) {
+            order_specifications['item-' + s_cursor] = response.data;
+            s_cursor ++;
+        } else {
+            layer.msg(response.msg);
+        }
+        hide_order_specifications_form();
+        refresh_order_specifications();
+        empty_order_specifications_form();
+    }
+
+    function refresh_order_detail() {
+        $('#detail-content').empty();
+        var html = '';
+        var i = 1;
+        for( var id in order_detail ) {
+            html += '<tr id="detail-'+id+'">';
+            html += '<td>' + i + '</td>';
+            html += '<td>' + order_detail[id]['product_name'] + '</td>';
+            html += '<td>' + order_detail[id]['goods_code'] + '</td>';
+            html += '<td>' + order_detail[id]['count'] + '</td>';
+            html += '<td>' + parseFloat(order_detail[id]['single_declared']).toFixed(2) + '</td>';
+            html += '<td>' + parseFloat(order_detail[id]['declared']).toFixed(2) + '</td>';
+            html += '<td>' + order_detail[id]['origin'] + '</td>';
+//            html += '<td class="text-right"><a href="javascript:edit_order_detail(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_detail(\''+id+'\');">删除</a></td>';
+            html += '</tr>';
+            i++;
+        }
+        $('#detail-content').append(html);
+    }
+
+    function refresh_order_specifications() {
+        $('#specifications-content').empty();
+        var html = '';
+        var i = 1;
+        for( var id in order_specifications ) {
+            html += '<tr id="detail-'+id+'">';
+            html += '<td>' + i + '</td>';
+            html += '<td>' + order_specifications[id]['weight'] + 'kg</td>';
+            html += '<td>' + order_specifications[id]['length'] + 'cm</td>';
+            html += '<td>' + order_specifications[id]['width'] + 'cm</td>';
+            html += '<td>' + order_specifications[id]['height'] + 'cm</td>';
+            html += '<td>' + order_specifications[id]['count'] + '</td>';
+            html += '<td>' + order_specifications[id]['remark'] + '</td>';
+//            html += '<td class="text-right"><a href="javascript:edit_order_specifications(\''+id+'\');">编辑</a> | <a href="javascript:remove_order_specifications(\''+id+'\');">删除</a></td>';
+            html += '</tr>';
+            i++;
+        }
+        $('#specifications-content').append(html);
+    }
+
+    function empty_order_detail_form() {
+        $('#order_detail_form input').val('');
+    }
+
+    function remove_order_detail(id) {
+        layer.confirm('确定删除该项订单详情？', {
+            btn: ['确定', '取消'],
+            btn1: function () {
+                ajax_remove_order_detail(id);
+            },
+            btn2: function () {
+                return false;
+            }
+        });
+    }
+
+    function ajax_remove_order_detail(index) {
+        show_loading();
+        var url = "{:U('Order/delDetail')}";
+        var id = order_detail[index].id;
+        var param = { 'order_id':order_id, 'id':id, 'index':index };
+        $.post(url, param, ajax_remove_order_detail_handler, 'json');
+    }
+
+    function ajax_remove_order_detail_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+            return;
+        }
+        if( response.code == 1 ) {
+            var index = response.data.index;
+            delete order_detail[index];
+        } else {
+            layer.msg(response.msg);
+        }
+        refresh_order_detail();
+    }
+
+    function show_spare_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '300px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#spare_receive_form')
+        });
+    }
+
+    function hide_spare_form() {
+        layer.close(tips);
+    }
+
+    //    function show_loading() {
+    //        loading = layer.load(0, { shade: 0.3 });
+    //    }
+    //
+    //    function hide_loading() {
+    //        layer.close(loading);
+    //    }
+
+    function get_default_delivery() {
+        show_loading();
+        var url = "{:U('Order/getDefaultDelivery')}";
+        var param = { };
+        $.post(url, param, get_default_delivery_handler, 'json');
+    }
+
+    function get_default_delivery_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            set_delivery(response.data);
+        } else if( response.code == -1 ) {
+            alert(response.msg);
+        }
+    }
+
+    function set_delivery(data) {
+        $('#consignor').val(data.consignor);
+        $('#delivery_phone').val(data.phone);
+        $('#delivery_mobile').val(data.mobile);
+        $('#delivery_detail_address').val(data.detail_address);
+        $('#delivery_postal_code').val(data.postal_code);
+        selected_delivery_id = data.id;
+        selected_delivery_data = data;
+
+    }
+
+    function get_delivery_list() {
+        show_loading();
+        var url = "{:U('Order/getDeliveryList')}";
+        var param = { };
+        $.post(url, param, get_delivery_list_handler, 'json');
+    }
+
+    function get_delivery_list_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            render_delivery_list(response.data);
+        } else if( response.code == -1 ) {
+            alert(response.msg);
+        }
+    }
+
+    function render_delivery_list(data) {
+        delivery_list = data;
+        var html = '';
+        $('#select_delivery_items').empty();
+        $.each(data, function (k, v) {
+            html += '<tr>';
+            html += '<td><input type="radio" class="ace delivery-check-item" name="delivery-check-item" value="'+v.id+'"';
+            if( selected_delivery_id && v.id == selected_delivery_id) {
+                html += ' checked></td>';
+            } else {
+                if (v.is_default == 1) {
+                    html += ' checked></td>';
+                } else {
+                    html += ' ></td>';
+                }
+            }
+            html += '<td>' + v.consignor + '</td>';
+            html += '<td>' + v.detail_address + '</td>';
+            html += '<td>' + v.postal_code + '</td>';
+            if (v.is_default == 1) {
+                html += '<td>是</td>';
+            } else {
+                html += '<td>否</td>';
+            }
+            html += '</tr>';
+        });
+        $('#select_delivery_items').append(html);
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '400px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#delivery-list')
+        });
+    }
+
+    function select_delivery() {
+        var obj = $('#delivery-check-item:checked');
+        if( !obj ) {
+            layer.msg('请选择一个发货地址');
+            return;
+        }
+        var id = $('.delivery-check-item:checked').val();
+        id = "'" + id + "'";
+        var data = delivery_list[id];
+        set_delivery(data);
+        layer.close(tips);
+    }
+
+    function show_delivery_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '480px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#add_delivery_form')
+        });
+    }
+
+    function close_delivery_form() {
+        $('#add_delivery_form input[type=text]').val('');
+        $('#add_delivery_country option:selected').removeAttr('selected');
+        $('#add_delivery_country option:first').attr('selected');
+        $('input[name=add_delivery_default]').removeAttr('checked');
+        $('#add_delivery_not_default').attr('checked', 'checked');
+        layer.close(tips);
+    }
+
+    function add_delivery() {
+        show_loading();
+        var url = "{:U('Delivery/ajaxAdd')}";
+        var consignor = $('#add_delivery_consignor').val();
+        var country = $('#add_delivery_country').val();
+        var state = $('#add_delivery_state').val();
+        var city = $('#add_delivery_city').val();
+        var detail_address = $('#add_delivery_detail_address').val();
+        var mobile = $('#add_delivery_mobile').val();
+        var phone = $('#add_delivery_phone').val();
+        var is_default = $('input[name=add_delivery_default]:checked').val();
+        var param = { consignor:consignor,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,is_default:is_default };
+        $.post(url, param, add_delivery_handler, 'json');
+    }
+
+    function add_delivery_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            set_delivery(response.data);
+            close_delivery_form();
+        } else if( response.code == -1 ) {
+            alert(response.msg);
+        }
+    }
+
+    function get_default_receive() {
+        show_loading();
+        var url = "{:U('Order/getDefaultReceive')}";
+        var param = { };
+        $.post(url, param, get_default_receive_handler, 'json');
+    }
+
+    function get_default_receive_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            set_receive(response.data);
+        } else if( response.code == -1 ) {
+            alert(response.msg);
+        }
+    }
+
+    function set_receive(data) {
+        $('#receive_company').val(data.company);
+        $('#addressee').val(data.addressee);
+        $('#receive_phone').val(data.phone);
+        $('#receive_mobile').val(data.mobile);
+        $('#receive_detail_address').val(data.detail_address);
+        $('#receive_postal_code').val(data.postal_code);
+        selected_receive_id = data.id;
+        selected_receive_data = data;
+    }
+
+    function get_receive_list() {
+        show_loading();
+        var url = "{:U('Order/getReceiveList')}";
+        var param = { };
+        $.post(url, param, get_receive_list_handler, 'json');
+    }
+
+    function get_receive_list_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            render_receive_list(response.data);
+        } else if( response.code == -1 ) {
+            alert(response.msg);
+        }
+    }
+
+    function render_receive_list(data) {
+        receive_list = data;
+        var html = '';
+        $('#select_receive_items').empty();
+        $.each(data, function (k, v) {
+            html += '<tr>';
+            html += '<td><input type="radio" class="ace receive-check-item" name="receive-check-item" value="'+v.id+'"';
+            if( selected_receive_id && v.id == selected_receive_id) {
+                html += ' checked></td>';
+            } else {
+                if (v.is_default == 1) {
+                    html += ' checked></td>';
+                } else {
+                    html += ' ></td>';
+                }
+            }
+            html += '<td>' + v.company + '</td>';
+            html += '<td>' + v.addressee + '</td>';
+            html += '<td>' + v.detail_address + '</td>';
+            html += '<td>' + v.postal_code + '</td>';
+            if (v.is_default == 1) {
+                html += '<td>是</td>';
+            } else {
+                html += '<td>否</td>';
+            }
+            html += '</tr>';
+        });
+        $('#select_receive_items').append(html);
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '400px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#receive-list')
+        });
+    }
+
+    function select_receive() {
+        var obj = $('#receive-check-item:checked');
+        if( !obj ) {
+            layer.msg('请选择一个收货地址');
+            return;
+        }
+        var id = $('.receive-check-item:checked').val();
+        id = "'" + id + "'";
+        var data = receive_list[id];
+        set_receive(data);
+        layer.close(tips);
+    }
+
+
+    function show_receive_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '550px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#add_receive_form')
+        });
+    }
+
+    function add_receive() {
+        show_loading();
+        var url = "{:U('Receive/ajaxAdd')}";
+        var addressee = $('#add_receive_addressee').val();
+        var country = $('#add_receive_country').val();
+        var state = $('#add_receive_state').val();
+        var city = $('#add_receive_city').val();
+        var detail_address = $('#add_receive_detail_address').val();
+        var mobile = $('#add_receive_mobile').val();
+        var phone = $('#add_receive_phone').val();
+        var is_default = $('input[name=add_receive_default]:checked').val();
+        var postal_code = $('#add_receive_postal_code').val();
+        var param = { addressee:addressee,country:country,state:state,city:city,detail_address:detail_address,mobile:mobile,phone:phone,postal_code:postal_code,is_default:is_default };
+        $.post(url, param, add_receive_handler, 'json');
+    }
+
+    function add_receive_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            set_receive(response.data);
+            close_receive_form();
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg);
+        }
+    }
+
+    function close_receive_form() {
+        $('#add_receive_form input[type=text]').val('');
+        $('#add_receive_country option:selected').removeAttr('selected');
+        $('#add_receive_country option:first').attr('selected');
+        $('input[name=add_receive_default]').removeAttr('checked');
+        $('#add_receive_not_default').attr('checked', 'checked');
+        layer.close(tips);
+    }
+
+    function edit_order(commit) {
+        var url = "{:U('Order/ajaxEdit')}";
+        //发货地址 js
+        //收货地址 js
+        //备用地址
+        var spare_receive_addressee = $('#spare_receive_addressee').val();
+        var spare_receive_detail_address = $('#spare_receive_detail_address').val();
+        var spare_receive_phone = $('#spare_receive_phone').val();
+        var spare_receive_mobile = $('#spare_receive_mobile').val();
+        var spare_receive_postal_code = $('#spare_receive_postal_code').val();
+        //其他信息
+        var currency = $('#currency').val();
+        var declared_value = $('#declared_value').val();
+        var channel = $('#channel').val();
+        var package_type = $('#package_type').val();
+        var export_reason = $('#export_reason').val();
+        var remark = $('#remark').val();
+        //订单详情 js
+        var param = {
+            'order_id': order_id,
+            'delivery_id':selected_delivery_id,
+            'receive_id':selected_receive_id,
+            'spare_receive_addressee':spare_receive_addressee,
+            'spare_receive_detail_address': spare_receive_detail_address,
+            'spare_receive_phone': spare_receive_phone,
+            'spare_receive_mobile': spare_receive_mobile,
+            'spare_receive_postal_code' : spare_receive_postal_code,
+            'currency': currency,
+            'declared_value': declared_value,
+            'channel': channel,
+            'package_type': package_type,
+            'export_reason': export_reason,
+            'remark': remark,
+            'commit': commit
+        };
+        show_loading();
+        $.post(url, param, add_order_handler, 'json');
+    }
+
+    function add_order_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            alert(response.msg);
+            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = response.url;
+            } );
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg);
+        }
+    }
+
+    function commit_order(id) {
+        layer.confirm('确定提交订单吗（提交后无法编辑和删除订单）？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            do_commit_order(id);
+        }, function(){
+
+        });
+    }
+
+    function do_commit_order(id) {
+        show_loading();
+        var url = '/Order/commit';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+    function ajax_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                if( response.url ) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.reload();
+                }
+            } );
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
+        }
+    }
+
+    function reject_history(id) {
+        show_loading();
+        var url = '/Order/reject';
+        var param = {'id':id};
+        $.post(url, param, reject_history_handler, 'json');
+    }
+
+    function reject_history_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            render_reject_history(response.data);
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
+        }
+    }
+
+    function render_reject_history(data) {
+        var html = '';
+        $.each(data, function(k,v) {
+            html += '<tr>'
+            html += '<td>'+v.created_at+'</td>';
+            html += '<td>'+v.content+'</td>';
+            html += '</tr>';
+        });
+        $('#order_reject_item').empty();
+        $('#order_reject_item').append(html);
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['550px', '400px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: true,
+            content: $("#order_reject_table")
+        });
+    }
+
+    function trace_order(id) {
+        show_loading();
+        var url = '/Order/trace';
+        var param = {'id':id};
+        $.post(url, param, trace_order_handler, 'json');
+    }
+
+    function trace_order_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            render_order_trace(response.data);
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
+        }
+    }
+
+    function render_order_trace(data) {
+        var html = '';
+        $.each(data.data, function(k,v) {
+            html += '<tr>'
+            html += '<td style="width: 20%">'+v.time+'</td>';
+            html += '<td>'+v.context+'</td>';
+            html += '</tr>';
+        });
+        $('#order_trace_item').empty();
+        $('#order_trace_item').append(html);
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['750px', '400px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: true,
+            content: $("#order_trace_table")
+        });
+    }
+
+    function complete_order(id) {
+        layer.confirm('确认订单已完成吗（确认之后无法再对订单进行操作）？', {
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            do_complete_order(id);
+        }, function(){
+
+        });
+    }
+
+    function do_complete_order(id) {
+        show_loading();
+        var url = '/Order/complete';
+        var param = {'id':id};
+        $.post(url, param, ajax_handler, 'json');
+    }
+
+</script>
+</body>
+</html>
