@@ -242,6 +242,7 @@ class OrderAction extends BaseAction  {
                     $temp = [
                         'specifications_id' => $v['id'],
                         'detail_id' => $order_detail[$d]['id'],
+                        'number' => $v['detail_number'][$d],
                     ];
                     $temp_result = M('ClientOrderMap')->add($temp);
                     if( !$temp_result ) {
@@ -512,7 +513,7 @@ class OrderAction extends BaseAction  {
         }
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
-            ->field('s.*, m.detail_id')
+            ->field('s.*, m.detail_id, m.number')
             ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
             ->where(['s.order_num' => $order['order_num']])
             ->select();
@@ -525,6 +526,7 @@ class OrderAction extends BaseAction  {
                     $temp['item-'.$v['id']] = $v;
                 }
                 $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
+                $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
                 $s_cursor = $d_cursor < $v['id'] ? $v['id'] : $s_cursor;
             }
             $order_specifications = $temp;
@@ -1236,7 +1238,7 @@ class OrderAction extends BaseAction  {
         }
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
-            ->field('s.*, m.detail_id')
+            ->field('s.*, m.detail_id,m.number')
             ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
             ->where(['s.order_num' => $order['order_num']])
             ->select();
@@ -1248,6 +1250,7 @@ class OrderAction extends BaseAction  {
                     $temp[$v['id']] = $v;
                 }
                 $temp[$v['id']]['detail'][] = $v['detail_id'];
+                $temp[$v['id']]['detail_number'][$v['detail_id']] = $v['number'];
             }
             $order_specifications = $temp;
         }

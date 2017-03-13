@@ -700,8 +700,14 @@ function select_order_specification_detail(obj) {
         var siblings = $(obj).siblings('input');
         // console.log($(siblings[0]));
         $(siblings[0]).val(order_detail[detail_index].en_product_name);
-        $(siblings[1]).val(order_detail[detail_index].count +　order_detail[detail_index].unit);
+        // $(siblings[1]).val(order_detail[detail_index].count +　order_detail[detail_index].unit);
+        var unit = $(obj).siblings('span');
+        $(unit[0]).text(order_detail[detail_index].unit);
     }
+}
+
+function set_order_specification_number() {
+
 }
 
 function add_order_specification_detail() {
@@ -758,12 +764,23 @@ function add_order_specifications() {
     var height = parseFloat($('#order_specifications_height').val());
     var count = parseInt($('#order_specifications_count').val());
     var detail = [];
+    var detail_number = {};
     $('.order_specification_detail').each(function(k, v) {
         var temp = $(v).val();
+        console.log(temp);
         if( temp && order_detail[temp] ) {
             detail.push(temp);
+
         }
     });
+    $('.order_specification_detail_number').each(function(k, v) {
+        var key = $(v).siblings('select').val();
+        var temp = $(v).val();
+        if( temp ) {
+            detail_number[key] = temp;
+        }
+    });
+    console.log(detail_number);
     // var remark = $('#order_specifications_remark').val().trim();
     var flag = true;
     var msg = '';
@@ -799,9 +816,11 @@ function add_order_specifications() {
         temp['height'] = height;
         temp['count'] = count;
         temp['detail'] = detail;
+        temp['detail_number'] = detail_number;
         if( s_editing === null ) {
+            console.log('s_cursor = ' + s_cursor);
             order_specifications['item-' + s_cursor] = temp;
-            s_cursor ++;
+            s_cursor++;
         } else {
             order_specifications['item-' + s_editing] = temp;
             s_editing = null;
@@ -832,7 +851,7 @@ function refresh_order_specifications(no_operate) {
             var temp_rate = order_specifications[id]['length'] *　order_specifications[id]['width'] * order_specifications[id]['height'] / 5000;
             var charging_weight = order_specifications[id]['weight'] > temp_rate ? order_specifications[id]['weight'] : temp_rate;
             charging_weight *= order_specifications[id]['count']
-            html += '<td>' + order_detail[detail_index]['product_name'] + ' ' + order_detail[detail_index]['en_product_name'] +'</td>';
+            html += '<td>' + order_detail[detail_index]['product_name'] + ' ' + order_detail[detail_index]['en_product_name'] + ' * '+ order_specifications[id]['detail_number'][detail_index] + order_detail[detail_index]['unit'] +'</td>';
             html += '<td>' + order_detail[detail_index]['goods_code'] + '</td>';
             html += '<td>' + order_detail[detail_index]['origin'] + '</td>';
             break;
@@ -861,8 +880,9 @@ function refresh_order_specifications(no_operate) {
                 j++;
                 continue;
             }
+            console.log(order_specifications[id]['detail_number'][detail_index]);
             html += '<tr>';
-            html += '<td>' + order_detail[detail_index]['product_name'] + ' ' + order_detail[detail_index]['en_product_name'] +'</td>';
+            html += '<td>' + order_detail[detail_index]['product_name'] + ' ' + order_detail[detail_index]['en_product_name'] + ' * '+ order_specifications[id]['detail_number'][detail_index] + order_detail[detail_index]['unit'] + '</td>';
             html += '<td>' + order_detail[detail_index]['goods_code'] + '</td>';
             html += '<td>' + order_detail[detail_index]['origin'] + '</td>';
             html += '</tr>';
@@ -892,12 +912,13 @@ function refresh_order_specifications(no_operate) {
 }
 
 function add_order_specifications_form() {
-    s_cursor = null;
+    s_editing = null;
     empty_order_specifications_form();
     show_order_specifications_form();
 }
 
 function edit_order_specifications(id) {
+    console.log(id);
     s_editing = id.split('-')[1];
     $('#order_specifications_weight').val(order_specifications[id]['weight']);
     $('#order_specifications_length').val(order_specifications[id]['length']);
@@ -919,9 +940,17 @@ function set_selected_detail(id) {
     var list = $('.order_specification_detail').each(function(k, v) {
         console.log(k);
     });
+    var number_list = $('.order_specification_detail_number').each(function(k,v){
+
+    });
     for(var i in order_specifications[id].detail) {
         $(list[j]).val(order_specifications[id].detail[i]);
         select_order_specification_detail(list[j]);
+        j++;
+    }
+    j = 0;
+    for(var i in order_specifications[id].detail_number) {
+        $(number_list[j]).val(order_specifications[id].detail_number[i]);
         j++;
     }
 }
@@ -982,6 +1011,7 @@ function add_order(commit) {
     var export_reason = $('#export_reason').val();
     var manufacturer = $('#manufacturer').val();
     var remark = $('#remark').val();
+    var specifications_remark = $('#specifications_remark').val();
     //订单详情 js
     var param = {
         'delivery_id':delivery_id,
@@ -1013,6 +1043,7 @@ function add_order(commit) {
         'export_nature' : export_nature,
         'export_reason': export_reason,
         'remark': remark,
+        'specifications_remark': specifications_remark,
         'commit': commit
     };
     console.log(param);
