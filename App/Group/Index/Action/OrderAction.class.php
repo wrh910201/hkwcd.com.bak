@@ -123,7 +123,6 @@ class OrderAction extends BaseAction  {
     }
 
     public function ajaxAdd() {
-        $this->_get_order_params();
         $data = $this->_get_order_params();
         $data = $this->_build_delivery_address($data);
         $data = $this->_build_receive_address($data);
@@ -569,140 +568,26 @@ class OrderAction extends BaseAction  {
             echo json_encode($this-d>response);
             exit;
         }
+        $data = $this->_get_order_params();
+        $data = $this->_build_delivery_address($data);
+        $data = $this->_build_receive_address($data);
+        $data = $this->_build_spare_address($data);
 
-        $has_error = false;
-        $error_msg = '';
-
-        $delivery_id = I('post.delivery_id', 0, 'intval');
-        $receive_id = I('post.receive_id', 0, 'intval');
-        $spare_addressee = I('post.spare_receive_addressee', '', 'trim');
-        $spare_detail_address = I('post.spare_receive_detail_address', '', 'trim');
-        $spare_mobile = I('post.spare_receive_mobile', '', 'trim');
-        $spare_phone = I('post.spare_receive_phone', '', 'trim');
-        $spare_postal_code = I('post.spare_receive_postal_code', '', 'trim');
-        $currency_id = I('post.currency', 1, 'intval');
-        $declared_value = I('post.declared_value', 0, 'floatval');
-        $receiver_code = I('post.receiver_code', '', 'trim');
-        $channel_id = I('post.channel', 0, 'intval');
-        $package_type = I('post.package_type', 0, 'intval');
-        $price_terms = I('post.price_terms', '', 'trim');
-        $tariff_payment = I('post.tariff_payment', '', 'trim');
-        $export_nature = I('post.export_nature', '', 'trim');
-        $export_reason = I('post.export_reason', '', 'trim');
-        $remark = I('post.remark', '', 'trim');
-        $commit = I('post.commit', 0, 'intval');
-
-        $commit = $commit == 1 ? 1 : 0;
-
-        //构造发货数据
-        $where = ['status' => 1, 'client_id' => $client_id, 'id' => $delivery_id];
-        $delivery = M('DeliveryAddress')->where($where)->find();
-        if( empty($delivery) ) {
-            $has_error = true;
-            $error_msg = '请输入发货信息';
-        } else {
-            $data['delivery_id'] = $delivery_id;
-            $data['delivery_company'] = $client['company'];
-            $data['delivery_consignor'] = $delivery['consignor'];
-            $data['delivery_country_id'] = $delivery['country_id'];
-            $data['delivery_state'] = $delivery['state'];
-            $data['delivery_city'] = $delivery['city'];
-            $data['delivery_phone'] = $delivery['phone'];
-            $data['delivery_mobile'] = $delivery['mobile'];
-            $data['delivery_detail_address'] = $delivery['detail_address'];
-            $data['delivery_postal_code'] = $delivery['postal_code'];
-        }
-        //构造收货数据
-        $where = ['status' => 1, 'client_id' => $client_id, 'id' => $receive_id];
-        $receive = M('ReceiveAddress')->where($where)->find();
-        if( empty($receive) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入发货信息' : '请输入发货信息';
-        } else {
-            $data['receive_id'] = $receive_id;
-            $data['receive_company'] = $client['company'];
-            $data['receive_addressee'] = $receive['addressee'];
-            $data['receive_country_id'] = $receive['country_id'];
-            $data['receive_state'] = $receive['state'];
-            $data['receive_city'] = $receive['city'];
-            $data['receive_phone'] = $receive['phone'];
-            $data['receive_mobile'] = $receive['mobile'];
-            $data['receive_detail_address'] = $receive['detail_address'];
-            $data['receive_postal_code'] = $receive['postal_code'];
-        }
-        //构造备用收货数据
-        $data['spare_addressee'] = $spare_addressee;
-        $data['spare_detail_address'] = $spare_detail_address;
-        $data['spare_phone'] = $spare_phone;
-        $data['spare_mobile'] = $spare_mobile;
-        $data['spare_postal_code'] = $spare_postal_code;
-
-        if( $has_error ) {
-            $this->response['msg'] = $error_msg;
+        if( $this->has_error ) {
+            $this->response['msg'] = $this->error_msg;
             echo json_encode($this->response);
             exit;
         }
 
-        //构造其他信息
-        $currency = M('Currency')->where(['status' => 1, 'id' => $currency_id])->find();
-        if( empty($currency) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请选择币种' : '请选择币种';
-        }
-        $data['currency_id'] = $currency_id;
-        $data['currency_name'] = $currency['name'];
-        $data['currency_rate'] = $currency['rate'];
+        $data = $this->_build_order_info($data);
 
-        $data['declared_value'] = $declared_value;
-        if( empty($receiver_code) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入进口商代码' : '请输入进口商代码';
-        }
-        $data['receiver_code'] = $receiver_code;
-
-        $channel = M('Channel')->where(['status' => 1, 'id' => $channel_id])->find();
-        if( empty($channel) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请选择渠道' : '请选择渠道';
-        }
-        $data['channel_name'] = $channel['name'].'/'.$channel['en_name'];
-
-        $data['package_type'] = $package_type;
-
-        $price_terms_array = ['FOB', 'CIF', 'WCB'];
-        if( !in_array($price_terms, $price_terms_array) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请选择价格条款' : '请选择价格条款';
-        }
-        $data['price_terms'] = $price_terms;
-
-
-        $tariff_payment_array = ['Receiver', 'Consignor'];
-        if( !in_array($tariff_payment, $tariff_payment_array) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请选择关税支付' : '请选择关税支付';
-        }
-        $data['tariff_payment'] = $tariff_payment;
-
-        $export_nature_array = ['Provisional', 'Forever'];
-        if( !in_array($export_nature, $export_nature_array) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请选择出口性质' : '请选择出口性质';
-        }
-        $data['export_nature'] = $export_nature;
-
-        if( empty($export_reason) ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入出口原因' : '请输入出口原因';
-        }
-        $data['export_reason'] = $export_reason;
-        $data['remark'] = $remark;
-
-        if( $has_error ) {
-            $this->response['msg'] = $error_msg;
+        if( $this->has_error ) {
+            $this->response['msg'] = $this->error_msg;
             echo json_encode($this->response);
             exit;
         }
+        $commit = $data['commit'];
+        unset($data['commit']);
         $data['client_status'] = $commit == 0 ? 0 : 1;
         $msg = $commit == 0 ? '修改订单成功' : '订单修改成功，并已提交';
         if( $commit == 1 ) {
@@ -712,7 +597,7 @@ class OrderAction extends BaseAction  {
         $data['client_id'] = $client_id;
         //修改订单
         $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
-        if( $result ) {
+        if( is_numeric($result) ) {
             //插入操作日志
             $log_data = [
                 'order_num' => $order['order_num'],
@@ -755,15 +640,22 @@ class OrderAction extends BaseAction  {
         $error_msg = '';
 
         $product_name = trim(I('product_name'));
+        $en_product_name = trim(I('en_product_name'));
         $goods_code = trim(I('goods_code'));
         $count = intval(I('count'));
         $single_declared = floatval(I('single_declared'));
+        $unit = trim(I('unit'));
         $declared = floatval(I('declared'));
         $origin = trim(I('origin'));
 
         if( $product_name == '' ) {
             $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入品名' : '请输入品名';
+            $error_msg = $error_msg ? $error_msg.'<br />请输入中文品名' : '请输入品名';
+        }
+
+        if( $en_product_name == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入英文品名' : '请输入英文品名';
         }
 
         if( $goods_code == '' ) {
@@ -781,11 +673,6 @@ class OrderAction extends BaseAction  {
             $error_msg = $error_msg ? $error_msg.'<br />请输入单件申报价值' : '请输入单件申报价值';
         }
 
-        if( $declared <= 0 ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入总申报价值' : '请输入总申报价值';
-        }
-
         if( $origin == '' ) {
             $has_error = true;
             $error_msg = $error_msg ? $error_msg.'<br />请输入原产地' : '请输入原产地';
@@ -798,10 +685,11 @@ class OrderAction extends BaseAction  {
         }
         $data = [
             'product_name' => $product_name,
+            'en_product_name' => $en_product_name,
             'goods_code' => $goods_code,
             'count' => $count,
+            'unit' => $unit,
             'single_declared' => $single_declared,
-            'declared' => $declared,
             'origin' => $origin,
             'order_id' => $order_id,
             'order_num' => $order['order_num'],
@@ -815,12 +703,12 @@ class OrderAction extends BaseAction  {
                 'order_id' => $order['id'],
                 'user_id' => $client_id,
                 'type' => 1,
-                'content' => '添加订单详情成功',
+                'content' => '添加商品信息成功',
             ];
             M('ClientOrderLog')->add($log_data);
 
             $this->response['code'] = 1;
-            $this->response['msg'] = '添加订单详情成功';
+            $this->response['msg'] = '添加商品信息成功';
             $this->response['url'] = U('Order/edit', ['id' => $order_id]);
             $this->response['data'] = $data;
         } else {
@@ -852,15 +740,22 @@ class OrderAction extends BaseAction  {
         $error_msg = '';
 
         $product_name = trim(I('product_name'));
+        $en_product_name = trim(I('en_product_name'));
         $goods_code = trim(I('goods_code'));
         $count = intval(I('count'));
         $single_declared = floatval(I('single_declared'));
+        $unit = trim(I('unit'));
         $declared = floatval(I('declared'));
         $origin = trim(I('origin'));
 
         if( $product_name == '' ) {
             $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入品名' : '请输入品名';
+            $error_msg = $error_msg ? $error_msg.'<br />请输入中文品名' : '请输入品名';
+        }
+
+        if( $en_product_name == '' ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入英文品名' : '请输入英文品名';
         }
 
         if( $goods_code == '' ) {
@@ -878,11 +773,6 @@ class OrderAction extends BaseAction  {
             $error_msg = $error_msg ? $error_msg.'<br />请输入单件申报价值' : '请输入单件申报价值';
         }
 
-        if( $declared <= 0 ) {
-            $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入总申报价值' : '请输入总申报价值';
-        }
-
         if( $origin == '' ) {
             $has_error = true;
             $error_msg = $error_msg ? $error_msg.'<br />请输入原产地' : '请输入原产地';
@@ -895,15 +785,17 @@ class OrderAction extends BaseAction  {
         }
         $data = [
             'product_name' => $product_name,
+            'en_product_name' => $en_product_name,
             'goods_code' => $goods_code,
             'count' => $count,
+            'unit' => $unit,
             'single_declared' => $single_declared,
             'declared' => $declared,
             'origin' => $origin,
         ];
 
         $result = M('ClientOrderDetail')->where(['id' => $detail_id, 'order_id' => $order_id])->save($data);
-        if( $result ) {
+        if( is_numeric($result) ) {
             $data['id'] = $detail_id;
             $data['order_id'] = $order_id;
             $data['order_num'] = $order['order_num'];
@@ -913,12 +805,11 @@ class OrderAction extends BaseAction  {
                 'order_id' => $order['id'],
                 'user_id' => $client_id,
                 'type' => 1,
-                'content' => '编辑订单详情成功',
+                'content' => '编辑商品信息成功',
             ];
             M('ClientOrderLog')->add($log_data);
-
             $this->response['code'] = 1;
-            $this->response['msg'] = '编辑订单详情成功';
+            $this->response['msg'] = '编辑商品信息成功';
             $this->response['url'] = U('Order/edit', ['id' => $order_id]);
             $this->response['data'] = $data;
         } else {
@@ -951,10 +842,17 @@ class OrderAction extends BaseAction  {
         $temp = M('ClientOrderDetail')->where(['order_id' => $order_id])->select();
         $remain_count = count($temp);
         if( $remain_count <= 1 ) {
-            $this->response['msg'] = '至少保留一项订单详情';
+            $this->response['msg'] = '至少保留一项商品';
             echo json_encode($this->response);
             exit;
         }
+        $exists = M('ClientOrderMap')->where(['detail_id' => $detail_id])->find();
+        if( $exists ) {
+            $this->response['msg'] = '该商品已被使用，无法删除';
+            echo json_encode($this->response);
+            exit;
+        }
+
         $result = M('ClientOrderDetail')->where(['order_id' => $order_id, 'id' => $detail_id])->delete();
         if( $result ) {
             //插入操作日志
@@ -963,12 +861,12 @@ class OrderAction extends BaseAction  {
                 'order_id' => $order['id'],
                 'user_id' => $client_id,
                 'type' => 1,
-                'content' => '删除订单详情成功',
+                'content' => '删除商品信息成功',
             ];
             M('ClientOrderLog')->add($log_data);
 
             $this->response['code'] = 1;
-            $this->response['msg'] = '删除订单详情成功';
+            $this->response['msg'] = '删除商品信息成功';
             $this->response['url'] = U('Order/edit', ['id' => $order_id]);
             $this->response['data']['index'] = $index;
         } else {
@@ -1002,6 +900,7 @@ class OrderAction extends BaseAction  {
         $height = floatval(I('height'));
         $count = floatval(I('count'));
         $remark = trim(I('remark'));
+        $detail = $_POST['detail'];
 
         $has_error = false;
         $error_msg = '';
@@ -1026,9 +925,25 @@ class OrderAction extends BaseAction  {
             $error_msg = $error_msg ? $error_msg.'<br />请输入高度' : '请输入高度';
         }
 
+        if( !is_array($detail) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入商品' : '请输入商品';
+        } else {
+            foreach( $detail as $k => $v ) {
+                $v['detail_number'] = intval($v['detail_number']);
+                $map = ['id' => $v['detail_id'], 'order_id' => $order_id];
+                if( !M('ClientOrderDetail')->where($map)->find() || $v['detail_number'] <= 0 ) {
+                    $has_error = true;
+                    $error_msg = $error_msg ? $error_msg.'<br />请输入商品以及每箱数量' : '请输入商品以及每箱数量';
+                    break;
+                }
+            }
+        }
+
+
         if( $count <= 0 ) {
             $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入数量' : '请输入数量';
+            $error_msg = $error_msg ? $error_msg.'<br />请输入箱数' : '请输入箱数';
         }
 
         if( $has_error ) {
@@ -1048,9 +963,53 @@ class OrderAction extends BaseAction  {
             'order_num' => $order['order_num'],
         ];
 
+        $model = new Model;
+        $model->startTrans();
+        $transaction = true;
+
         $result = M('ClientOrderSpecifications')->add($data);
-        if( $result ) {
-            $data['id'] = M('ClientOrderSpecifictions')->getLastInsID();
+        if( !$result ) {
+            $transaction = false;
+        } else {
+            $sid = M('ClientOrderSpecifications')->getLastInsID();
+        }
+
+        if( $transaction ) {
+            foreach( $detail as $k => $v ) {
+                $map_data = [
+                    'detail_id' => $v['detail_id'],
+                    'specifications_id' => $sid,
+                    'number' => $v['detail_number'],
+                ];
+                $result = M('ClientOrderMap')->add($map_data);
+                if( !$result ) {
+                    $transaction = false;
+                    break;
+                }
+            }
+        }
+
+        if( $transaction ) {
+            $model->commit();
+            $order_specifications = M('ClientOrderSpecifications')
+                ->alias('s')
+                ->field('s.*, m.detail_id, m.number')
+                ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+                ->where(['s.id' => $sid])
+                ->select();
+            $key = '';
+            if( $order_specifications ) {
+                $temp = [];
+                foreach( $order_specifications as $k => $v ) {
+                    if( !isset($temp['item-'.$v['id']]) ) {
+                        $temp['item-'.$v['id']] = $v;
+                    }
+                    $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
+                    $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
+                    $key = 'item-'.$v['id'];
+                }
+                $order_specifications = $temp;
+            }
             //插入操作日志
             $log_data = [
                 'order_num' => $order['order_num'],
@@ -1064,8 +1023,10 @@ class OrderAction extends BaseAction  {
             $this->response['code'] = 1;
             $this->response['msg'] = '添加订单规格成功';
             $this->response['url'] = U('Order/edit', ['id' => $order_id]);
-            $this->response['data'] = $data;
+            $this->response['data'] = $order_specifications[$key];
+            $this->response['key'] = $key;
         } else {
+            $model->rollback();
             $this->response['msg'] = '系统繁忙，请稍后重试';
         }
         echo json_encode($this->response);
@@ -1091,15 +1052,13 @@ class OrderAction extends BaseAction  {
             exit;
         }
 
-        $has_error = false;
-        $error_msg = '';
-
         $weight = floatval(I('weight'));
         $length = floatval(I('length'));
         $width = floatval(I('width'));
         $height = floatval(I('height'));
         $count = floatval(I('count'));
         $remark = trim(I('remark'));
+        $detail = $_POST['detail'];
 
         $has_error = false;
         $error_msg = '';
@@ -1124,9 +1083,24 @@ class OrderAction extends BaseAction  {
             $error_msg = $error_msg ? $error_msg.'<br />请输入高度' : '请输入高度';
         }
 
+        if( !is_array($detail) ) {
+            $has_error = true;
+            $error_msg = $error_msg ? $error_msg.'<br />请输入商品' : '请输入商品';
+        } else {
+            foreach( $detail as $k => $v ) {
+                $v['detail_number'] = intval($v['detail_number']);
+                $map = ['id' => $v['detail_id'], 'order_id' => $order_id];
+                if( !M('ClientOrderDetail')->where($map)->find() || $v['detail_number'] <= 0 ) {
+                    $has_error = true;
+                    $error_msg = $error_msg ? $error_msg.'<br />请输入商品以及每箱数量' : '请输入商品以及每箱数量';
+                    break;
+                }
+            }
+        }
+
         if( $count <= 0 ) {
             $has_error = true;
-            $error_msg = $error_msg ? $error_msg.'<br />请输入数量' : '请输入数量';
+            $error_msg = $error_msg ? $error_msg.'<br />请输入箱数' : '请输入箱数';
         }
 
         if( $has_error ) {
@@ -1134,6 +1108,10 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
+
+        $model = new Model;
+        $model->startTrans();
+        $transaction = true;
 
         $data = [
             'weight' => $weight,
@@ -1145,7 +1123,55 @@ class OrderAction extends BaseAction  {
         ];
 
         $result = M('ClientOrderSpecifications')->where(['order_id' => $order_id, 'id' => $specifications_id])->save($data);
-        if( $result ) {
+        if( !is_numeric($result) ) {
+            $transaction = false;
+        }
+
+        if( $transaction ) {
+            $result = M('ClientOrderMap')->where(['specifications_id' => $specifications_id])->delete();
+            if( !$result ) {
+                $transaction = false;
+            }
+        }
+
+        if( $transaction ) {
+            foreach( $detail as $k => $v ) {
+                $map_data = [
+                    'detail_id' => $v['detail_id'],
+                    'specifications_id' => $specifications_id,
+                    'number' => $v['detail_number'],
+                ];
+                $result = M('ClientOrderMap')->add($map_data);
+                if( !$result ) {
+                    $transaction = false;
+                    break;
+                }
+            }
+        }
+
+        if( $transaction ) {
+            $model->commit();
+
+            $order_specifications = M('ClientOrderSpecifications')
+                ->alias('s')
+                ->field('s.*, m.detail_id, m.number')
+                ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+                ->where(['s.id' => $specifications_id])
+                ->select();
+            $key = '';
+            if( $order_specifications ) {
+                $temp = [];
+                foreach( $order_specifications as $k => $v ) {
+                    if( !isset($temp['item-'.$v['id']]) ) {
+                        $temp['item-'.$v['id']] = $v;
+                    }
+                    $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
+                    $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
+                    $key = 'item-'.$v['id'];
+                }
+                $order_specifications = $temp;
+            }
+
             $data['order_id'] = $order_id;
             $data['order_num'] = $order['order_num'];
             //插入操作日志
@@ -1161,8 +1187,10 @@ class OrderAction extends BaseAction  {
             $this->response['code'] = 1;
             $this->response['msg'] = '编辑订单规格成功';
             $this->response['url'] = U('Order/edit', ['id' => $order_id]);
-            $this->response['data'] = $data;
+            $this->response['data'] = $order_specifications[$key];
+            $this->response['key'] = $key;
         } else {
+            $model->rollback();
             $this->response['msg'] = '系统繁忙，请稍后重试';
         }
         echo json_encode($this->response);
@@ -1195,8 +1223,23 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
+        $model = new Model;
+        $model->startTrans();
+        $transaction = true;
+
         $result = M('ClientOrderSpecifications')->where(['order_id' => $order_id, 'id' => $specifications_id])->delete();
-        if( $result ) {
+        if( !$result ) {
+            $transaction = false;
+        }
+        if( $transaction ) {
+            $result = M('ClientOrderMap')->where(['specifications_id' => $specifications_id])->delete();
+            if( !$result ) {
+                $transaction = false;
+            }
+        }
+
+        if( $transaction ) {
+            $model->commit();
             //插入操作日志
             $log_data = [
                 'order_num' => $order['order_num'],
@@ -1212,6 +1255,7 @@ class OrderAction extends BaseAction  {
             $this->response['url'] = U('Order/edit', ['id' => $order_id]);
             $this->response['data']['index'] = $index;
         } else {
+            $model->rollback();
             $this->response['msg'] = '系统繁忙，请稍后重试';
         }
         echo json_encode($this->response);
@@ -1378,7 +1422,7 @@ class OrderAction extends BaseAction  {
         //软删除
 //        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->delete();
         $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save(['status' => 0]);
-        if( $result ) {
+        if( is_numeric($result) ) {
 //            M('ClientOrderDetail')->where(['order_id' => $id])->delete();
 //            M('ClientOrderSpecifications')->where(['order_id' => $id])->delete();
             $this->response['code'] = 1;

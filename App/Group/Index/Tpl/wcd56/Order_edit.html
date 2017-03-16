@@ -467,7 +467,7 @@
             <div class="clear"></div>
             <div class="fr">
                 <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="edit_order_button">确定</button> &nbsp;<button class="btn btn_commit" type="button" id="commit_order_button">确定并提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>
+                <button class="btn btn_commit" type="button" id="edit_order_button">确定</button> &nbsp;<button class="btn btn_commit" type="button" id="edit_commit_order_button">确定并提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>
                 <input type="hidden" name="delivery_id" id="delivery_id" value="{$order.delivery_id}"/>
                 <input type="hidden" name="receive_id" id="receive_id" value="{$order.receive_id}"/>
             </div>
@@ -904,7 +904,7 @@
                 <select class="w150 order_specification_detail" onchange="select_order_specification_detail(this);">
                 </select>
                 <input readonly class="text_input w150" type="text" name="" placeholder=""/>
-                <input class="text_input w150" type="text" name=""  placeholder=""/>
+                <input class="text_input w150 order_specification_detail_number" type="text" name=""  placeholder=""/>
                 <span></span>
             </div>
             <div class="box_c_item">
@@ -951,6 +951,11 @@
     var d_cursor = {$d_cursor};
     var default_company = {$default_company};
     var country_list = {$json_country_list};
+    var ajax_edit = true;
+
+    d_cursor++;
+    s_cursor++;
+
 
     refresh_order_detail();
     refresh_order_specifications();

@@ -85,6 +85,30 @@ $('#commit_order_button').click(function() {
     });
 });
 
+$('#edit_order_button').click(function() {
+    layer.confirm('确定修改订单？', {
+        btn: ['确定', '取消'],
+        btn1: function () {
+            edit_order(0);
+        },
+        btn2: function () {
+            return false;
+        }
+    });
+});
+
+$('#edit_commit_order_button').click(function() {
+    layer.confirm('确定修改订单并提交？（订单提交之后进入待审核状态，无法编辑）', {
+        btn: ['确定', '取消'],
+        btn1: function () {
+            edit_order(1);
+        },
+        btn2: function () {
+            return false;
+        }
+    });
+});
+
 // $('.order_specification_detail').change(function() {
 //     select_order_specification_detail(this);
 // });
@@ -561,12 +585,23 @@ function add_order_detail() {
         temp['declared'] = (count * single_declared);
         temp['origin'] = origin;
         if( d_editing === null ) {
-            order_detail['item-' + d_cursor] = temp;
-            d_cursor ++;
+            if( ajax_edit ) {
+                ajax_add_order_detail(temp);
+                return;
+            } else {
+                order_detail['item-' + d_cursor] = temp;
+                d_cursor ++;
+            }
         } else {
-            order_detail['item-' + d_editing] = temp;
-            d_editing = null;
-            refresh_order_specifications();
+            if( ajax_edit ) {
+                temp['order_id'] = order_detail['item-' + d_editing].order_id;
+                temp['id'] = order_detail['item-' + d_editing].id;
+                ajax_edit_order_detail(temp);
+            } else {
+                order_detail['item-' + d_editing] = temp;
+                d_editing = null;
+                refresh_order_specifications();
+            }
         }
         hide_order_detail_form();
         refresh_order_detail();
@@ -667,13 +702,17 @@ function remove_order_detail(id) {
     layer.confirm('确定删除该项商品信息？', {
         btn: ['确定', '取消'],
         btn1: function () {
-            if( order_detail[id].is_locked ) {
-                layer.msg('当前商品信息已被使用，无法删除');
-                return;
-            }
-            delete order_detail[id];
+            if( ajax_edit ) {
+                ajax_remove_order_detail(id)
+            } else {
+                if (order_detail[id].is_locked) {
+                    layer.msg('当前商品信息已被使用，无法删除');
+                    return;
+                }
+                delete order_detail[id];
 //                s_cursor--;
-            refresh_order_detail();
+                refresh_order_detail();
+            }
         },
         btn2: function () {
             return false;
@@ -704,10 +743,6 @@ function select_order_specification_detail(obj) {
         var unit = $(obj).siblings('span');
         $(unit[0]).text(order_detail[detail_index].unit);
     }
-}
-
-function set_order_specification_number() {
-
 }
 
 function add_order_specification_detail() {
@@ -764,7 +799,7 @@ function add_order_specifications() {
     var height = parseFloat($('#order_specifications_height').val());
     var count = parseInt($('#order_specifications_count').val());
     var detail = [];
-    var detail_number = {};
+    var detail_number = [];
     $('.order_specification_detail').each(function(k, v) {
         var temp = $(v).val();
         console.log(temp);
@@ -818,12 +853,23 @@ function add_order_specifications() {
         temp['detail'] = detail;
         temp['detail_number'] = detail_number;
         if( s_editing === null ) {
-            console.log('s_cursor = ' + s_cursor);
-            order_specifications['item-' + s_cursor] = temp;
-            s_cursor++;
+            if( ajax_edit ) {
+                ajax_add_order_specifications(temp);
+                return;
+            } else {
+                order_specifications['item-' + s_cursor] = temp;
+                s_cursor++;
+            }
         } else {
-            order_specifications['item-' + s_editing] = temp;
-            s_editing = null;
+            if( ajax_edit ) {
+                temp['order_id'] = order_specifications['item-' + s_editing].order_id;
+                temp['id'] = order_specifications['item-' + s_editing].id;
+                ajax_edit_order_specifications(temp);
+                return;
+            } else {
+                order_specifications['item-' + s_editing] = temp;
+                s_editing = null;
+            }
         }
         hide_order_specifications_form();
         refresh_order_specifications();
@@ -843,7 +889,8 @@ function refresh_order_specifications(no_operate) {
     for( var id in order_specifications ) {
         var j = 1;
         var rowspan = order_specifications[id].detail.length;
-        var i_end = i + parseInt(order_specifications[id]['count']) - 1;
+        var count_temp = parseInt(order_specifications[id]['count']);
+        var i_end = i + count_temp - 1;
         html += '<tr id="detail-'+id+'">';
         html += '<td rowspan="'+rowspan+'">' + i + '-' + i_end + '</td>';
         for( var y in order_specifications[id].detail ) {
@@ -891,7 +938,7 @@ function refresh_order_specifications(no_operate) {
         total_count += order_specifications[id]['count'];
         total_rate += order_specifications[id]['rate'] * order_specifications[id]['count'];
         total_charging_weight += order_specifications[id]['charging_weight'] * order_specifications[id]['count'];
-        i += order_specifications[id]['count'];
+        i += count_temp;
         console.log(order_specifications[id]['count']);
     }
 
@@ -918,7 +965,6 @@ function add_order_specifications_form() {
 }
 
 function edit_order_specifications(id) {
-    console.log(id);
     s_editing = id.split('-')[1];
     $('#order_specifications_weight').val(order_specifications[id]['weight']);
     $('#order_specifications_length').val(order_specifications[id]['length']);
@@ -959,13 +1005,17 @@ function remove_order_specifications(id) {
     layer.confirm('确定删除该项订单规格？', {
         btn: ['确定', '取消'],
         btn1: function () {
-            for(var index in order_specifications[id].detail ) {
-                var detail_index = order_specifications[id].detail[index];
-                order_detail[detail_index].is_locked = false;
-            }
-            delete order_specifications[id];
+            if( ajax_edit ) {
+                ajax_remove_order_specifications(id);
+            } else {
+                for (var index in order_specifications[id].detail) {
+                    var detail_index = order_specifications[id].detail[index];
+                    order_detail[detail_index].is_locked = false;
+                }
+                delete order_specifications[id];
 //                s_cursor--;
-            refresh_order_specifications();
+                refresh_order_specifications();
+            }
         },
         btn2: function () {
             return false;
@@ -1051,6 +1101,75 @@ function add_order(commit) {
     $.post(url, param, add_order_handler, 'json');
 }
 
+function edit_order(commit) {
+    var url = "/Order/ajaxEdit";
+    var delivery_id = $('#delivery_id').val();
+    var receive_id = $('#receive_id').val();
+    //备用收货地址
+    var spare_receive_company = $('#spare_receive_company').val();
+    var spare_receive_addressee = $('#spare_receive_addressee').val();
+    var spare_country = $('#spare_country').val();
+    var spare_state = $('#spare_state').val();
+    var spare_city = $('#spare_city').val();
+    var spare_receive_detail_address = $('#spare_receive_detail_address').val();
+    var spare_receive_phone = $('#spare_receive_phone').val();
+    var spare_receive_mobile = $('#spare_receive_mobile').val();
+    var spare_receive_postal_code = $('#spare_receive_postal_code').val();
+    var spare_receiver_code = $('#spare_receiver_code').val();
+    var enable_spare = $('input[name=enable_spare]:checked').val();
+    //订单信息
+    var channel = $('#channel').val();
+    var package_type = $('#package_type').val();
+    var price_terms = $('#price_terms').val();
+    var tariff_payment = $('#tariff_payment').val();
+    var shipment_reference = $('#shipment_reference').val();
+    var settlement = $('#settlement').val();
+    var declaration_of_power_attorney = $('#declaration_of_power_attorney').val();
+    var contract_num = $('#contract_num').val();
+    var mode_of_transportation = $('#mode_of_transportation').val();
+    var express_service = $('#express_service').val();
+    var export_nature = $('#export_nature').val();
+    var export_reason = $('#export_reason').val();
+    var manufacturer = $('#manufacturer').val();
+    var remark = $('#remark').val();
+    var specifications_remark = $('#specifications_remark').val();
+    var param = {
+        'order_id': order_id,
+        'delivery_id':delivery_id,
+        'receive_id':receive_id,
+        'spare_receive_company': spare_receive_company,
+        'spare_receive_addressee':spare_receive_addressee,
+        'spare_country': spare_country,
+        'spare_state' : spare_state,
+        'spare_city' : spare_city,
+        'spare_receive_detail_address': spare_receive_detail_address,
+        'spare_receive_phone': spare_receive_phone,
+        'spare_receive_mobile': spare_receive_mobile,
+        'spare_receive_postal_code': spare_receive_postal_code,
+        'spare_receiver_code': spare_receiver_code,
+        'enable_spare': enable_spare,
+        'channel': channel,
+        'package_type': package_type,
+        'price_terms' : price_terms,
+        'tariff_payment' : tariff_payment,
+        'shipment_reference': shipment_reference,
+        'settlement': settlement,
+        'declaration_of_power_attorney': declaration_of_power_attorney,
+        'contract_num': contract_num,
+        'mode_of_transportation': mode_of_transportation,
+        'express_service': express_service,
+        'manufacturer': manufacturer,
+        'export_nature' : export_nature,
+        'export_reason': export_reason,
+        'remark': remark,
+        'specifications_remark': specifications_remark,
+        'commit': commit
+    };
+    show_loading();
+    $.post(url, param, add_order_handler, 'json');
+}
+
+
 function add_order_handler(response) {
     hide_loading();
     if( response.code == 0 ) {
@@ -1100,6 +1219,175 @@ function ajax_handler(response) {
     } else if( response.code == -1 ) {
         layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
     }
+}
+
+function ajax_add_order_detail(param) {
+    show_loading();
+    var url = "/Order/ajaxAddDetail";
+    param['order_id'] = order_id;
+    $.post(url, param, ajax_add_order_detail_handler, 'json');
+}
+
+function ajax_add_order_detail_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        alert(response.msg);
+        window.location.href = '/';
+        return;
+    }
+    if( response.code == 1 ) {
+        order_detail['item-' + d_cursor] = response.data;
+        d_cursor++;
+    } else {
+        layer.msg(response.msg);
+    }
+    hide_order_detail_form();
+    refresh_order_detail();
+    empty_order_detail_form();
+}
+
+function ajax_edit_order_detail(param) {
+    show_loading();
+    var url = "/Order/ajaxEditDetail";
+    $.post(url, param, ajax_edit_order_detail_handler, 'json');
+}
+
+function ajax_edit_order_detail_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        alert(response.msg);
+        window.location.href = '/';
+        return;
+    }
+    if( response.code == 1 ) {
+        order_detail['item-' + d_editing] = response.data;
+    } else {
+        layer.msg(response.msg);
+    }
+    refresh_order_specifications();
+    d_editing = null;
+    hide_order_detail_form();
+    refresh_order_detail();
+    empty_order_detail_form();
+}
+
+function ajax_remove_order_detail(index) {
+    show_loading();
+    var url = "/Order/ajaxDeleteDetail";
+    var id = order_detail[index].id;
+    var param = { 'order_id':order_id, 'id':id, 'index':index };
+    $.post(url, param, ajax_remove_order_detail_handler, 'json');
+}
+
+function ajax_remove_order_detail_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        alert(response.msg);
+        window.location.href = '/';
+        return;
+    }
+    if( response.code == 1 ) {
+        var index = response.data.index;
+        delete order_detail[index];
+    } else {
+        layer.msg(response.msg);
+    }
+    refresh_order_detail();
+}
+
+function ajax_add_order_specifications(param) {
+    show_loading();
+    var url = "/Order/ajaxAddSpecifications";
+    param['order_id'] = order_id;
+    var temp = [];
+    for( var id in param.detail ) {
+        var detail = {"detail_id": order_detail[param.detail[id]].id, "detail_number": param.detail_number[param.detail[id]]};
+        // console.log(detail);
+        temp.push(detail);
+    }
+    param.detail = temp;
+    // console.log(param);
+    // return;
+    $.post(url, param, ajax_add_order_specifications_handler, 'json');
+}
+
+function ajax_add_order_specifications_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        alert(response.msg);
+        window.location.href = '/';
+        return;
+    }
+    if( response.code == 1 ) {
+        order_specifications['item-' + s_cursor] = response.data;
+        s_cursor ++;
+    } else {
+        layer.msg(response.msg);
+    }
+    hide_order_specifications_form();
+    refresh_order_specifications();
+    empty_order_specifications_form();
+}
+
+function ajax_edit_order_specifications(param) {
+    show_loading();
+    var url = "/Order/ajaxEditSpecifications";
+    param['order_id'] = order_id;
+    var temp = [];
+    for( var id in param.detail ) {
+        var detail = {"detail_id": order_detail[param.detail[id]].id, "detail_number": param.detail_number[param.detail[id]]};
+        // console.log(detail);
+        temp.push(detail);
+    }
+    param.detail = temp;
+    // console.log(param);
+    // return;
+    $.post(url, param, ajax_edit_order_specifications_handler, 'json');
+}
+
+function ajax_edit_order_specifications_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        alert(response.msg);
+        window.location.href = '/';
+        return;
+    }
+    if( response.code == 1 ) {
+        order_specifications['item-' + s_editing] = response.data;
+    } else {
+        layer.msg(response.msg);
+    }
+    hide_order_specifications_form();
+    refresh_order_specifications();
+    empty_order_specifications_form();
+}
+
+function ajax_remove_order_specifications(index) {
+    show_loading();
+    var url = "/Order/ajaxDeleteSpecifications";
+    var id = order_specifications[index].id;
+    var param = { 'order_id':order_id, 'id':id, 'index':index };
+    $.post(url, param, ajax_remove_order_specifications_handler, 'json');
+}
+
+function ajax_remove_order_specifications_handler(response) {
+    hide_loading();
+    if( response.code == 0 ) {
+        alert(response.msg);
+        window.location.href = '/';
+        return;
+    }
+    if( response.code == 1 ) {
+        var index = response.data.index;
+        for (var i in order_specifications[index].detail) {
+            var detail_index = order_specifications[index].detail[i];
+            order_detail[detail_index].is_locked = false;
+        }
+        delete order_specifications[index];
+    } else {
+        layer.msg(response.msg);
+    }
+    refresh_order_specifications();
 }
 
 //==========ajax结束============================================

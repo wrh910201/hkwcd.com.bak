@@ -470,7 +470,7 @@
             <div class="fr">
                 <label class="l_title"></label>
                 <if condition="$order.client_status eq 0">
-                    <a class="btn btn_commit" href="/Order/edit/id/{$order.id}" id="edit_order_button">编辑</a> &nbsp;
+                    <a class="btn btn_commit" href="/Order/edit/id/{$order.id}" id="">编辑</a> &nbsp;
                     <button class="btn btn_commit" type="button" onclick="commit_order({$order.id})">提交</button> &nbsp;
                     <if condition="$order.is_rejected eq 1">
                         <button class="btn btn_commit" type="button" onclick="reject_history({$order.id})">驳回日志</button> &nbsp;
