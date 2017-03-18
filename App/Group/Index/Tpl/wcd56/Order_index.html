@@ -12,7 +12,7 @@
                 <div class="box_t box_t_bottom">
                     <h3>{$title}</h3>
                     <div class="search_box fr">
-                        <form action="{:U('/Order/index')}" method="get" >
+                        <form action="{:U('/Order/index')}" method="post" >
                         <input value="{$start_date}" id="start_date" name="start_date" class="fl" type="text" placeholder="起始日期" style="margin-right: 10px; border-right: #fff solid 1px"/>
                         <input value="{$end_date}" id="end_date" name="end_date" class="fl" type="text" placeholder="结束日期"/>
                         <button class="fl" type="submit"><i class="icon">&#xe617;</i></button>

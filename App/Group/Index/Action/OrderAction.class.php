@@ -219,9 +219,9 @@ class OrderAction extends BaseAction  {
          */
         $order_id = 0;
         $order_num = '';
-        $today_time = strtotime(date('Y-m-d', time()));
+        $today_time = strtotime(date('Y', time()).'01-01');
         $total_map = [
-            'client_id' => $this->client_id,
+//            'client_id' => $this->client_id,
             'add_time' => ['gt', date('Y-m-d H:i:s', $today_time)],
         ];
         for( $i = 0; $i < 5; $i++ ) {
@@ -229,7 +229,7 @@ class OrderAction extends BaseAction  {
             $total++;
             $total_number = $this->_total_to_str($total);
 //            $order_num = 'HD' . date('Ymd', time()) . $this->client_id . $total_number;
-            $order_num = date('Ymd', time()) . $this->client_id . $total_number;
+            $order_num = date('Ymd', time()) . $total_number;
             $data['order_num'] = $order_num;
             $add_order_result = M('ClientOrder')->add($data);
             if (!$add_order_result) {
@@ -1734,14 +1734,17 @@ class OrderAction extends BaseAction  {
     }
 
     private function _total_to_str($total) {
-        $temp_total = '000'.$total;
+        $temp_total = '00000'.$total;
         $length = strlen($temp_total);
         $number = '';
         switch($length) {
-            case 4: $number = $temp_total;break;
-            case 5: $number = '00'.$total;break;
-            case 6: $number = '0'.$total;break;
-            case 7: $number = $temp_total;break;
+            case 6: $number = $temp_total;break;
+            case 7: $number = '00000'.$total;break;
+            case 8: $number = '0000'.$total;break;
+            case 9: $number = '000'.$total;break;
+            case 10: $number = '00'.$total;break;
+            case 11: $number = '0'.$total;break;
+            case 12: $number = $total;break;
         }
         return $number;
     }

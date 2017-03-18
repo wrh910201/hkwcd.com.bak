@@ -9,23 +9,57 @@ class ClientorderAction extends CommonContentAction {
 
     public function index() {
         $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字
+        $start_date = I('start_date', '');
+        $end_date = I('end_date', '');
         $where = array();
         $condition = array();
         if (!empty($keyword)) {
-            $condition['order_num'] = ['like', $keyword];
-            $condition['delivery_company'] = ['like', $keyword];
-            $condition['receive_company'] = ['like', $keyword];
+            $condition['o.order_num'] = ['like', '%'.$keyword.'%'];
+            $condition['o.delivery_company'] = ['like', '%'.$keyword.'%'];
+            $condition['o.receive_company'] = ['like', '%'.$keyword.'%'];
+            $condition['c.username'] = ['like', '%'.$keyword.'%'];
             $condition['_logic'] = 'OR';
             $where['_complex'] = $condition;
         }
+        if( $start_date ) {
+            $where['o.add_time'] = ['gt', $start_date];
+        }
+        if( $end_date ) {
+            $old_end_date = $end_date;
+            $end_date = date('Y-m-d', strtotime($end_date) + 3600 * 24);
+            $where['o.add_time'] = ['lt', $end_date];
+        }
+        if( $start_date && $end_date ) {
+            $where['o.add_time'] = ['between', [$start_date, $end_date]];
+        } else {
+            if( $start_date ) {
+                $where['o.add_time'] = ['gt', $start_date];
+            }
+            if( $end_date ) {
+                $where['o.add_time'] = ['lt', $end_date];
+            }
+        }
+
         $where['client_status'] = 1;
         //分页
         import('ORG.Util.Page');
-        $count = M('ClientOrder')->where($where)->count();
+        $count = M('ClientOrder')
+            ->alias('o')
+            ->field('o.*, c.username')
+            ->join('left join hx_client as c on o.client_id = c.id')
+            ->where($where)
+            ->count();
 
         $page = new Page($count, 10);
         $limit = $page->firstRow. ',' .$page->listRows;
-        $list = M('ClientOrder')->where($where)->order('id')->limit($limit)->select();
+        $list = M('ClientOrder')
+            ->alias('o')
+            ->field('o.*, c.username')
+            ->join('left join hx_client as c on o.client_id = c.id')
+            ->where($where)
+            ->order('o.id')
+            ->limit($limit)
+            ->select();
         if( $list ) {
             foreach( $list as $k => $v ) {
                 $list[$k]['company'] = mb_strlen($v['company'], 'utf-8') > 13 ? mb_substr($v['company'], 0, 13, 'utf-8').'...' : $v['company'];
@@ -38,7 +72,8 @@ class ClientorderAction extends CommonContentAction {
         $this->order_list = $list;
         $this->type = '客户订单列表';
         $this->keyword = $keyword;
-
+        $this->assign('start_date', $start_date);
+        $this->assign('end_date', $old_end_date);
 
         $this->display();
     }
@@ -226,6 +261,11 @@ class ClientorderAction extends CommonContentAction {
             $model->rollback();
             $this->error('系统繁忙，请稍后重试');
         }
+    }
+
+    public function edit() {
+
+        $this->display();
     }
 
     public function trace() {
