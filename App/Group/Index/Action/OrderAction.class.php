@@ -62,10 +62,41 @@ class OrderAction extends BaseAction  {
     public function index() {
         $client_id = session('hkwcd_user.user_id');
 
+        $start_date = I('start_date', '');
+        $end_date = I('end_date', '');
+
         $where = [
             'status' => 1,
             'client_id' => $client_id,
         ];
+
+        $condition = [];
+
+        if( $start_date ) {
+            $condition['add_time'] = ['gt', $start_date];
+        }
+        if( $end_date ) {
+            $old_end_date = $end_date;
+            $end_date = date('Y-m-d', strtotime($end_date) + 3600 * 24);
+            $condition['add_time'] = ['lt', $end_date];
+        }
+        if( $start_date && $end_date ) {
+            $condition['add_time'] = ['between', [$start_date, $end_date]];
+        } else {
+            if( $start_date ) {
+                $condition['add_time'] = ['gt', $start_date];
+            }
+            if( $end_date ) {
+                $condition['add_time'] = ['lt', $end_date];
+            }
+        }
+        if( $condition ) {
+            if( count($condition) == 2 ) {
+                $condition['_logic'] = 'AND';
+            }
+            $where['_complex'] = $condition;
+        }
+
         //分页
         import('ORG.Util.Page');
         $count = M('ClientOrder')->where($where)->count();
@@ -82,6 +113,8 @@ class OrderAction extends BaseAction  {
         $this->page = $page->show();
         $this->assign('order_list', $order_list);
         $this->assign('title', '订单列表');
+        $this->assign('start_date', $start_date);
+        $this->assign('end_date', $old_end_date);
         $this->display();
     }
 
