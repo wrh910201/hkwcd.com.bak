@@ -57,7 +57,7 @@ class ClientorderAction extends CommonContentAction {
             ->field('o.*, c.username')
             ->join('left join hx_client as c on o.client_id = c.id')
             ->where($where)
-            ->order('o.id')
+            ->order('o.add_time desc')
             ->limit($limit)
             ->select();
         if( $list ) {
@@ -265,6 +265,90 @@ class ClientorderAction extends CommonContentAction {
 
     public function edit() {
 
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+//        if( $order['client_status'] != 0 ) {
+//            $this->error('当前订单不是可编辑状态');
+//        }
+
+        $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
+        $d_cursor = 0;
+        if( $order_detail ) {
+            $temp = [];
+            foreach( $order_detail as $k => $v ) {
+                $temp['item-'.$v['id']] = $v;
+                $d_cursor = $d_cursor < $v['id'] ? $v['id'] : $d_cursor;
+            }
+            $order_detail = $temp;
+        }
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id, m.number')
+            ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
+//        echo M('ClientOrderSpecifications')->getLastSql();exit;
+        $s_cursor = 0;
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp['item-'.$v['id']]) ) {
+                    $temp['item-'.$v['id']] = $v;
+                }
+                $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
+                $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
+                $s_cursor = $d_cursor < $v['id'] ? $v['id'] : $s_cursor;
+            }
+            $order_specifications = $temp;
+        }
+//        var_dump($order_specifications);exit;
+        $selected_delivery = M('DeliveryAddress')->where(['id' => $order['delivery_id']])->find();
+        $selected_receive = M('ReceiveAddress')->where(['id' => $order['receive_id']])->find();
+
+        $this->assign('order', $order);
+        $this->assign('order_detail', json_encode($order_detail));
+        $this->assign('order_specifications', json_encode($order_specifications));
+
+        $this->assign('has_default_delivery', true);
+        $this->assign('has_default_receive', true);
+        $this->assign('json_delivery', json_encode($selected_delivery));
+        $this->assign('json_receive', json_encode($selected_receive));
+        $this->assign('s_cursor', $s_cursor);
+        $this->assign('d_cursor', $d_cursor);
+
+
+        $this->assign('order_detail_unit', C('order_detail_unit'));
+        $this->assign('package_type', C('package_type'));
+        $this->assign('price_terms', C('price_terms'));
+        $this->assign('tariff_payment', C('tariff_payment'));
+        $this->assign('settlement', C('settlement'));
+        $this->assign('express_service', C('express_service'));
+        $this->assign('export_reason', C('export_reason'));
+        $this->assign('export_nature', C('export_nature'));
+        $channel_list = M('Channel')->where(['status' => 1])->select();
+        $this->assign('channel_list', $channel_list);
+        //国家
+        $where = array('pid' => 0,'types'=>0);
+        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $this->assign('country_list', $country_list);
+        if( $country_list ) {
+            $temp = [];
+            foreach( $country_list as $k => $v ) {
+                $temp['item-'.$v['id']] = $v;
+            }
+            $country_list = $temp;
+        }
+        $this->assign('json_country_list', json_encode($country_list));
+
+
+        if( empty($client['company']) ) {
+            $this->assign('default_company', json_encode(''));
+        } else {
+            $this->assign('default_company', json_encode($client['company']));
+        }
         $this->display();
     }
 
