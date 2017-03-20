@@ -124,9 +124,9 @@
                             <div class="box_c_item">
                                 <div class="fl" style="width:456px">
                                     <label class="l_title"></label>
-                                    <button id="get-default-delivery" class="btn btn_blue" type="button">使用默认</button>
-                                    <button id="get-delivery-list" class="btn btn_blue" type="button">地址列表</button>
-                                    <button id="delivery-form" class="btn btn_blue" type="button">新地址</button>
+                                    <!--<button id="get-default-delivery" class="btn btn_blue" type="button">使用默认</button>-->
+                                    <!--<button id="get-delivery-list" class="btn btn_blue" type="button">地址列表</button>-->
+                                    <!--<button id="delivery-form" class="btn btn_blue" type="button">新地址</button>-->
                                     <div class="clear"></div>
                                 </div>
                             </div>
@@ -228,9 +228,9 @@
                             <div class="box_c_item">
                                 <div class="fl" style="width:516px">
                                     <label class="l_title"></label>
-                                    <button id="get-default-receive" class="btn btn_blue" type="button">使用默认</button>
-                                    <button id="get-receive-list" class="btn btn_blue" type="button">地址列表</button>
-                                    <button id="receive-form" class="btn btn_blue" type="button">新地址</button>
+                                    <!--<button id="get-default-receive" class="btn btn_blue" type="button">使用默认</button>-->
+                                    <!--<button id="get-receive-list" class="btn btn_blue" type="button">地址列表</button>-->
+                                    <!--<button id="receive-form" class="btn btn_blue" type="button">新地址</button>-->
                                     <button id="spare-receive" class="btn btn_blue" type="button">备用联系人</button>
                                     <div class="clear"></div>
                                 </div>
@@ -481,7 +481,9 @@
             <div class="clear"></div>
             <div class="fr">
                 <label class="l_title"></label>
-                <button class="btn btn_blue" type="button" id="edit_order_button">确定</button> &nbsp;<button class="btn btn_blue" type="button" id="edit_commit_order_button">确定并提交</button> &nbsp;<a href="javascript:;" class="btn btn_cancel">取消</a>
+                <button class="btn btn_blue" type="button" id="edit_order_button">确定</button> &nbsp;
+                <!--<button class="btn btn_blue" type="button" id="edit_commit_order_button">确定并提交</button> &nbsp;-->
+                <a href="javascript:window.location.go(-1);" class="btn btn_cancel">取消</a>
                 <input type="hidden" name="delivery_id" id="delivery_id" value="{$order.delivery_id}"/>
                 <input type="hidden" name="receive_id" id="receive_id" value="{$order.receive_id}"/>
             </div>

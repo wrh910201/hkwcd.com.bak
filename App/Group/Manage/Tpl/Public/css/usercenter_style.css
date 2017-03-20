@@ -94,14 +94,14 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 
 /* iconfont css */
 @font-face {
-    font-family: 'iconfont';
-    src: url('fonts/iconfont.eot'); /* IE9*/
-    src: url('fonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('fonts/iconfont.woff') format('woff'), /* chrome、firefox */
-    url('fonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-    url('fonts/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
-    font-weight: normal;
-    font-style: normal;
+    /*font-family: 'iconfont';*/
+    /*src: url('fonts/iconfont.eot'); !* IE9*!*/
+    /*src: url('fonts/iconfont.eot?#iefix') format('embedded-opentype'), !* IE6-IE8 *!*/
+    /*url('fonts/iconfont.woff') format('woff'), !* chrome、firefox *!*/
+    /*url('fonts/iconfont.ttf') format('truetype'), !* chrome、firefox、opera、Safari, Android, iOS 4.2+*!*/
+    /*url('fonts/iconfont.svg#iconfont') format('svg'); !* iOS 4.1- *!*/
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
 }
 .icon {
     font-family: 'iconfont';
@@ -124,20 +124,20 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 }
 .login{
     margin-top: 80px;
-    background: url("../images/login_bg.png");
+    /*background: url("../images/login_bg.png");*/
     height: 415px;
 }
 .login .fl{
     margin-top: 45px;
     width: 552px;
     height: 352px;
-    background: url("../images/login_banner.png") no-repeat right;
+    /*background: url("../images/login_banner.png") no-repeat right;*/
 }
 .login .fr{
     width: 420px;
     height: 415px;
     margin-right: 26px;
-    background: url("../images/login_form.png");
+    /*background: url("../images/login_form.png");*/
 }
 .login_logo{
     width: 250px;
@@ -263,7 +263,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     margin-left:230px;
     min-width: 1110px;
     max-width: 1366px;
-    _width: expression(document.body.clientWidth < 1110 ? "1110px" : (document.body.clientWidth > 1366 ? "1366px" : "auto"));
+    /*_width: expression(document.body.clientWidth < 1110 ? "1110px" : (document.body.clientWidth > 1366 ? "1366px" : "auto"));*/
 }
 /*top_bar css*/
 .top_bar{
@@ -409,7 +409,7 @@ fieldset .l_t_mid i{
 fieldset input.text_input,fieldset select, fieldset textarea {
     padding: 7px;
     font-size: 12px;
-    background: #fff url('../images/bg-form-field.gif') top left repeat-x;
+    /*background: #fff url('../images/bg-form-field.gif') top left repeat-x;*/
     border: 1px solid #d5d5d5;
     color: #333;
 }
@@ -557,7 +557,7 @@ fieldset .radio_inner {
 .table-total {
     padding: 12px 18px;
     font-weight: normal;
-    color: #78cc40;
+    color: #fff;
     border-bottom: 1px solid #25293d;
     background-color: #0f92d6;
 }

@@ -1102,7 +1102,7 @@ function add_order(commit) {
 }
 
 function edit_order(commit) {
-    var url = "/Order/ajaxEdit";
+    var url = "/Manage/Clientorder/ajaxEdit";
     var delivery_id = $('#delivery_id').val();
     var receive_id = $('#receive_id').val();
     //备用收货地址
@@ -1223,7 +1223,7 @@ function ajax_handler(response) {
 
 function ajax_add_order_detail(param) {
     show_loading();
-    var url = "/Order/ajaxAddDetail";
+    var url = "/Manage/Clientorder/ajaxAddDetail";
     param['order_id'] = order_id;
     $.post(url, param, ajax_add_order_detail_handler, 'json');
 }
@@ -1248,7 +1248,7 @@ function ajax_add_order_detail_handler(response) {
 
 function ajax_edit_order_detail(param) {
     show_loading();
-    var url = "/Order/ajaxEditDetail";
+    var url = "/Manage/Clientorder/ajaxEditDetail";
     $.post(url, param, ajax_edit_order_detail_handler, 'json');
 }
 
@@ -1273,7 +1273,7 @@ function ajax_edit_order_detail_handler(response) {
 
 function ajax_remove_order_detail(index) {
     show_loading();
-    var url = "/Order/ajaxDeleteDetail";
+    var url = "/Manage/Clientorder/ajaxDeleteDetail";
     var id = order_detail[index].id;
     var param = { 'order_id':order_id, 'id':id, 'index':index };
     $.post(url, param, ajax_remove_order_detail_handler, 'json');
@@ -1297,7 +1297,7 @@ function ajax_remove_order_detail_handler(response) {
 
 function ajax_add_order_specifications(param) {
     show_loading();
-    var url = "/Order/ajaxAddSpecifications";
+    var url = "/Manage/Clientorder/ajaxAddSpecifications";
     param['order_id'] = order_id;
     var temp = [];
     for( var id in param.detail ) {
@@ -1331,7 +1331,7 @@ function ajax_add_order_specifications_handler(response) {
 
 function ajax_edit_order_specifications(param) {
     show_loading();
-    var url = "/Order/ajaxEditSpecifications";
+    var url = "/Manage/Clientorder/ajaxEditSpecifications";
     param['order_id'] = order_id;
     var temp = [];
     for( var id in param.detail ) {
@@ -1364,7 +1364,7 @@ function ajax_edit_order_specifications_handler(response) {
 
 function ajax_remove_order_specifications(index) {
     show_loading();
-    var url = "/Order/ajaxDeleteSpecifications";
+    var url = "/Manage/Clientorder/ajaxDeleteSpecifications";
     var id = order_specifications[index].id;
     var param = { 'order_id':order_id, 'id':id, 'index':index };
     $.post(url, param, ajax_remove_order_specifications_handler, 'json');
