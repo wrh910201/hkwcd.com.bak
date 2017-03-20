@@ -559,7 +559,7 @@ class OrderAction extends BaseAction  {
                 }
                 $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
                 $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
-                $s_cursor = $d_cursor < $v['id'] ? $v['id'] : $s_cursor;
+                $s_cursor = $s_cursor < $v['id'] ? $v['id'] : $s_cursor;
             }
             $order_specifications = $temp;
         }

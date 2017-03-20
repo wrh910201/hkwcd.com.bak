@@ -47,23 +47,27 @@
         </table>
     </div>
     <div class="list">
-        <div class="operate">客户资料</div>
+        <div class="operate">寄件信息</div>
         <table width="100%">
             <tr>
-                <th>客户名称</th>
+                <th>公司名称</th>
                 <th>联系人</th>
-                <th>座机</th>
-                <th>手机</th>
+                <th>国家</th>
+                <th>城市</th>
                 <th>地址</th>
+                <th>联系方式</th>
                 <th>邮编</th>
+                <th>出口商代码</th>
             </tr>
             <tr>
                 <td>{$order.delivery_company}</td>
                 <td>{$order.delivery_consignor}</td>
-                <td>{$order.delivery_phone}</td>
-                <td>{$order.delivery_mobile}</td>
+                <td>{$order.delivery_country_name}/{$order.delivery_country_en_name}</td>
+                <td>{$order.delivery_city}</td>
                 <td>{$order.delivery_detail_address}</td>
+                <td>{$order.delivery_contact}</td>
                 <td>{$order.delivery_postal_code}</td>
+                <td>{$order.exporter_code}</td>
             </tr>
         </table>
     </div>
@@ -73,105 +77,189 @@
             <tr>
                 <th>收货公司</th>
                 <th>联系人</th>
-                <th>座机</th>
-                <th>手机</th>
+                <th>国家</th>
+                <th>城市</th>
                 <th>地址</th>
+                <th>联系方式</th>
                 <th>邮编</th>
+                <th>进口商代码</th>
             </tr>
             <tr>
                 <td>{$order.receive_company}</td>
                 <td>{$order.receive_addressee}</td>
-                <td>{$order.receive_phone}</td>
-                <td>{$order.receive_mobile}</td>
+                <td>{$order.receive_country_name}/{$order.receive_country_en_name}</td>
+                <td>{$order.receive_city}</td>
                 <td>{$order.receive_detail_address}</td>
+                <td>{$order.receive_contact}</td>
                 <td>{$order.receive_postal_code}</td>
+                <td>{$order.receiver_code}</td>
             </tr>
         </table>
-        <if condition="$order.spare_addressee neq ''">
+        <if condition="$order.enable_spare eq 1">
         <div class="operate">备用收货信息</div>
         <table width="100%">
             <tr>
-                <th></th>
-                <th>备用收货人</th>
-                <th>备用座机</th>
-                <th>备用手机</th>
-                <th>备用地址</th>
-                <th>备用邮编</th>
+                <th>收货公司</th>
+                <th>联系人</th>
+                <th>国家</th>
+                <th>城市</th>
+                <th>地址</th>
+                <th>联系方式</th>
+                <th>邮编</th>
+                <th>进口商代码</th>
             </tr>
             <tr>
-                <td></td>
+                <td>{$order.spare_company}</td>
                 <td>{$order.spare_addressee}</td>
-                <td>{$order.spare_phone}</td>
-                <td>{$order.spare_mobile}</td>
+                <td>{$order.spare_country_name}/{$order.spare_country_en_name}</td>
+                <td>{$order.spare_city}</td>
                 <td>{$order.spare_detail_address}</td>
+                <td>{$order.spare_contact}</td>
                 <td>{$order.spare_postal_code}</td>
+                <td>{$order.receiver_code}</td>
             </tr>
         </table>
         </if>
     </div>
     <div class="list">
+        <div class="operate">订单信息</div>
+        <table width="100%">
+            <tr>
+                <th>价格条款</th>
+                <th>关税支付</th>
+                <th>结汇方式</th>
+                <th>相关委托书</th>
+                <th>合同号</th>
+                <th>装运参考</th>
+            </tr>
+            <tr>
+                <td>{$order.price_terms}</td>
+                <td>{$order.tariff_payment}</td>
+                <td>{$order.settlement}</td>
+                <td>{$order.declaration_of_power_attorney}</td>
+                <td>{$order.contract_num}</td>
+                <td>{$order.shipment_reference}</td>
+                <!--<td>{$order.delivery_postal_code}</td>-->
+                <!--<td>{$order.exporter_code}</td>-->
+            </tr>
+            <tr>
+                <th colspan="4">运输方式</th>
+                <th>出口原因</th>
+                <th>出口性质</th>
+            </tr>
+            <tr>
+                <td colspan="4">{$order.mode_of_transportation}. {$order.express_service}</td>
+                <td>{$order.export_reason}</td>
+                <td>{$order.export_nature}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="list">
         <div class="operate">订单详情</div>
         <table width="100%">
             <tr>
-                <th>品名</th>
+                <th>中文品名</th>
+                <th>英文品名</th>
                 <th>商品编码</th>
                 <th>数量</th>
+                <th>单位</th>
                 <th>单件申报价值</th>
                 <th>总申报价值</th>
                 <th>原产地</th>
-                <th>装箱数</th>
-                <th>每箱数量</th>
             </tr>
             <foreach name="order_detail" item="v">
             <tr>
                 <td>{$v.product_name}</td>
+                <td>{$v.en_product_name}</td>
                 <td>{$v.goods_code}</td>
                 <td>{$v.count}</td>
+                <td>{$v.unit}</td>
                 <td>{$v.single_declared}</td>
                 <td>{$v.declared}</td>
                 <td>{$v.origin}</td>
-                <td></td>
-                <td></td>
             </tr>
             </foreach>
+            <tr>
+                <th>总计</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{$order.detail_declared_total}</td>
+                <td></td>
+            </tr>
         </table>
     </div>
     <div class="list">
         <div class="operate">订单规格</div>
         <table width="100%">
             <tr>
-                <th>重量</th>
+                <th>编号</th>
+                <th>品名</th>
+                <th>数量</th>
                 <th>长度</th>
                 <th>宽度</th>
                 <th>高度</th>
-                <th>备注</th>
+                <th>重量</th>
+                <th>材积重</th>
+                <th>箱数</th>
+                <th>计费重量</th>
             </tr>
             <foreach name="order_specifications" item="v">
                 <tr>
-                    <td>{$v.weight}</td>
-                    <td>{$v.length}</td>
-                    <td>{$v.width}</td>
-                    <td>{$v.height}</td>
-                    <td>{$v.remark}</td>
+                    <td rowspan="{$v.rowspan}">{$v.no}</td>
+                    <foreach name="v.detail" item="d" key="k">
+                        <if condition="$k eq 0">
+                        <td>{$d.product_name} {$d.en_product_name}</td>
+                        <td>{$d.number} * {$d.unit}</td>
+                        </if>
+                    </foreach>
+                    <td rowspan="{$v.rowspan}">{$v.length}</td>
+                    <td rowspan="{$v.rowspan}">{$v.width}</td>
+                    <td rowspan="{$v.rowspan}">{$v.height}</td>
+                    <td rowspan="{$v.rowspan}">{$v.weight}</td>
+                    <td rowspan="{$v.rowspan}">{$v.rate}kg</td>
+                    <td rowspan="{$v.rowspan}">{$v.count}</td>
+                    <td rowspan="{$v.rowspan}"></td>
                 </tr>
+                <foreach name="v.detail" item="d" key="k">
+                    <if condition="$k gt 0">
+                    <td>{$d.product_name} {$d.en_product_name}</td>
+                    <td>{$d.number} * {$d.unit}</td>
+                    </if>
+                </foreach>
             </foreach>
+            <tr>
+                <th>合计</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{$order.specifications_total_weight}kg</td>
+                <td>{$order.specifications_total_rate}kg</td>
+                <td>{$order.specifications_total_count}</td>
+                <td>{$order.specifications_calculate_weight}kg</td>
+            </tr>
         </table>
     </div>
     <div class="list">
-        <div class="operate">其他</div>
+        <div class="operate">备注</div>
         <table width="100%">
             <tr>
-                <td style="width:20%">出口原因</td>
-                <td style="text-align: left">{$order.export_reason}</td>
+                <td style="width:20%">订单备注</td>
+                <td style="text-align: left">{$order.remark}</td>
             </tr>
             <tr>
-                <td >备注</td>
-                <td style="text-align: left">{$order.remark}</td>
+                <td >托运备注</td>
+                <td style="text-align: left">{$order.specifications_remark}</td>
             </tr>
         </table>
     </div>
     <if condition="$order.exam_status eq 0">
     <div class="form_b">
+        <input type="button" class="btn_blue" id="fee" onclick="input_fee()" value="录入费用">
         <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $v['id']), '')}', '确定该订单通过审核吗？')" value="通 过">
         <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}';" value="驳 回">
     </div>
@@ -186,7 +274,25 @@
         <input type="button" class="btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $v['id']), '')}';" value="物 流">
     </div>
     </if>
+    <div class="list">
+        <div class="">订单日志</div><br />
+        <div>
+            <foreach name="order_log" item="v">
+            <if condition="$v.type eq 1">
+            <span>{$v.created_at}&nbsp;[{$v.client_name}]{$v.content}</span><br />
+            </if>
+            <if condition="$v.type eq 2">
+                <span>{$v.created_at}&nbsp;[{$v.operator_name}]{$v.content}</span><br />
+            </if>
+            </foreach>
+        </div>
+    </div>
 
 </div>
 </body>
+<script type="text/javascript">
+    function input_fee() {
+
+    }
+</script>
 </html>

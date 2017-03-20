@@ -125,29 +125,112 @@ class ClientorderAction extends CommonContentAction {
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
         $order['status_str'] = $this->_order_status($order);
-        $order_specifications = M('ClientOrderSpecifications')
+        if( $order['delivery_mobile'] && $order['delivery_phone'] ) {
+            $order['delivery_contact'] = $order['delivery_mobile'].'、'.$order['delivery_phone'];
+        } else {
+            if( $order['delivery_mobile'] ) {
+                $order['delivery_contact'] = $order['delivery_mobile'];
+            }
+            if( $order['delivery_phone'] ) {
+                $order['delivery_contact'] = $order['delivery_phone'];
+            }
+        }
+        if( $order['receive_mobile'] && $order['receive_phone'] ) {
+            $order['receive_contact'] = $order['receive_mobile'].'、'.$order['receive_phone'];
+        } else {
+            if( $order['receive_mobile'] ) {
+                $order['receive_contact'] = $order['receive_mobile'];
+            }
+            if( $order['receive_phone'] ) {
+                $order['receive_contact'] = $order['receive_phone'];
+            }
+        }
+        if( $order['enable_spare'] ) {
+            if ($order['spare_mobile'] && $order['spare_phone']) {
+                $order['spare_contact'] = $order['spare_mobile'] . '、' . $order['spare_phone'];
+            } else {
+                if ($order['spare_mobile']) {
+                    $order['spare_contact'] = $order['spare_mobile'];
+                }
+                if ($order['spare_phone']) {
+                    $order['spare_contact'] = $order['spare_phone'];
+                }
+            }
+        }
+
+        $order_detail = M('ClientOrderDetail')
             ->where(['order_num' => $order['order_num']])
             ->select();
+        $order['detail_declared_total'] = 0;
+        if( $order_detail ){
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]['single_declared'] = sprintf('%.2f', $v['single_declared']);
+                $order_detail[$k]['declared'] = sprintf('%.2f', $v['single_declared'] * $v['count']);
+                $order['detail_declared_total'] += $order_detail[$k]['declared'];
+            }
+        }
+        $order['detail_declared_total'] = sprintf('%.2f', $order['detail_declared_total']);
+
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id,m.number, d.product_name, d.en_product_name, d.unit')
+            ->join('left join hx_client_order_map as m on m.specifications_id = s.id')
+            ->join('left join hx_client_order_detail as d on d.id = m.detail_id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
         if( $order_specifications ) {
+            $temp = [];
             foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp['item-'.$v['id']]) ) {
+                    $temp['item-'.$v['id']] = $v;
+                }
+                $temp['item-'.$v['id']]['detail'][] = [
+                    'product_name' => $v['product_name'],
+                    'en_product_name' => $v['en_product_name'],
+                    'unit' => $v['unit'],
+                    'number' => $v['number']
+                ];
+            }
+            $order_specifications = $temp;
+        }
+        $order['specifications_total_weight'] = 0;
+        $order['specifications_total_rate'] = 0;
+        $order['specifications_calculate_weight'] = 0;
+        $order['specifications_total_count'] = 0;
+        if( $order_specifications ) {
+            $start = 1;
+            foreach( $order_specifications as $k => $v ) {
+                $end = $start + $v['count'] - 1;
+                $order_specifications[$k]['no'] = $start.'-'.$end;
                 $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']).'kg';
                 $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']).'cm';
                 $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']).'cm';
                 $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']).'cm';
+                $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
+                $order_specifications[$k]['real_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
+                $order['specifications_total_weight'] += $v['weight'] * $v['count'];
+                $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
+                $order['specifications_total_count'] += $v['count'];
+                $order['specifications_calculate_weight'] += $order_specifications[$k]['real_weight'] * $v['count'];
+                $order_specifications[$k]['rowspan'] = count($v['detail']);
+                $start = $end + 1;
+//                var_dump($order_specifications[$k]['detail']);exit;
             }
         }
-        $order_detail = M('ClientOrderDetail')
-            ->where(['order_num' => $order['order_num']])
+
+        $order_log = M('ClientOrderLog')
+            ->alias('l')
+            ->field('l.created_at, l.content, c.full_name as client_name, a.realname as operator_name, l.type')
+            ->join('left join hx_client as c on c.id = l.user_id and l.type = 1')
+            ->join('left join hx_admin as a on a.id = l.operator_id and l.type = 2')
+            ->where(['l.order_id' => $id])
             ->select();
-        if( $order_detail ){
-            foreach( $order_detail as $k => $v ) {
-                $order_detail[$k]['single_declared'] = sprintf('%.2f', $v['single_declared']);
-                $order_detail[$k]['declared'] = sprintf('%.2f', $v['declared']);
-            }
-        }
+//        echo M('ClientOrderLog')->getLastSql();exit;
+//        var_dump($order_log);exit;
 
         $channel_list = M('Channel')->where(['status' => 1])->select();
 
+        $this->assign('order_log', $order_log);
         $this->assign('channel_list', $channel_list);
         $this->assign('order', $order);
         $this->assign('order_specifications', $order_specifications);
@@ -307,7 +390,7 @@ class ClientorderAction extends CommonContentAction {
                 }
                 $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
                 $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
-                $s_cursor = $d_cursor < $v['id'] ? $v['id'] : $s_cursor;
+                $s_cursor = $s_cursor < $v['id'] ? $v['id'] : $s_cursor;
             }
             $order_specifications = $temp;
         }
@@ -356,6 +439,7 @@ class ClientorderAction extends CommonContentAction {
         } else {
             $this->assign('default_company', json_encode($client['company']));
         }
+        $this->assign('title', '编辑订单');
         $this->display();
     }
 
@@ -744,7 +828,7 @@ class ClientorderAction extends CommonContentAction {
 
             $this->response['code'] = 1;
             $this->response['msg'] = $msg;
-            $this->response['url'] = U('/Manage/Clientorder/index');
+            $this->response['url'] = U('/Manage/Clientorder/detail', ['id' => $id]);
         } else {
             $this->response['msg'] = '系统繁忙，请稍后重试';
         }
