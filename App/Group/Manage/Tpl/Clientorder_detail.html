@@ -4,8 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+    <link href="__PUBLIC__/css/usercenter_style.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="/Public/wcd56/usercenter/layer/layer.js"></script>
     <script language="JavaScript">
         <!--
         var URL = '__URL__';
@@ -16,7 +18,7 @@
     </script>
 </head>
 <body>
-<div class="main">
+<div class="main"  style="margin-left:0px">
     <div class="pos">{$type} | 订单号:{$order.order_num} </div>
     <div class="operate">
         <div class="left">
@@ -259,9 +261,9 @@
     </div>
     <if condition="$order.exam_status eq 0">
     <div class="form_b">
-        <input type="button" class="btn_blue" id="fee" onclick="input_fee()" value="录入费用">
-        <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $v['id']), '')}', '确定该订单通过审核吗？')" value="通 过">
-        <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}';" value="驳 回">
+        <input type="button" class="btn_blue" id="fee" onclick="show_input_fee_form()" value="录入费用">
+        <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $order['id']), '')}', '确定该订单通过审核，并返回客户确认吗？')" value="返回客户确认">
+        <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $order['id']), '')}';" value="驳 回">
     </div>
     </if>
     <if condition="$order.exam_status eq 1 && $order.express_status eq 0">
@@ -271,7 +273,7 @@
     </if>
     <if condition="$order.express_status eq 1">
     <div class="form_b">
-        <input type="button" class="btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $v['id']), '')}';" value="物 流">
+        <input type="button" class="btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
     </div>
     </if>
     <div class="list">
@@ -289,10 +291,182 @@
     </div>
 
 </div>
+<form action="" method="post" id="input_fee_form" class="box_c hide">
+    <fieldset>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">运费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.delivery_fee}" name="delivery_fee" id="delivery_fee" placeholder="请输入运费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">燃油费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.fuel_cost}" name="fuel_cost" id="fuel_cost" placeholder="请输入燃油费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">报关费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.customs_charges}" name="customs_charges" id="customs_charges" placeholder="请输入报关费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">提货费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.pick_up_charge}" name="pick_up_charge" id="pick_up_charge" placeholder="请输入提货费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">快递费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.express_fee}" name="express_fee" id="express_fee" placeholder="请输入快递费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">保险费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.insurance_premium}" name="insurance_premium" id="insurance_premium" placeholder="请输入保险费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">包装费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.packing_charges}" name="packing_charges" id="packing_charges" placeholder="请输入包装费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">验货费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.inspection_fee}" name="inspection_fee" id="inspection_fee" placeholder="请输入验货费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">偏远费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.remote_fee}" name="remote_fee" id="remote_fee" placeholder="请输入偏远费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">超重费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.over_weight_fee}" name="over_weight_fee" id="over_weight_fee" placeholder="请输入超重费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">超长费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.over_length_fee}" name="over_length_fee" id="over_length_fee" placeholder="请输入超长费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">储存费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.storage_fee}" name="storage_fee" id="storage_fee" placeholder="请输入储存费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">杂费：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.incidental}" name="incidental" id="incidental" placeholder="请输入杂费">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">其他费用：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.other_fee}" name="other_fee" id="other_fee" placeholder="请输入其他费用">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">总费用：</label>
+                <input class="text_input w300" type="text" value="{$order_fee.total_fee}" name="total_fee" id="total_fee" placeholder="请输入总费用">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">结算：</label>
+                <select class="w300" name="settlement_method" id="settlement_method">
+                    <option value=""></option>
+                    <foreach name="settlement_method" item="v">
+                    <option value="{$v}" <if condition="$v eq $order_fee['settlement_method']">selected</if>>{$v}</option>
+                    </foreach>
+                </select>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <label class="l_title"></label>
+            <button class="btn btn_blue" type="button" id="input_fee" onclick="input_order_fee()">保存</button>
+            <div class="clear"></div>
+        </div>
+    </fieldset>
+</form>
 </body>
 <script type="text/javascript">
-    function input_fee() {
+    var tips = null;
+    function show_input_fee_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['550px', '600px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#input_fee_form')
+        });
+    }
 
+    function input_order_fee() {
+        var url = "{:U('Clientorder/inputFee')}";
+        var param = {
+            id: '{$order.id}',
+            delivery_fee: $('#delivery_fee').val(),
+            fuel_cost: $('#fuel_cost').val(),
+            customs_charges: $('#customs_charges').val(),
+            pick_up_charge: $('#pick_up_charge').val(),
+            express_fee: $('#express_fee').val(),
+            insurance_premium: $('#insurance_premium').val(),
+            packing_charges: $('#packing_charges').val(),
+            inspection_fee: $('#inspection_fee').val(),
+            remote_fee: $('#remote_fee').val(),
+            over_weight_fee: $('#over_weight_fee').val(),
+            over_length_fee: $('#over_length_fee').val(),
+            storage_fee: $('#storage_fee').val(),
+            incidental: $('#incidental').val(),
+            other_fee: $('#other_fee').val(),
+            total_fee: $('#total_fee').val(),
+            settlement_method: $('#settlement_method').val(),
+
+        };
+        $.post(url, param, input_fee_handler, 'json');
+    }
+
+    function input_fee_handler(response) {
+//        hide_loading();
+        if( response.code == 0 ) {
+//            alert(response.msg);
+//            window.location.href = '/';
+        } else if( response.code == 1 ) {
+            window.location.reload();
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg);
+        }
     }
 </script>
 </html>

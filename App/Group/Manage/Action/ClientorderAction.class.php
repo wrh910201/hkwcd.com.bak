@@ -230,6 +230,10 @@ class ClientorderAction extends CommonContentAction {
 
         $channel_list = M('Channel')->where(['status' => 1])->select();
 
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+
+        $this->assign('order_fee', $order_fee);
+        $this->assign('settlement_method', C('settlement_method'));
         $this->assign('order_log', $order_log);
         $this->assign('channel_list', $channel_list);
         $this->assign('order', $order);
@@ -237,6 +241,66 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('order_detail', $order_detail);
         $this->type = '客户订单详情';
         $this->display();
+
+    }
+
+    public function inputFee() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['client_status'] == 1 && $order['exam_status'] == 0) ) {
+            $this->error('当前订单不是待审核状态');
+        }
+        $data['delivery_fee'] = I('delivery_fee', 0, 'floatval');
+        $data['fuel_cost'] = I('fuel_cost', 0, 'floatval');
+        $data['customs_charges'] = I('customs_charges', 0, 'floatval');
+        $data['pick_up_charge'] = I('pick_up_charge', 0, 'floatval');
+        $data['express_fee'] = I('express_fee', 0, 'floatval');
+        $data['insurance_premium'] = I('insurance_premium', 0, 'floatval');
+        $data['packing_charges'] = I('packing_charges', 0, 'floatval');
+        $data['inspection_fee'] = I('inspection_fee', 0, 'floatval');
+        $data['remote_fee'] = I('remote_fee', 0, 'floatval');
+        $data['over_weight_fee'] = I('over_weight_fee', 0, 'floatval');
+        $data['over_length_fee'] = I('over_length_fee', 0, 'floatval');
+        $data['storage_fee'] = I('storage_fee', 0, 'floatval');
+        $data['incidental'] = I('incidental', 0, 'floatval');
+        $data['other_fee'] = I('other_fee', 0, 'floatval');
+        $data['total_fee'] = I('total_fee', 0, 'floatval');
+        $data['settlement_method'] = I('settlement_method', '', 'trim');
+
+        $exists = M('ClientOrderFee')->where(['order_id' => $id])->find();
+        if( $exists ) {
+            $msg = '修改费用';
+            $result = M('ClientOrderFee')->where(['order_id' => $id])->save($data);
+            $result = is_numeric($result) ? true : false;
+        } else {
+            $msg = '录入费用';
+            $data['order_id'] = $id;
+            $result = M('ClientOrderFee')->add($data);
+
+        }
+
+        if( $result ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
+                'content' => $msg,
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = $msg.'成功';
+            $this->response['url'] = U('/Manage/Clientorder/detail', ['id' => $id]);
+        } else {
+            $this->response['msg'] = $msg.'失败';
+        }
+        echo json_encode($this->response);
+        exit;
 
     }
 
