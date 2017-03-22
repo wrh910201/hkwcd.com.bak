@@ -61,7 +61,7 @@
                             <a href="{:U(GROUP_NAME. '/Clientorder/detail',array('id' => $v['id']), '')}">详情</a>
                             <if condition="$v.client_status eq 1 && $v.exam_status eq 0">
                                 <a href="{:U(GROUP_NAME. '/Clientorder/edit',array('id' => $v['id']), '')}">编辑</a>
-                                <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $v['id']), '')}', '确定该订单通过审核吗？')">通过</a>
+                                <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/doExam',array('id' => $v['id']), '')}', '确定返回客户确认吗？')">返回客户确认</a>
                                 <a href="{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}">驳回</a>
                             </if>
                             <if condition="$v.exam_status eq 1 && $v.express_status eq 0">

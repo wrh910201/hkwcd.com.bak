@@ -1467,6 +1467,92 @@ class OrderAction extends BaseAction  {
         exit;
     }
 
+    public function ensure() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+
+        }
+        if( !($order['exam_status'] == 1 && $order['ensure_status'] == 0 ) ) {
+            $this->error('当前订单不是待确认状态');
+        }
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+        if( $order_detail ) {
+            $temp = [];
+            foreach( $order_detail as $k => $v ) {
+                $temp[$v['id']] = $v;
+            }
+            $order_detail = $temp;
+        }
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id,m.number')
+            ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
+//        echo M('ClientOrderSpecifications')->getLastSql();exit;
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp[$v['id']]) ) {
+                    $temp[$v['id']] = $v;
+                }
+                $temp[$v['id']]['detail'][] = $v['detail_id'];
+                $temp[$v['id']]['detail_number'][$v['detail_id']] = $v['number'];
+            }
+            $order_specifications = $temp;
+        }
+
+        $this->assign('order', $order);
+        $this->assign('order_detail', json_encode($order_detail));
+        $this->assign('order_specifications', json_encode($order_specifications));
+
+        $this->title = '确认订单';
+        $this->display();
+    }
+
+    public function doEnsure() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( !($order['express_status'] == 1 && $order['receive_status'] == 0 ) ) {
+            $this->response['msg'] = '当前订单不是待收货状态';
+            echo json_encode($this->response);
+            exit;
+        }
+        $data = [
+            'receive_status' => 1,
+        ];
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])
+            ->save($data);
+        if( is_numeric($result) ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'user_id' => $client_id,
+                'type' => 1,
+                'content' => '订单完成',
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->response['code'] = 1;
+            $this->response['msg'] = '订单完成';
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
+    }
+
     public function complete() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();

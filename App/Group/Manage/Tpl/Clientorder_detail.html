@@ -262,7 +262,7 @@
     <if condition="$order.exam_status eq 0">
     <div class="form_b">
         <input type="button" class="btn_blue" id="fee" onclick="show_input_fee_form()" value="录入费用">
-        <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/exam',array('id' => $order['id']), '')}', '确定该订单通过审核，并返回客户确认吗？')" value="返回客户确认">
+        <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/doExam',array('id' => $order['id']), '')}', '确定该订单通过审核，并返回客户确认吗？')" value="返回客户确认">
         <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $order['id']), '')}';" value="驳 回">
     </div>
     </if>

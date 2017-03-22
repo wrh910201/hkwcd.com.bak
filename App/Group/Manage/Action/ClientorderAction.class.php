@@ -86,7 +86,6 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function doExam() {
-        exit;
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -107,11 +106,11 @@ class ClientorderAction extends CommonContentAction {
                 'order_id' => $order['id'],
                 'operator_id' => session('yang_adm_uid'),
                 'type' => 2,
-                'content' => '通过订单审核',
+                'content' => '返回客户确认',
             ];
             M('ClientOrderLog')->add($log_data);
 
-            $this->success('订单已审核通过');
+            $this->success('订单已审核，等待客户确认');
         } else {
             $this->error('系统繁忙，请稍后重试');
         }
@@ -410,6 +409,15 @@ class ClientorderAction extends CommonContentAction {
         }
         if( $transaction ) {
             $model->commit();
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
+                'content' => '驳回订单',
+            ];
+            M('ClientOrderLog')->add($log_data);
             $this->success('订单驳回成功', U('Clientorder/index'));
         } else{
             $model->rollback();
