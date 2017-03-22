@@ -1391,3 +1391,15 @@ function ajax_remove_order_specifications_handler(response) {
 }
 
 //==========ajax结束============================================
+
+function show_fee() {
+    tips = layer.open({
+        type: 1,
+        skin: 'layui-layer-rim', //加上边框
+        area: ['550px', '600px'], //宽高
+        title: false,
+        closeBtn: 1,
+        shadeClose: false,
+        content: $('#input_fee_form')
+    });
+}

@@ -466,6 +466,15 @@
                 </div>
 
             </div>
+            <if condition="$order_fee">
+                <div class="box">
+                    <div class="box_t box_t_bottom">
+                        <h3 class="fl">总费用：{:sprintf('%.2f', $order_fee['total_fee'])}</h3>
+                        <button id="show_fee" class="btn btn_add fr" type="button" onclick="show_fee()">&nbsp;费用明细</button>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </if>
             <div class="clear"></div>
             <div class="fr">
                 <label class="l_title"></label>
@@ -934,6 +943,134 @@
             </div>
         </fieldset>
     </form>
+    <if condition="$order_fee">
+    <form action="" method="post" id="input_fee_form" class="box_c hide">
+        <fieldset>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">运费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.delivery_fee}" name="delivery_fee" id="delivery_fee" placeholder="请输入运费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">燃油费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.fuel_cost}" name="fuel_cost" id="fuel_cost" placeholder="请输入燃油费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">报关费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.customs_charges}" name="customs_charges" id="customs_charges" placeholder="请输入报关费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">提货费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.pick_up_charge}" name="pick_up_charge" id="pick_up_charge" placeholder="请输入提货费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">快递费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.express_fee}" name="express_fee" id="express_fee" placeholder="请输入快递费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">保险费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.insurance_premium}" name="insurance_premium" id="insurance_premium" placeholder="请输入保险费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">包装费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.packing_charges}" name="packing_charges" id="packing_charges" placeholder="请输入包装费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">验货费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.inspection_fee}" name="inspection_fee" id="inspection_fee" placeholder="请输入验货费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">偏远费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.remote_fee}" name="remote_fee" id="remote_fee" placeholder="请输入偏远费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">超重费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.over_weight_fee}" name="over_weight_fee" id="over_weight_fee" placeholder="请输入超重费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">超长费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.over_length_fee}" name="over_length_fee" id="over_length_fee" placeholder="请输入超长费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">储存费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.storage_fee}" name="storage_fee" id="storage_fee" placeholder="请输入储存费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">杂费：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.incidental}" name="incidental" id="incidental" placeholder="请输入杂费">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">其他费用：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.other_fee}" name="other_fee" id="other_fee" placeholder="请输入其他费用">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">总费用：</label>
+                    <input disabled class="text_input w300" type="text" value="{$order_fee.total_fee}" name="total_fee" id="total_fee" placeholder="请输入总费用">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <div class="fl">
+                    <label class="l_title">结算：</label>
+                    <select disabled class="w300" name="settlement_method" id="settlement_method" >
+                        <option value=""></option>
+                        <foreach name="settlement_method" item="v">
+                            <option value="{$v}" <if condition="$v eq $order_fee['settlement_method']">selected</if>>{$v}</option>
+                        </foreach>
+                    </select>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="box_c_item">
+                <label class="l_title"></label>
+                <button class="btn btn_commit" type="button" id="input_fee" onclick="javascript:layer.close(tips);">关闭</button>
+                <div class="clear"></div>
+            </div>
+        </fieldset>
+    </form>
+    </if>
 
 </div>
 <!-- END main -->

@@ -70,7 +70,7 @@ class ClientorderAction extends CommonContentAction {
         if( $list ) {
             foreach( $list as $k => $v ) {
                 $list[$k]['company'] = mb_strlen($v['company'], 'utf-8') > 13 ? mb_substr($v['company'], 0, 13, 'utf-8').'...' : $v['company'];
-                $list[$k]['status_str'] = $this->_order_status($v);
+                $list[$k]['status_str'] = _order_status($v);
             }
         }
 
@@ -93,6 +93,11 @@ class ClientorderAction extends CommonContentAction {
         }
         if( !($order['client_status'] == 1 && $order['exam_status'] == 0) ) {
             $this->error('当前订单不是待审核状态');
+        }
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+
+        if( $order_fee ) {
+            $this->error('您还未录入费用');
         }
         $data = [
             'exam_status' => 1,
@@ -123,7 +128,7 @@ class ClientorderAction extends CommonContentAction {
             $this->error('订单不存在');
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
-        $order['status_str'] = $this->_order_status($order);
+        $order['status_str'] = _order_status($order);
         if( $order['delivery_mobile'] && $order['delivery_phone'] ) {
             $order['delivery_contact'] = $order['delivery_mobile'].'、'.$order['delivery_phone'];
         } else {
@@ -223,6 +228,7 @@ class ClientorderAction extends CommonContentAction {
             ->join('left join hx_client as c on c.id = l.user_id and l.type = 1')
             ->join('left join hx_admin as a on a.id = l.operator_id and l.type = 2')
             ->where(['l.order_id' => $id])
+            ->order('l.created_at')
             ->select();
 //        echo M('ClientOrderLog')->getLastSql();exit;
 //        var_dump($order_log);exit;
@@ -310,7 +316,7 @@ class ClientorderAction extends CommonContentAction {
             $this->error('订单不存在');
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
-        $order['status_str'] = $this->_order_status($order);
+        $order['status_str'] = _order_status($order);
         $order_specifications = M('ClientOrderSpecifications')
             ->where(['order_num' => $order['order_num']])
             ->select();
@@ -525,7 +531,7 @@ class ClientorderAction extends CommonContentAction {
             $this->error('当前订单未发货');
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
-        $order['status_str'] = $this->_order_status($order);
+        $order['status_str'] = _order_status($order);
         $trace_result = S('hkwcd_trace_result');
         if( !$trace_result ) {
             $trace_result = query_express($order['express_type'], $order['express_order_num']);
@@ -550,7 +556,7 @@ class ClientorderAction extends CommonContentAction {
             $this->error('当前订单不是待发货状态');
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
-        $order['status_str'] = $this->_order_status($order);
+        $order['status_str'] = _order_status($order);
         $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
         if( $order_detail ){
             foreach( $order_detail as $k => $v ) {
@@ -814,36 +820,6 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '装箱单';
         $this->display();
-    }
-
-
-    private function _order_status($order) {
-        $status = '';
-        if( $order['error_status'] == 1 ) {
-            $status = '订单异常';
-            return $status;
-        }
-
-        if( $order['client_status'] == 0 ) {
-            $status = '未提交';
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 0 ) {
-            $status = '待审核';
-            if( $order['is_rejected'] ) {
-                $status .= '（驳回）';
-            }
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 1 && $order['express_status'] == 0 ) {
-            $status = '待发货';
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 0 ) {
-            $status = '已发货';
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 1 ) {
-            $status = '已收货';
-        }
-        $status = '' == $status ? '订单异常' : $status;
-        return $status;
     }
 
 

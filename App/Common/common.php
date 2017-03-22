@@ -1158,4 +1158,40 @@ function post($url, $params = array(), $encode = true)
     return $data;
 }
 
+function _order_status($order)
+{
+    $status = '';
+    if ($order['error_status'] == 1) {
+        $status = '订单异常';
+        return $status;
+    }
+
+    if ($order['client_status'] == 0) {
+        $status = '未提交';
+    }
+    if ($order['client_status'] == 1 && $order['exam_status'] == 0) {
+        $status = '待审核';
+        if ($order['is_rejected']) {
+            $status .= '（驳回）';
+        }
+    }
+    if ($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 0) {
+        $status = '待确认';
+    }
+    if ($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 1 && $order['pay_status'] == 0) {
+        $status = '待收款';
+    }
+    if ($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 1 && $order['pay_status'] == 1 && $order['express_status'] == 0) {
+        $status = '待发货';
+    }
+    if ($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 1 && $order['pay_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 0) {
+        $status = '已发货';
+    }
+    if ($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 1 && $order['pay_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 1) {
+        $status = '已收货';
+    }
+    $status = '' == $status ? '订单异常' : $status;
+    return $status;
+}
+
 ?>

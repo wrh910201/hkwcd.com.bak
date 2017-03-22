@@ -107,7 +107,7 @@ class OrderAction extends BaseAction  {
         $order_list = M('ClientOrder')->where($where)->limit($limit)->order('id desc')->select();
         if( $order_list ) {
             foreach( $order_list as $k => $v ) {
-                $order_list[$k]['status_str'] = $this->_order_status($v);
+                $order_list[$k]['status_str'] = _order_status($v);
             }
         }
         $this->page = $page->show();
@@ -1331,11 +1331,13 @@ class OrderAction extends BaseAction  {
             }
             $order_specifications = $temp;
         }
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
 
         $this->assign('order', $order);
         $this->assign('order_detail', json_encode($order_detail));
         $this->assign('order_specifications', json_encode($order_specifications));
-
+        $this->assign('order_fee', $order_fee);
+        $this->assign('settlement_method', C('settlement_method'));
         $this->display();
     }
 
@@ -1506,9 +1508,14 @@ class OrderAction extends BaseAction  {
             $order_specifications = $temp;
         }
 
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+
+
         $this->assign('order', $order);
         $this->assign('order_detail', json_encode($order_detail));
         $this->assign('order_specifications', json_encode($order_specifications));
+        $this->assign('order_fee', $order_fee);
+        $this->assign('settlement_method', C('settlement_method'));
 
         $this->title = '确认订单';
         $this->display();
@@ -1524,13 +1531,22 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
-        if( !($order['express_status'] == 1 && $order['receive_status'] == 0 ) ) {
-            $this->response['msg'] = '当前订单不是待收货状态';
+        if( !($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 0 ) ) {
+            $this->response['msg'] = '当前订单不是待确认状态';
             echo json_encode($this->response);
             exit;
         }
+
+        $autograph = I('autograph', '', 'trim');
+        if( empty($autograph) ) {
+            $this->response['msg'] = '请签名';
+            echo json_encode($this->response);
+            exit;
+        }
+
         $data = [
-            'receive_status' => 1,
+            'ensure_status' => 1,
+            'autograph' => $autograph,
         ];
         $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])
             ->save($data);
@@ -1541,11 +1557,12 @@ class OrderAction extends BaseAction  {
                 'order_id' => $order['id'],
                 'user_id' => $client_id,
                 'type' => 1,
-                'content' => '订单完成',
+                'content' => '确认发货，签名：'.$autograph,
             ];
             M('ClientOrderLog')->add($log_data);
             $this->response['code'] = 1;
-            $this->response['msg'] = '订单完成';
+            $this->response['msg'] = '确认发货成功';
+            $this->response['url'] = U('Order/detail', ['id' => $id]);
         } else {
             $this->response['msg'] = '系统繁忙，请稍后重试';
         }
@@ -1788,35 +1805,6 @@ class OrderAction extends BaseAction  {
         }
         echo json_encode($this->response);
         exit;
-    }
-
-    private function _order_status($order) {
-        $status = '';
-        if( $order['error_status'] == 1 ) {
-            $status = '订单异常';
-            return $status;
-        }
-
-        if( $order['client_status'] == 0 ) {
-            $status = '未提交';
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 0 ) {
-            $status = '待审核';
-            if( $order['is_rejected'] ) {
-                $status .= '（驳回）';
-            }
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 1 && $order['express_status'] == 0 ) {
-            $status = '待发货';
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 0 ) {
-            $status = '已发货';
-        }
-        if( $order['client_status'] == 1 && $order['exam_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 1 ) {
-            $status = '已收货';
-        }
-        $status = '' == $status ? '订单异常' : $status;
-        return $status;
     }
 
     private function _total_to_str($total) {
