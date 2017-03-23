@@ -70,8 +70,14 @@ button, input, select, textarea {
 .w80{
     width: 80px !important;
 }
+.w50{
+    width: 50px !important;
+}
 .w40{
     width: 40px !important;
+}
+.w30{
+    width: 30px !important;
 }
 .w20{
     width: 20px !important;

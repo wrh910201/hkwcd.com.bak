@@ -206,10 +206,10 @@ class ClientorderAction extends CommonContentAction {
             foreach( $order_specifications as $k => $v ) {
                 $end = $start + $v['count'] - 1;
                 $order_specifications[$k]['no'] = $start.'-'.$end;
-                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']).'kg';
-                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']).'cm';
-                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']).'cm';
-                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']).'cm';
+                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']);
+                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']);
+                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']);
+                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']);
                 $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
                 $order_specifications[$k]['real_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
                 $order['specifications_total_weight'] += $v['weight'] * $v['count'];
@@ -236,6 +236,7 @@ class ClientorderAction extends CommonContentAction {
         $channel_list = M('Channel')->where(['status' => 1])->select();
 
         $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+        $express_type = M('ExpressType')->where(1)->select();
 
         $this->assign('order_fee', $order_fee);
         $this->assign('settlement_method', C('settlement_method'));
@@ -244,6 +245,7 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('order', $order);
         $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail', $order_detail);
+        $this->assign('express_type', $express_type);
         $this->type = '客户订单详情';
         $this->display();
 
@@ -544,6 +546,35 @@ class ClientorderAction extends CommonContentAction {
         $this->type = '订单跟踪';
         $this->display();
 
+    }
+
+    public function pay() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['ensure_status'] == 1 && $order['pay_status'] == 0) ) {
+            $this->error('当前订单不是待收款状态');
+        }
+        $data = [
+            'pay_status' => 1
+        ];
+        $result = M('ClientOrder')->where(['id' => $id, 'status' => 1])->save($data);
+        if( is_numeric($result) ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
+                'content' => '已收款',
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->success('订单收款成功');
+        } else {
+            $this->error('订单收款失败');
+        }
     }
 
     public function delivery() {

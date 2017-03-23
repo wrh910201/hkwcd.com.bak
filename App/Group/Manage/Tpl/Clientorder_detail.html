@@ -35,6 +35,8 @@
                 <th>状态</th>
                 <th>下家</th>
                 <th>转运单号</th>
+                <th>报关员</th>
+                <th>出口端</th>
                 <th>添加时间</th>
             </tr>
             <tr>
@@ -44,6 +46,8 @@
                 <td>{$order.status_str}</td>
                 <td>{$order.express_type_name}</td>
                 <td>{$order.express_order_num}</td>
+                <td>{$order.customs_broker}</td>
+                <td>{$order.exit_end}</td>
                 <td>{$order.add_time}</td>
             </tr>
         </table>
@@ -217,10 +221,10 @@
                         <td>{$d.number} * {$d.unit}</td>
                         </if>
                     </foreach>
-                    <td rowspan="{$v.rowspan}">{$v.length}</td>
-                    <td rowspan="{$v.rowspan}">{$v.width}</td>
-                    <td rowspan="{$v.rowspan}">{$v.height}</td>
-                    <td rowspan="{$v.rowspan}">{$v.weight}</td>
+                    <td rowspan="{$v.rowspan}">{$v.length}cm</td>
+                    <td rowspan="{$v.rowspan}">{$v.width}cm</td>
+                    <td rowspan="{$v.rowspan}">{$v.height}cm</td>
+                    <td rowspan="{$v.rowspan}">{$v.weight}kg</td>
                     <td rowspan="{$v.rowspan}">{$v.rate}kg</td>
                     <td rowspan="{$v.rowspan}">{$v.count}</td>
                     <td rowspan="{$v.rowspan}"></td>
@@ -269,9 +273,11 @@
     <if condition="$order.ensure_status eq 1">
     <div class="form_b">
         <input type="button" class="btn_blue" id="" onclick="show_input_fee_disabled_form()" value="查看费用">
-        <input type="button" class="btn_blue" id="receive_money" onclick="" value="已收款">
+        <if condition="$order.pay_status eq 0">
+            <input type="button" class="btn_blue" id="receive_money" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/pay',array('id' => $order['id']), '')}', '确定该订单已收款吗？')" value="已收款">
+        </if>
         <if condition="$order.pay_status eq 1">
-            <input type="button" class="btn_blue" id="delivery" value="发 货">
+            <input type="button" class="btn_blue" id="delivery" onclick="open_delivery_form()" value="发 货">
         </if>
     </div>
     </if>
@@ -548,10 +554,141 @@
         </div>
     </fieldset>
 </form>
+<form action="" method="post" id="delivery_form" class="box_c hide">
+    <fieldset>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">下家：</label>
+                <select class="w300" name="express_type_id">
+                    <option value="0">未选择下家</option>
+                    <foreach name="express_type" item="v">
+                    <option value="{$v.id}" <if condition="$v.id eq $order['express_type_id']">selected</if>>{$v.name}</option>
+                    </foreach>
+                </select>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">转运单号：</label>
+                <input class="text_input w300" type="text" value="{$order.express_order_num}" name="express_order_num" id="" placeholder="请输入转运单号">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">报关员：</label>
+                <input class="text_input w300" type="text" value="{$order.customs_broker}" name="customs_broker" id="" placeholder="请输入报关员">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">出口端：</label>
+                <input class="text_input w300" type="text" value="{$order.exit_end}" name="exit_end" id="" placeholder="请输入出口端">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">发票号：</label>
+                <input class="text_input w300" type="text" value="{$order.invoice_num}" name="invoice_num" id="" placeholder="请输入发票号">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <if condition="$order.express_service eq 'air'">
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">空运提单号：</label>
+                <input class="text_input w300" type="text" value="{$order.invoice_num}" name="invoice_num" id="" placeholder="请输入空运提单号">
+            </div>
+            <div class="clear"></div>
+        </div>
+        </if>
+        <if condition="$order.express_service eq 'sea shipping'">
+        <div class="box_c_item">
+            <div class="fl">
+                <label class="l_title">海运提单号：</label>
+                <input class="text_input w300" type="text" value="{$order.invoice_num}" name="invoice_num" id="" placeholder="请输入海运提单号">
+            </div>
+            <div class="clear"></div>
+        </div>
+        </if>
+        <div class="box_c box_c_reset">
+            <div style="width: 95%; padding: 20px;">
+                <div class="box_t box_t_bottom">
+                    <h3 class="fl">出货重量</h3>
+                    <!--<button id="" class="btn btn_add fr" type="button">添加行</button>-->
+                    <div class="clear"></div>
+                </div>
+                <table class="table">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>重量</th>
+                    <th>长</th>
+                    <th>宽</th>
+                    <th>高</th>
+                    <th>材积重</th>
+                    <th>箱数</th>
+                </tr>
+                </thead>
+                <tbody id="specifications-content">
+                <if condition="$order.delivery_status eq 0">
+                <foreach name="order_specifications" item="v">
+                <tr>
+                    <td>{$v.no}</td>
+                    <td><input value="{$v.weight}" name="real_weight[{$v.id}]" class="real_weight text_input w50" type="text" /></td>
+                    <td><input value="{$v.length}" name="real_length[{$v.id}]" class="real_length text_input w50" type="text" /></td>
+                    <td><input value="{$v.width}" name="real_width[{$v.id}]" class="real_width text_input w50" type="text" /></td>
+                    <td><input value="{$v.height}" name="real_height[{$v.id}]" class="real_height text_input w50" type="text" /></td>
+                    <td><input value="{$v.rate}" name="real_rate[{$v.id}]" class="real_rate text_input w50" type="text" /></td>
+                    <td><input value="{$v.count}" name="real_count[{$v.id}]" class="real_count text_input w50" type="text" /></td>
+                </tr>
+                </foreach>
+                <tr>
+                    <th>合计</th>
+                    <td>{$order.specifications_total_weight}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{$order.specifications_total_rate}</td>
+                    <td>{$order.specifications_total_count}</td>
+                </tr>
+                </if>
+                </tbody>
+            </table>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="box_c_item">
+            <label class="l_title"></label>
+            <button class="btn btn_blue" type="button" id="" onclick="javascript:layer.close(tips);">确认</button>
+            <div class="clear"></div>
+        </div>
+    </fieldset>
+</form>
 
 </body>
 <script type="text/javascript">
     var tips = null;
+
+    function open_delivery_form() {
+        tips = layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['850px', '600px'], //宽高
+            title: false,
+            closeBtn: 1,
+            shadeClose: false,
+            content: $('#delivery_form')
+        });
+    }
+
+    function change_real_count() {
+
+    }
+
     function show_input_fee_form() {
         tips = layer.open({
             type: 1,
