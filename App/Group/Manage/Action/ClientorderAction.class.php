@@ -203,6 +203,7 @@ class ClientorderAction extends CommonContentAction {
         $order['specifications_total_count'] = 0;
         if( $order_specifications ) {
             $start = 1;
+            $real_start = 1;
             foreach( $order_specifications as $k => $v ) {
                 $end = $start + $v['count'] - 1;
                 $order_specifications[$k]['no'] = $start.'-'.$end;
@@ -211,17 +212,31 @@ class ClientorderAction extends CommonContentAction {
                 $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']);
                 $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']);
                 $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
-                $order_specifications[$k]['real_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
+                $order_specifications[$k]['calculate_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
                 $order['specifications_total_weight'] += $v['weight'] * $v['count'];
                 $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
                 $order['specifications_total_count'] += $v['count'];
-                $order['specifications_calculate_weight'] += $order_specifications[$k]['real_weight'] * $v['count'];
+                $order['specifications_calculate_weight'] += $order_specifications[$k]['calculate_weight'] * $v['count'];
                 $order_specifications[$k]['rowspan'] = count($v['detail']);
                 $start = $end + 1;
-//                var_dump($order_specifications[$k]['detail']);exit;
+                //real
+                $real_end = $real_start + $v['real_count'] - 1;
+                $order_specifications[$k]['real_no'] = $real_start.'-'.$real_end;
+                $order_specifications[$k]['real_weight'] = sprintf('%.2f', $v['real_weight']);
+                $order_specifications[$k]['real_length'] = sprintf('%.2f', $v['real_length']);
+                $order_specifications[$k]['real_width'] = sprintf('%.2f', $v['real_width']);
+                $order_specifications[$k]['real_height'] = sprintf('%.2f', $v['real_height']);
+                $order_specifications[$k]['real_rate'] = ($v['real_height'] * $v['real_length'] * $v['real_width'] / 5000);
+                $order_specifications[$k]['real_calculate_weight'] = $v['real_weight'] > $order_specifications[$k]['real_rate'] ? $v['real_weight'] : $order_specifications[$k]['real_rate'];
+                $order['real_specifications_total_weight'] += $v['real_weight'] * $v['real_count'];
+                $order['real_specifications_total_rate'] += $order_specifications[$k]['real_rate'] * $v['real_count'];
+                $order['real_specifications_total_count'] += $v['real_count'];
+                $order['real_specifications_calculate_weight'] += $order_specifications[$k]['real_calculate_weight'] * $v['real_count'];
+                $order_specifications[$k]['rowspan'] = count($v['detail']);
+                $real_start = $real_end + 1;
             }
         }
-
+//        var_dump($order_specifications);exit;
         $order_log = M('ClientOrderLog')
             ->alias('l')
             ->field('l.created_at, l.content, c.full_name as client_name, a.realname as operator_name, l.type')
@@ -612,39 +627,20 @@ class ClientorderAction extends CommonContentAction {
         if( empty($order) ) {
             $this->error('订单不存在');
         }
-        if( !($order['exam_status'] == 1 && $order['express_status'] == 0) ) {
-            $this->error('当前订单不是待发货状态');
+        if( !($order['pay_status'] == 1) ) {
+            $this->error('当前订单未付款，无法编辑发货信息');
         }
-
+//        var_dump($_POST);exit;
         $express_type_id = I('express_type_id', 0, 'intval');
         $express_order_num = I('express_order_num', '', 'trim');
+        $customs_broker = I('customs_broker', '', 'trim');
+        $exit_end = I('exit_end', '', 'trim');
         $invoice_num = I('invoice_num', '', 'trim');
-        $services_type = I('services_type', '', 'trim');
-        $shipment_reference = I('shipment_reference', '', 'trim');
-        $exporter_code = I('exporter_code', '', 'trim');
-//        $receiver_code = I('receiver_code', '', 'trim');
-//        $price_terms = I('price_terms', '', 'trim');
-//        $tariff_payment = I('tariff_payment', '', 'trim');
-        $declaration_of_power_attorney = I('declaration_of_power_attorney', '', 'trim');
-        $settlement = I('settlement', '', 'trim');
-        $mode_of_transportation = I('mode_of_transportation', '', 'trim');
-//        $export_nature = I('export_nature', '', 'trim');
-        $contract_num = I('contract_num', '', 'trim');
-        $order_detail = $_POST['detail'];
+        $obl = I('obl', '', 'trim');
+        $awb = I('awb', '', 'trim');
         $delivery = I('delivery', 0, 'intval');
         $delivery = $delivery == 1 ? 1 : 0;
-
-        if( empty($invoice_num) ) {
-            $this->error('请输入发票号码');
-        }
-
-        if( empty($services_type) ) {
-            $this->error('请输入服务类型');
-        }
-        if( empty($shipment_reference) ) {
-            $this->error('请输入装运参考');
-        }
-
+        $specifications = $_POST['specifications'];
 
         $express_type_exists = M('ExpressType')->where(['id' => $express_type_id])->find();
         if( empty($express_type_exists) ) {
@@ -653,54 +649,52 @@ class ClientorderAction extends CommonContentAction {
         if( empty($express_order_num) ) {
             $this->error('请输入转运单号');
         }
-        if( empty($exporter_code) ) {
-            $this->error('请输入出口商代码');
-        }
-//        if( empty($receiver_code) ) {
-//            $this->error('请输入进口商代码');
-//        }
-//        if( empty($price_terms) ) {
-//            $this->error('请输入价格条款');
-//        }
-//        if( empty($tariff_payment) ) {
-//            $this->error('请输入关税支付');
-//        }
-        if( empty($declaration_of_power_attorney) ) {
-            $this->error('请输入相关委托书');
-        }
-        if( empty($settlement) ) {
-            $this->error('请输入结汇方式');
-        }
-        if( empty($mode_of_transportation) ) {
-            $this->error('请输入运输方式');
+
+        if( empty($customs_broker) ) {
+            $this->error('请输入报关员');
         }
 
-//        if( empty($export_nature) ) {
-//            $this->error('请输入出口性质');
-//        }
-
-        if( empty($contract_num) ) {
-            $this->error('请输入合同号');
+        if( empty($exit_end) ) {
+            $this->error('请输入出口端');
         }
 
-        if( !is_array($order_detail) ) {
+        if( empty($invoice_num) ) {
+            $this->error('请输入发票号码');
+        }
+
+        if( $order['express_type'] == 'air' ) {
+            if( empty($awb) ) {
+                $this->error('请输入空运提单号');
+            }
+        }
+
+        if( $order['express_type'] == 'sea shipping' ) {
+            if( empty($obl) ) {
+                $this->error('请输入海运提单号');
+            }
+        }
+
+        if( !is_array($specifications) ) {
             $this->error('参数错误');
         }
-        foreach( $order_detail as $detail ) {
-            if( !is_array($detail) ) {
+        foreach( $specifications as $s ) {
+            if( !is_array($s) ) {
                 $this->error('参数错误');
             }
-            if( !isset($detail['weighting_weight']) || floatval($detail['weighting_weight']) < 0 ) {
-                $this->error('请输入过磅重量');
+            if( !isset($s['real_weight']) || floatval($s['real_weight']) < 0 ) {
+                $this->error('请输入重量');
             }
-            if( !isset($detail['cubic_of_volume']) || floatval($detail['cubic_of_volume']) < 0 ) {
-                $this->error('请输入材积立方数');
+            if( !isset($s['real_length']) || floatval($s['real_length']) < 0 ) {
+                $this->error('请输入长度');
             }
-            if( !isset($detail['box']) || floatval($detail['box']) < 0 ) {
-                $this->error('请输入装箱数');
+            if( !isset($s['real_width']) || floatval($s['real_width']) < 0 ) {
+                $this->error('请输入宽度');
             }
-            if( !isset($detail['box_number']) || floatval($detail['box_number']) < 0 ) {
-                $this->error('请输入每箱数量');
+            if( !isset($s['real_height']) || floatval($s['real_height']) < 0 ) {
+                $this->error('请输入高度');
+            }
+            if( !isset($s['real_count']) || floatval($s['real_count']) < 0 ) {
+                $this->error('请输入箱数');
             }
         }
         $data = [
@@ -708,45 +702,41 @@ class ClientorderAction extends CommonContentAction {
             'express_type' => $express_type_exists['type'],
             'express_type_name' => $express_type_exists['name'],
             'express_order_num' => $express_order_num,
+            'customs_broker' => $customs_broker,
+            'exit_end' => $exit_end,
             'invoice_num' => $invoice_num,
-            'services_type' => $services_type,
-            'shipment_reference' => $shipment_reference,
-            'exporter_code' => $exporter_code,
-            'receiver_code' => $receiver_code,
-            'price_terms' => $price_terms,
-            'tariff_payment' => $tariff_payment,
-            'declaration_of_power_attorney' => $declaration_of_power_attorney,
-            'settlement' => $settlement,
-            'mode_of_transportation' => $mode_of_transportation,
-            'export_nature' => $export_nature,
-            'contract_num' => $contract_num,
+            'awb' => $awb,
+            'obl' => $obl,
         ];
         if( $delivery == 1 ) {
             $data['express_status'] = 1;
             $data['express_time'] = date('Y-m-d H:i:s', time());
             $msg = '发货成功';
+            $log_content = '发货'.$express_type_exists['name'];
         } else {
             $msg = '装箱信息已保存';
+            $log_content = '编辑装箱信息';
         }
         //事务开始
         $model = new Model;
         $transaction = true;
         $model->startTrans();
 
-        $result = M('ClientOrder')->where(['id' => $id, 'express_status' => 0])->save($data);
+        $result = M('ClientOrder')->where(['id' => $id])->save($data);
         if( !is_numeric($result) ) {
             $transaction = false;
         }
 
         if( $transaction ) {
-            foreach( $order_detail as $k => $v ) {
+            foreach( $specifications as $k => $v ) {
                 $detail_data = [
-                    'weighting_weight' => floatval($v['weighting_weight']),
-                    'cubic_of_volume' => floatval($v['cubic_of_volume']),
-                    'box' => intval($v['box']),
-                    'box_number' => intval($v['box_number']),
+                    'real_weight' => floatval($v['real_weight']),
+                    'real_length' => floatval($v['real_length']),
+                    'real_width' => floatval($v['real_width']),
+                    'real_height' => floatval($v['real_height']),
+                    'real_count' => intval($v['real_count']),
                 ];
-                $result = M('ClientOrderDetail')->where(['id' => intval($k), 'order_num' => $order['order_num']])->save($detail_data);
+                $result = M('ClientOrderSpecifications')->where(['id' => intval($k), 'order_num' => $order['order_num']])->save($detail_data);
                 if( !is_numeric($result) ) {
                     $transaction = false;
                     break;
@@ -756,18 +746,16 @@ class ClientorderAction extends CommonContentAction {
 
         if( $transaction ) {
             $model->commit();
-            if( $delivery ) {
-                //插入操作日志
-                $log_data = [
-                    'order_num' => $order['order_num'],
-                    'order_id' => $order['id'],
-                    'operator_id' => session('yang_adm_uid'),
-                    'type' => 2,
-                    'content' => '订单发货',
-                ];
-                M('ClientOrderLog')->add($log_data);
-            }
-            $this->success($msg, U('Clientorder/index'));
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
+                'content' => $log_content,
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->success($msg, U('Clientorder/detail', ['id' => $id]));
         } else {
             $model->rollback();
             $this->error('系统繁忙，请稍后重试');

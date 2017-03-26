@@ -265,28 +265,33 @@
     </div>
     <if condition="$order.exam_status eq 0">
     <div class="form_b">
-        <input type="button" class="btn_blue" id="fee" onclick="show_input_fee_form()" value="录入费用">
-        <input type="button" class="btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/doExam',array('id' => $order['id']), '')}', '确定该订单通过审核，并返回客户确认吗？')" value="返回客户确认">
-        <input type="button" class="btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $order['id']), '')}';" value="驳 回">
+        <input type="button" class="btn btn_blue" id="fee" onclick="show_input_fee_form()" value="录入费用">
+        <input type="button" class="btn btn_blue" id="agree" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/doExam',array('id' => $order['id']), '')}', '确定该订单通过审核，并返回客户确认吗？')" value="返回客户确认">
+        <input type="button" class="btn btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $order['id']), '')}';" value="驳 回">
     </div>
     </if>
     <if condition="$order.ensure_status eq 1">
     <div class="form_b">
-        <input type="button" class="btn_blue" id="" onclick="show_input_fee_disabled_form()" value="查看费用">
+        <input type="button" class="btn btn_blue" id="" onclick="show_input_fee_disabled_form()" value="查看费用">
         <if condition="$order.pay_status eq 0">
-            <input type="button" class="btn_blue" id="receive_money" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/pay',array('id' => $order['id']), '')}', '确定该订单已收款吗？')" value="已收款">
+            <input type="button" class="btn btn_blue" id="receive_money" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/pay',array('id' => $order['id']), '')}', '确定该订单已收款吗？')" value="已收款">
         </if>
         <if condition="$order.pay_status eq 1">
-            <input type="button" class="btn_blue" id="delivery" onclick="open_delivery_form()" value="发 货">
+            <if condition="$order.express_status eq 1">
+                <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="装箱信息"/>
+                <input type="button" class="btn btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
+                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/transfer',array('id' => $order['id']), '')}" class="btn btn_blue" id="transfer">交接单</a>
+                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $order['id']), '')}" class="btn btn_blue" id="packing" >装箱单</a>
+                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $order['id']), '')}" class="btn btn_blue" id="invoice" >发票</a>
+                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/express',array('id' => $order['id']), '')}" class="btn btn_blue" id="express" >快递单</a>
+            <else />
+            <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="发 货"/>
+            </if>
+
         </if>
     </div>
     </if>
 
-    <if condition="$order.express_status eq 1">
-    <div class="form_b">
-        <input type="button" class="btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
-    </div>
-    </if>
     <div class="list">
         <div class="">订单日志</div><br />
         <div>
@@ -423,7 +428,7 @@
         </div>
         <div class="box_c_item">
             <label class="l_title"></label>
-            <button class="btn btn_blue" type="button" id="input_fee" onclick="input_order_fee()">保存</button>
+            <button class="btn btn_blue"" type="button" id="input_fee" onclick="input_order_fee()">保存</button>
             <div class="clear"></div>
         </div>
     </fieldset>
@@ -549,12 +554,12 @@
         </div>
         <div class="box_c_item">
             <label class="l_title"></label>
-            <button class="btn btn_blue" type="button" id="" onclick="javascript:layer.close(tips);">关闭</button>
+            <button class="btn btn_blue"" type="button" id="" onclick="javascript:layer.close(tips);">关闭</button>
             <div class="clear"></div>
         </div>
     </fieldset>
 </form>
-<form action="" method="post" id="delivery_form" class="box_c hide">
+<form action="/Manage/Clientorder/doDelivery" method="post" id="delivery_form" class="box_c hide">
     <fieldset>
         <div class="box_c_item">
             <div class="fl">
@@ -600,7 +605,7 @@
         <div class="box_c_item">
             <div class="fl">
                 <label class="l_title">空运提单号：</label>
-                <input class="text_input w300" type="text" value="{$order.invoice_num}" name="invoice_num" id="" placeholder="请输入空运提单号">
+                <input class="text_input w300" type="text" value="{$order.awb}" name="awb" id="awb" placeholder="请输入空运提单号">
             </div>
             <div class="clear"></div>
         </div>
@@ -609,7 +614,7 @@
         <div class="box_c_item">
             <div class="fl">
                 <label class="l_title">海运提单号：</label>
-                <input class="text_input w300" type="text" value="{$order.invoice_num}" name="invoice_num" id="" placeholder="请输入海运提单号">
+                <input class="text_input w300" type="text" value="{$order.obl}" name="obl" id="obl" placeholder="请输入海运提单号">
             </div>
             <div class="clear"></div>
         </div>
@@ -617,7 +622,15 @@
         <div class="box_c box_c_reset">
             <div style="width: 95%; padding: 20px;">
                 <div class="box_t box_t_bottom">
-                    <h3 class="fl">出货重量</h3>
+                    <h3 class="fl">出货重量
+                    <span id="delivery_weight">:
+                        <if condition="$order.express_type_id">
+                        {$order.real_specifications_calculate_weight}
+                        <else />
+                        {$order.specifications_calculate_weight}
+                        </if>
+                    </span>
+                    </h3>
                     <!--<button id="" class="btn btn_add fr" type="button">添加行</button>-->
                     <div class="clear"></div>
                 </div>
@@ -634,26 +647,48 @@
                 </tr>
                 </thead>
                 <tbody id="specifications-content">
-                <if condition="$order.delivery_status eq 0">
+                <if condition="$order.express_type_id eq 0">
                 <foreach name="order_specifications" item="v">
                 <tr>
                     <td>{$v.no}</td>
-                    <td><input value="{$v.weight}" name="real_weight[{$v.id}]" class="real_weight text_input w50" type="text" /></td>
-                    <td><input value="{$v.length}" name="real_length[{$v.id}]" class="real_length text_input w50" type="text" /></td>
-                    <td><input value="{$v.width}" name="real_width[{$v.id}]" class="real_width text_input w50" type="text" /></td>
-                    <td><input value="{$v.height}" name="real_height[{$v.id}]" class="real_height text_input w50" type="text" /></td>
-                    <td><input value="{$v.rate}" name="real_rate[{$v.id}]" class="real_rate text_input w50" type="text" /></td>
-                    <td><input value="{$v.count}" name="real_count[{$v.id}]" class="real_count text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.weight}" name="specifications[{$v.id}][real_weight]" class="real_weight text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.length}" name="specifications[{$v.id}][real_length]" class="real_length text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.width}" name="specifications[{$v.id}][real_width]" class="real_width text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.height}" name="specifications[{$v.id}][real_height]" class="real_height text_input w50" type="text" /></td>
+                    <td><input readonly value="{$v.rate}" name="specifications[{$v.id}][real_rate]" class="real_rate text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.count}" name="specifications[{$v.id}][real_count]" class="real_count text_input w50" type="text" /></td>
                 </tr>
                 </foreach>
                 <tr>
                     <th>合计</th>
-                    <td>{$order.specifications_total_weight}</td>
+                    <td id="total_weight">{$order.specifications_total_weight}</td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>{$order.specifications_total_rate}</td>
-                    <td>{$order.specifications_total_count}</td>
+                    <td id="total_rate">{$order.specifications_total_rate}</td>
+                    <td id="total_count">{$order.specifications_total_count}</td>
+                </tr>
+                </if>
+                <if condition="$order.express_type_id gt 0">
+                <foreach name="order_specifications" item="v">
+                <tr>
+                    <td>{$v.real_no}</td>
+                    <td><input onchange="change_real_count(this)" value="{$v.real_weight}" name="specifications[{$v.id}][real_weight]" class="real_weight text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.real_length}" name="specifications[{$v.id}][real_length]" class="real_length text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.real_width}" name="specifications[{$v.id}][real_width]" class="real_width text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.real_height}" name="specifications[{$v.id}][real_height]" class="real_height text_input w50" type="text" /></td>
+                    <td><input readonly value="{$v.real_rate}" name="specifications[{$v.id}][real_rate]" class="real_rate text_input w50" type="text" /></td>
+                    <td><input onchange="change_real_count(this)" value="{$v.real_count}" name="specifications[{$v.id}][real_count]" class="real_count text_input w50" type="text" /></td>
+                </tr>
+                </foreach>
+                <tr>
+                    <th>合计</th>
+                    <td id="total_weight">{$order.real_specifications_total_weight}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td id="total_rate">{$order.real_specifications_total_rate}</td>
+                    <td id="total_count">{$order.real_specifications_total_count}</td>
                 </tr>
                 </if>
                 </tbody>
@@ -663,7 +698,12 @@
         </div>
         <div class="box_c_item">
             <label class="l_title"></label>
-            <button class="btn btn_blue" type="button" id="" onclick="javascript:layer.close(tips);">确认</button>
+            <if condition="$order.express_status eq 0">
+            <button class="btn btn_blue"" type="button" id="" onclick="submit_delivery_form(1)">保存并发货</button>
+            </if>
+            <button class="btn btn_blue"" type="button" id="" onclick="submit_delivery_form(0)">保存</button>
+            <input type="hidden" name="id" value="{$order.id}" />
+            <input type="hidden" name="delivery" id="is_delivery" value="" />
             <div class="clear"></div>
         </div>
     </fieldset>
@@ -685,8 +725,51 @@
         });
     }
 
-    function change_real_count() {
+    function change_real_count(obj) {
+        var result = $(obj).val();
+        if( !result ) {
+            alert('不能为空');
+            return;
+        }
+        var start = 1;
+        var end = 1;
+        var total_weight = 0;
+        var total_rate = 0;
+        var total_count = 0;
+        $('.real_count').each(function(k, v) {
+            var value = $(this).val();
+            if( k == 0 ) {
+                start = 1;
+                end = value;
+            } else {
+                start = end;
+                end = start + value;
+            }
+            var no = start + '-' + end;
+            var weight = parseFloat($('.real_weight:eq(' + k + ')').val());
+            var length = parseFloat($('.real_length:eq(' + k + ')').val());
+            var width = parseFloat($('.real_width:eq(' + k + ')').val());
+            var height = parseFloat($('.real_height:eq(' + k + ')').val());
+            var rate = parseFloat(length * width * height / 5000);
+            total_weight += parseFloat(weight) * value;
+            total_rate += rate * value;
+            total_count += parseInt(value);
+            $(this).parent().siblings().first().text(no);
+        });
+        $('#total_weight').text(total_weight);
+        $('#total_rate').text(total_rate);
+        $('#total_count').text(total_count);
+        $('#delivery_weight').empty();
+        if( total_weight > total_rate ) {
+            $('#delivery_weight').text(':' + total_weight);
+        } else {
+            $('#delivery_weight').text(':' + total_rate);
+        }
+    }
 
+    function submit_delivery_form(delivery) {
+        $('#is_delivery').val(delivery);
+        $('#delivery_form').submit();
     }
 
     function show_input_fee_form() {
