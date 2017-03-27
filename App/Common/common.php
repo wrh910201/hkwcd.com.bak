@@ -1194,4 +1194,11 @@ function _order_status($order)
     return $status;
 }
 
+function packageTypeFormatter($type) {
+    switch($type) {
+        case 1: return '文件';
+        case 2: return '包裹';
+    }
+}
+
 ?>

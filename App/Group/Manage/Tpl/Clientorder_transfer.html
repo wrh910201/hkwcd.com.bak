@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>香港华度货运有限公司交接清单</title>
+    <script type="text/javascript" src="/Public/wcd56/usercenter/js/jquery.js"></script>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="/Public/wcd56/images/favicon.ico" type="image/x-icon">
+    <link href="/Public/wcd56/usercenter/css/print_table.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/Public/wcd56/usercenter/layer/layer.js"></script>
+    <style>
+        .delivery_notice_con .transfer_detail_table th {
+            border: none;
+            border-bottom: 1px solid #000;
+        }
+        .delivery_notice_con .transfer_detail_table td {
+            border: none;
+        }
+        .delivery_notice_con .transfer_detail_table tr:last{
+            border: none;
+        }
+        .delivery_notice_con .transfer_detail_table_total td {
+            border: none;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="delivery_notice_table" style="width: 880px">
+    <div class="delivery_notice_header" style="width: 780px;">
+        <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
+        <div class="delivery_notice_title" style="text-align: left;">
+            <h4 style="font-size: 18px;font-weight: bold;">香港华度货运有限公司HTTP://WWW.HKWCD.COM<br />&nbsp;HONG KONG WCD EXPRESS COMPANY LIMITED</h4>
+            <p style="font-size: 15px">交接清单</p>
+        </div>
+        <div class="clear"></div>
+        <div  style="position: absolute; top: 10px; left:800px;float: right; width: 120px; height: 120px;">
+            <img style="width: 120px; height: 120px;" src="/Public/wcd56/images/qrcode.jpg"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="delivery_notice_info">
+        <table style="width: 100%">
+            <tbody>
+            <tr>
+                <td style="width: 33%; font-size: 13px">打印日期:{:date('Y-m-d', time())}</td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 13px"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <div class="delivery_notice_info">
+        <table style="width: 100%">
+            <tbody>
+            <tr>
+                <td style="width: 33%; font-size: 13px">客户名称:{$client.full_name}</td>
+                <td style="width: 33%; font-size: 13px">结算方式:{$order_fee.settlement_method}</td>
+                <td style="width: 33%;"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <div class="delivery_notice_con">
+        <table style="width:100%" class="transfer_detail_table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>运单号码</th>
+                    <th>箱数</th>
+                    <th>类型</th>
+                    <th>实重</th>
+                    <th>体积重</th>
+                    <th>计费重</th>
+                    <th>国家</th>
+                    <th>发货渠道</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+            <foreach name="order_list" item="v" key="k">
+                <tr>
+                    <td class="transfer_detail_table_item">{$k + 1}</td>
+                    <td class="transfer_detail_table_item">{$v.order_num}</td>
+                    <td class="transfer_detail_table_item">{$v.total_count}</td>
+                    <td class="transfer_detail_table_item">{$v.package_type|packageTypeFormatter}</td>
+                    <td class="transfer_detail_table_item">{$v.total_weight}KG</td>
+                    <td class="transfer_detail_table_item">{$v.total_rate}KG</td>
+                    <td class="transfer_detail_table_item">{$v.delivery_weight}KG</td>
+                    <td class="transfer_detail_table_item">{$v.delivery_country_name}/{$v.delivery_country_en_name}</td>
+                    <td class="transfer_detail_table_item">{$v.channel_name}/{$v.channel_en_name}</td>
+                    <td class="transfer_detail_table_item">{$v.remark}</td>
+                </tr>
+            </foreach>
+            <for start="$k" end="$detail_end">
+                <tr>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                    <td class="transfer_detail_table_item"></td>
+                </tr>
+            </for>
+            <tr class="transfer_detail_table_total">
+                <td>总计：</td>
+                <td>票数：{$order_count}</td>
+                <td></td>
+                <td>箱数：{$order_total_count}</td>
+                <td></td>
+                <td>包裹: {$order_package_total_count}</td>
+                <td></td>
+                <td>文件: {$order_document_total_count}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="1" style="text-align: right">寄件公司确认:</td>
+                <td colspan="2" style="border-bottom: 1px solid #000"></td>
+                <td colspan="1" style="text-align: right">收货员:</td>
+                <td style="border-bottom: 1px solid #000"></td>
+                <td colspan="2" ></td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            <tr>
+                <td colspan="10" style="text-align: left">
+                    &nbsp;注一：本交接清单经双方签字确认后，作为交货和结算费用的依据。
+                </td>
+            </tr>
+            <tr>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+                <td class="transfer_detail_table_item"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_con">
+        <table class="transfer_detail_table_total">
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="delivery_notice_info">
+        <table>
+            <tbody>
+            <tr>
+                <td style="width: 33%; font-size: 15px"></td>
+                <td style="width: 33%;"></td>
+                <td style="width: 33%; font-size: 15px"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clear"></div>
+    <div class="operate">
+        <button type="button" id="print_button" class="btn"><i class="icon">&#xe61f;</i>&nbsp;打印</button>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#print_button").click(function(){
+        $(".operate").hide();
+        window.print();
+        $(".operate").show();
+
+        $.post("delivery_notice.php", { "opera":"confirm", "delivery_notice_sn":'{$delivery_notice.delivery_notice_sn}' }, print_handler, 'json');
+    });
+
+    function print_handler(response) {
+        if( response.errno == 0 ) {
+
+        } else {
+
+        }
+    }
+</script>
+</body>
+</html>

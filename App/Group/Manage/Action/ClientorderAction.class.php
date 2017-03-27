@@ -726,6 +726,12 @@ class ClientorderAction extends CommonContentAction {
         if( !is_numeric($result) ) {
             $transaction = false;
         }
+        $order_data = [
+            'total_weight' => 0,
+            'total_rate' => 0,
+            'delivery_weight' => 0,
+            'total_count' => 0,
+        ];
 
         if( $transaction ) {
             foreach( $specifications as $k => $v ) {
@@ -736,11 +742,23 @@ class ClientorderAction extends CommonContentAction {
                     'real_height' => floatval($v['real_height']),
                     'real_count' => intval($v['real_count']),
                 ];
+                $order_data['total_weight'] += floatval($v['real_weight']) * intval($v['real_count']);
+                $order_data['total_rate'] += floatval($v['real_length']) * floatval($v['real_width']) * floatval($v['real_height']) / 5000 * intval($v['real_count']);
+                $order_data['delivery_weight'] += $order_data['total_weight'] > $order_data['total_rate'] ? $order_data['total_weight'] : $order_data['total_rate'];
+                $order_data['total_count'] += intval($v['real_count']);
+
                 $result = M('ClientOrderSpecifications')->where(['id' => intval($k), 'order_num' => $order['order_num']])->save($detail_data);
                 if( !is_numeric($result) ) {
                     $transaction = false;
                     break;
                 }
+            }
+        }
+
+        if( $transaction ) {
+            $result = M('ClientOrder')->where(['id' => $id])->save($order_data);
+            if( !is_numeric($result) ) {
+                $transaction = false;
             }
         }
 
@@ -841,6 +859,58 @@ class ClientorderAction extends CommonContentAction {
         $this->display();
     }
 
+    public function transfer() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印装箱单');
+        }
+
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $order['id']])->find();
+
+        $today_time = strtotime(date('Y-m-d', strtotime($order['add_time'])));
+        $tomorrow_time = $today_time + 3600 * 24;
+        $start_time = date('Y-m-d H:i:s', $today_time);
+        $end_time = date('Y-m-d H:i:s', $tomorrow_time);
+        $map = [
+            'add_time' => ['between', [$start_time, $end_time]],
+            'express_status' => 1,
+        ];
+
+        $client = M('Client')->where(['id' => $order['client_id']])->find();
+
+        $order_package_total_count = 0;
+        $order_document_total_count = 0;
+        $order_total_count = 0;
+        $order_list = M('ClientOrder')->where($map)->select();
+        if( $order_list ) {
+            foreach( $order_list as $k => $v ) {
+                if( $v['package_type'] == 1 ) {
+                    $order_document_total_count++;
+                }
+                if( $v['package_type'] == 2 ) {
+                    $order_package_total_count++;
+                }
+                $order_total_count += $v['total_count'];
+            }
+        }
+
+        $order_count = count($order_list);
+        $detail_end = $order_count > 3 ? $order_count : 3;
+
+        $this->assign('order_fee', $order_fee);
+        $this->assign('client', $client);
+        $this->assign('order_list', $order_list);
+        $this->assign('order_count', $order_count);
+        $this->assign('detail_end', $detail_end);
+        $this->assign('order_total_count', $order_total_count);
+        $this->assign('order_package_total_count', $order_package_total_count);
+        $this->assign('order_document_total_count', $order_document_total_count);
+        $this->display();
+    }
 
     public function ajaxEdit() {
 
