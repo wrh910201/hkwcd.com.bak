@@ -866,7 +866,7 @@ class ClientorderAction extends CommonContentAction {
             $this->error('订单不存在');
         }
         if( !($order['express_status'] == 1) ) {
-            $this->error('当前订单不能打印装箱单');
+            $this->error('当前订单不能打印交接清单');
         }
 
         $order_fee = M('ClientOrderFee')->where(['order_id' => $order['id']])->find();
@@ -905,12 +905,102 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('client', $client);
         $this->assign('order_list', $order_list);
         $this->assign('order_count', $order_count);
+        $this->assign('detail_start', $order_count);
         $this->assign('detail_end', $detail_end);
         $this->assign('order_total_count', $order_total_count);
         $this->assign('order_package_total_count', $order_package_total_count);
         $this->assign('order_document_total_count', $order_document_total_count);
         $this->display();
     }
+
+    public function express() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印快递单');
+        }
+
+        if( $order['receive_mobile'] && $order['receive_phone'] ) {
+            $order['receive_contact'] = $order['receive_mobile'].'、'.$order['receive_phone'];
+        } else {
+            if( $order['receive_mobile'] ) {
+                $order['receive_contact'] = $order['receive_mobile'];
+            }
+            if( $order['receive_phone'] ) {
+                $order['receive_contact'] = $order['receive_phone'];
+            }
+        }
+        $order_detail = M('ClientOrderDetail')
+            ->where(['order_num' => $order['order_num']])
+            ->select();
+        $order['detail_declared_total'] = 0;
+        if( $order_detail ){
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]['single_declared'] = sprintf('%.2f', $v['single_declared']);
+                $order_detail[$k]['declared'] = sprintf('%.2f', $v['single_declared'] * $v['count']);
+                $order['detail_declared_total'] += $order_detail[$k]['declared'];
+            }
+        }
+        $order['detail_declared_total'] = sprintf('%.2f', $order['detail_declared_total']);
+
+        $this->assign('detail_start', count($order_detail));
+        $this->assign('detail_end', 10);
+        $this->assign('order_detail', $order_detail);
+        $this->assign('order', $order);
+        $this->display();
+    }
+
+    public function createUPCA() {
+        vendor('Barcode.class.BCGFontFile');
+        vendor('Barcode.class.BCGColor');
+        vendor('Barcode.class.BCGDrawing');
+        vendor('Barcode.class.BCGcode39');
+// Loading Font
+        $font = new BCGFontFile(THINK_PATH.'/Extend/Vendor/Barcode/font/Arial.ttf', 18);
+
+// Don't forget to sanitize user inputs
+        $text = isset($_GET['order_num']) ? $_GET['order_num'] : 'nothing';
+
+// The arguments are R, G, B for color.
+        $color_black = new BCGColor(0, 0, 0);
+        $color_white = new BCGColor(255, 255, 255);
+
+        $drawException = null;
+        try {
+            $code = new BCGcode39();
+            $code->setScale(2); // Resolution
+            $code->setThickness(30); // Thickness
+            $code->setForegroundColor($color_black); // Color of bars
+            $code->setBackgroundColor($color_white); // Color of spaces
+            $code->setFont($font); // Font (or 0)
+            $code->parse($text); // Text
+        } catch(Exception $exception) {
+            $drawException = $exception;
+        }
+
+        /* Here is the list of the arguments
+        1 - Filename (empty : display on screen)
+        2 - Background color */
+        $drawing = new BCGDrawing('', $color_white);
+        if($drawException) {
+            $drawing->drawException($drawException);
+        } else {
+            $drawing->setBarcode($code);
+            $drawing->draw();
+        }
+
+// Header that says it is an image (remove it if you save the barcode to a file)
+        header('Content-Type: image/png');
+        header('Content-Disposition: inline; filename="barcode.png"');
+
+// Draw (or save) the image into PNG format.
+        $drawing->finish(BCGDrawing::IMG_FORMAT_PNG);
+
+    }
+
 
     public function ajaxEdit() {
 

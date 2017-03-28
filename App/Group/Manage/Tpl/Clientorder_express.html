@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>香港华度货运有限公司快递单</title>
+    <script type="text/javascript" src="/Public/wcd56/usercenter/js/jquery.js"></script>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="/Public/wcd56/images/favicon.ico" type="image/x-icon">
+    <link href="/Public/wcd56/usercenter/css/print_table.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/Public/wcd56/usercenter/layer/layer.js"></script>
+    <style>
+        .express_detail_con .express_detail_table tr {
+            height: 22px;
+            min-height: 20px;
+            line-height: 22px;
+            font-size: 14px;
+            border: 1px solid #000;
+            word-break : break-all;
+        }
+        .express_detail_con .express_detail_table td {
+            height: 22px;
+            min-height: 20px;
+            line-height: 22px;
+            font-size: 12px;
+            border: 1px solid #000;
+            word-break : break-all;
+        }
+    </style>
+</head>
+<body>
+<div class="delivery_notice_table" style="width: 480px; height: 700px; padding: 5px 2px;">
+    <div class="delivery_notice_header" style="width: 480px;">
+        <div class="delivery_notice_title" style="text-align: left;float: left">
+            <h4 style="font-size: 24px;font-weight: bold;">香港华度货运有限公司<br />
+                <p style="font-size: 13px;">HONG KONG WCD EXPRESS COMPANY LIMITED</p>
+                <p style="line-height: 10px;font-size: 8px; text-align: center; margin: 0 auto;">http://www.hkwcd.com</p>
+            </h4>
+        </div>
+        <div  style="float: left">
+            <img style="width: 200px; height: 60px;" src="/Manage/Clientorder/createUPCA/order_num/{$order.order_num}" />
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="express_detail_con" style="width: 480px">
+        <table style="width:480px;table-layout:fixed" class="express_detail_table">
+            <tr>
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;公司名称/Company Name:<br />&nbsp;{$order.receive_company_name}</td>
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;收件人/Attn:<br />&nbsp;{$order.receive_addressee}</td>
+            </tr>
+            <tr style="border: 1px solid #000">
+                <td colspan="12" style="border:none;text-align: left">&nbsp;地址/Add:(P O BOX address cannot be delivered)<br />&nbsp;{$order.receive_detail_address}</td>
+            </tr>
+            <tr>
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;国家/Country:<br />&nbsp;{$order.receive_country_name}/{$order.receive_country_en_name}</td>
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;城市/City:<br />&nbsp;{$order.receive_city}</td>
+            </tr>
+            <tr style="border: 1px solid #000">
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;电话/Tel:<br />&nbsp;{$order.receive_contact}</td>
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;邮编/Zip:<br />&nbsp;{$order.receive_postal_code}</td>
+            </tr>
+            <tr style="border: 1px solid #000">
+                <td colspan="12" style="border:none;text-align: left">&nbsp;运输方式/Mode of Transportation: &nbsp;{$order.mode_of_transportation} {$order.express_service}</td>
+            </tr>
+            <tr style="border: 1px solid #000">
+                <td colspan="3" style="width: 25%; border:none;text-align:left">&nbsp;重量/W.T:<br />&nbsp;{$order.delivery_weight}KG</td>
+                <td colspan="3" style="width: 25%; border:none;text-align:left">&nbsp;箱数/CTNS:<br />&nbsp;{$order.total_count}</td>
+                <td colspan="3" style="width: 25%; border:none;text-align:left">&nbsp;申报价值/ISF:<br />&nbsp;USD&nbsp;{$order.detail_declared_total}</td>
+                <td colspan="3" style="width: 25%; border:none;text-align:left">&nbsp;原产国/Origin:<br />&nbsp;&nbsp;{$order_detail[0]['origin']}</td>
+            </tr>
+            <tr style="border-left: 1px solid #000; border-right: 1px solid #000;">
+                <td colspan="6" style=" border:none;text-align:left">&nbsp;品名/Goods:</td>
+                <td colspan="3" style=" border:none;text-align:left">&nbsp;商品编码/HS CODE:</td>
+                <td colspan="3" style=" border:none;text-align:left">&nbsp;数量/Quantity:</td>
+            </tr>
+            <foreach name="order_detail" item="v" kye="k">
+            <tr style="border: none ;border-left: 1px solid #000; border-right: 1px solid #000;">
+                <td colspan="6" style=" border:none;text-align:left">&nbsp;{$v.product_name}/{$v.en_product_name}</td>
+                <td colspan="3" style=" border:none;text-align:center">&nbsp;{$v.goods_code}</td>
+                <td colspan="3" style=" border:none;text-align:center">&nbsp;{$v.count}&nbsp;{$v.unit}</td>
+            </tr>
+            </foreach>
+            <for start="$detail_start" end="$detail_end">
+                <tr style="border: none ;border-left: 1px solid #000; border-right: 1px solid #000;">
+                    <td colspan="6" style=" border:none;text-align:left">&nbsp;</td>
+                    <td colspan="3" style=" border:none;text-align:center">&nbsp;</td>
+                    <td colspan="3" style=" border:none;text-align:center">&nbsp;</td>
+                </tr>
+            </for>
+            <tr style="border: 1px solid #000; ">
+                <td colspan="12" style="width: 480px;border:none;text-align: left">&nbsp;发件公司/Shipper Company Name: &nbsp;{$order.delivery_company_name}</td>
+            </tr>
+            <tr style="border: 1px solid #000; min-height: 30px;">
+                <td colspan="12" style="border:none;text-align: left">&nbsp;出口原因/Reason Of Export: &nbsp;{$order.export_reason}</td>
+            </tr>
+            <tr style="border: 1px solid #000; min-height: 30px;">
+                <td colspan="12" style="border:none;text-align: left">&nbsp;备注/Remark: &nbsp;{$order.remark}</td>
+            </tr>
+            <tr style="border: none">
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;Signature:&nbsp;{$order.autograph}</td>
+                <td colspan="6" style="width: 50%; border:none;text-align:left">&nbsp;日期/Date:&nbsp;{:date('d/m/Y', time())}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="clear"></div>
+<div class="operate">
+    <button type="button" id="print_button" class="btn"><i class="icon">&#xe61f;</i>&nbsp;打印</button>
+</div>
+<script type="text/javascript">
+    $("#print_button").click(function(){
+        $(".operate").hide();
+        window.print();
+        $(".operate").show();
+
+    });
+</script>
+</body>
+</html>
