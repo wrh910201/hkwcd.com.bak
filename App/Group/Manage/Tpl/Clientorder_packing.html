@@ -18,15 +18,15 @@
             text-align: left;
             font-size: 10px;
             /*height: 30px;*/
-            height: 15px;
-            line-height: 15px;
+            /*height: 15px;*/
+            /*line-height: 15px;*/
         }
         .delivery_notice_con table td {
             text-align: left;
             padding-left: 3px;
-            font-size: 10px;
-            height: 15px;
-            line-height: 15px;
+            /*font-size: 10px;*/
+            /*height: 15px;*/
+            /*line-height: 15px;*/
         }
         .delivery_notice_title h3 {
             font-size: 20px;
@@ -64,11 +64,11 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司名称 / Company name<br />{$order.delivery_company}</td>
+                <td class="w340">公司名称 / Company name<br />{$order.receive_company}</td>
                 <td class="w340" colspan="2">快件号码 / Shipment No.<br />{$order.order_num}</td>
             </tr>
             <tr>
-                <td class="w340">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
+                <td class="w340">地址 / add:(PO BOX address cannot be delivered)<br />{$order.receive_detail_address}</td>
                 <td class="w170">发票号/ Invoice number<br />{$order.invoice_num}</td>
                 <td class="w170">合同号 / Contract No.<br />{$order.contract_num}</td>
             </tr>
@@ -91,7 +91,7 @@
             </tr>
             <tr>
                 <td class="w340">联系人 / Contact name<br />{$order.receive_addressee}</td>
-                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />{$order.mode_of_transportation}</td>
+                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />{$order.mode_of_transportation} {$order.express_service}</td>
             </tr>
             </tbody>
         </table>
