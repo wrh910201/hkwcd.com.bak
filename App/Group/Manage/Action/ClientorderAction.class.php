@@ -47,6 +47,17 @@ class ClientorderAction extends CommonContentAction {
             }
         }
 
+        $status = I('status', 'all', 'trim');
+        switch($status) {
+            case 'exam': $where['exam_status'] = 0;break;
+            case 'pay': $where['ensure_status'] = 1;$where['pay_status'] = 0;break;
+            case 'express':$where['ensure_status'] = 1;$where['pay_status'] = 1;$where['express_status'] = 0; break;
+            case 'receive': $where['ensure_status'] = 1;$where['pay_status'] = 1;$where['express_status'] = 1;$where['receive_status'] = 0;break;
+            case 'all': break;
+            default: break;
+        }
+
+
         $where['client_status'] = 1;
         //分页
         import('ORG.Util.Page');
@@ -86,6 +97,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function doExam() {
+        if( $this->hkwcd_admin['order_exam'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+            $this->error('您没有审核订单的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -267,6 +281,10 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function inputFee() {
+        if( $this->hkwcd_admin['order_pay'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+            $this->response['msg'] = '您没有订单收款的权限';
+            echo json_encode($this->response);
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -327,6 +345,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function exam() {
+        if( $this->hkwcd_admin['order_exam'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+            $this->error('您没有审核订单的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -368,6 +389,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function reject() {
+        if( $this->hkwcd_admin['order_exam'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+            $this->error('您没有审核订单的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -382,6 +406,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function doReject() {
+        if( $this->hkwcd_admin['order_exam'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+            $this->error('您没有审核订单的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();
         if( empty($order) ) {
@@ -564,6 +591,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function pay() {
+        if( $this->hkwcd_admin['order_exam'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+            $this->error('您没有订单收款的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
         if( empty($order) ) {
@@ -593,6 +623,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function delivery() {
+        if( $this->hkwcd_admin['order_express'] != 1 && $this->hkwcd_admin['order_express'] != 1 ) {
+            $this->error('您没有订单发货的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
         if( empty($order) ) {
@@ -622,6 +655,9 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function doDelivery() {
+        if( $this->hkwcd_admin['order_express'] != 1 && $this->hkwcd_admin['order_express'] != 1 ) {
+            $this->error('您没有订单发货的权限');
+        }
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
         if( empty($order) ) {

@@ -263,6 +263,23 @@
             </tr>
         </table>
     </div>
+    <if condition="$order.express_status eq 1">
+        <div class="list">
+            <div class="operate"></div>
+            <table width="100%">
+                <tr>
+                    <td></td>
+                    <td style="text-align: right">
+                        出货重量：{$order.real_specifications_calculate_weight}KG&nbsp;
+                        重量：{$order.real_specifications_total_weight}KG&nbsp;
+                        材积重：{$order.real_specifications_total_rate}KG&nbsp;
+                        箱数：{$order.real_specifications_total_count}&nbsp;
+                        计费：{$order_fee.total_fee}&nbsp;
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </if>
     <if condition="$order.exam_status eq 0">
     <div class="form_b">
         <input type="button" class="btn btn_blue" id="fee" onclick="show_input_fee_form()" value="录入费用">

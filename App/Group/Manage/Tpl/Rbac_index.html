@@ -64,10 +64,10 @@
                 <td>{$v.department_name}</td>
                 <td>{$v.post}</td>
                 <td>
-                    <if condition="$v.access eq 0">管理</if>
-                    <if condition="$v.access eq 1">审核</if>
-                    <if condition="$v.access eq 2">收款</if>
-                    <if condition="$v.access eq 3">发货</if>
+                    <if condition="$v.order_manage eq 1">&nbsp;管理</if>
+                    <if condition="$v.order_exam eq 1">&nbsp;审核</if>
+                    <if condition="$v.order_pay eq 1">&nbsp;收款</if>
+                    <if condition="$v.order_express eq 1">&nbsp;发货</if>
                 </td>
                 <td>{$v.loginip}</td>
                 <td>{$v.logintime|date='Y-m-d H:i:s',###}</td>

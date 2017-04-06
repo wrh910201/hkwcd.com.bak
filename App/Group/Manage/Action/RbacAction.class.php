@@ -572,7 +572,11 @@ class RbacAction extends CommonAction {
         $data['post'] = I('station', '', 'trim');
         $data['work_date'] = I('work_date', '', 'trim');
         $data['mobile'] = I('mobile', '', 'trim');
-        $data['access'] = I('access', '', 'trim');
+        $data['order_exam'] = I('order_exam', 0, 'intval');
+        $data['order_pay'] = I('order_pay', 0, 'intval');
+        $data['order_express'] = I('order_express', 0, 'intval');
+        $data['order_manage'] = I('order_manage', 0, 'intval');
+
         $data['islock'] = I('islock', 0, 'intval');
 
         //M验证
@@ -645,7 +649,10 @@ class RbacAction extends CommonAction {
         $data['post'] = I('station', '', 'trim');
         $data['work_date'] = I('work_date', '', 'trim');
         $data['mobile'] = I('mobile', '', 'trim');
-        $data['access'] = I('access', '', 'trim');
+        $data['order_exam'] = I('order_exam', 0, 'intval');
+        $data['order_pay'] = I('order_pay', 0, 'intval');
+        $data['order_express'] = I('order_express', 0, 'intval');
+        $data['order_manage'] = I('order_manage', 0, 'intval');
         $data['islock'] = I('islock', 0, 'intval');
 
         //M验证

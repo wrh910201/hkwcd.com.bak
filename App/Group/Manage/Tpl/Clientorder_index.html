@@ -31,6 +31,11 @@
                     <input type="text" id="start_date" name="start_date" placeholder="起始日期" title="起始日期" class="inp_default" value="{$start_date}">
                     <input type="text" id="end_date" name="end_date" placeholder="结束日期" title="结束日期" class="inp_default" value="{$end_date}">
                     <input type="submit" class="btn_blue" value="查  询">
+                    <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'all'])}')" class="btn_blue" value="全部">
+                    <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'exam'])}')" class="btn_blue" value="待审核">
+                    <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'pay'])}')" class="btn_blue" value="待收款">
+                    <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'express'])}')" class="btn_blue" value="待发货">
+                    <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'receive'])}')" class="btn_blue" value="待签收">
                 </form>
             </div>
         </if>
