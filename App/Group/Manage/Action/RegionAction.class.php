@@ -191,10 +191,17 @@ class RegionAction extends CommonContentAction {
             return;
         }
 
+
         $region = M('Region')->where(['id' => $id])->find();
-        if( empty($region) || $region['status'] == 0 ) {
+        if( empty($region) ) {
             $this->error('自定义地区不存在');
             exit;
+        }
+
+        //检查地区是否使用中
+        $exists = M('RegionMap')->where(['region_id' => $id])->find();
+        if( $exists ) {
+            $this->error('该地区正在使用中，无法删除');
         }
 
         $result = M('Region')->where(['id' => $id])->delete();
@@ -211,6 +218,13 @@ class RegionAction extends CommonContentAction {
             $this->error('请选择要彻底删除的项');
         }
 
+        //检查地区是否使用中
+        $where = array('region_id' => array('in', $idArr));
+        $exists = M('RegionMap')->where($where)->find();
+        if( $exists ) {
+            $this->error('要删除的地区中有正在使用的，无法删除');
+        }
+
         $where = array('id' => array('in', $idArr));
         $result = M('Region')->where($where)->delete();
         if( $result ) {
@@ -224,7 +238,8 @@ class RegionAction extends CommonContentAction {
         $rid = I('get.rid', 0, 'intval');
         $id = I('get.id', 0, 'intval');
         $region = M('Region')->where(['id' => $rid])->find();
-        if( empty($region) || $region['status'] == 0 ) {
+//        echo M('Region')->getLastSql();exit;
+        if( empty($region) ) {
             $this->error('自定义地区不存在');
             exit;
         }
@@ -245,7 +260,7 @@ class RegionAction extends CommonContentAction {
         $rid = I('get.rid', 0, 'intval');
         $id = I('key');
         $region = M('Region')->where(['id' => $rid])->find();
-        if( empty($region) || $region['status'] == 0 ) {
+        if( empty($region) ) {
             $this->error('自定义地区不存在');
             exit;
         }
@@ -261,5 +276,29 @@ class RegionAction extends CommonContentAction {
         } else {
             $this->error('删除下属国家失败');
         }
+    }
+
+
+    public function detail() {
+        $id = I('get.id', 0, 'intval');
+        $region = M('region')->where(['id' => $id])->find();
+        if( empty($region) ) {
+            $this->error('地区不存在');
+            exit;
+        }
+
+        $country_list = M('regionMap')
+            ->field('hx_region_map.id, c.name, c.ename, c.id as country_id')
+            ->where(['region_id' => $id])
+            ->join('left join hx_country as c on c.id = hx_region_map.country_id')
+            ->select();
+//            ->buildSql();
+//        var_dump($country_list);exit;
+
+        $this->assign('country_list', $country_list);
+        $this->assign('region', $region);
+        $this->type = '地区详情';
+
+        $this->display();
     }
 }

@@ -37,6 +37,25 @@
                 </dd>
             </dl>
             <dl>
+                <dt>是否单独国家</dt>
+                <dd>
+                    <input type="radio" name="single_country" value="0" <if condition="0 eq $client['single_country']">checked="checked"</if>  />否
+                    &nbsp;&nbsp;
+                    <input type="radio" name="single_country" value="1" <if condition="1 eq $client['single_country']">checked="checked"</if> />是
+                </dd>
+            </dl>
+            <dl id="single_country_id" <if condition="0 eq $client['single_country']">style="display:none"</if>>
+                <dt>经营国家：</dt>
+                <dd>
+                    <select name="single_country_id">
+                        <option value="0">无</option>
+                        <foreach name='country_list' item='v'>
+                            <option value="{$v.id}" <if condition="$client.single_country_id eq $v['id']">selected</if>>{$v.name}/{$v.ename}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
                 <dt>姓名：</dt>
                 <dd>
                     <input type="text" name="full_name" class="inp_one" value="{$client.full_name}" />
@@ -199,6 +218,15 @@
 //    function check_name_handler(response) {
 //        $('#username-alert').text(response.msg);
 //    }
+
+    $('input[name=single_country]').click(function() {
+        if( $('input[name=single_country]:checked').val() == 1 ) {
+            $('#single_country_id').show();
+        }
+        if( $('input[name=single_country]:checked').val() == 0 ) {
+            $('#single_country_id').hide();
+        }
+    });
 </script>
 
 </body>

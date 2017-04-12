@@ -94,6 +94,11 @@ class ClientAction extends CommonContentAction {
             $data['fax'] = I('post.fax', '', 'htmlspecialchars,trim');
             $data['remark'] = I('post.remark', '', 'htmlspecialchars,trim');
             $data['is_locked'] = I('post.islock', 0, 'intval');
+            $data['single_country'] = I('post.single_country', 0, 'intval');
+            $data['single_country_id'] = I('post.single_country_id', 0, 'intval');
+
+            $data['single_country'] = $data['single_country'] == 1 ? 1 : 0;
+
 
             //检测用户名是否可以用
             if( empty($data['username']) ) {
@@ -111,6 +116,14 @@ class ClientAction extends CommonContentAction {
                 $this->error('请选择用户组');
                 exit;
             }
+
+            if( $data['single_country'] == 1 ) {
+                if( empty($data['single_country_id']) ) {
+                    $this->error('请选择经营国家');
+                }
+            }
+
+
             //密码
             $password = $data['password'];
             if( empty($password) ) {
@@ -181,6 +194,7 @@ class ClientAction extends CommonContentAction {
             $this->error('客户不存在');
             exit;
         }
+//        var_dump($client);exit;
         $where = array('pid' => 0,'types'=>0);
         $country_list = M('country')->where($where)->order('sort,id')->select();
         $this->assign('country_list', $country_list);
@@ -224,6 +238,11 @@ class ClientAction extends CommonContentAction {
         $data['remark'] = I('post.remark', '', 'htmlspecialchars,trim');
         $data['is_locked'] = I('post.islock', 0, 'intval');
 
+        $data['single_country'] = I('post.single_country', 0, 'intval');
+        $data['single_country_id'] = I('post.single_country_id', 0, 'intval');
+
+        $data['single_country'] = $data['single_country'] == 1 ? 1 : 0;
+
         //检测用户名是否可以用
 //        if( empty($data['username']) ) {
 //            $this->error('请输入用户名');
@@ -239,6 +258,12 @@ class ClientAction extends CommonContentAction {
         if( empty($group_exists) ) {
             $this->error('请选择用户组');
             exit;
+        }
+
+        if( $data['single_country'] == 1 ) {
+            if( empty($data['single_country_id']) ) {
+                $this->error('请选择经营国家');
+            }
         }
 
         //设置添加的管理员id

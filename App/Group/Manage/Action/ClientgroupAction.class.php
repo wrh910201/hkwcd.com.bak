@@ -186,7 +186,11 @@ class ClientgroupAction extends CommonContentAction
                         $offset = $temp[0];
                         $per_kilo = explode('}', $temp[1]);
                         $per_kilo = $per_kilo[0];
-                        $price[$k][$k1] = '超过'.$offset.'kg，按每'.$per_kilo.'kg';
+                        if( substr($offset, '~') === false ) {
+                            $price[$k][$k1] = '大于等于'.$offset . 'kg，按每' . $per_kilo . 'kg';
+                        } else {
+                            $price[$k][$k1] = $offset . 'kg，按每' . $per_kilo . 'kg';
+                        }
                     } else {
                         $price[$k][$k1] = sprintf('%.2f', $v);
                     }
@@ -231,36 +235,83 @@ class ClientgroupAction extends CommonContentAction
             exit;
         }
         $data['channel_id'] = I('post.channel_id', 0, 'intval');
-        $data['type'] = I('post.type', 0, 'intval');
-        $data['type'] = $data['type'] == 1 ? 1 : 2;
         $channel = M('Channel')->where(['id' => $data['channel_id']])->find();
         if( empty($channel) || $channel['status'] == 0 ) {
             $this->error('渠道不存在');
             exit;
         }
         $path = I('post.url', '', 'trim');
-        $data['content'] = $this->_readFromExcel($path);
+
+        $model = new Model;
+        $model->startTrans();
+        $transaction = true;
+
+        $read_result = $this->_readPackageFromExcel($path);
+        if( $read_result['code'] == 0 ) {
+            @unlink($_SERVER['DOCUMENT_ROOT'].$path);
+            $this->error('导入包裹价格时，'.$read_result['msg']);
+        }
+        $data['content'] = $read_result['data'];
+        $data['type'] = 2;
         $data['content'] = json_encode($data['content']);
         $data['group_id'] = $id;
         $where = [
             'group_id' => $id,
             'channel_id' => $data['channel_id'],
-            'type' => $data['type'],
+            'type' => 2,
         ];
         $exists = M('ChannelMap')->where($where)->find();
         if( $exists ) {
             $result = M('ChannelMap')->where($where)->save(['content' => $data['content']]);
+            if( !is_numeric($result) ) {
+                $transaction = false;
+            }
         } else {
             $result = M('ChannelMap')->add($data);
+            if( !$result ){
+                $transaction = false;
+            }
         }
-        if( is_numeric($result) ) {
+
+        $read_result = $this->_readDocumentFromExcel($path);
+        if( $read_result['code'] == 0 ) {
+            $model->rollback();
+            @unlink($_SERVER['DOCUMENT_ROOT'].$path);
+            $this->error('导入文件价格时，'.$read_result['msg']);
+        }
+        $data['content'] = $read_result['data'];
+        $data['type'] = 1;
+        $data['content'] = json_encode($data['content']);
+        $data['group_id'] = $id;
+        $where = [
+            'group_id' => $id,
+            'channel_id' => $data['channel_id'],
+            'type' => 1,
+        ];
+        $exists = M('ChannelMap')->where($where)->find();
+        if( $exists ) {
+            $result = M('ChannelMap')->where($where)->save(['content' => $data['content']]);
+            if( !is_numeric($result) ) {
+                $transaction = false;
+            }
+        } else {
+            $result = M('ChannelMap')->add($data);
+            if( !$result ){
+                $transaction = false;
+            }
+        }
+        @unlink($_SERVER['DOCUMENT_ROOT'].$path);
+
+        if( $transaction ) {
+            $model->commit();
             $this->success('价格导入成功');
         } else {
+            $model->rollback();
             $this->error('价格导入失败');
         }
     }
 
-    private function _readFromExcel($path) {
+    private function _readPackageFromExcel($path) {
         vendor('PHPExcel.Classes.PHPExcel');
         $filename = $_SERVER['DOCUMENT_ROOT'].$path;
         if( !file_exists($filename) ) {
@@ -277,6 +328,8 @@ class ClientgroupAction extends CommonContentAction
         $objReader = PHPExcel_IOFactory::createReader('Excel5');
         $objReader->setReadDataOnly(true);
         $objPHPExcel = $objReader->load($filename);
+        //包裹
+        $objPHPExcel->setActiveSheetIndex(0);
         $objWorksheet = $objPHPExcel->getActiveSheet();
 
         $highestRow = $objWorksheet->getHighestRow();
@@ -309,17 +362,82 @@ class ClientgroupAction extends CommonContentAction
                 }
                 $excelData[$row][] =(string)trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
             }
-           if( $error_region != '' ) {
-               $error_region .= '】不存在';
-           }
+            if( $error_region != '' ) {
+                $error_region .= '】不存在';
+            }
             if( $error_region ) {
-                @unlink($filename);
-                $this->error($error_region);
-                exit;
+//                @unlink($filename);
+//                $this->error($error_region);
+//                exit;
+                return ['code' => 0, 'msg' => $error_region];
             }
         }
 //        var_dump($excelData);exit;
-        @unlink($filename);
-        return $excelData;
+        return ['code' => 1, 'data' => $excelData];
+    }
+
+    private function _readDocumentFromExcel($path) {
+        vendor('PHPExcel.Classes.PHPExcel');
+        $filename = $_SERVER['DOCUMENT_ROOT'].$path;
+        if( !file_exists($filename) ) {
+            @unlink($filename);
+            $this->error('请上传Excel文件,后缀为xls');
+        }
+        $type = substr($filename, strrpos($filename, '.')+1);
+        if( !($type == 'xls') ) {
+            @unlink($filename);
+            $this->error('请上传Excel文件,后缀为xls');
+        }
+//        echo $filename;exit;
+        $phpExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader('Excel5');
+        $objReader->setReadDataOnly(true);
+        $objPHPExcel = $objReader->load($filename);
+        //文件
+        $objPHPExcel->setActiveSheetIndex(1);
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+
+        $highestRow = $objWorksheet->getHighestRow();
+        $highestColumn = $objWorksheet->getHighestColumn();
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+        $excelData = [];
+        for ($row = 1; $row <= $highestRow; $row++) {
+            $error_region = '';
+            for ($col = 0; $col < $highestColumnIndex; $col++) {
+                if( $row == 1 && $col == 0 ) {
+                    continue;
+                }
+                //检测分区是否存在
+                if( $row == 1 ) {
+                    $region = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
+                    if( is_numeric($region) && is_integer($region) ) {
+                        $region = intval($region);
+                        $exists = M('Region')->where(['id' => $region])->find();
+                    } else {
+                        $exists = M('Region')->where(['alias' => $region])->find();
+                    }
+                    if( empty($exists) ) {
+                        if( $error_region == '' ) {
+                            $error_region .= '分区【';
+                            $error_region .= (string)$region;
+                        } else {
+                            $error_region .= '，'.(string)$region;
+                        }
+                    }
+                }
+                $excelData[$row][] =(string)trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
+            }
+            if( $error_region != '' ) {
+                $error_region .= '】不存在';
+            }
+            if( $error_region ) {
+//                @unlink($filename);
+//                $this->error($error_region);
+//                exit;
+                return ['code' => 0, 'msg' => $error_region];
+            }
+        }
+//        var_dump($excelData);exit;
+        return ['code' => 1, 'data' => $excelData];
     }
 }

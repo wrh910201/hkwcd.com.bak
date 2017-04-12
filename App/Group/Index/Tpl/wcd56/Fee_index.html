@@ -1,0 +1,40 @@
+<include file="Usercenter:header" />
+<body>
+<include file="Usercenter:aside" />
+<!-- main -->
+<div class="main">
+    <include file="Usercenter:top" />
+    <!--content-->
+    <div class="content">
+        <!--{$title}-->
+        <div class="profile">
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3>{$title}</h3>
+                    <div class="search_box fr">
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c box_c_reset">
+                </div>
+            </div>
+
+        </div>
+        <!--END 个人信息-->
+    </div>
+    <!--END content-->
+</div>
+
+
+
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/laydate/laydate.js"></script>
+<script type="text/javascript">
+    $(function () {
+        menu1("#ud6", "#ud6 a", ".coin_6 a.nav_top_item");
+    });
+</script>
+</body>
+</html>
