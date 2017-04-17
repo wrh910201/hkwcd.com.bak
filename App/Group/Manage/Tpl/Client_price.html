@@ -46,14 +46,19 @@
                     <tr>
                         <!--<th><input type="checkbox" id="check"></th>-->
                         <th></th>
+                        <if condition="$client.single_country eq 0">
                         <volist name="region_list" id="v">
                             <th>{$v}</th>
                         </volist>
+                        </if>
+                        <if condition="$client.single_country eq 1">
+                            <th>{$country_name}</th>
+                        </if>
                     </tr>
                     <volist name='price' id='sub'>
                         <tr>
                             <volist name="sub" id="v">
-                                <td>{$v}</td>
+                                <td <if condition="$client.single_country eq 1">style="width: 50%"</if>>{$v}</td>
                             </volist>
                         </tr>
                     </volist>
