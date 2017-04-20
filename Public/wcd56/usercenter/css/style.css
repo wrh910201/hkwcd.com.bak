@@ -61,6 +61,9 @@ button, input, select, textarea {
 .w20{
     width: 20px !important;
 }
+.w30{
+    width: 30px !important;
+}
 .text-right {
     text-align: right;
 }
