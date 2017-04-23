@@ -251,6 +251,7 @@ class ClientgroupAction extends CommonContentAction
             @unlink($_SERVER['DOCUMENT_ROOT'].$path);
             $this->error('导入包裹价格时，'.$read_result['msg']);
         }
+//        var_dump($read_result['data']);exit;
         $data['content'] = $read_result['data'];
         $data['type'] = 2;
         $data['content'] = json_encode($data['content']);
@@ -262,14 +263,70 @@ class ClientgroupAction extends CommonContentAction
         ];
         $exists = M('ChannelMap')->where($where)->find();
         if( $exists ) {
+            $map_id = $exists['id'];
             $result = M('ChannelMap')->where($where)->save(['content' => $data['content']]);
             if( !is_numeric($result) ) {
                 $transaction = false;
             }
+            $delete_result = M('ChannelMapPrice')->where(['map_id' => $map_id])->delete();
+            if( !is_numeric($delete_result) ) {
+                $transaction = false;
+            }
+
         } else {
             $result = M('ChannelMap')->add($data);
+            $map_id = M('ChannelMap')->getLastInsID();
             if( !$result ){
                 $transaction = false;
+            }
+        }
+
+        $price_data = [];
+        if( $transaction ) {
+            foreach( $read_result['data'] as $i => $row ) {
+                foreach( $row as $j => $v ) {
+                    if( $i == 1 ) {
+                        $region = M('Region')->where(['alias' => $v])->find();
+                        $price_data[$j+1] = $region['id'];
+                        continue;
+                    }
+                    if( $j == 0 ) {
+                        if (is_numeric(strpos($v, '{'))) {
+                            $temp = explode('{', $v);
+                            $offset = $temp[0];
+                            $per_kilo = explode('}', $temp[1]);
+                            $per_kilo = $per_kilo[0];
+                            if( strpos($offset, '~') === false ) {
+                                $insert_data['status'] = 3;
+                                $insert_data['max_weight'] = $v;
+                                $insert_data['min_weight'] = 0;
+                                $insert_data['per_kilo'] = $per_kilo;
+                            } else {
+                                $temp2 = explode('~', $temp[0]);
+                                $insert_data['status'] = 2;
+                                $insert_data['min_weight'] = $temp2[0];
+                                $insert_data['max_weight'] = $temp2[1];
+                                $insert_data['per_kilo'] = $per_kilo;
+                            }
+                        } else {
+                            $insert_data['status'] = 1;
+                            $insert_data['min_weight'] = $v;
+                            $insert_data['max_weight'] = 0;
+                        }
+                        continue;
+                    }
+                    $insert_data['price'] = $v;
+                    $insert_data['map_id'] = $map_id;
+                    $insert_data['region_id'] = $price_data[$j];
+                    $insert_result = M('ChannelMapPrice')->add($insert_data);
+                    if( !$insert_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
+                    break;
+                }
             }
         }
 
@@ -290,16 +347,70 @@ class ClientgroupAction extends CommonContentAction
         ];
         $exists = M('ChannelMap')->where($where)->find();
         if( $exists ) {
+            $map_id = $exists['id'];
             $result = M('ChannelMap')->where($where)->save(['content' => $data['content']]);
             if( !is_numeric($result) ) {
                 $transaction = false;
             }
+            $delete_result = M('ChannelMapPrice')->where(['map_id' => $map_id])->delete();
+            if( !is_numeric($delete_result) ) {
+                $transaction = false;
+            }
         } else {
             $result = M('ChannelMap')->add($data);
+            $map_id = M('ChannelMap')->getLastInsID();
             if( !$result ){
                 $transaction = false;
             }
         }
+        if( $transaction ) {
+            foreach( $read_result['data'] as $i => $row ) {
+                foreach( $row as $j => $v ) {
+                    if( $i == 1 ) {
+                        $region = M('Region')->where(['alias' => $v])->find();
+                        $price_data[$j+1] = $region['id'];
+                        continue;
+                    }
+                    if( $j == 0 ) {
+                        if (is_numeric(strpos($v, '{'))) {
+                            $temp = explode('{', $v);
+                            $offset = $temp[0];
+                            $per_kilo = explode('}', $temp[1]);
+                            $per_kilo = $per_kilo[0];
+                            if( strpos($offset, '~') === false ) {
+                                $insert_data['status'] = 3;
+                                $insert_data['max_weight'] = $v;
+                                $insert_data['min_weight'] = 0;
+                                $insert_data['per_kilo'] = $per_kilo;
+                            } else {
+                                $temp2 = explode('~', $temp[0]);
+                                $insert_data['status'] = 2;
+                                $insert_data['min_weight'] = $temp2[0];
+                                $insert_data['max_weight'] = $temp2[1];
+                                $insert_data['per_kilo'] = $per_kilo;
+                            }
+                        } else {
+                            $insert_data['status'] = 1;
+                            $insert_data['min_weight'] = $v;
+                            $insert_data['max_weight'] = 0;
+                        }
+                        continue;
+                    }
+                    $insert_data['price'] = $v;
+                    $insert_data['map_id'] = $map_id;
+                    $insert_data['region_id'] = $price_data[$j];
+                    $insert_result = M('ChannelMapPrice')->add($insert_data);
+                    if( !$insert_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
+                    break;
+                }
+            }
+        }
+
         @unlink($_SERVER['DOCUMENT_ROOT'].$path);
 
         if( $transaction ) {
