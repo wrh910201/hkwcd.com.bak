@@ -29,4 +29,30 @@ class FeeAction extends BaseAction  {
         $this->display();
     }
 
+    public function calculate() {
+        if( IS_POST ) {
+            $country_id = I('post.country_id', 0, 'intval');
+            $package_type = I('post.package_type');
+            $total_weight = I('post.total_weight', 0, 'floatval');
+            $total_rate = I('post.total_rate', 0, 'floatval');
+
+            $this->client_id = session('hkwcd_user.user_id');
+            $this->client = M('Client')->where(['status' => 1, 'id' => $this->client_id])->find();
+            if( $this->client['single_country'] == 0 ) {
+
+            } else {
+
+            }
+
+            $this->response['code'] = 1;
+            $this->response['msg'] = '成功';
+            $this->response['data'] = $_POST;
+
+        } else {
+            $this->response['msg'] = '系统繁忙，请稍后重试';
+        }
+        echo json_encode($this->response);
+        exit;
+    }
+
 }

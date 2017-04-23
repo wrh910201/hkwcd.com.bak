@@ -21,7 +21,7 @@
                         <div class="box_c_item">
                             <label class="l_title">国家：</label>
                             <if condition="$cleint.single_country eq 0">
-                            <select class="w300" name="country">
+                            <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}">{$v.name}</option>
                                 </foreach>
@@ -79,7 +79,7 @@
                             <div class="clear"></div>
                             <div class="fr">
                                 <label class="l_title"></label>
-                                <button class="btn btn_commit" type="button" id="add_order_button">运费预算</button> &nbsp;
+                                <button class="btn btn_commit" type="button" id="calculate_fee_button">运费预算</button> &nbsp;
                             </div>
                         </div>
                         <br />
@@ -118,15 +118,13 @@
 
 
 
-<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
-<script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
-<script type="text/javascript" src="__PUBLIC__/usercenter/laydate/laydate.js"></script>
 <script type="text/javascript">
     $(function () {
         menu1("#ud6", "#ud6 a", ".coin_6 a.nav_top_item");
     });
 
     var package = {};
+    var layer = null;
 
     $('#fee-content').on('change', '.weight', function() {
         calculate_total_weight();
@@ -146,6 +144,10 @@
 
     $('#fee-content').on('change', '.count', function() {
         calculate_total_count();
+    });
+
+    $('#calculate_fee_button').click(function() {
+        calculate_fee();
     });
 
     function calculate_total_count() {
@@ -213,16 +215,47 @@
 
     function remove_package(index) {
         $('.package_item:eq('+index+')').remove();
-        refresh_pacakge_item();
+        refresh_package_item();
     }
 
-    function refresh_pacakge_item() {
+    function refresh_package_item() {
         $('.package_item').each(function(k,v) {
             $('.remove_package:eq('+k+')').attr('onclick', 'remove_package('+k+')');
         });
         calculate_total_count();
     }
 
+    function calculate_fee() {
+        var url = '/Fee/calculate';
+        var data = {
+            country_id: $('#country').val(),
+            package_type: $('#package_type').val(),
+            total_weight: $('.total_weight').val(),
+            total_rate: $('.total_rate').val(),
+        };
+        show_loading();
+        $.post(url, data, calculate_fee_handler, 'json');
+    }
+
+    function calculate_fee_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+
+            } );
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
+        }
+
+    }
+
 </script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/laydate/laydate.js"></script>
 </body>
 </html>
