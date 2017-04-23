@@ -21,7 +21,7 @@
                         <div class="box_c_item">
                             <label class="l_title">国家：</label>
                             <if condition="$cleint.single_country eq 0">
-                            <select class="w300" id="country" name="country">
+                            <select class="w300" name="country">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}">{$v.name}</option>
                                 </foreach>
@@ -52,27 +52,27 @@
                                 </tr>
                                 </thead>
                                 <tbody id="fee-content">
-                                <tr>
+                                <tr class="package_item">
                                     <td>1</td>
-                                    <td><input class="text_input w30 weight" type="text" />&nbsp;KG</td>
-                                    <td><input class="text_input w30 length" type="text" />&nbsp;CM</td>
-                                    <td><input class="text_input w30 width" type="text" />&nbsp;CM</td>
-                                    <td><input class="text_input w30 height" type="text" />&nbsp;CM</td>
+                                    <td><input class="text_input w80 weight" type="number" />&nbsp;KG</td>
+                                    <td><input class="text_input w80 length" type="number" />&nbsp;CM</td>
+                                    <td><input class="text_input w80 width" type="number" />&nbsp;CM</td>
+                                    <td><input class="text_input w80 height" type="number" />&nbsp;CM</td>
                                     <td></td>
-                                    <td><input class="text_input w30 count" type="text" />CTNS</td>
-                                    <td class="text-right"><a href="javascript:void(0);">删除</a></td>
+                                    <td><input class="text_input w80 count" type="number" />CTNS</td>
+                                    <td class="text-right"><a  onclick="remove_package(0)" class="remove_package" href="javascript:void(0);">删除</a></td>
                                 </tr>
-                                <tr>
-                                    <td colspan="8" class="text-right"><a href="javascript:void(0);">添加一个包裹</a></td>
+                                <tr id="add_package_wrapper">
+                                    <td colspan="8" class="text-right"><a id="add_package" href="javascript:void(0);">添加一个包裹</a></td>
                                 </tr>
                                 <tr>
                                     <td>合计</td>
-                                    <td>KG</td>
+                                    <td><input readonly class="text_input w80 total_weight" type="number" />&nbsp;KG</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>KG</td>
-                                    <td>CTNS</td>
+                                    <td><input readonly class="text_input w80 total_rate" type="number" />&nbsp;KG</td>
+                                    <td><input readonly class="text_input w80 total_count" type="number" />&nbsp;CTNS</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -127,6 +127,101 @@
     });
 
     var package = {};
+
+    $('#fee-content').on('change', '.weight', function() {
+        calculate_total_weight();
+    });
+
+    $('#fee-content').on('change', '.length', function() {
+        calculate_total_rate();
+    });
+
+    $('#fee-content').on('change', '.width', function() {
+        calculate_total_rate();
+    });
+
+    $('#fee-content').on('change', '.height', function() {
+        calculate_total_rate();
+    });
+
+    $('#fee-content').on('change', '.count', function() {
+        calculate_total_count();
+    });
+
+    function calculate_total_count() {
+        var total_count = 0;
+        $('.count').each(function(k,v) {
+            var temp = parseInt($(v).val());
+            total_count += temp;
+        });
+        $('.total_count').val(total_count);
+        calculate_total_rate();
+        calculate_total_weight();
+    }
+
+    function calculate_total_weight() {
+        var total_weight = 0;
+        $('.weight').each(function(k,v) {
+            var temp = parseFloat($(v).val());
+            var count_temp = parseInt($('.count:eq('+k+')').val());
+            if( count_temp <= 0 ) {
+                return;
+            }
+            total_weight += temp * count_temp;
+        });
+        $('.total_weight').val(total_weight);
+    }
+
+
+    function calculate_total_rate() {
+        var total_rate = 0;
+        $('.length').each(function(k,v) {
+            var length_temp = parseFloat($(v).val());
+            var width_temp = parseFloat($('.width:eq('+k+')').val());
+            var height_temp = parseFloat($('.height:eq('+k+')').val());
+            var count_temp = parseInt($('.count:eq('+k+')').val());
+            if( length_temp <= 0 || width_temp <= 0 || height_temp <= 0 || count_temp <= 0 ) {
+                return;
+            }
+            total_rate += length_temp * width_temp * height_temp / 5000 * count_temp;
+        });
+        $('.total_rate').val(total_rate);
+    }
+
+    $('#add_package').click(function() {
+        add_package();
+    });
+
+    function add_package() {
+        var k = $('.remove_package').length;
+        console.log('k=' + k);
+        var html = '';
+        html += '<tr class="package_item">';
+        html += '<td>1</td>';
+        html += '<td><input class="text_input w80 weight" type="number" />&nbsp;KG</td>';
+        html += '<td><input class="text_input w80 length" type="number" />&nbsp;CM</td>';
+        html += '<td><input class="text_input w80 width" type="number" />&nbsp;CM</td>';
+        html += '<td><input class="text_input w80 height" type="number" />&nbsp;CM</td>';
+        html += '<td></td>';
+        html += '<td><input class="text_input w80 count" type="number" />CTNS</td>';
+        html += '<td class="text-right"><a class="remove_package" onclick="remove_package('+k+')" href="javascript:void(0);">删除</a></td>';
+        html += '</tr>';
+
+        $('#add_package_wrapper').before(html);
+    }
+
+
+    function remove_package(index) {
+        $('.package_item:eq('+index+')').remove();
+        refresh_pacakge_item();
+    }
+
+    function refresh_pacakge_item() {
+        $('.package_item').each(function(k,v) {
+            $('.remove_package:eq('+k+')').attr('onclick', 'remove_package('+k+')');
+        });
+        calculate_total_count();
+    }
 
 </script>
 </body>
