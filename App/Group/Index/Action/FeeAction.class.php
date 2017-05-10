@@ -39,16 +39,41 @@ class FeeAction extends BaseAction  {
             $this->client_id = session('hkwcd_user.user_id');
             $this->client = M('Client')->where(['status' => 1, 'id' => $this->client_id])->find();
             $group_id = $this->client['group_id'];
+            $real_weight = $total_weight > $total_rate ? $total_weight : $total_rate;
+            $result = [];
             if( $this->client['single_country'] == 0 ) {
 
-                $data = M('ChannelMapPrice')->query("SELECT c.name,c.en_name, cmp.status, cmp.price, cmp.min_weight, cmp.max_weight, cmp.per_kilo FROM `hx_channel_map_price` as cmp
+                $data = M('ChannelMapPrice')->query(
+"SELECT c.name,c.en_name, cmp.status, cmp.price, cmp.min_weight, cmp.max_weight, cmp.per_kilo, country.name as country_name, country.ename as country_ename, c.prescription
+ FROM `hx_channel_map_price` as cmp
  left join hx_channel_map as cm on cmp.map_id = cm.id
  left join hx_region as r on r.id = cmp.region_id
  left join hx_region_map as rm on rm.region_id = r.id
  left join hx_channel as c on c.id = cm.channel_id
+ left join hx_country as country on country.id = rm.country_id
  where rm.country_id = {$country_id} and cm.group_id = {$group_id} and cm.type = {$package_type}
  order by cmp.min_weight");
-                var_dump($data);
+//                echo M('ChannelMapPrice')->getLastSql();exit;
+//                var_dump($data);
+                foreach($data as $k => $v) {
+                    if( $v['status'] == 1 ) {
+                        if (sprintf("%.1f", $real_weight) == $v['min_weight']) {
+                            $v['real_weight'] = $real_weight;
+                            $result[] = $v;
+                        }
+                    }
+                }
+                if( empty($result) ) {
+                    foreach($data as $k => $v) {
+                        if( $v['status'] == 2 ) {
+                            if (sprintf("%.1f", $real_weight) >= $v['min_weight'] && sprintf("%.1f", $real_weight) <= $v['max_weight']) {
+                                $v['price'] = $v['price'] * $real_weight;
+                                $v['real_weight'] = $real_weight;
+                                $result[] = $v;
+                            }
+                        }
+                    }
+                }
 
             } else {
                 $data = M('ClientPrice')
@@ -59,7 +84,7 @@ class FeeAction extends BaseAction  {
 
             $this->response['code'] = 1;
             $this->response['msg'] = '成功';
-            $this->response['data'] = $_POST;
+            $this->response['data'] = $result;
 
         } else {
             $this->response['msg'] = '系统繁忙，请稍后重试';
