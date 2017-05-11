@@ -813,16 +813,70 @@ class ClientAction extends CommonContentAction {
         ];
         $exists = M('ClientPrice')->where($where)->find();
         if( $exists ) {
+            $price_id = $exists['id'];
             $result = M('ClientPrice')->where($where)->save(['content' => $data['content']]);
             if( !is_numeric($result) ) {
                 $transaction = false;
             }
         } else {
             $result = M('ClientPrice')->add($data);
+            $price_id = M('ClientPrice')->getLastInsID();
             if( !$result ){
                 $transaction = false;
             }
         }
+//        var_dump($read_result['data']);
+//        $model->rollback();exit;
+//        $price_data = [];
+        if( $transaction ) {
+            foreach( $read_result['data'] as $i => $row ) {
+                foreach( $row as $j => $v ) {
+//                    if( $i == 1 ) {
+//                        $region = M('Region')->where(['alias' => $v])->find();
+//                        $price_data[$j+1] = $region['id'];
+//                        continue;
+//                    }
+                    if( $j == 0 ) {
+                        if (is_numeric(strpos($v, '{'))) {
+                            $temp = explode('{', $v);
+                            $offset = $temp[0];
+                            $per_kilo = explode('}', $temp[1]);
+                            $per_kilo = $per_kilo[0];
+                            if( strpos($offset, '~') === false ) {
+                                $insert_data['status'] = 3;
+                                $insert_data['max_weight'] = $v;
+                                $insert_data['min_weight'] = 0;
+                                $insert_data['per_kilo'] = $per_kilo;
+                            } else {
+                                $temp2 = explode('~', $temp[0]);
+                                $insert_data['status'] = 2;
+                                $insert_data['min_weight'] = $temp2[0];
+                                $insert_data['max_weight'] = $temp2[1];
+                                $insert_data['per_kilo'] = $per_kilo;
+                            }
+                        } else {
+                            $insert_data['status'] = 1;
+                            $insert_data['min_weight'] = $v;
+                            $insert_data['max_weight'] = 0;
+                        }
+                        continue;
+                    }
+                    $insert_data['price'] = $v;
+                    $insert_data['price_id'] = $price_id;
+                    $insert_data['country_id'] = $data['country_id'];
+                    $insert_result = M('ClientPriceDetail')->add($insert_data);
+                    if( !$insert_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
+                    break;
+                }
+            }
+        }
+//        echo $model->getLastSql();
+//        $model->rollback();exit;
 
         $read_result = $this->_readDocumentFromExcel($path);
         if( $read_result['code'] == 0 ) {
@@ -841,16 +895,67 @@ class ClientAction extends CommonContentAction {
         ];
         $exists = M('ClientPrice')->where($where)->find();
         if( $exists ) {
+            $price_id = $exists['id'];
             $result = M('ClientPrice')->where($where)->save(['content' => $data['content']]);
             if( !is_numeric($result) ) {
                 $transaction = false;
             }
         } else {
             $result = M('ClientPrice')->add($data);
+            $price_id = M('ClientPrice')->getLastInsID();
             if( !$result ){
                 $transaction = false;
             }
         }
+
+        if( $transaction ) {
+            foreach( $read_result['data'] as $i => $row ) {
+                foreach( $row as $j => $v ) {
+//                    if( $i == 1 ) {
+//                        $region = M('Region')->where(['alias' => $v])->find();
+//                        $price_data[$j+1] = $region['id'];
+//                        continue;
+//                    }
+                    if( $j == 0 ) {
+                        if (is_numeric(strpos($v, '{'))) {
+                            $temp = explode('{', $v);
+                            $offset = $temp[0];
+                            $per_kilo = explode('}', $temp[1]);
+                            $per_kilo = $per_kilo[0];
+                            if( strpos($offset, '~') === false ) {
+                                $insert_data['status'] = 3;
+                                $insert_data['max_weight'] = $v;
+                                $insert_data['min_weight'] = 0;
+                                $insert_data['per_kilo'] = $per_kilo;
+                            } else {
+                                $temp2 = explode('~', $temp[0]);
+                                $insert_data['status'] = 2;
+                                $insert_data['min_weight'] = $temp2[0];
+                                $insert_data['max_weight'] = $temp2[1];
+                                $insert_data['per_kilo'] = $per_kilo;
+                            }
+                        } else {
+                            $insert_data['status'] = 1;
+                            $insert_data['min_weight'] = $v;
+                            $insert_data['max_weight'] = 0;
+                        }
+                        continue;
+                    }
+                    $insert_data['price'] = $v;
+                    $insert_data['price_id'] = $price_id;
+                    $insert_data['country_id'] = $data['country_id'];
+                    $insert_result = M('ClientPriceDetail')->add($insert_data);
+                    if( !$insert_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
+                    break;
+                }
+            }
+        }
+
         @unlink($_SERVER['DOCUMENT_ROOT'].$path);
 
         if( $transaction ) {

@@ -267,7 +267,7 @@
             html += "<td>"+ data[i].real_weight +"</td>";
             html += "<td>"+ data[i].price +"</td>";
             html += "<td>"+ data[i].prescription +"</td>";
-            html += '<td class="text - right"></td>';
+            html += '<td class="text-right">' +data[i].remark+ '</td>';
             html += "</tr>";
         }
         $('#result_data').empty();
