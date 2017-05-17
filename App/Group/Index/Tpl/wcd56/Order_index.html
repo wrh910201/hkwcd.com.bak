@@ -60,6 +60,9 @@
                                             | <a href="javascript:void(0);" onclick="complete_order({$v.id})">完成</a>
                                         </if>
                                     </if>
+                                    <if condition="$v.operate_remark">
+                                        | <a href="javascript:void(0);" onclick="show_operate_remark({$v.id})">处理备注</a>
+                                    </if>
                                 </td>
                             </tr>
                         </foreach>
@@ -291,6 +294,35 @@
         var param = {'id':id};
         $.post(url, param, ajax_handler, 'json');
     }
+
+    function show_operate_remark(id) {
+        show_loading();
+        var url = '/Order/show_remark';
+        var param = {'id':id};
+        $.post(url, param, show_remark_handler, 'json');
+    }
+
+    function show_remark_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            layer.open({
+                type: 1,
+                title: '备注内容',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '240px'], //宽高
+                content: response.data
+            });
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, shift: -1, btn: ['确定'] });
+        }
+
+    }
+
+
 
     var start_date = laydate({
         elem: '#start_date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'

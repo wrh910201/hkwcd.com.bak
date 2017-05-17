@@ -75,6 +75,7 @@ class ClientAction extends CommonContentAction {
             $data['group_id'] = I('post.group_id', 0, 'intval');
             $data['full_name'] = I('post.full_name', '', 'htmlspecialchars,trim');
             $data['company'] = I('post.company', '', 'htmlspecialchars,trim');
+            $data['en_company'] = I('post.en_company', '', 'htmlspecialchars,trim');
             $data['email'] = I('post.email', '', 'htmlspecialchars,trim');
             $data['mobile'] = I('post.mobile', '', 'htmlspecialchars,trim');
             $data['spare_mobile'] = I('post.spare_mobile', '', 'htmlspecialchars,trim');
@@ -218,6 +219,7 @@ class ClientAction extends CommonContentAction {
         $data['group_id'] = I('post.group_id', 0, 'intval');
         $data['full_name'] = I('post.full_name', '', 'htmlspecialchars,trim');
         $data['company'] = I('post.company', '', 'htmlspecialchars,trim');
+        $data['en_company'] = I('post.en_company', '', 'htmlspecialchars,trim');
         $data['email'] = I('post.email', '', 'htmlspecialchars,trim');
         $data['mobile'] = I('post.mobile', '', 'htmlspecialchars,trim');
         $data['spare_mobile'] = I('post.spare_mobile', '', 'htmlspecialchars,trim');

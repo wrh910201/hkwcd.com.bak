@@ -78,6 +78,7 @@
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/express',array('id' => $v['id']), '')}">快递单</a>
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $v['id']), '')}">装箱单</a>
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $v['id']), '')}">商业发票</a>
+                                <a href="{:U(GROUP_NAME. '/Clientorder/remark',array('id' => $v['id']), '')}">备注</a>
                                 <if condition="$v.express_status eq 1">
                                     <!--<a href="javascript:void(0);" onclick="">跟踪</a>-->
                                 </if>

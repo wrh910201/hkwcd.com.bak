@@ -475,6 +475,65 @@ class ClientorderAction extends CommonContentAction {
         }
     }
 
+    public function remark() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        $this->type = '订单处理备注';
+        $this->assign('order', $order);
+        $this->display();
+    }
+
+    public function doRemark() {
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        $operate_remark = I('operate_remark', '', 'trim');
+        if( empty($operate_remark) ) {
+            $this->error('请输入处理备注');
+        }
+
+        $map = [
+            'id' => $id,
+        ];
+
+        $data = [
+            'operate_remark' => $operate_remark,
+        ];
+
+        $model = new Model();
+        $model->startTrans();
+        $transaction = true;
+
+        $result = M('ClientOrder')->where($map)->save($data);
+        if( is_numeric($result) ) {
+            $transaction = true;
+        } else {
+            $transaction = false;
+        }
+
+        if( $transaction ) {
+            $model->commit();
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
+                'content' => '订单处理备注',
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->success('订单备注成功', U('Clientorder/index'));
+        } else{
+            $model->rollback();
+            $this->error('系统繁忙，请稍后重试');
+        }
+    }
+
     public function edit() {
 
         $id = I('id');

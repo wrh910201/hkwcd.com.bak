@@ -1933,6 +1933,21 @@ class OrderAction extends BaseAction  {
         exit;
     }
 
+    public function show_remark() {
+        $client_id = session('hkwcd_user.user_id');
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+        } else {
+            $this->response['code'] = 1;
+            $this->response['data'] = "&nbsp;&nbsp;".$order['operate_remark'];
+        }
+        echo json_encode($this->response);
+        exit;
+
+    }
+
     private function _total_to_str($total) {
         $temp_total = '00000'.$total;
         $length = strlen($temp_total);
