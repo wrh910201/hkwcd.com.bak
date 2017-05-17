@@ -13,15 +13,41 @@
     <link rel="shortcut icon" href="/Public/wcd56/images/favicon.ico" type="image/x-icon">
     <link href="/Public/wcd56/usercenter/css/print_table.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/Public/wcd56/usercenter/layer/layer.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/biweb.js"></script>
+    <style>
+        .delivery_notice_con table tr {
+            text-align: left;
+            font-size: 10px;
+            /*height: 30px;*/
+            /*height: 15px;*/
+            /*line-height: 15px;*/
+        }
+        .delivery_notice_con table td {
+            text-align: left;
+            padding-left: 3px;
+            /*font-size: 10px;*/
+            /*height: 15px;*/
+            /*line-height: 15px;*/
+        }
+        .delivery_notice_title h3 {
+            font-size: 20px;
+        }
+        .delivery_notice_title p {
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
 <div class="delivery_notice_table">
     <div class="delivery_notice_header">
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
-        <div class="delivery_notice_title">
-            <h3>香港华度货运有限公司<br />HONG KONG WCD EXPRESS COMPANY LIMITED</h3>
-            <p>装箱单 / PACKING LIST</p>
+        <div class="delivery_notice_title" style="width: 500px;">
+            <if condition="$client.company">
+            <h3 style="line-height: normal">{$client.company}</h3>
+            </if>
+            <if condition="$client.en_company">
+            <p>{$client.en_company}</p>
+            </if>
+            <p style="font-size:15px">装箱单 / PACKING LIST</p>
         </div>
         <div class="delivery_notice_no">
         </div>
@@ -42,12 +68,11 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司名称 / Company name<br />{$order.delivery_company}</td>
+                <td class="w340">公司名称 / Company name<br />{$order.receive_company}</td>
                 <td class="w340" colspan="2">快件号码 / Shipment No.<br />{$order.order_num}</td>
-                <td></td>
             </tr>
             <tr>
-                <td class="w340">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
+                <td class="w340">地址 / add:(PO BOX address cannot be delivered)<br />{$order.receive_detail_address}</td>
                 <td class="w170">发票号/ Invoice number<br />{$order.invoice_num}</td>
                 <td class="w170">合同号 / Contract No.<br />{$order.contract_num}</td>
             </tr>
@@ -70,7 +95,7 @@
             </tr>
             <tr>
                 <td class="w340">联系人 / Contact name<br />{$order.receive_addressee}</td>
-                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />{$order.mode_of_transportation}</td>
+                <td class="w340" colspan="2">运输方式 / Mode of transportation<br />{$order.mode_of_transportation} {$order.express_service}</td>
             </tr>
             </tbody>
         </table>
@@ -98,16 +123,30 @@
                 <td class="">材积立方数 / Cubage of volume (CBM)</td>
                 <td class="">箱数/ Box number (CTNS)</td>
             </tr>
-            <foreach name="order_detail" item="v">
+            <foreach name="order_specifications" item="v">
                 <tr>
-                    <td>{$v.product_name}</td>
-                    <td>{$v.count}</td>
-                    <td>{$v.goods_code}</td>
-                    <td>{$v.origin}</td>
-                    <td>{$v.weighting_weight}</td>
-                    <td>{$v.cubic_of_volume}</td>
-                    <td>{$v.box}</td>
+                    <foreach name="v.detail" item="d" key="j">
+                        <if condition="$j eq 0">
+                            <td style="border-top: none; border-bottom: none">{$d.en_product_name}&nbsp;{$d.product_name}</td>
+                            <td style="border-top: none; border-bottom: none">{$d.number}</td>
+                            <td style="border-top: none; border-bottom: none">{$d.goods_code}</td>
+                            <td style="border-top: none; border-bottom: none">{$d.origin}</td>
+                        </if>
+                    </foreach>
+                    <td rowspan="{$v.rowspan}">{$v.real_weight}KG</td>
+                    <td rowspan="{$v.rowspan}">{$v.real_rate}KG</td>
+                    <td rowspan="{$v.rowspan}">{$v.real_count}</td>
                 </tr>
+                <foreach name="v.detail" item="d" key="j">
+                    <if condition="$j gt 0">
+                        <tr>
+                            <td style="border-top: none; border-bottom: none">{$d.en_product_name}&nbsp;{$d.product_name}</td>
+                            <td style="border-top: none; border-bottom: none">{$d.number}</td>
+                            <td style="border-top: none; border-bottom: none">{$d.goods_code}</td>
+                            <td style="border-top: none; border-bottom: none">{$d.origin}</td>
+                        </tr>
+                    </if>
+                </foreach>
             </foreach>
             <foreach name="order_detail_remain" item="v">
                 <tr>
@@ -121,13 +160,10 @@
                 </tr>
             </foreach>
             <tr>
-                <td>总 / Total</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4">总 / Total</td>
+                <td>{$order.real_specifications_total_weight}KG</td>
+                <td>{$order.real_specifications_total_rate}KG</td>
+                <td>{$order.real_specifications_total_count}</td>
             </tr>
             <tr>
                 <td>备注 / Remark</td>
@@ -151,7 +187,7 @@
         <table>
             <tbody>
             <tr>
-                <td colspan="6">制造商或出口商名称及地址 / Name and Address<br >{$order.delivery_company}&nbsp;{$order.delivery_detail_address}</td>
+                <td colspan="6">制造商或出口商名称及地址 / Name and Address<br >{$order.manufacturer}</td>
             </tr>
             <tr>
                 <td colspan="4">出口原因 / Reason of Export<br />{$order.export_reason}</td>
@@ -195,8 +231,8 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company} {$order.delivery_detail_address}</td>
-                <td class="w340">公司或单位地址/Address of Company / Firm<br />{$order.delivery_company} {$order.delivery_detail_address}</td>
+                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company}</td>
+                <td class="w340">公司或单位地址/Address of Company / Firm<br />{$order.delivery_detail_address}</td>
             </tr>
             </tbody>
         </table>
@@ -238,7 +274,6 @@
 
         }
     }
-
 </script>
 </body>
 </html>

@@ -598,7 +598,7 @@ class OrderAction extends BaseAction  {
         }
         if( $order['client_status'] != 0 ) {
             $this->response['msg'] = '当前订单不是可编辑状态';
-            echo json_encode($this-d>response);
+            echo json_encode($this->response);
             exit;
         }
         $data = $this->_get_order_params();
@@ -1612,6 +1612,7 @@ class OrderAction extends BaseAction  {
     public function invoice() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $this->assign('client', $client);
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
@@ -1627,31 +1628,102 @@ class OrderAction extends BaseAction  {
 
         $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
 //        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
-        $order['total_box_num'] = 0;
-        $order['total_weight'] = 0;
+//        $order['total_box_num'] = 0;
+//        $order['total_weight'] = 0;
         $order['total_declared'] = 0;
         $order_detail_remain =  [];
         if( $order_detail ) {
             foreach( $order_detail as $k => $v ) {
-                $order['total_box_num'] += $v['box'];
-                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
-                $order['total_declared'] += $v['declared'];
+                $order_detail[$k]['declared'] = $v['single_declared'] * $v['count'];
+//                $order['total_box_num'] += $v['box'];
+//                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
+                $order['total_declared'] += $order_detail[$k]['declared'];
+                $order_detail[$k]['declared'] = sprintf('%.2f', $order_detail[$k]['declared']);
+                $order_detail[$k]['single_declared'] = sprintf('%.2f', $order_detail[$k]['single_declared']);
             }
         }
+        $order['total_declared'] = sprintf('%.2f', $order['total_declared']);
         for( $i = 0; $i < 4 - count($order_detail); $i++ ) {
             $order_detail_remain[] = [];
+        }
+
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id,m.number, d.product_name, d.en_product_name, d.unit, d.origin, d.goods_code')
+            ->join('left join hx_client_order_map as m on m.specifications_id = s.id')
+            ->join('left join hx_client_order_detail as d on d.id = m.detail_id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp['item-'.$v['id']]) ) {
+                    $temp['item-'.$v['id']] = $v;
+                }
+                $temp['item-'.$v['id']]['detail'][] = [
+                    'product_name' => $v['product_name'],
+                    'en_product_name' => $v['en_product_name'],
+                    'unit' => $v['unit'],
+                    'number' => $v['number'],
+                    'origin' => $v['origin'],
+                    'goods_code' => $v['goods_code'],
+                ];
+            }
+            $order_specifications = $temp;
+        }
+        $order['specifications_total_weight'] = 0;
+        $order['specifications_total_rate'] = 0;
+        $order['specifications_calculate_weight'] = 0;
+        $order['specifications_total_count'] = 0;
+        if( $order_specifications ) {
+            $start = 1;
+            $real_start = 1;
+            foreach( $order_specifications as $k => $v ) {
+                $end = $start + $v['count'] - 1;
+                $order_specifications[$k]['no'] = $start.'-'.$end;
+                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']);
+                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']);
+                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']);
+                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']);
+                $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
+                $order_specifications[$k]['calculate_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
+                $order['specifications_total_weight'] += $v['weight'] * $v['count'];
+                $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
+                $order['specifications_total_count'] += $v['count'];
+                $order['specifications_calculate_weight'] += $order_specifications[$k]['calculate_weight'] * $v['count'];
+                $order_specifications[$k]['rowspan'] = count($v['detail']);
+                $start = $end + 1;
+                //real
+                $real_end = $real_start + $v['real_count'] - 1;
+                $order_specifications[$k]['real_no'] = $real_start.'-'.$real_end;
+                $order_specifications[$k]['real_weight'] = sprintf('%.2f', $v['real_weight']);
+                $order_specifications[$k]['real_length'] = sprintf('%.2f', $v['real_length']);
+                $order_specifications[$k]['real_width'] = sprintf('%.2f', $v['real_width']);
+                $order_specifications[$k]['real_height'] = sprintf('%.2f', $v['real_height']);
+                $order_specifications[$k]['real_rate'] = ($v['real_height'] * $v['real_length'] * $v['real_width'] / 5000);
+                $order_specifications[$k]['real_calculate_weight'] = $v['real_weight'] > $order_specifications[$k]['real_rate'] ? $v['real_weight'] : $order_specifications[$k]['real_rate'];
+                $order['real_specifications_total_weight'] += $v['real_weight'] * $v['real_count'];
+                $order['real_specifications_total_rate'] += $order_specifications[$k]['real_rate'] * $v['real_count'];
+                $order['real_specifications_total_count'] += $v['real_count'];
+                $order['real_specifications_calculate_weight'] += $order_specifications[$k]['real_calculate_weight'] * $v['real_count'];
+                $order_specifications[$k]['rowspan'] = count($v['detail']);
+                $real_start = $real_end + 1;
+            }
         }
 
 
         $this->assign('order', $order);
         $this->assign('order_detail', $order_detail);
         $this->assign('order_detail_remain', $order_detail_remain);
+        $this->type = '商业发票';
         $this->display();
     }
 
     public function packing() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $this->assign('client', $client);
+
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
@@ -1665,27 +1737,81 @@ class OrderAction extends BaseAction  {
         $order['country_name'] = $country['name'];
         $order['country_ename'] = $country['ename'];
 
-        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
-//        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
-        $order['total_box_num'] = 0;
-        $order['total_weight'] = 0;
-        $order['total_declared'] = 0;
+
         $order_detail_remain =  [];
-        if( $order_detail ) {
-            foreach( $order_detail as $k => $v ) {
-                $order['total_box_num'] += $v['box'];
-                $order['total_weight'] += $v['cubic_of_volume'] > $v['weighting_weight'] ? $v['cubic_of_volume'] : $v['weighting_weight'];
-                $order['total_declared'] += $v['declared'];
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id,m.number, d.product_name, d.en_product_name, d.unit, d.origin, d.goods_code')
+            ->join('left join hx_client_order_map as m on m.specifications_id = s.id')
+            ->join('left join hx_client_order_detail as d on d.id = m.detail_id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp['item-'.$v['id']]) ) {
+                    $temp['item-'.$v['id']] = $v;
+                }
+                $temp['item-'.$v['id']]['detail'][] = [
+                    'product_name' => $v['product_name'],
+                    'en_product_name' => $v['en_product_name'],
+                    'unit' => $v['unit'],
+                    'number' => $v['number'],
+                    'origin' => $v['origin'],
+                    'goods_code' => $v['goods_code'],
+                ];
+            }
+            $order_specifications = $temp;
+        }
+        $order['specifications_total_weight'] = 0;
+        $order['specifications_total_rate'] = 0;
+        $order['specifications_calculate_weight'] = 0;
+        $order['specifications_total_count'] = 0;
+        if( $order_specifications ) {
+            $start = 1;
+            $real_start = 1;
+            foreach( $order_specifications as $k => $v ) {
+                $end = $start + $v['count'] - 1;
+                $order_specifications[$k]['no'] = $start.'-'.$end;
+                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']);
+                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']);
+                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']);
+                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']);
+                $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
+                $order_specifications[$k]['calculate_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
+                $order['specifications_total_weight'] += $v['weight'] * $v['count'];
+                $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
+                $order['specifications_total_count'] += $v['count'];
+                $order['specifications_calculate_weight'] += $order_specifications[$k]['calculate_weight'] * $v['count'];
+                $order_specifications[$k]['rowspan'] = count($v['detail']);
+                $start = $end + 1;
+                //real
+                $real_end = $real_start + $v['real_count'] - 1;
+                $order_specifications[$k]['real_no'] = $real_start.'-'.$real_end;
+                $order_specifications[$k]['real_weight'] = sprintf('%.2f', $v['real_weight']);
+                $order_specifications[$k]['real_length'] = sprintf('%.2f', $v['real_length']);
+                $order_specifications[$k]['real_width'] = sprintf('%.2f', $v['real_width']);
+                $order_specifications[$k]['real_height'] = sprintf('%.2f', $v['real_height']);
+                $order_specifications[$k]['real_rate'] = ($v['real_height'] * $v['real_length'] * $v['real_width'] / 5000);
+                $order_specifications[$k]['real_calculate_weight'] = $v['real_weight'] > $order_specifications[$k]['real_rate'] ? $v['real_weight'] : $order_specifications[$k]['real_rate'];
+                $order['real_specifications_total_weight'] += $v['real_weight'] * $v['real_count'];
+                $order['real_specifications_total_rate'] += $order_specifications[$k]['real_rate'] * $v['real_count'];
+                $order['real_specifications_total_count'] += $v['real_count'];
+                $order['real_specifications_calculate_weight'] += $order_specifications[$k]['real_calculate_weight'] * $v['real_count'];
+                $order_specifications[$k]['rowspan'] = count($v['detail']);
+                $real_start = $real_end + 1;
             }
         }
-        for( $i = 0; $i < 4 - count($order_detail); $i++ ) {
+        for( $i = 0; $i < 4 - count($order_specifications); $i++ ) {
             $order_detail_remain[] = [];
         }
 
+//        var_dump($order_specifications['detail']);exit;
 
         $this->assign('order', $order);
-        $this->assign('order_detail', $order_detail);
+        $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail_remain', $order_detail_remain);
+        $this->type = '装箱单';
         $this->display();
     }
 
