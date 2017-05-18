@@ -25,6 +25,9 @@ class FeeAction extends BaseAction  {
         }
         $this->assign('json_country_list', json_encode($country_list));
 
+        $country = M('Country')->where(['id' => $this->client['single_country_id']])->find();
+        $this->assign('country', $country);
+
         $this->assign('title', '运费预算');
         $this->display();
     }

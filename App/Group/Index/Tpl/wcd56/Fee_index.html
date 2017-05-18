@@ -20,14 +20,14 @@
                     <fieldset>
                         <div class="box_c_item">
                             <label class="l_title">国家：</label>
-                            <if condition="$cleint.single_country eq 0">
+                            <if condition="$client.single_country eq 0">
                             <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}">{$v.name}</option>
                                 </foreach>
                             </select>
                             <else />
-                            <input type="text" class="text_input" readonly />
+                            <input type="text" class="text_input" readonly value="{$country.name}"/>
                             <input type="hidden" id="country" value="{$client.single_country_id}"/>
                             </if>
                             <label class="r_title">寄件类型：</label>
