@@ -59,10 +59,11 @@
                                         <if condition="$v.receive_status eq 0">
                                             | <a href="javascript:void(0);" onclick="complete_order({$v.id})">完成</a>
                                         </if>
+                                        <if condition="$v.operate_remark">
+                                            | <a href="javascript:void(0);" onclick="show_operate_remark({$v.id})">处理备注</a>
+                                        </if>
                                     </if>
-                                    <if condition="$v.operate_remark">
-                                        | <a href="javascript:void(0);" onclick="show_operate_remark({$v.id})">处理备注</a>
-                                    </if>
+
                                 </td>
                             </tr>
                         </foreach>
