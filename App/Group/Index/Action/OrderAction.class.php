@@ -219,17 +219,21 @@ class OrderAction extends BaseAction  {
          */
         $order_id = 0;
         $order_num = '';
-        $today_time = strtotime(date('Y', time()).'01-01');
+        $today_time = strtotime(date('Y-', time()).'01-01');
         $total_map = [
 //            'client_id' => $this->client_id,
             'add_time' => ['gt', date('Y-m-d H:i:s', $today_time)],
         ];
+//        echo date('Y-m-d H:i:s', $today_time);exit;
         for( $i = 0; $i < 5; $i++ ) {
             $total = M('ClientOrder')->where($total_map)->count();
+//            echo $total;exit;
             $total++;
+//            echo $total;exit;
             $total_number = $this->_total_to_str($total);
 //            $order_num = 'HD' . date('Ymd', time()) . $this->client_id . $total_number;
             $order_num = date('Ymd', time()) . $total_number;
+            echo $order_num;exit;
             $data['order_num'] = $order_num;
             $add_order_result = M('ClientOrder')->add($data);
             if (!$add_order_result) {
