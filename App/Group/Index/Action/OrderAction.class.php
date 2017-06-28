@@ -187,7 +187,7 @@ class OrderAction extends BaseAction  {
         $order_specifications = $data['order_specifications'];
         unset($data['order_specifications']);
         $order_specifications = $this->_build_order_specification($order_specifications);
-
+//        var_dump($order_specifications);exit;
 
         if( $this->has_error ) {
             $this->response['msg'] = $this->error_msg;
@@ -274,7 +274,8 @@ class OrderAction extends BaseAction  {
                     $temp = [
                         'specifications_id' => $v['id'],
                         'detail_id' => $order_detail[$d]['id'],
-                        'number' => $v['detail_number'][$d],
+//                        'number' => $v['detail_number'][$d],
+                        'number' => $order_detail[$d]['count'],
                     ];
                     $temp_result = M('ClientOrderMap')->add($temp);
                     if( !$temp_result ) {
@@ -305,7 +306,9 @@ class OrderAction extends BaseAction  {
             $this->response['url'] = U('Order/index');
         } else {
             $model->rollback();
+//            echo $model->getError();
             $this->response['msg'] = '系统繁忙，请稍后重试';
+            $this->response['msg'] = $model->getDbError();
         }
         echo json_encode($this->response);
         exit;
