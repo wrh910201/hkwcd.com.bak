@@ -1918,7 +1918,7 @@ class OrderAction extends BaseAction  {
             ->find();
         if( empty($default_receive) ) {
             $this->response['code'] = -1;
-            $this->response['msg'] = '您没有设置默认的发货地址';
+            $this->response['msg'] = '您没有设置默认的收货地址';
         } else {
             if( mb_strlen($default_receive['detail_address']) > 20 ) {
                 $default_receive['show_detail_address'] = mb_substr($default_receive['detail_address'], 0, 20).'...';
