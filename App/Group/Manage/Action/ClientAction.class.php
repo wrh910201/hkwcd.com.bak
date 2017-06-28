@@ -268,6 +268,11 @@ class ClientAction extends CommonContentAction {
             }
         }
 
+        $data['is_person'] = 0;
+        if( empty($data['company']) ) {
+            $data['is_person'] = 1;
+        }
+
         //设置添加的管理员id
 //        $data['operator_id'] = session('yang_adm_uid');
 
