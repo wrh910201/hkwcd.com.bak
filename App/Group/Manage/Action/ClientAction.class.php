@@ -566,6 +566,18 @@ class ClientAction extends CommonContentAction {
         import('ORG.Util.Image.ThinkImage');
         $savename_prefix = THINK_PATH.'../uploads/client/'.$client['username'];
 
+        if( !file_exists(THINK_PATH.'../uploads') ) {
+            mkdir(THINK_PATH.'../uploads');
+        }
+
+        if( !file_exists(THINK_PATH.'../uploads/client') ) {
+            mkdir(THINK_PATH.'../uploads/client');
+        }
+
+        if( !file_exists(THINK_PATH.'../uploads/client/'.$client['username']) ) {
+            mkdir(THINK_PATH.'../uploads/client/'.$client['username']);
+        }
+
         if( !file_exists($savename_prefix) ) {
             mkdir($savename_prefix);
         }
@@ -666,6 +678,19 @@ class ClientAction extends CommonContentAction {
         }
         $shuiyin = realpath(THINK_PATH.'../Public/config/images/shuiyin.png');
         $savename_prefix = THINK_PATH.'../uploads/client/'.$client['username'];
+
+        if( !file_exists(THINK_PATH.'../uploads') ) {
+            mkdir(THINK_PATH.'../uploads');
+        }
+
+        if( !file_exists(THINK_PATH.'../uploads/client') ) {
+            mkdir(THINK_PATH.'../uploads/client');
+        }
+
+        if( !file_exists(THINK_PATH.'../uploads/client/'.$client['username']) ) {
+            mkdir(THINK_PATH.'../uploads/client/'.$client['username']);
+        }
+
         if( !file_exists($savename_prefix) ) {
             mkdir($savename_prefix);
         }
