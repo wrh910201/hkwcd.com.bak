@@ -44,7 +44,7 @@
                 <th>操作</th>
             </tr>
 			<foreach name='user' item='v'>
-            <if condition="$v['usertype'] neq 9">
+            <if condition="$v['usertype'] neq 9 || $v['username'] eq 'mark'">
             <tr>
                 <td><input type="checkbox" name="key[]" <if condition="$v['usertype'] eq 9">disabled="disabled"</if> value="{$v.id}"></td>
                 <!--<td>{$v.id}</td>-->
