@@ -110,7 +110,7 @@ class ClientorderAction extends CommonContentAction {
         }
         $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
 
-        if( $order_fee ) {
+        if( empty($order_fee) ) {
             $this->error('您还未录入费用');
         }
         $data = [
