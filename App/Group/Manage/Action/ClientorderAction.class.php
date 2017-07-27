@@ -1360,8 +1360,8 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
                 'content' => '添加商品信息成功',
             ];
             M('ClientOrderLog')->add($log_data);
@@ -1462,8 +1462,8 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
                 'content' => '编辑商品信息成功',
             ];
             M('ClientOrderLog')->add($log_data);
@@ -1518,8 +1518,8 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
                 'content' => '删除商品信息成功',
             ];
             M('ClientOrderLog')->add($log_data);
@@ -1673,8 +1673,8 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
                 'content' => '添加订单规格成功',
             ];
             M('ClientOrderLog')->add($log_data);
@@ -1835,8 +1835,8 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
                 'content' => '编辑订单规格成功',
             ];
             M('ClientOrderLog')->add($log_data);
@@ -1899,8 +1899,8 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
+                'operator_id' => session('yang_adm_uid'),
+                'type' => 2,
                 'content' => '删除订单规格成功',
             ];
             M('ClientOrderLog')->add($log_data);
