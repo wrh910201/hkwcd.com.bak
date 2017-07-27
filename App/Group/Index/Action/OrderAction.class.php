@@ -233,7 +233,7 @@ class OrderAction extends BaseAction  {
             $total_number = $this->_total_to_str($total);
 //            $order_num = 'HD' . date('Ymd', time()) . $this->client_id . $total_number;
             $order_num = date('Ymd', time()) . $total_number;
-            echo $order_num;exit;
+//            echo $order_num;exit;
             $data['order_num'] = $order_num;
             $add_order_result = M('ClientOrder')->add($data);
             if (!$add_order_result) {
