@@ -27,7 +27,7 @@
                 <div class="x_nav"><yang:position /></div>
                 <div class="ser_nav">{$title}</div>
                 <div class="zgwen">　　
-                    <form class="form" action="/Remote/query.html" method="post">
+                    <form id="remoteForm" class="form" action="/Remote/query.html" method="post">
                     <dl>
                         <dt>国 家：</dt>
                         <dd>
@@ -37,17 +37,17 @@
                     <dl>
                         <dt>邮 编：</dt>
                         <dd>
-                            <input name="code" type="text">
+                            <input id="code" name="code" type="text">
                         </dd>
                     </dl>
                     <dl>
                         <dt>城 市：</dt>
                         <dd>
-                            <input name="city" type="text">
+                            <input id="city" name="city" type="text">
                         </dd>
                     </dl>
                     <div class="form_b">
-                        <input type="submit" class="btn_blue" style="height: 40px;width: 80px;font-size: 16px;" id="submit" value="提 交">
+                        <input type="button" class="btn_blue" style="height: 40px;width: 80px;font-size: 16px;" id="submit" value="提 交">
                     </div>
                     </form>
                     <if condition="$is_result eq true">
@@ -62,15 +62,10 @@
                                 <th style="text-align: center">开始邮编</th>
                                 <th style="text-align: center">结束邮编</th>
                             </tr>
-                            <volist name="query_result" id="vo">
-                            <tr>
-                                <td style="text-align: center">{$vo.servCode}</td>
-                                <td style="text-align: center">{$vo.countCode}</td>
-                                <td style="text-align: center">{$vo.town}</td>
-                                <td style="text-align: center">{$vo.startCode}</td>
-                                <td style="text-align: center">{$vo.endCode}</td>
-                            </tr>
-                            </volist>
+                            <tbody id="remoteResultTable">
+
+
+                            </tbody>
                         </table>
                     </if>
                 </div>
@@ -85,6 +80,55 @@
 <include file="Public:footer" />
 <script type="text/javascript">
     $("#ccount").select2();
+
+    $("#submit").click(function() {
+        selectRemote();
+    });
+
+
+    function selectRemote(){
+        var code=$("#code").val();
+        var city=$("#city").val();
+        if((code ==null || code =='') && (city ==null || city =='')){
+            alert("邮编跟城市名必须输入一项");
+            return ;
+
+        }
+        var remoteTable=window.document.getElementById("remoteResultTable");
+        $.ajax({
+            type:"POST",
+            url:"/Remote/ajaxQuery",
+            dataType:"json",
+            data:$('#remoteForm').serialize(),
+            success :function(data){
+                remoteTable.innerHTML = "";
+                var str="";
+                if(data.length>0){
+
+                    for (i in data) {
+                        str += "<tr><td style=\"text-align: center\">"+data[i].servCode+"</td>"+
+                                "<td style=\"text-align: center\">"+data[i].countCode+"</td>"+
+                                "<td style=\"text-align: center\">"+data[i].town+"</td>"+
+                                "<td style=\"text-align: center\">"+data[i].startCode+"</td>"+
+                                "<td style=\"text-align: center\">"+data[i].endCode+"</td>"+
+                                "</tr>"
+                    }
+
+                }else{
+                    str += "<tr><td width=\"15%\" colspan=\"5\" class=\"red\">不是偏远 </td></tr>"
+                }
+                remoteTable.innerHTML = str;
+
+
+
+            },
+            error :function(){
+                alert('查询出错');
+
+            }
+        });
+
+    }
 </script>
 </body>
 </html>

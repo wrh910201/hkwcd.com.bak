@@ -70,6 +70,36 @@ class RemoteAction extends Action {
         $this->display('index');
     }
 
+    public function ajaxQuery() {
+        $ccount = I('ccount');
+        $code = I('code');
+        $city = I('city');
+
+//        if( empty($code) && empty($city) ) {
+//            $this->error("邮编跟城市名必须输入一项");
+//        }
+
+        $param = [
+            'ccount' => $ccount,
+//            'countCode2' => $countCode2,
+            'code' => $code,
+            'city' => $city,
+        ];
+        $query_result = S($this->key_prefix.'_result_'.md5(json_encode($param)));
+        if( !$query_result ) {
+//            $url = 'http://exp.hecny.com/serch_remot.action';
+            $url = "http://exp.hecny.com/exp/mainIndex/selectRemote.do";
+            $result = post($url, $param);
+            $query_result = json_decode($result, true);
+            if ($query_result) {
+                S($this->key_prefix . '_result_' . md5(json_encode($param)), $query_result, 3600 * 24 * 3);
+            }
+        } else {
+            $result = json_encode($query_result);
+        }
+        echo $result;exit;
+    }
+
     private function _getCountryList() {
         $url = 'http://exp.hecny.com/serch_remote.html';
         $result = get($url);
