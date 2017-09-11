@@ -8,8 +8,14 @@
     <meta name="description" content="{$description}" />
     <link href="__PUBLIC__/css/hd.css" rel="stylesheet" type="text/css">
     <link href="__PUBLIC__/css/zy.css" rel="stylesheet" type="text/css">
+    <!--<link href="__PUBLIC__/css/chosen.css" rel="stylesheet" type="text/css">-->
+
     <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <!--<script type="text/javascript" src="__PUBLIC__/js/chosen.jquery.min.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.select2.js"></script>-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 </head>
 <body>
 <include file="Public:header" />
@@ -25,7 +31,7 @@
                     <dl>
                         <dt>国 家：</dt>
                         <dd>
-                            <select name="countCode2">{$country_list}</select>
+                            <select name="ccount" id="ccount">{$country_list}</select>
                         </dd>
                     </dl>
                     <dl>
@@ -46,7 +52,25 @@
                     </form>
                     <if condition="$is_result eq true">
                         <table class="tableStyle" id="tab">
-                            {$query_result}
+                            <tr>
+                                <td colspan="5" style="text-align: center">仅供参考</td>
+                            </tr>
+                            <tr>
+                                <th style="text-align: center">服务商</th>
+                                <th style="text-align: center">国家</th>
+                                <th style="text-align: center">城市</th>
+                                <th style="text-align: center">开始邮编</th>
+                                <th style="text-align: center">结束邮编</th>
+                            </tr>
+                            <volist name="query_result" id="vo">
+                            <tr>
+                                <td style="text-align: center">{$vo.servCode}</td>
+                                <td style="text-align: center">{$vo.countCode}</td>
+                                <td style="text-align: center">{$vo.town}</td>
+                                <td style="text-align: center">{$vo.startCode}</td>
+                                <td style="text-align: center">{$vo.endCode}</td>
+                            </tr>
+                            </volist>
                         </table>
                     </if>
                 </div>
@@ -59,5 +83,8 @@
 </div>
 
 <include file="Public:footer" />
+<script type="text/javascript">
+    $("#ccount").select2();
+</script>
 </body>
 </html>

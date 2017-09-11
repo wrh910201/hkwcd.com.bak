@@ -15,6 +15,7 @@ class RemoteAction extends Action {
 
         $this->title = '偏远地区查询';
         $country_list = S($this->key_prefix.'ch');
+//        $country_list = null;
         if( $country_list ) {
             $this->assign('country_list', $country_list);
         } else {
@@ -38,26 +39,28 @@ class RemoteAction extends Action {
             $this->assign('country_list', $country_list);
         }
 
-        $countCode2 = I('countCode2');
+        $ccount = I('ccount');
         $code = I('code');
         $city = I('city');
         $this->title = '偏远地区查询';
         $this->is_result = false;
         $param = [
-            'countCode' => '',
-            'countCode2' => $countCode2,
+            'ccount' => $ccount,
+//            'countCode2' => $countCode2,
             'code' => $code,
             'city' => $city,
         ];
         $query_result = S($this->key_prefix.'_result_'.md5(json_encode($param)));
         if( !$query_result ) {
 //        var_dump($param);exit;
-            $url = 'http://exp.hecny.com/serch_remot.action';
+//            $url = 'http://exp.hecny.com/serch_remot.action';
+            $url = "http://exp.hecny.com/exp/mainIndex/selectRemote.do";
             $result = post($url, $param);
 //            var_dump($result);exit;
-            $pattern = '#<table width="100%" border="0" align="left" cellpadding="1" cellspacing="1" class="tablelistcontent ">(.*)<\/table>#s';
-            preg_match($pattern, $result, $matches);
-            $query_result = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
+            $query_result = json_decode($result, true);
+//            $pattern = '#<table width="100%" border="0" align="left" cellpadding="1" cellspacing="1" class="tablelistcontent ">(.*)<\/table>#s';
+//            preg_match($pattern, $result, $matches);
+//            $query_result = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
             if ($query_result) {
                 S($this->key_prefix . '_result_' . md5(json_encode($param)), $query_result, 3600 * 24 * 3);
             }
@@ -70,16 +73,18 @@ class RemoteAction extends Action {
     private function _getCountryList() {
         $url = 'http://exp.hecny.com/serch_remote.html';
         $result = get($url);
-        $pattern = '#<select class="dlk" name="countCode">(.*)<\/select>#s';
+        $pattern = '#<select class="chosen-select select-box inline"  name="ccount" id="ccount" style="width:250px;">(.*)<\/select>#s';
         preg_match($pattern, $result, $matches);
-        $en_country_list = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
+//        $en_country_list = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
+        $en_country_list = $matches[1];
         if( $en_country_list ) {
             S($this->key_prefix.'en', $en_country_list, 3600 * 24 * 3);
         }
 
-        $pattern = '#<select class="dlk" name="countCode2">(.*)<\/select>#s';
+        $pattern = '#<select class="chosen-select select-box inline"  name="ccount" id="ccount" style="width:250px;">(.*)<\/select>#s';
         preg_match($pattern, $result, $matches);
-        $ch_country_list = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
+//        $ch_country_list = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
+        $ch_country_list = $matches[1];
         S($this->key_prefix.'ch', $ch_country_list, 3600 * 24 * 3);
     }
 
