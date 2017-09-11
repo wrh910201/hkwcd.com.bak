@@ -42,6 +42,11 @@ class RemoteAction extends Action {
         $ccount = I('ccount');
         $code = I('code');
         $city = I('city');
+
+        if( empty($code) && empty($city) ) {
+            $this->error("邮编跟城市名必须输入一项");
+        }
+
         $this->title = '偏远地区查询';
         $this->is_result = false;
         $param = [
@@ -52,15 +57,10 @@ class RemoteAction extends Action {
         ];
         $query_result = S($this->key_prefix.'_result_'.md5(json_encode($param)));
         if( !$query_result ) {
-//        var_dump($param);exit;
 //            $url = 'http://exp.hecny.com/serch_remot.action';
             $url = "http://exp.hecny.com/exp/mainIndex/selectRemote.do";
             $result = post($url, $param);
-//            var_dump($result);exit;
             $query_result = json_decode($result, true);
-//            $pattern = '#<table width="100%" border="0" align="left" cellpadding="1" cellspacing="1" class="tablelistcontent ">(.*)<\/table>#s';
-//            preg_match($pattern, $result, $matches);
-//            $query_result = mb_convert_encoding($matches[1], 'utf-8', 'gbk');
             if ($query_result) {
                 S($this->key_prefix . '_result_' . md5(json_encode($param)), $query_result, 3600 * 24 * 3);
             }
