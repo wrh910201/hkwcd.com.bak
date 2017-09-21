@@ -155,6 +155,42 @@ class OrderAction extends BaseAction  {
         $this->display();
     }
 
+    public function new_add() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['id'  => $client_id])->find();
+
+        $default_delivery = M('DeliveryAddress')->where(['status' => 1, 'is_default' => 1])->find();
+        $has_default_delivery = $default_delivery ? 1 : 0;
+        $selected_delivery_id = $default_delivery ? $default_delivery['id'] : 0;
+
+        $default_receive = M('ReceiveAddress')->where(['status' => 1, 'is_default' => 1])->find();
+        $has_default_receive = $default_receive ? 1 : 0;
+        $selected_receive_id = $default_receive ? $default_receive['id'] : 0;
+
+
+
+        $this->assign('client', $client);
+
+        $this->assign('default_delivery', $default_delivery);
+        $this->assign('json_delivery', json_encode($default_delivery));
+        $this->assign('default_delivery_id', $selected_delivery_id);
+        $this->assign('has_default_delivery', $has_default_delivery);
+
+        $this->assign('default_receive', $default_receive);
+        $this->assign('json_receive', json_encode($default_receive));
+        $this->assign('default_receive_id', $selected_receive_id);
+        $this->assign('has_default_receive', $has_default_receive);
+        if( empty($client['company']) ) {
+            $this->assign('default_company', json_encode(''));
+        } else {
+            $this->assign('default_company', json_encode($client['company']));
+        }
+
+        $this->assign('title', '添加订单');
+
+        $this->display();
+    }
+
     public function ajaxAdd() {
         $data = $this->_get_order_params();
         $data = $this->_build_delivery_address($data);
