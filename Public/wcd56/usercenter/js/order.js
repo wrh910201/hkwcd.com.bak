@@ -235,7 +235,7 @@ function show_delivery_form() {
     tips = layer.open({
         type: 1,
         skin: 'layui-layer-rim', //加上边框
-        area: ['1050px', '500px'], //宽高
+        area: ['1000px', '600px'], //宽高
         title: false,
         closeBtn: 1,
         shadeClose: false,

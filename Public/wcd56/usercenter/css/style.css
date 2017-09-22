@@ -420,7 +420,8 @@ fieldset input.text_input,fieldset select, fieldset textarea {
     padding: 7px;
     font-size: 12px;
     background: #fff url('../images/bg-form-field.gif') top left repeat-x;
-    border: 1px solid #d5d5d5;
+    border: 1px solid #b2b2b2;
+    border-radius: 4px;
     color: #333;
 }
 fieldset select {

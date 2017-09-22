@@ -1,15 +1,17 @@
-<include file="Usercenter:header" />
+<include file="Usercenter:header"/>
+<link href="__PUBLIC__/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet">
+<link href="__PUBLIC__/select2/4.0.3/css/select2.min.css" rel="stylesheet">
 <body>
-<include file="Usercenter:aside" />
+<include file="Usercenter:aside"/>
 <!-- main -->
 <div class="main">
-    <include file="Usercenter:top" />
+    <include file="Usercenter:top"/>
 
     <!--content-->
     <div class="content">
         <!--{$title}-->
         <div class="profile">
-            <div class="box">
+            <div class="box" id="addOrder">
                 <div class="box_t box_t_bottom">
                     <h3>{$title}</h3>
                     <div class="clear"></div>
@@ -21,7 +23,7 @@
                                 <div class="fl">
                                     <label class="l_title">发货公司：</label>
                                     <span id="delivery_company" class="w300 l_con"></span>
-                                    <!--<input readonly class="text_input w300" type="text" name="delivery_company" id="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
+                                    <!--<input readonly class="text_input w300" type="text" name="delivery_company" placeholder="请输入发货公司" value="{$client.company}">-->
                                     <div class="clear"></div>
                                 </div>
                             </div>
@@ -226,8 +228,382 @@
                     </div>
                 </div>
                 <div class="clear"></div>
+                <div id="delivery-list" class="hide">
+                    <fieldset>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>选择</th>
+                                <th>公司</th>
+                                <th>联系人</th>
+                                <th>地址</th>
+                                <th>邮编</th>
+                                <th>默认</th>
+                            </tr>
+                            </thead>
+                            <tbody id="select_delivery_items">
+                            <!--
+                            <tr>
+                                <td><input type="radio" class="ace" name="chkItem"></td>
+                                <td>WP15K081</td>
+                                <td>三只松鼠松籽</td>
+                                <td>T011</td>
+                                <td>500g</td>
+                                <td>9999</td>
+                            </tr>
+                            -->
+                            </tbody>
+                        </table>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <button class="btn btn_commit" type="button" id="select-delivery-btn">确认</button>
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="receive-list" class="hide">
+                    <fieldset>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>选择</th>
+                                <th>公司</th>
+                                <th>联系人</th>
+                                <th>地址</th>
+                                <th>邮编</th>
+                                <th>默认</th>
+                            </tr>
+                            </thead>
+                            <tbody id="select_receive_items">
+                            <!--
+                            <tr>
+                                <td><input type="radio" class="ace" name="chkItem"></td>
+                                <td>WP15K081</td>
+                                <td>三只松鼠松籽</td>
+                                <td>T011</td>
+                                <td>500g</td>
+                                <td>9999</td>
+                            </tr>
+                            -->
+                            </tbody>
+                        </table>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <button class="btn btn_commit" type="button" id="select-receive-btn">确认</button>
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </div>
+                <form action="" method="post" id="add_delivery_form" class="box_c hide">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">发货公司：</label>
+                                <input class="text_input w300" type="text" name="add_delivery_company" id="add_delivery_company"
+                                       placeholder="请输入公司" v-model="deliveryInfo.company">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 联系人：</label>
+                                <input class="text_input w300" type="text" name="add_delivery_consignor" id="add_delivery_consignor"
+                                       placeholder="请输入联系人" v-model="deliveryInfo.consignor">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 国家：</label>
+                                <select class="w300 text_input" id="add_delivery_country"
+                                        v-select2='add_delivery_country' v-model="deliveryInfo.country">
+                                    <foreach name="country_list" item="v">
+                                        <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">省：</label>
+                                <input class="text_input w300" type="text" id="add_delivery_state" name="add_delivery_state"
+                                       placeholder="请输入省" v-model="deliveryInfo.state">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 市：</label>
+                                <input class="text_input w300" type="text" id="add_delivery_city" name="add_delivery_city"
+                                       placeholder="请输入市" v-model="deliveryInfo.city">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 具体地址：</label>
+                                <input class="text_input w300" type="text" id="add_delivery_detail_address"
+                                       name="add_delivery_detail_address" v-model="deliveryInfo.detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 邮编：</label>
+                                <input class="text_input w300" type="text" id="add_delivery_postal_code"
+                                       name="add_delivery_postal_code" v-model="deliveryInfo.postal_code" placeholder="请输入邮编"/>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 手机：</label>
+                            <input class="text_input w300" type="text" name="add_delivery_mobile" id="add_delivery_mobile"
+                                   placeholder="请输入手机" v-model="deliveryInfo.mobile"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">座机：</label>
+                            <input class="text_input w300" type="text" name="add_delivery_phone" id="add_delivery_phone"
+                                   placeholder="请输入座机" v-model="deliveryInfo.phone"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">出口商代码：</label>
+                            <input class="text_input w300" type="text" name="add_exporter_code" id="add_exporter_code"
+                                   placeholder="请输入出口商代码" v-model="deliveryInfo.exporter_code"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 身份证号码：</label>
+                            <input class="text_input w300" type="text" id="certificate_num" name="certificate_num"
+                                   placeholder="请输入身份证号码" v-model="deliveryInfo.certificate_num">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item" style="width: 980px;">
+                            <div class="fl add_product_img select-image" id="select-image-1"
+                                 style="position: relative;margin-top: 0px;margin-left: 50px;width: 400px; height: 240px">
+                                <input type="hidden" name="certificate1_url" id="certificate1_url"/>
+                                <input name="mypic" type="file" id="certificate-upload-1" value=""
+                                       style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
+                            </div>
+                            <div id="show-image-1" class="fl product_img_show show-image"
+                                 style="position: relative;display: none; width: 408px;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
+                                <img src="" alt="身份证正面" width='408' height='248'/>
+                                <input name="mypic" type="file" id="change-certificate-upload-1" value=""
+                                       style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
+                            </div>
+                            <div class="fl add_product_img select-image" id="select-image-2"
+                                 style="position: relative;position: relative;margin-top: 0px;margin-left: 10px;width: 400px; height: 240px">
+                                <input type="hidden" name="certificate2_url" id="certificate2_url"/>
+                                <input name="mypic" type="file" id="certificate-upload-2" value=""
+                                       style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;"/>
+                            </div>
+                            <div id="show-image-2" class="fl product_img_show show-image"
+                                 style="position: relative;display: none; width: 408px;position: relative;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
+                                <img src="" alt="身份证反面" width='408' height='248'/>
+                                <input name="mypic" type="file" id="change-certificate-upload-2" value=""
+                                       style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item" id="show-result-1" style="display: none;">
+                            <label class="l_title">上传中...</label>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="box_c_item">
+                            <label class="l_title">默认：</label>
+                            <input type="radio" name="add_delivery_default" id="add_delivery_is_default" value="1"/>是&nbsp;
+                            <input type="radio" name="add_delivery_default" id="add_delivery_not_default" value="0"
+                                   checked="checked"/>否
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <button class="btn btn_commit" type="button" id="add-new-delivery">保存</button>
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </form>
+                <form action="" method="post" id="add_receive_form" class="box_c hide">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">公司：</label>
+                                <input class="text_input w300" type="text" name="add_receive_company" id="add_receive_company"
+                                       placeholder="请输入公司">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">联系人：</label>
+                                <input class="text_input w300" type="text" name="add_receive_addressee" id="add_receive_addressee"
+                                       placeholder="请输入联系人">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">国家：</label>
+                                <select class="w300" id="add_receive_country">
+                                    <foreach name="country_list" item="v">
+                                        <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">省：</label>
+                                <input class="text_input w300" type="text" id="add_receive_state" name="add_receive_state"
+                                       placeholder="请输入省">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">市：</label>
+                                <input class="text_input w300" type="text" id="add_receive_city" name="add_receive_city"
+                                       placeholder="请输入市">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">具体地址：</label>
+                                <input class="text_input w300" type="text" id="add_receive_detail_address"
+                                       name="add_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">手机：</label>
+                            <input class="text_input w300" type="text" name="add_receive_mobile" id="add_receive_mobile"
+                                   placeholder="请输入手机"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">座机：</label>
+                            <input class="text_input w300" type="text" name="add_receive_phone" id="add_receive_phone"
+                                   placeholder="请输入座机"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">邮编：</label>
+                            <input class="text_input w300" type="text" name="add_receive_postal_code" id="add_receive_postal_code"
+                                   placeholder="请输入邮编"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">进口商代码：</label>
+                            <input class="text_input w300" type="text" name="receiver_code" placeholder="请输入进口商代码">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">默认：</label>
+                            <input type="radio" name="add_receive_default" id="add_receive_is_default" value="1"/>是&nbsp;
+                            <input type="radio" name="add_receive_default" id="add_receive_not_default" value="0"
+                                   checked="checked"/>否
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <button class="btn btn_commit" type="button" id="add-new-receive">保存</button>
+                            <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </form>
+                <form action="" method="post" id="spare_receive_form" class="box_c hide">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">公司：</label>
+                                <input class="text_input w300" type="text" name="spare_receive_company" id="spare_receive_company"
+                                       placeholder="请输入公司">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">备用联系人：</label>
+                                <input class="text_input w300" type="text" name="spare_receive_addressee"
+                                       id="spare_receive_addressee" placeholder="请输入备用联系人">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">国家：</label>
+                            <select class="w300" id="spare_country" name="spare_country">
+                                <foreach name="country_list" item="v">
+                                    <option value="{$v.id}">{$v.name}</option>
+                                </foreach>
+                            </select>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">省：</label>
+                            <input class="text_input w300" type="text" name="spare_state" id="spare_state" placeholder="请输入省">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">市：</label>
+                            <input class="text_input w300" type="text" name="spare_city" id="spare_city" placeholder="请输入市">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">具体地址：</label>
+                                <input class="text_input w300" type="text" id="spare_receive_detail_address"
+                                       name="spare_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">邮编：</label>
+                            <input class="text_input w300" type="text" name="spare_receive_postal_code"
+                                   id="spare_receive_postal_code" placeholder="请输入邮编"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">手机：</label>
+                            <input class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile"
+                                   placeholder="请输入手机"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">座机：</label>
+                            <input class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone"
+                                   placeholder="请输入座机"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">进口商代码：</label>
+                            <input class="text_input w300" type="text" name="spare_receiver_code" id="spare_receiver_code"
+                                   placeholder="请输入进口商代码">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">启用：</label>
+                            <input type="radio" name="enable_spare" id="enable_spare" value="1"/>是&nbsp;
+                            <input type="radio" name="enable_spare" id="disable_spare" value="0" checked="checked"/>否
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <button class="btn btn_commit" type="button" id="add-spare-receive" onclick="hide_spare_form();">确认
+                            </button>
+                            <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
-            <div class="box">
+            <div id="orderInfo" class="box">
                 <div class="box_t box_t_bottom">
                     <h3 class="fl">订单信息</h3>
                     <div class="clear"></div>
@@ -269,7 +645,8 @@
                             </div>
                             <div class="fl">
                                 <label class="l_title">* 关税支付：</label>
-                                <select class=" text_input " style="width:316px;" id="tariff_payment" name="tariff_payment">
+                                <select class=" text_input " style="width:316px;" id="tariff_payment"
+                                        name="tariff_payment">
                                     <option value="Receiver">收货人</option>
                                     <option value="Sender">寄件人</option>
                                     <option value="3rd Party">第三方</option>
@@ -281,7 +658,8 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">装运参考：</label>
-                                <input class="text_input w300" type="text" name="shipment_reference" id="shipment_reference" placeholder="货物上的标记，例如 WCD">
+                                <input class="text_input w300" type="text" name="shipment_reference"
+                                       id="shipment_reference" placeholder="货物上的标记，例如 WCD">
                                 <div class="clear"></div>
                             </div>
                             <div class="fl">
@@ -298,12 +676,14 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">相关委托书：</label>
-                                <input class="text_input w300" type="text" name="declaration_of_power_attorney" id="declaration_of_power_attorney" placeholder="正式报关需填写，默认为 快件报关">
+                                <input class="text_input w300" type="text" name="declaration_of_power_attorney"
+                                       id="declaration_of_power_attorney" placeholder="正式报关需填写，默认为 快件报关">
                                 <div class="clear"></div>
                             </div>
                             <div class="fl">
                                 <label class="l_title">合同号：</label>
-                                <input class="text_input w300" type="text" name="contract_num" id="contract_num" placeholder="">
+                                <input class="text_input w300" type="text" name="contract_num" id="contract_num"
+                                       placeholder="">
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -311,7 +691,8 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">* 运输方式：</label>
-                                <input class="text_input w300" type="text" name="mode_of_transportation" id="mode_of_transportation" placeholder="请输入运输方式">
+                                <input class="text_input w300" type="text" name="mode_of_transportation"
+                                       id="mode_of_transportation" placeholder="请输入运输方式">
                                 <div class="clear"></div>
                             </div>
                             <div class="fl">
@@ -328,7 +709,8 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">* 出口原因：</label>
-                                <select class=" text_input " style="width:316px;" id="export_reason" name="export_reason">
+                                <select class=" text_input " style="width:316px;" id="export_reason"
+                                        name="export_reason">
                                     <option value="Business">商业</option>
                                     <option value="Exhibition">展览</option>
                                     <option value="Sample">样品</option>
@@ -343,7 +725,8 @@
                             </div>
                             <div class="fl">
                                 <label class="l_title">* 出口性质：</label>
-                                <select class="text_input " style="width:316px;" id="export_nature" name="export_nature">
+                                <select class="text_input " style="width:316px;" id="export_nature"
+                                        name="export_nature">
                                     <option value="Permanent">永久</option>
                                     <option value="Temporarily">暂时</option>
                                 </select>
@@ -355,7 +738,8 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">制造商或出口商及地址：</label>
-                                <input style="width:800px;" class="text_input" type="text" name="manufacturer" id="manufacturer" placeholder="不能填写物流公司">
+                                <input style="width:800px;" class="text_input" type="text" name="manufacturer"
+                                       id="manufacturer" placeholder="不能填写物流公司">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -364,7 +748,8 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">备注：</label>
-                                <input style="width:800px;" class="text_input" type="text" name="remark" id="remark" placeholder="备注">
+                                <input style="width:800px;" class="text_input" type="text" name="remark" id="remark"
+                                       placeholder="备注">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -373,12 +758,12 @@
                     </fieldset>
                     <div class="clear"></div>
                 </div>
-
             </div>
-            <div class="box">
+            <div class="box" id="orderDetail">
                 <div class="box_t box_t_bottom">
                     <h3 class="fl">商品信息（为了确保您的货物能够顺利通关，请一定要提供具体的商品名称）</h3>
-                    <button id="show_order_detail" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入</button>
+                    <button id="show_order_detail" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入
+                    </button>
                     <div class="clear"></div>
                 </div>
                 <div class="box_c box_c_reset">
@@ -400,12 +785,73 @@
                     </table>
                     <div class="clear"></div>
                 </div>
+                <form action="" method="post" id="order_detail_form" class="box_c hide">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 中文品名：</label>
+                                <input class="text_input w300" type="text" name="order_detail_product_name"
+                                       id="order_detail_product_name" v-model="newDetail.product_name" placeholder="请输入中文品名">&nbsp;
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 英文品名：</label>
+                                <input class="text_input w300" type="text" name="order_detail_product_name"
+                                       id="order_detail_en_product_name" v-model="newDetail.en_product_name" placeholder="请输入英文品名">&nbsp;
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <div class="fl">
+                                <label class="l_title">* 商品编码：</label>
+                                <input class="text_input w300" type="text" id="order_detail_goods_code"
+                                       name="order_detail_goods_code" v-model="newDetail.detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
+                                <a class="btn btn_commit" href="http://www.censtatd.gov.hk/trader/hscode/index_tc.jsp"
+                                   target="_blank">编码查询</a>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 数量：</label>
+                            <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count"
+                                   placeholder="请输入数量" v-model="newDetail.detail_count"/>&nbsp;
+                            <select name="order_detail_unit" id="order_detail_unit" v-model="newDetail.unit">
+                                <foreach name="order_detail_unit" item="v" key="k">
+                                    <option value="{$k}">{$k}/{$v}</option>
+                                </foreach>
+                            </select>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 单件申报价值：</label>
+                            <input class="text_input w300" type="text" name="order_detail_single_declared"
+                                   id="order_detail_single_declared" v-model="newDetail.single_declared" placeholder="请输入单件申报价值"/>&nbsp;
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 原产地：</label>
+                            <input class="text_input w300" type="text" v-model="newDetail.origin" name="order_detail_origin" id="order_detail_origin"
+                                   placeholder="请输入原产地, 如 CHINA"/>&nbsp;
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <input type="hidden" id="d_editing_id" value="0"/>
+                            <button class="btn btn_commit" type="button" @click="addOrderDetail" id="add_order_detail">确认</button>
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
             <div class="box">
                 <div class="box_t box_t_bottom">
                     <h3 class="fl">规格详情（材积重=长*宽*高/5000，重量与材积重两者取大收费）</h3>
                     <!--<button id="calculate" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;计费</button>-->
-                    <button id="show_order_specifications" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入</button>
+                    <button id="show_order_specifications" class="btn btn_add fr" type="button"><i
+                            class="icon">&#xe61e;</i>&nbsp;录入
+                    </button>
                     <div class="clear"></div>
                 </div>
                 <div class="box_c box_c_reset">
@@ -458,7 +904,8 @@
                         <div class="box_c_item">
                             <div class="fl">
                                 <label class="l_title">托运备注：</label>
-                                <input style="width:800px;" class="text_input" type="text" name="specifications_remark" id="specifications_remark" placeholder="请填写国内物流信息或工厂联系人信息">
+                                <input style="width:800px;" class="text_input" type="text" name="specifications_remark"
+                                       id="specifications_remark" placeholder="请填写国内物流信息或工厂联系人信息">
                                 <div class="clear"></div>
                             </div>
                             <div class="clear"></div>
@@ -488,419 +935,35 @@
     </div>
     <!--END content-->
 
-    <div id="delivery-list" class="hide">
-        <fieldset>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>选择</th>
-                    <th>公司</th>
-                    <th>联系人</th>
-                    <th>地址</th>
-                    <th>邮编</th>
-                    <th>默认</th>
-                </tr>
-                </thead>
-                <tbody id="select_delivery_items">
-                <!--
-                <tr>
-                    <td><input type="radio" class="ace" name="chkItem"></td>
-                    <td>WP15K081</td>
-                    <td>三只松鼠松籽</td>
-                    <td>T011</td>
-                    <td>500g</td>
-                    <td>9999</td>
-                </tr>
-                -->
-                </tbody>
-            </table>
-            <div class="box_c_item">
-                <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="select-delivery-btn">确认</button>
-                <div class="clear"></div>
-            </div>
-        </fieldset>
-    </div>
-    <div id="receive-list" class="hide">
-        <fieldset>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>选择</th>
-                    <th>公司</th>
-                    <th>联系人</th>
-                    <th>地址</th>
-                    <th>邮编</th>
-                    <th>默认</th>
-                </tr>
-                </thead>
-                <tbody id="select_receive_items">
-                <!--
-                <tr>
-                    <td><input type="radio" class="ace" name="chkItem"></td>
-                    <td>WP15K081</td>
-                    <td>三只松鼠松籽</td>
-                    <td>T011</td>
-                    <td>500g</td>
-                    <td>9999</td>
-                </tr>
-                -->
-                </tbody>
-            </table>
-            <div class="box_c_item">
-                <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="select-receive-btn">确认</button>
-                <div class="clear"></div>
-            </div>
-        </fieldset>
-    </div>
-    <form action="" method="post" id="add_delivery_form" class="box_c hide">
-        <fieldset>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">发货公司：</label>
-                    <input class="text_input w300" type="text" name="add_delivery_company" id="add_delivery_company" placeholder="请输入公司">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 联系人：</label>
-                    <input class="text_input w300" type="text" name="add_delivery_consignor" id="add_delivery_consignor" placeholder="请输入联系人">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 国家：</label>
-                    <select class="w300" id="add_delivery_country">
-                        <foreach name="country_list" item="v">
-                            <option value="{$v.id}">{$v.name} / {$v.ename}</option>
-                        </foreach>
-                    </select>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">省：</label>
-                    <input class="text_input w300" type="text" id="add_delivery_state" name="add_delivery_state" placeholder="请输入省">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 市：</label>
-                    <input class="text_input w300" type="text" id="add_delivery_city" name="add_delivery_city" placeholder="请输入市">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 具体地址：</label>
-                    <input class="text_input w450" type="text" id="add_delivery_detail_address" name="add_delivery_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 邮编：</label>
-                    <input class="text_input w450" type="text" id="add_delivery_postal_code" name="add_delivery_postal_code" placeholder="请输入邮编"/>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">* 手机：</label>
-                <input class="text_input w300" type="text" name="add_delivery_mobile" id="add_delivery_mobile" placeholder="请输入手机"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">座机：</label>
-                <input class="text_input w300" type="text" name="add_delivery_phone" id="add_delivery_phone" placeholder="请输入座机"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">出口商代码：</label>
-                <input class="text_input w300" type="text" name="add_exporter_code" id="add_exporter_code" placeholder="请输入出口商代码"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">* 身份证号码：</label>
-                <input class="text_input w300" type="text" id="certificate_num" name="certificate_num" placeholder="请输入身份证号码">
-                <div class="clear"></div>
-            </div>
-            <div class="clear"></div>
-            <div class="box_c_item" style="width: 980px;">
-                <div class="fl add_product_img select-image" id="select-image-1" style="position: relative;margin-top: 0px;margin-left: 50px;width: 400px; height: 240px">
-                    <input type="hidden" name="certificate1_url" id="certificate1_url" />
-                    <input name="mypic" type="file" id="certificate-upload-1" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
-                </div>
-                <div id="show-image-1" class="fl product_img_show show-image" style="position: relative;display: none; width: 408px;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
-                    <img src="" alt="身份证正面"  width='408' height='248'/>
-                    <input name="mypic" type="file" id="change-certificate-upload-1" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
-                </div>
-                <div class="fl add_product_img select-image" id="select-image-2" style="position: relative;position: relative;margin-top: 0px;margin-left: 10px;width: 400px; height: 240px">
-                    <input type="hidden" name="certificate2_url" id="certificate2_url" />
-                    <input name="mypic" type="file" id="certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;"/>
-                </div>
-                <div id="show-image-2" class="fl product_img_show show-image" style="position: relative;display: none; width: 408px;position: relative;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
-                    <img src="" alt="身份证反面"  width='408' height='248'/>
-                    <input name="mypic" type="file" id="change-certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
-                </div>
-            </div>
-            <div class="clear"></div>
-            <div class="box_c_item" id="show-result-1" style="display: none;">
-                <label class="l_title">上传中...</label>
-                <div class="clear"></div>
-            </div>
-            <div class="clear"></div>
-            <div class="box_c_item">
-                <label class="l_title">默认：</label>
-                <input type="radio" name="add_delivery_default" id="add_delivery_is_default" value="1"  />是&nbsp;
-                <input type="radio" name="add_delivery_default" id="add_delivery_not_default" value="0" checked="checked" />否
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add-new-delivery">保存</button>
-                <div class="clear"></div>
-            </div>
-        </fieldset>
-    </form>
-    <form action="" method="post" id="add_receive_form" class="box_c hide">
-        <fieldset>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">公司：</label>
-                    <input class="text_input w300" type="text" name="add_receive_company" id="add_receive_company" placeholder="请输入公司">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">联系人：</label>
-                    <input class="text_input w300" type="text" name="add_receive_addressee" id="add_receive_addressee" placeholder="请输入联系人">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">国家：</label>
-                    <select class="w300" id="add_receive_country">
-                        <foreach name="country_list" item="v">
-                            <option value="{$v.id}">{$v.name} / {$v.ename}</option>
-                        </foreach>
-                    </select>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">省：</label>
-                    <input class="text_input w300" type="text" id="add_receive_state" name="add_receive_state" placeholder="请输入省">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">市：</label>
-                    <input class="text_input w300" type="text" id="add_receive_city" name="add_receive_city" placeholder="请输入市">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">具体地址：</label>
-                    <input class="text_input w450" type="text" id="add_receive_detail_address" name="add_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">手机：</label>
-                <input class="text_input w300" type="text" name="add_receive_mobile" id="add_receive_mobile" placeholder="请输入手机"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">座机：</label>
-                <input class="text_input w300" type="text" name="add_receive_phone" id="add_receive_phone" placeholder="请输入座机"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">邮编：</label>
-                <input class="text_input w300" type="text" name="add_receive_postal_code" id="add_receive_postal_code" placeholder="请输入邮编"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">进口商代码：</label>
-                <input class="text_input w300" type="text" name="receiver_code" placeholder="请输入进口商代码">
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">默认：</label>
-                <input type="radio" name="add_receive_default" id="add_receive_is_default" value="1"  />是&nbsp;
-                <input type="radio" name="add_receive_default" id="add_receive_not_default" value="0" checked="checked" />否
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add-new-receive">保存</button>
-                <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
-                <div class="clear"></div>
-            </div>
-        </fieldset>
-    </form>
-    <form action="" method="post" id="spare_receive_form" class="box_c hide">
-        <fieldset>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">公司：</label>
-                    <input class="text_input w300" type="text" name="spare_receive_company" id="spare_receive_company" placeholder="请输入公司">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">备用联系人：</label>
-                    <input class="text_input w300" type="text" name="spare_receive_addressee" id="spare_receive_addressee" placeholder="请输入备用联系人">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">国家：</label>
-                <select class="w300" id="spare_country" name="spare_country">
-                    <foreach name="country_list" item="v">
-                        <option value="{$v.id}">{$v.name}</option>
-                    </foreach>
-                </select>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">省：</label>
-                <input class="text_input w300" type="text" name="spare_state" id="spare_state" placeholder="请输入省">
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">市：</label>
-                <input class="text_input w300" type="text" name="spare_city" id="spare_city" placeholder="请输入市">
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">具体地址：</label>
-                    <input class="text_input w450" type="text" id="spare_receive_detail_address" name="spare_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"/>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">邮编：</label>
-                <input class="text_input w300" type="text" name="spare_receive_postal_code" id="spare_receive_postal_code" placeholder="请输入邮编"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">手机：</label>
-                <input class="text_input w300" type="text" name="spare_receive_mobile" id="spare_receive_mobile" placeholder="请输入手机"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">座机：</label>
-                <input class="text_input w300" type="text" name="spare_receive_phone" id="spare_receive_phone" placeholder="请输入座机"/>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">进口商代码：</label>
-                <input class="text_input w300" type="text" name="spare_receiver_code" id="spare_receiver_code" placeholder="请输入进口商代码">
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">启用：</label>
-                <input type="radio" name="enable_spare" id="enable_spare" value="1"  />是&nbsp;
-                <input type="radio" name="enable_spare" id="disable_spare" value="0" checked="checked" />否
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add-spare-receive" onclick="hide_spare_form();">确认</button>
-                <a class="btn btn_commit" href="{:U('Remote/index')}" target="_blank">偏远查询</a> &nbsp;
-                <div class="clear"></div>
-            </div>
-        </fieldset>
-    </form>
-    <form action="" method="post" id="order_detail_form" class="box_c hide">
-        <fieldset>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 中文品名：</label>
-                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_product_name" placeholder="请输入中文品名">&nbsp;
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 英文品名：</label>
-                    <input class="text_input w300" type="text" name="order_detail_product_name" id="order_detail_en_product_name" placeholder="请输入英文品名">&nbsp;
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <div class="fl">
-                    <label class="l_title">* 商品编码：</label>
-                    <input class="text_input w300" type="text" id="order_detail_goods_code" name="order_detail_goods_code" placeholder="请输入商品编码"/>&nbsp;
-                    <a class="btn btn_commit" href="http://www.censtatd.gov.hk/trader/hscode/index_tc.jsp" target="_blank">编码查询</a>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">* 数量：</label>
-                <input class="text_input w300" type="text" name="order_detail_count" id="order_detail_count" placeholder="请输入数量"/>&nbsp;
-                <select name="order_detail_unit" id="order_detail_unit">
-                    <foreach name="order_detail_unit" item="v" key="k">
-                        <option value="{$k}">{$k}/{$v}</option>
-                    </foreach>
-                </select>
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">* 单件申报价值：</label>
-                <input class="text_input w300" type="text" name="order_detail_single_declared" id="order_detail_single_declared" placeholder="请输入单件申报价值"/>&nbsp;
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title">* 原产地：</label>
-                <input class="text_input w300" type="text" name="order_detail_origin" id="order_detail_origin" placeholder="请输入原产地, 如 CHINA"/>&nbsp;
-                <div class="clear"></div>
-            </div>
-            <div class="box_c_item">
-                <label class="l_title"></label>
-                <input type="hidden" id="d_editing_id" value="0" />
-                <button class="btn btn_commit" type="button" id="add_order_detail">确认</button>
-                <div class="clear"></div>
-            </div>
-        </fieldset>
-    </form>
+
     <form action="" method="post" id="order_specifications_form" class="box_c hide">
         <fieldset>
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">* 重量：</label>
-                    <input class="text_input w300" type="text" name="order_specifications_weight" id="order_specifications_weight" placeholder="请输入重量">&nbsp;kg
+                    <input class="text_input w300" type="text" name="order_specifications_weight"
+                           id="order_specifications_weight" placeholder="请输入重量">&nbsp;kg
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <div class="fl">
                     <label class="l_title">* 长度：</label>
-                    <input class="text_input w300" type="text" id="order_specifications_length" name="order_specifications_length" placeholder="请输入长度"/>&nbsp;cm
+                    <input class="text_input w300" type="text" id="order_specifications_length"
+                           name="order_specifications_length" placeholder="请输入长度"/>&nbsp;cm
                 </div>
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">* 宽度：</label>
-                <input class="text_input w300" type="text" name="order_specifications_width" id="order_specifications_width" placeholder="请输入宽度"/>&nbsp;cm
+                <input class="text_input w300" type="text" name="order_specifications_width"
+                       id="order_specifications_width" placeholder="请输入宽度"/>&nbsp;cm
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title">* 高度：</label>
-                <input class="text_input w300" type="text" name="order_specifications_height" id="order_specifications_height" placeholder="请输入高度"/>&nbsp;cm
+                <input class="text_input w300" type="text" name="order_specifications_height"
+                       id="order_specifications_height" placeholder="请输入高度"/>&nbsp;cm
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
@@ -915,17 +978,18 @@
                 <select class="w150 order_specification_detail" onchange="select_order_specification_detail(this);">
                 </select>
                 <input readonly class="text_input w150" type="text" name="" placeholder=""/>
-                <input class="text_input w150 order_specification_detail_number" type="text" name=""  placeholder=""/>
+                <input class="text_input w150 order_specification_detail_number" type="text" name="" placeholder=""/>
                 <span></span>
             </div>
             <div class="box_c_item">
                 <label class="l_title">箱数：</label>
-                <input class="text_input w300" type="text" name="order_specifications_count" id="order_specifications_count" placeholder="请输入箱数"/>&nbsp;
+                <input class="text_input w300" type="text" name="order_specifications_count"
+                       id="order_specifications_count" placeholder="请输入箱数"/>&nbsp;
                 <div class="clear"></div>
             </div>
             <div class="box_c_item">
                 <label class="l_title"></label>
-                <input type="hidden" id="s_editing_id" value="0" />
+                <input type="hidden" id="s_editing_id" value="0"/>
                 <button class="btn btn_commit" type="button" id="add_order_specifications">确认</button>
                 <div class="clear"></div>
             </div>
@@ -934,8 +998,12 @@
 
 </div>
 <!-- END main -->
+<script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/sweetalert/1.1.3/sweetalert.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/select2.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script type="text/javascript">
     $(function () {
         menu1("#ud5", "#ud5 a", ".coin_5 a.nav_top_item");
@@ -954,8 +1022,8 @@
     var selected_receive_data;
     var delivery_list = [];
     var receive_list = [];
-    var order_specifications = { };
-    var order_detail = { };
+    var order_specifications = {};
+    var order_detail = {};
     var s_editing = null;
     var s_cursor = 0;
     var d_editing = null;
@@ -964,33 +1032,28 @@
     var country_list = {$json_country_list};
     var ajax_edit = false;
 
-
-</script>
-<script type="text/javascript" src="__PUBLIC__/usercenter/js/order.js"></script>
-<script type="text/javascript">
     $(function () {
         //上传
         $("#certificate-upload-1").wrap('<form id="myupload-1" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
         $('#myupload-1').append('<i class="icon">&#xe629;</i> <p>上传身份证正面</p>');
-        $("#certificate-upload-1").change(function() {
+        $("#certificate-upload-1").change(function () {
             console.log(123);
             upload_certificate_1('myupload-1');
         });
 
         $('#change-certificate-upload-1').wrap('<form id="change-myupload-1" style="" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
-        $("#change-certificate-upload-1").change(function() {
+        $("#change-certificate-upload-1").change(function () {
             upload_certificate_1('change-myupload-1');
         });
 
-
         $("#certificate-upload-2").wrap('<form id="myupload-2" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
         $('#myupload-2').append('<i class="icon">&#xe629;</i> <p>上传身份证反面</p>');
-        $("#certificate-upload-2").change(function() {
+        $("#certificate-upload-2").change(function () {
             upload_certificate_2('myupload-2');
         });
 
         $('#change-certificate-upload-2').wrap('<form id="change-myupload-2" style="" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
-        $("#change-certificate-upload-2").change(function() {
+        $("#change-certificate-upload-2").change(function () {
             upload_certificate_2('change-myupload-2');
         });
 
@@ -999,18 +1062,18 @@
     function upload_certificate_1(key) {
 //            console.log($("#certificate-upload-1").val());
 //            return;
-        if($("#certificate-upload-1").val() == "") return;
+        if ($("#certificate-upload-1").val() == "") return;
         $("#" + key).ajaxSubmit({
-            dataType:  'json',
-            beforeSend: function() {
+            dataType: 'json',
+            beforeSend: function () {
                 $('#show-result-1 label').empty();
 //                    $('#show-result-1 label').html("上传中...");
                 $('#show-result-1').show();
             },
-            success: function(data) {
+            success: function (data) {
                 //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
-                if(data.state == 'SUCCESS'){
-                    $('#show-result-1 label').html("身份证正面 上传成功("+data.size+"k)");
+                if (data.state == 'SUCCESS') {
+                    $('#show-result-1 label').html("身份证正面 上传成功(" + data.size + "k)");
                     var img = data.url;
                     var timg = data.turl;
 //                        $('#show-image-1').empty();
@@ -1018,54 +1081,237 @@
                     $("#certificate1_url").val(img);
                     $('#show-image-1').show();
                     $('#select-image-1').hide();
-                }else {
+                } else {
                     $('#show-result-1 label').html(data.state);
                 }
 //                    btn.html("上传");
 
             },
-            error:function(xhr){
+            error: function (xhr) {
                 btn.html("上传失败");
                 litpic_tip.html(xhr);
             }
         });
     }
 
-    function upload_certificate_2(key){
+    function upload_certificate_2(key) {
 //            console.log($("#certificate-upload-1").val());
 //            return;
-        if($("#certificate-upload-2").val() == "") return;
+        if ($("#certificate-upload-2").val() == "") return;
         $("#" + key).ajaxSubmit({
-            dataType:  'json',
-            beforeSend: function() {
+            dataType: 'json',
+            beforeSend: function () {
                 $('#show-result-1 label').empty();
 //                    $('#show-result-2 label').html("上传中...");
                 $('#show-result-1').show();
             },
-            success: function(data) {
+            success: function (data) {
                 //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
-                if(data.state == 'SUCCESS'){
-                    $('#show-result-1 label').html("身份证反面 上传成功("+data.size+"k)");
+                if (data.state == 'SUCCESS') {
+                    $('#show-result-1 label').html("身份证反面 上传成功(" + data.size + "k)");
                     var img = data.url;
                     var timg = data.turl;
                     $('#show-image-2 img').attr("src", img);
                     $("#certificate2_url").val(img);
                     $('#show-image-2').show();
                     $('#select-image-2').hide();
-                }else {
+                } else {
                     $('#show-result-1 label').html(data.state);
                 }
 //                    btn.html("上传");
 
             },
-            error:function(xhr){
+            error: function (xhr) {
                 btn.html("上传失败");
                 litpic_tip.html(xhr);
             }
         });
     }
-
-
 </script>
+<script>
+    Vue.config.devtools = true;
+    Vue.directive('select2', {
+        inserted: function (el, binding, vnode) {
+            var options = binding.value || {};
+            $(el).select2(options).on("select2:select", function (e){
+                el.dispatchEvent(new Event('change', { target: e.target })); //说好的双向绑定，竟然不安套路
+            });
+        },
+        update: function(el, binding, vnode) {
+            $(el).trigger("change");
+        }
+    });
+
+    var addOrder = new Vue({
+        el: "#addOrder",
+        data: {
+            deliveryInfo: {
+                company: default_company,
+                consignor: "",
+                country: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                postal_code: "",
+                mobile: "",
+                phone: "",
+                exporter_code: "",
+                certificate_num:""
+            },
+            receiveInfo: {
+                company: "",
+                consignor: "",
+                country: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                postal_code: "",
+                mobile: "",
+                phone: "",
+                exporter_code: ""
+            },
+            defaultInfo:{},
+            deliveryAddressList: [],
+            receiveAddressList: []
+        },
+        mounted:function () {
+            this.defaultInfo.deliveryInfo = this.deliveryInfo;
+            this.defaultInfo.receiveInfo  = this.receiveInfo;
+        },
+        methods: {
+            setDefaultDelivery: function () {
+                show_loading();
+                $.ajax({
+                    url:"/Order/getDefaultDelivery",
+                    data:{ },
+                    dataType:"json",
+                    type:"POST",
+                    success:function (res) {
+                        hide_loading();
+                        var resCode = Number(res.code);
+                        if( resCode === 0 ) {
+                            alert(res.msg);
+                            window.location.href = '/';
+                        } else if( resCode === 1 ) {
+                            set_delivery(res.data);
+                        } else if( resCode === -1 ) {
+                            layer.msg(res.msg);
+                        }
+                    }
+                });
+            },
+            setDefaultReceive: function () {
+                $.post(url, param, get_default_receive_handler, 'json');
+                show_loading();
+                $.ajax({
+                    url: "/Order/getDefaultReceive",
+                    data: { },
+                    dataType: "json",
+                    type: "POST",
+                    success: function (res) {
+                        var resCode = Number(res.code);
+                        hide_loading();
+                        if( resCode === 0 ) {
+                            alert(res.msg);
+                            window.location.href = '/';
+                        } else if( resCode === 1 ) {
+                            set_receive(res.data);
+                        } else if( resCode === -1 ) {
+                            layer.msg(res.msg);
+                        }
+                    }
+                });
+            },
+            addDeliveryAddress: function () {
+
+            },
+            addReceiveAddress: function () {
+
+            },
+            addReceiveContract: function () {
+
+            }
+        }
+    });
+
+    var orderInfo = new Vue({
+        el: "#orderInfo",
+        data: {
+
+        }
+    });
+
+    var orderDetail = new Vue({
+        el: "#orderDetail",
+        data: {
+            newDetail:{
+                product_name:"",
+                en_product_name:"",
+                detail_goods_code:"",
+                detail_count:"",
+                unit:"",
+                single_declared:"",
+                origin:""
+            },
+            defaultDetail:{},
+            orderList:[]
+        },
+        mounted: function () {
+            this.defaultDetail = this.newDetail
+        },
+        methods: {
+            addOrderDetail:function () {
+                if(add_order_detail()){
+                    this.orderList.push(this.newDetail);
+                    this.newDetail = this.defaultDetail
+                }
+            }
+        }
+    });
+
+    var orderSpec = new Vue({
+        el:"#orderSpec",
+        data: {
+            specList: []
+        },
+        methods: {
+            resetList: function () {
+
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        $("#add_delivery_country").select2({
+            dropdownParent: $('#add_delivery_form'),
+            placeholder: "請选择國家/地區",
+            allowClear: true,
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: resFormatter,
+            templateSelection: formatSelection
+        });
+
+        $("#orderInfo select").each(function () {
+            $(this).select2()
+        });
+
+        function resFormatter(res) {
+            if (res.loading) {
+                return res.text
+            }
+            var markup = "<div class='select2-result-repository clearfix'>" +
+                "<div class='select2-result-repository__meta'>" +
+                "<div class='select2-result-repository__title'>" + res.text + "</div>";
+            return markup
+        }
+        function formatSelection(res) {
+            console.log("res.id", res);
+            return  res.text || res.value;
+        }
+    })
+</script>
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/order.js"></script>
 </body>
 </html>

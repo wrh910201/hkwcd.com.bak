@@ -22,7 +22,7 @@ function menu1(dx, dx1, dx3) {
 /* END 侧栏导航条 */
 
 function show_loading() {
-    loading = layer.load(0, { shade: 0.3 });
+    loading = layer.load(0, { shade: 0.4 });
 }
 
 function hide_loading() {
