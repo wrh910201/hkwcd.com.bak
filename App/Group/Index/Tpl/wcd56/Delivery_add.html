@@ -31,7 +31,7 @@
                             <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
                             <foreach name="country_list" item="v">
-                                <option value="{$v.id}">{$v.name}</option>
+                                <option value="{$v.id}">{$v.name} / {$v.ename}</option>
                             </foreach>
                             </select>
                             <div class="clear"></div>
@@ -124,6 +124,8 @@
 </div>
 <!-- END main -->
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/select2.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script type="text/javascript">
     $(function () {
         menu1("#ud3", "#ud3 a", ".coin_3 a.nav_top_item");
@@ -131,6 +133,8 @@
 </script>
 <script type="text/javascript">
     $(function () {
+        $("#country").select2();
+
         //上传
         $("#certificate-upload-1").wrap('<form id="myupload-1" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
         $('#myupload-1').append('<i class="icon">&#xe629;</i> <p>上传身份证正面</p>');
