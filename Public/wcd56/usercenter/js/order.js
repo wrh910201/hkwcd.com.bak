@@ -49,17 +49,17 @@ $('#show_order_detail').click(function() {
     add_order_detail_form();
 });
 
-$('#show_order_specifications').click(function() {
-    add_order_specifications_form();
-});
+// $('#show_order_specifications').click(function() {
+//     add_order_specifications_form();
+// });
 
 $('#add_order_specifications').click(function() {
     add_order_specifications();
 });
 
-$('#add_order_detail').click(function() {
-    add_order_detail();
-});
+// $('#add_order_detail').click(function() {
+//     add_order_detail();
+// });
 
 $('#add_order_button').click(function() {
     layer.confirm('确定添加订单？', {
