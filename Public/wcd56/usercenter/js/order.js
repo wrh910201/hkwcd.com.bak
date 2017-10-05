@@ -45,17 +45,17 @@
 //     show_spare_form();
 // });
 
-$('#show_order_detail').click(function() {
-    add_order_detail_form();
-});
+// $('#show_order_detail').click(function() {
+//     add_order_detail_form();
+// });
 
 // $('#show_order_specifications').click(function() {
 //     add_order_specifications_form();
 // });
 
-$('#add_order_specifications').click(function() {
-    add_order_specifications();
-});
+// $('#add_order_specifications').click(function() {
+//     add_order_specifications();
+// });
 
 // $('#add_order_detail').click(function() {
 //     add_order_detail();

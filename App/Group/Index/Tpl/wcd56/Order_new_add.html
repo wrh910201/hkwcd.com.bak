@@ -797,7 +797,7 @@
             <div id="orderDetail" v-cloak class="box">
                 <div class="box_t box_t_bottom">
                     <h3 class="fl">商品信息（为了确保您的货物能够顺利通关，请一定要提供具体的商品名称）</h3>
-                    <button id="show_order_detail" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入
+                    <button id="show_order_detail" @click="editOrderDetail()" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;录入
                     </button>
                     <div class="clear"></div>
                 </div>
@@ -816,22 +816,20 @@
                         </tr>
                         </thead>
                         <tbody id="detail-content">
-                            <template v-for="(item,index) in orderList">
-                                <tr :id="'detail-item-'+index">
-                                    <td>{{index+1}}</td>
-                                    <td>{{item.product_name + ' ' +item.en_product_name}}</td>
-                                    <td>{{item.goods_code}}</td>
-                                    <td>{{item.detail_count+item.unit}}</td>
-                                    <td>{{fixedNum(item.single_declared,2)}}</td>
-                                    <td>{{fixedNum((item.detail_count*item.single_declared),2)}}</td>
-                                    <td>{{item.origin}}</td>
-                                    <td class="text-right">
-                                        <span @click="editOrderDetail(index)">编辑</span>
-                                        |
-                                        <span @click="removeOrderDetail(index)">删除</span>
-                                    </td>
-                                </tr>
-                            </template>
+                            <tr v-for="(item,index) in orderList" :id="'detail-item-'+index">
+                                <td>{{index+1}}</td>
+                                <td>{{item.product_name + ' ' +item.en_product_name}}</td>
+                                <td>{{item.detail_goods_code}}</td>
+                                <td>{{item.detail_count+item.unit}}</td>
+                                <td>{{fixedNum(item.single_declared,2)}}</td>
+                                <td>{{fixedNum((item.detail_count*item.single_declared),2)}}</td>
+                                <td>{{item.origin}}</td>
+                                <td class="text-right">
+                                    <span @click="editOrderDetail(index)">编辑</span>
+                                    |
+                                    <span @click="removeOrderDetail(index)">删除</span>
+                                </td>
+                            </tr>
                             <tr v-show="total_declared>0">
                                 <td class="table-total">合计</td>
                                 <td></td>
@@ -994,18 +992,22 @@
                             <span class="w150 l_con">中文品名</span>
                             <span class="w150 l_con">英文品名</span>
                             <span class="w150 l_con">数量</span>
-                            <a class="btn btn_commit" href="javascript:void(0)" @click="addSpecCargo" onclick="add_order_specification_detail();">添加商品</a>
+                            <a class="btn btn_commit" href="javascript:void(0)" @click="addSpecCargo">添加商品</a>
                         </div>
                         <div class="box_c_item add_order_specification_detail_wrap"
                              v-for="(cargo,index) in specOrder.order_specifications_cargo">
                             <label class="l_title"></label>
-                            <select class="w150 order_specification_detail" onchange="select_order_specification_detail(this);">
+                            <!--<select class="w150 order_specification_detail" v-model="cargo.product_name" onchange="select_order_specification_detail(this);">-->
+                            <select class="w150 order_specification_detail" v-model="cargo.product_index"
+                                    @change="selectSpecDetail(index)">
                                 <option v-for="(item,idx) in orderDetail.orderList" :value="idx"
                                         v-if="orderDetail.orderList.length > 0">{{item.product_name}}</option>
                             </select>
-                            <input readonly class="text_input w150" type="text" name="" placeholder=""/>
-                            <input class="text_input w150 order_specification_detail_number" type="text" name="" placeholder=""/>
-                            <span></span>
+                            <input readonly class="text_input w150" type="text" v-model="cargo.en_product_name"
+                                   name="" placeholder="" :value="cargo.en_product_name"/>
+                            <input class="text_input w150 order_specification_detail_number" type="text" name=""
+                                   v-model="cargo.count" :value="cargo.count" placeholder=""/>
+                            <span @click="removeCargo(index)" v-show="index > 0" style="cursor: pointer">删除</span>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">箱数：</label>
@@ -1017,7 +1019,8 @@
                         <div class="box_c_item">
                             <label class="l_title"></label>
                             <input type="hidden" id="s_editing_id" value="0"/>
-                            <button class="btn btn_commit" type="button" id="add_order_specifications">确认</button>
+                            <button class="btn btn_commit" type="button" id="add_order_specifications"
+                                    @click="addOrderSpec">确认</button>
                             <div class="clear"></div>
                         </div>
                     </fieldset>
@@ -1436,7 +1439,7 @@
     var orderDetail = new Vue({
         el: "#orderDetail",
         data: {
-            newDetail:{
+            newDetail: {
                 product_name:"",
                 en_product_name:"",
                 detail_goods_code:"",
@@ -1458,50 +1461,96 @@
             }
         },
         methods: {
+            resetDetail: function (obj) {
+                var $obj = obj ? obj : false;
+                if($obj){
+                    for(var i in $obj){
+                        this.newDetail[i] = $obj[i]
+                    }
+                }else{
+                    this.newDetail = {
+                        product_name:"",
+                        en_product_name:"",
+                        detail_goods_code:"",
+                        detail_count:"",
+                        unit:'PCS',
+                        single_declared:"",
+                        origin:""
+                    }
+                }
+            },
             fixedNum: function(num,fix){
                 var $num = Number(num),$fix = Number(fix);
                 return $num.toFixed($fix)
             },
-            addOrderDetail: function () {
-                var  msg ='',flag = true,that = this;
-                if( this.newDetail.product_name === '' ) {
+            checkDetail: function (list) {
+                var flag = true,msg = '',detail = list;
+                for(var i in this.newDetail){
+                    detail[i] = this.newDetail[i]
+                }
+                if( detail.product_name === '' ) {
                     msg += '请输入中文品名<br />';
                     flag = false;
                 }
-                if( this.newDetail.en_product_name === '' ) {
+                if( detail.en_product_name === '' ) {
                     msg += '请输入英文品名<br />';
                     flag = false;
                 }
-                if( this.newDetail.goods_code === '' ) {
+                if( detail.goods_code === '' ) {
                     msg += '请输入商品编号<br />';
                     flag = false;
                 }
-                if( isNaN(this.newDetail.detail_count) || this.newDetail.detail_count <= 0 ) {
+                if( isNaN(detail.detail_count) || detail.detail_count <= 0 ) {
                     msg += '请正确的输入数量<br />';
                     flag = false;
                     this.newDetail.detail_count = 0;
                 }
-                if( isNaN(this.newDetail.single_declared) || this.newDetail.single_declared <= 0 ) {
+                if( isNaN(detail.single_declared) || detail.single_declared <= 0 ) {
                     msg += '请输入正确的单件申报价值<br />';
                     flag = false;
                     this.newDetail.single_declared = 0;
                 }
-                if( this.newDetail.origin === '' ) {
+                if( detail.origin === '' ) {
                     msg += '请输入原产地<br />';
                     flag = false;
                 }
-                if(flag){
-                    if(this.editingIndex !== null){
-                        this.orderList[this.editingIndex] = this.newDetail;
-                    }else{
-                        this.orderList.push(this.newDetail);
-                    }
-                    this.recountTotal();
-                    hide_order_detail_form();
-                    this.newDetail = this.emptyDetail;
+                return {
+                    flag : flag,
+                    msg : msg
+                }
+            },
+            editOrderDetail: function (index) {
+                console.log("index",index);
+                this.editingIndex = index>=0 ? index : -1;
+                console.log("this.editingIndex",this.editingIndex);
+                if(this.editingIndex >= 0){
+                    this.resetDetail(this.orderList[index]);
                 }
                 else{
-                    layer.msg(msg);
+                    this.resetDetail()
+                }
+                show_order_detail_form()
+            },
+            addOrderDetail: function () {
+                var that = this,detail = {};
+                var check = this.checkDetail(this.newDetail);
+                for(var i in this.newDetail){
+                    detail[i] = this.newDetail[i]
+                }
+                if(check.flag){
+                    if(this.editingIndex >=  0){
+                        console.log("edit");
+                        this.orderList[this.editingIndex] = detail;
+                    }else{
+                        console.log("push");
+                        this.orderList.push(detail);
+                    }
+                    hide_order_detail_form();
+                    this.resetDetail();
+                    this.recountTotal();
+                }
+                else{
+                    layer.msg(check.msg);
                     return false;
                 }
             },
@@ -1515,11 +1564,6 @@
                     this.total_declared += Number(this.orderList[i].single_declared)*Number(this.orderList[i].detail_count);
                 }
             },
-            editOrderDetail: function (index) {
-                this.editingIndex = index;
-                this.newDetail = this.orderList[index];
-                show_order_detail_form()
-            },
             removeOrderDetail:function (index) {
                 var that = this;
                 layer.confirm('确定删除该项商品信息？', {
@@ -1531,11 +1575,6 @@
                         return false;
                     }
                 });
-            }
-        },
-        watch: {
-            orderList: function () {
-                this.recountTotal()
             }
         }
     });
@@ -1551,9 +1590,12 @@
                 order_specifications_height: "",
                 order_specifications_count: "",
                 order_specifications_cargo: [
-                    {}
-                ],
-                order_specifications_cargo_id: ""
+                    {
+                        product_index:'',
+                        en_product_name:'',
+                        count: null
+                    }
+                ]
             },
             cargoList : [],
             emptyOrder : {}
@@ -1573,7 +1615,6 @@
                     layer.msg('请先至少录入一个商品信息');
                     return false;
                 }
-                empty_order_specifications_form();
                 show_order_specifications_form();
                 tips = layer.open({
                     type: 1,
@@ -1585,10 +1626,104 @@
                     content: $('#order_specifications_form')
                 });
             },
+            selectSpecDetail:function (index) {
+                var id = Number(event.target.value);
+                this.specOrder.order_specifications_cargo[index].en_product_name = orderDetail.orderList[id].en_product_name
+                this.specOrder.order_specifications_cargo[index].product_name = orderDetail.orderList[id].product_name
+            },
             addSpecCargo: function () {
+                this.specOrder.order_specifications_cargo.push({
+                    product_name:'',
+                    en_product_name:'',
+                    count: null
+                });
+            },
+            removeSpecCargo: function (index) {
+                this.specOrder.order_specifications_cargo.splice(index,1)
+            },
+            addOrderSpec:function () {
+                var flag = true;
+                var msg = '';
+                var specOrder = this.specOrder;
+                var weight = parseFloat(specOrder.order_specifications_weight);
+                var length = parseFloat(specOrder.order_specifications_length);
+                var width = parseFloat(specOrder.order_specifications_width);
+                var height = parseFloat(specOrder.order_specifications_height);
+                var count = parseInt(specOrder.order_specifications_count);
+                var detail = {};
+                var detail_number = [];
+                var cargo = this.specOrder.order_specifications_cargo;
 
+                for(var i in cargo){
+                    var index = cargo[i].product_index;
+                    detail.push(orderDetail.orderList[index]);
+                    detail_number[i] = cargo[i].count;
+                }
+                console.log("detail,",detail,detail_number);
+
+
+                if( isNaN(weight) || weight <= 0 ) {
+                    msg += '请输入重量<br />';
+                    flag = false;
+                }
+                if( isNaN(length) || length <= 0 ) {
+                    msg += '请输入长度<br />';
+                    flag = false;
+                }
+                if( isNaN(width) || width <= 0 ) {
+                    msg += '请输入宽度<br />';
+                    flag = false;
+                }
+                if( isNaN(height) || height <= 0 ) {
+                    msg += '请输入高度<br />';
+                    flag = false;
+                }
+                if( detail.length < 1 ) {
+                    msg += '请至少选择一个商品<br />';
+                    flag = false;
+                }
+                if( isNaN(count) || count <= 0 ) {
+                    msg += '请输入箱数<br />';
+                    flag = false;
+                }
+                if( flag ) {
+                    detail['weight'] = weight;
+                    detail['length'] = length;
+                    detail['width'] = width;
+                    detail['height'] = height;
+                    detail['count'] = count;
+                    console.log("detail new ",detail)
+//                    ajax_add_order_specifications(temp);
+
+                    /*if( s_editing === null ) {
+                        if( ajax_edit ) {
+                            ajax_add_order_specifications(temp);
+                            return;
+                        } else {
+                            order_specifications['item-' + s_cursor] = temp;
+                            s_cursor++;
+                        }
+                    }
+                    else {
+                        if( ajax_edit ) {
+                            temp['order_id'] = order_specifications['item-' + s_editing].order_id;
+                            temp['id'] = order_specifications['item-' + s_editing].id;
+                            ajax_edit_order_specifications(temp);
+                            return;
+                        } else {
+                            order_specifications['item-' + s_editing] = temp;
+                            s_editing = null;
+                        }
+                    }*/
+                    /*hide_order_specifications_form();
+                    refresh_order_specifications();
+                    empty_order_specifications_form();*/
+                    return true;
+                } else {
+                    layer.msg(msg);
+                    return false;
+                }
             }
-
         }
     });
 
