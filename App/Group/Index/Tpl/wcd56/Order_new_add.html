@@ -919,9 +919,17 @@
                         <thead>
                         <tr>
                             <th>编号</th>
-                            <th>品名</th>
-                            <th>商品编码</th>
-                            <th>原产地</th>
+                            <th style="padding: 0">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>品名</th>
+                                            <th>商品编码</th>
+                                            <th>原产地</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
                             <th>重量</th>
                             <th>长 宽 高</th>
                             <th>材积重</th>
@@ -931,24 +939,27 @@
                         </tr>
                         </thead>
                         <tbody id="specifications-content">
-                        <!--<tr>-->
-                        <!--<td rowspan="2">1-2</td>-->
-                        <!--<td>1 1</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td rowspan="2">1</td>-->
-                        <!--<td rowspan="2">1</td>-->
-                        <!--<td rowspan="2">1</td>-->
-                        <!--<td rowspan="2">1</td>-->
-                        <!--<td rowspan="2">1</td>-->
-                        <!--</tr>-->
-                        <!--<tr>-->
-                        <!--<td>2 2</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>2</td>-->
-                        <!--<td>2</td>-->
-                        <!--</tr>-->
+                        <tr v-for="(spec,index) in specList">
+                            <td :rowspan="spec.cargo.length">1-2</td>
+                            <td style="padding-top: 0 ;padding-bottom: 0">
+                                <table>
+                                    <tbody>
+                                        <tr v-for="cargo in spec.cargo">
+                                            <td>{{cargo.product_name}} {{cargo.en_product_name}}</td>
+                                            <td>{{cargo.detail_goods_code}}</td>
+                                            <td>{{cargo.origin}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+
+                            <td :rowspan="spec.cargo.length">{{spec.weight}}</td>
+                            <td :rowspan="spec.cargo.length">{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
+                            <td :rowspan="spec.cargo.length">{{(spec.length*spec.width*spec.height)/5000}}</td>
+                            <td :rowspan="spec.cargo.length">{{spec.count}}</td>
+                            <td :rowspan="spec.cargo.length">{{(spec.length*spec.width*spec.height)/5000 > spec.weight ? (spec.length*spec.width*spec.height)/5000 : spec.weigth}}</td>
+                        </tr>
+
                         </tbody>
                     </table>
                     <div class="clear"></div>
@@ -1006,7 +1017,7 @@
                             <input readonly class="text_input w150" type="text" v-model="cargo.en_product_name"
                                    name="" placeholder="" :value="cargo.en_product_name"/>
                             <input class="text_input w150 order_specification_detail_number" type="text" name=""
-                                   v-model="cargo.count" :value="cargo.count" placeholder=""/>
+                                   v-model="cargo.product_count" :value="cargo.count" placeholder=""/>
                             <span @click="removeCargo(index)" v-show="index > 0" style="cursor: pointer">删除</span>
                         </div>
                         <div class="box_c_item">
@@ -1583,6 +1594,7 @@
         el:"#orderSpec",
         data: {
             specList: [],
+            total_order_specifications_count : "",
             specOrder: {
                 order_specifications_weight: "",
                 order_specifications_length: "",
@@ -1593,11 +1605,10 @@
                     {
                         product_index:'',
                         en_product_name:'',
-                        count: null
+                        product_count: null
                     }
                 ]
             },
-            cargoList : [],
             emptyOrder : {}
         },
         mounted: function () {
@@ -1635,7 +1646,7 @@
                 this.specOrder.order_specifications_cargo.push({
                     product_name:'',
                     en_product_name:'',
-                    count: null
+                    product_count: null
                 });
             },
             removeSpecCargo: function (index) {
@@ -1650,17 +1661,9 @@
                 var width = parseFloat(specOrder.order_specifications_width);
                 var height = parseFloat(specOrder.order_specifications_height);
                 var count = parseInt(specOrder.order_specifications_count);
-                var detail = {};
+                var detail = [];
                 var detail_number = [];
                 var cargo = this.specOrder.order_specifications_cargo;
-
-                for(var i in cargo){
-                    var index = cargo[i].product_index;
-                    detail.push(orderDetail.orderList[index]);
-                    detail_number[i] = cargo[i].count;
-                }
-                console.log("detail,",detail,detail_number);
-
 
                 if( isNaN(weight) || weight <= 0 ) {
                     msg += '请输入重量<br />';
@@ -1678,7 +1681,7 @@
                     msg += '请输入高度<br />';
                     flag = false;
                 }
-                if( detail.length < 1 ) {
+                if( cargo.length < 1 ) {
                     msg += '请至少选择一个商品<br />';
                     flag = false;
                 }
@@ -1687,34 +1690,28 @@
                     flag = false;
                 }
                 if( flag ) {
-                    detail['weight'] = weight;
-                    detail['length'] = length;
-                    detail['width'] = width;
-                    detail['height'] = height;
-                    detail['count'] = count;
-                    console.log("detail new ",detail)
-//                    ajax_add_order_specifications(temp);
+                    var  start = 1;
+                    var detailTemp = {
+                        weight : weight,
+                        length : length,
+                        width : width,
+                        height : height,
+                        count : count
+                    };
 
-                    /*if( s_editing === null ) {
-                        if( ajax_edit ) {
-                            ajax_add_order_specifications(temp);
-                            return;
-                        } else {
-                            order_specifications['item-' + s_cursor] = temp;
-                            s_cursor++;
-                        }
+                    for(var i = 0 ;i < cargo.length;i++){
+                        var index = cargo[i].product_index;
+                        var detailCargo = $.extend([],cargo[i],orderDetail.orderList[index]);
+                        detail.push(detailCargo);
+                        start += Number(count)
+//                        detail_number[i] = cargo[i].product_count;
                     }
-                    else {
-                        if( ajax_edit ) {
-                            temp['order_id'] = order_specifications['item-' + s_editing].order_id;
-                            temp['id'] = order_specifications['item-' + s_editing].id;
-                            ajax_edit_order_specifications(temp);
-                            return;
-                        } else {
-                            order_specifications['item-' + s_editing] = temp;
-                            s_editing = null;
-                        }
-                    }*/
+
+                    detailTemp.cargo = detail;
+                    this.specList.push(detailTemp);
+
+                    console.log("specList,",this.specList);
+                    hide_order_specifications_form();
                     /*hide_order_specifications_form();
                     refresh_order_specifications();
                     empty_order_specifications_form();*/
