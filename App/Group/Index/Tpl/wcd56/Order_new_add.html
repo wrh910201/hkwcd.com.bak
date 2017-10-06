@@ -1779,12 +1779,14 @@
                 for(var i in this.specList){
                     tempSpec = this.specList[i];
                     weight = tempSpec.weight;
+                    this.total_weight += weight;
                     rate = tempSpec.charging_weight;
+                    this.total_rate += rate;
                     charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
                     console.log("charging_weight",charging_weight);
                 }
-                this.total_weight = this.fixedNum(weight,2);
-                this.total_rate = this.fixedNum(rate,2);
+                this.total_weight = this.fixedNum(this.total_weight,2);
+                this.total_rate = this.fixedNum(this.total_rate,2);
                 this.total_charging_weight = this.fixedNum(charging_weight,2);
             },
             editSpecOrder: function (index) {
