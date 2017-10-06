@@ -940,7 +940,7 @@
                         </thead>
                         <tbody id="specifications-content">
                         <tr v-for="(spec,index) in specList">
-                            <td :rowspan="spec.cargo.length - 1">1-2</td>
+                            <td>1-2</td>
                             <td style="padding: 0">
                                 <table class="table" style="margin-bottom: 0">
                                     <tbody>
@@ -953,11 +953,12 @@
                                 </table>
                             </td>
 
-                            <td :rowspan="spec.cargo.length - 1 ">{{spec.weight}}</td>
-                            <td :rowspan="spec.cargo.length - 1 ">{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
-                            <td :rowspan="spec.cargo.length - 1 ">{{(spec.length*spec.width*spec.height)/5000}}</td>
-                            <td :rowspan="spec.cargo.length - 1 ">{{spec.count}}</td>
-                            <td :rowspan="spec.cargo.length - 1 ">{{(spec.length*spec.width*spec.height)/5000 > spec.weight ? (spec.length*spec.width*spec.height)/5000 : spec.weight}}</td>
+                            <td >{{spec.weight}}</td>
+                            <td >{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
+                            <td >{{spec.charging_weight}}</td>
+                            <td >{{spec.count}}</td>
+                            <td >{{spec.charging_weight > spec.weight ? spec.charging_weight : spec.weight}}</td>
+                            <td >编辑 | 删除</td>
                         </tr>
                         <tr v-show="specList.length > 0">
                             <td class="table-total">合计</td>
@@ -1023,7 +1024,7 @@
                                 <option v-for="(item,idx) in orderDetail.orderList" :value="idx"
                                         v-if="orderDetail.orderList.length > 0">{{item.product_name}}</option>
                             </select>
-                            <input readonly class="text_input w150" type="text" v-model="cargo.en_product_name"
+                            <input disabled class="text_input w150" type="text" v-model="cargo.en_product_name"
                                    name="" placeholder="" :value="cargo.en_product_name"/>
                             <input class="text_input w150 order_specification_detail_number" type="text" name=""
                                    v-model="cargo.product_count" :value="cargo.count" placeholder=""/>
@@ -1629,6 +1630,10 @@
             }
         },
         methods: {
+            fixedNum: function(num,fix){
+                var $num = Number(num),$fix = Number(fix);
+                return $num.toFixed($fix)
+            },
             resetList: function () {
 
             },
@@ -1706,6 +1711,7 @@
                         length : length,
                         width : width,
                         height : height,
+                        charging_weight : (length * width * height)/5000,
                         count : count
                     };
 
@@ -1734,8 +1740,8 @@
                         order_specifications_count: "",
                         order_specifications_cargo: [
                             {
-                                product_index:'',
-                                en_product_name:'',
+                                product_index: '',
+                                en_product_name: '',
                                 product_count: null
                             }
                         ]
@@ -1748,16 +1754,16 @@
             },
             recountTotal: function () {
                 this.total_order_specifications_count = this.total_weight = this.total_rate = this.total_charging_weight = 0;
-                var l = 0,w = 0,h = 0,tempSpec;
+                var tempSpec;
                 for(var i in this.specList){
                     tempSpec = this.specList[i];
                     this.total_weight += tempSpec.weight * tempSpec.count;
-                    l = tempSpec.length;
-                    w = tempSpec.width;
-                    h = tempSpec.height;
-                    this.total_rate += ((l*w*h)/5000) * tempSpec.count;
+                    this.total_rate += tempSpec.charging_weight * tempSpec.count;
                     this.total_charging_weight += this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
                 }
+                this.total_weight = this.fixedNum(this.total_weight,2);
+                this.total_rate = this.fixedNum(this.total_rate,2);
+                this.total_charging_weight = this.fixedNum(this.total_charging_weight,2);
             },
             removeSpecOrder: function () {
 
