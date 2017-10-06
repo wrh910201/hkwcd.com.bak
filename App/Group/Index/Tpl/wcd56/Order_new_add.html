@@ -5,6 +5,7 @@
     [v-cloak]{
         display: none;
     }
+
 </style>
 <body>
 <include file="Usercenter:aside"/>
@@ -909,7 +910,7 @@
                 <div class="box_t box_t_bottom">
                     <h3 class="fl">规格详情（材积重=长*宽*高/5000，重量与材积重两者取大收费）</h3>
                     <!--<button id="calculate" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;计费</button>-->
-                    <button id="show_order_specifications" @click="showSpec" class="btn btn_add fr" type="button"><i
+                    <button id="show_order_specifications" @click="editSpecOrder()" class="btn btn_add fr" type="button"><i
                             class="icon">&#xe61e;</i>&nbsp;录入
                     </button>
                     <div class="clear"></div>
@@ -920,7 +921,7 @@
                         <tr>
                             <th>编号</th>
                             <th style="padding: 0">
-                                <table class="table" style="margin-bottom: 0">
+                                <table class="table" style="margin-bottom: -1px">
                                     <thead>
                                         <tr>
                                             <th>品名</th>
@@ -942,7 +943,7 @@
                         <tr v-for="(spec,index) in specList">
                             <td>1-2</td>
                             <td style="padding: 0">
-                                <table class="table" style="margin-bottom: 0">
+                                <table class="table" style="margin-bottom: -1px">
                                     <tbody>
                                         <tr v-for="cargo in spec.cargo">
                                             <td>{{cargo.product_name}} {{cargo.en_product_name}}</td>
@@ -958,7 +959,11 @@
                             <td >{{spec.charging_weight}}</td>
                             <td >{{spec.count}}</td>
                             <td >{{spec.charging_weight > spec.weight ? spec.charging_weight : spec.weight}}</td>
-                            <td >编辑 | 删除</td>
+                            <td >
+                                <a href="javascript:void(0)" @click="editSpecOrder(index)">编辑</a>
+                                |
+                                <a href="javascript:void(0)" @click="removeSpecOrder(index)">删除</a>
+                                </td>
                         </tr>
                         <tr v-show="specList.length > 0">
                             <td class="table-total">合计</td>
@@ -1028,7 +1033,7 @@
                                    name="" placeholder="" :value="cargo.en_product_name"/>
                             <input class="text_input w150 order_specification_detail_number" type="text" name=""
                                    v-model="cargo.product_count" :value="cargo.count" placeholder=""/>
-                            <span @click="removeCargo(index)" v-show="index > 0" style="cursor: pointer">删除</span>
+                            <span @click="removeSpecCargo(index)" v-show="index > 0" style="cursor: pointer">删除</span>
                         </div>
                         <div class="box_c_item">
                             <label class="l_title">箱数：</label>
@@ -1608,6 +1613,7 @@
             total_rate: 0,
             total_charging_weight: 0,
             total_order_specifications_count : 0,
+            editingIndex : null,
             specOrder: {
                 order_specifications_weight: "",
                 order_specifications_length: "",
@@ -1665,7 +1671,8 @@
                 });
             },
             removeSpecCargo: function (index) {
-                this.specOrder.order_specifications_cargo.splice(index,1)
+                this.specOrder.order_specifications_cargo.splice(index,1);
+                this.recountTotal()
             },
             addOrderSpec:function () {
                 var flag = true;
@@ -1704,8 +1711,18 @@
                     msg += '请输入箱数<br />';
                     flag = false;
                 }
+                for(var i in cargo ){
+                    for(var j in cargo[i]){
+                        if(cargo[i][j] === '' || cargo[i][j] === null ){
+                            msg += '请补全信息<br />';
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
                 if( flag ) {
                     var  start = 1;
+
                     var detailTemp = {
                         weight : weight,
                         length : length,
@@ -1724,8 +1741,11 @@
                     }
 
                     detailTemp.cargo = detail;
-                    this.specList.push(detailTemp);
-
+                    if(this.editingIndex>=0){
+                        this.specList[this.editingIndex] = detailTemp;
+                    }else{
+                        this.specList.push(detailTemp);
+                    }
                     console.log("specList,",this.specList);
                     this.recountTotal();
                     hide_order_specifications_form();
@@ -1755,18 +1775,53 @@
             recountTotal: function () {
                 this.total_order_specifications_count = this.total_weight = this.total_rate = this.total_charging_weight = 0;
                 var tempSpec;
+                var weight = 0/*重量*/ , rate = 0 /*材积重*/, charging_weight = 0/*计算重量*/;
                 for(var i in this.specList){
                     tempSpec = this.specList[i];
-                    this.total_weight += tempSpec.weight * tempSpec.count;
-                    this.total_rate += tempSpec.charging_weight * tempSpec.count;
-                    this.total_charging_weight += this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+                    weight = tempSpec.weight;
+                    rate = tempSpec.charging_weight;
+                    charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
+                    console.log("charging_weight",charging_weight);
                 }
-                this.total_weight = this.fixedNum(this.total_weight,2);
-                this.total_rate = this.fixedNum(this.total_rate,2);
-                this.total_charging_weight = this.fixedNum(this.total_charging_weight,2);
+                this.total_weight = this.fixedNum(weight,2);
+                this.total_rate = this.fixedNum(rate,2);
+                this.total_charging_weight = this.fixedNum(charging_weight,2);
             },
-            removeSpecOrder: function () {
-
+            editSpecOrder: function (index) {
+                console.log("index",index);
+                this.editingIndex = index>=0 ? index : -1;
+                var editOrder = this.specList[index];
+                if(this.editingIndex >= 0){
+                    this.specOrder = {
+                        order_specifications_weight: editOrder.weight,
+                        order_specifications_length: editOrder.length,
+                        order_specifications_width: editOrder.width,
+                        order_specifications_height: editOrder.height,
+                        order_specifications_count: editOrder.count,
+                        order_specifications_cargo: editOrder.cargo
+                    };
+                }
+                else{
+                    this.specOrder = {
+                        order_specifications_weight: "",
+                        order_specifications_length: "",
+                        order_specifications_width: "",
+                        order_specifications_height: "",
+                        order_specifications_count: "",
+                        order_specifications_cargo: [
+                        {
+                            product_index: '',
+                            en_product_name: '',
+                            product_count: null
+                        }
+                    ]
+                }
+                }
+                this.showSpec()
+            },
+            removeSpecOrder: function (index) {
+                this.specList.splice(index,1);
+                this.recountTotal()
             }
         }
     });
