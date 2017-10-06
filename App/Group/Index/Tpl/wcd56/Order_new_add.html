@@ -920,7 +920,7 @@
                         <tr>
                             <th>编号</th>
                             <th style="padding: 0">
-                                <table>
+                                <table class="table" style="margin-bottom: 0">
                                     <thead>
                                         <tr>
                                             <th>品名</th>
@@ -940,9 +940,9 @@
                         </thead>
                         <tbody id="specifications-content">
                         <tr v-for="(spec,index) in specList">
-                            <td :rowspan="spec.cargo.length">1-2</td>
-                            <td style="padding-top: 0 ;padding-bottom: 0">
-                                <table>
+                            <td :rowspan="spec.cargo.length - 1">1-2</td>
+                            <td style="padding: 0">
+                                <table class="table" style="margin-bottom: 0">
                                     <tbody>
                                         <tr v-for="cargo in spec.cargo">
                                             <td>{{cargo.product_name}} {{cargo.en_product_name}}</td>
@@ -953,13 +953,22 @@
                                 </table>
                             </td>
 
-                            <td :rowspan="spec.cargo.length">{{spec.weight}}</td>
-                            <td :rowspan="spec.cargo.length">{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
-                            <td :rowspan="spec.cargo.length">{{(spec.length*spec.width*spec.height)/5000}}</td>
-                            <td :rowspan="spec.cargo.length">{{spec.count}}</td>
-                            <td :rowspan="spec.cargo.length">{{(spec.length*spec.width*spec.height)/5000 > spec.weight ? (spec.length*spec.width*spec.height)/5000 : spec.weigth}}</td>
+                            <td :rowspan="spec.cargo.length - 1 ">{{spec.weight}}</td>
+                            <td :rowspan="spec.cargo.length - 1 ">{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
+                            <td :rowspan="spec.cargo.length - 1 ">{{(spec.length*spec.width*spec.height)/5000}}</td>
+                            <td :rowspan="spec.cargo.length - 1 ">{{spec.count}}</td>
+                            <td :rowspan="spec.cargo.length - 1 ">{{(spec.length*spec.width*spec.height)/5000 > spec.weight ? (spec.length*spec.width*spec.height)/5000 : spec.weight}}</td>
                         </tr>
-
+                        <tr v-show="specList.length > 0">
+                            <td class="table-total">合计</td>
+                            <td></td>
+                            <td>{{total_weight}}KG</td>
+                            <td></td>
+                            <td>{{total_rate}}KG</td>
+                            <td></td>
+                            <td>{{total_charging_weight}}KG</td>
+                            <td class="text-right"></td>
+                        </tr>
                         </tbody>
                     </table>
                     <div class="clear"></div>
@@ -1594,7 +1603,10 @@
         el:"#orderSpec",
         data: {
             specList: [],
-            total_order_specifications_count : "",
+            total_weight : 0,
+            total_rate: 0,
+            total_charging_weight: 0,
+            total_order_specifications_count : 0,
             specOrder: {
                 order_specifications_weight: "",
                 order_specifications_length: "",
@@ -1621,12 +1633,10 @@
 
             },
             showSpec: function () {
-                var hasData = orderDetail.orderList.length > 0;
-                if( !hasData ) {
+                if( orderDetail.orderList.length === 0 ) {
                     layer.msg('请先至少录入一个商品信息');
                     return false;
                 }
-                show_order_specifications_form();
                 tips = layer.open({
                     type: 1,
                     skin: 'layui-layer-rim', //加上边框
@@ -1711,15 +1721,46 @@
                     this.specList.push(detailTemp);
 
                     console.log("specList,",this.specList);
+                    this.recountTotal();
                     hide_order_specifications_form();
                     /*hide_order_specifications_form();
                     refresh_order_specifications();
                     empty_order_specifications_form();*/
+                    this.specOrder = {
+                        order_specifications_weight: "",
+                        order_specifications_length: "",
+                        order_specifications_width: "",
+                        order_specifications_height: "",
+                        order_specifications_count: "",
+                        order_specifications_cargo: [
+                            {
+                                product_index:'',
+                                en_product_name:'',
+                                product_count: null
+                            }
+                        ]
+                    };
                     return true;
                 } else {
                     layer.msg(msg);
                     return false;
                 }
+            },
+            recountTotal: function () {
+                this.total_order_specifications_count = this.total_weight = this.total_rate = this.total_charging_weight = 0;
+                var l = 0,w = 0,h = 0,tempSpec;
+                for(var i in this.specList){
+                    tempSpec = this.specList[i];
+                    this.total_weight += tempSpec.weight * tempSpec.count;
+                    l = tempSpec.length;
+                    w = tempSpec.width;
+                    h = tempSpec.height;
+                    this.total_rate += ((l*w*h)/5000) * tempSpec.count;
+                    this.total_charging_weight += this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+                }
+            },
+            removeSpecOrder: function () {
+
             }
         }
     });
