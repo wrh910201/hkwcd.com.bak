@@ -635,10 +635,11 @@ class ClientorderAction extends CommonContentAction {
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
         $order['status_str'] = _order_status($order);
-        $trace_result = S('hkwcd_trace_result');
+        $trace_result = S('hkwcd_trace_result_'.$order['order_num']);
         if( !$trace_result ) {
             $trace_result = query_express($order['express_type'], $order['express_order_num']);
-            S('hkwcd_trace_result', $trace_result, 7200);
+//            var_dump($trace_result);exit;
+            S('hkwcd_trace_result_'.$order['order_num'], $trace_result, 7200);
         }
         $trace_result_array = json_decode($trace_result, true);
         $this->assign('order', $order);

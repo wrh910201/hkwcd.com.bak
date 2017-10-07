@@ -31,7 +31,7 @@
                             <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
-                                    <option value="{$v.id}">{$v.name}</option>
+                                    <option value="{$v.id}">{$v.name} / {$v.ename}</option>
                                 </foreach>
                             </select>
                             <div class="clear"></div>
@@ -95,9 +95,13 @@
 </div>
 <!-- END main -->
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/select2.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script type="text/javascript">
     $(function () {
         menu1("#ud4", "#ud4 a", ".coin_4 a.nav_top_item");
+
+        $("#country").select2();
     })
 </script>
 </body>
