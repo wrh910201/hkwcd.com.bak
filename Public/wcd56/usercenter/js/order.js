@@ -61,29 +61,29 @@
 //     add_order_detail();
 // });
 
-$('#add_order_button').click(function() {
-    layer.confirm('确定添加订单？', {
-        btn: ['确定', '取消'],
-        btn1: function () {
-            add_order(0);
-        },
-        btn2: function () {
-            return false;
-        }
-    });
-});
+// $('#add_order_button').click(function() {
+//     layer.confirm('确定添加订单？', {
+//         btn: ['确定', '取消'],
+//         btn1: function () {
+//             add_order(0);
+//         },
+//         btn2: function () {
+//             return false;
+//         }
+//     });
+// });
 
-$('#commit_order_button').click(function() {
-    layer.confirm('确定添加订单并提交？（订单提交之后进入待审核状态，无法编辑）', {
-        btn: ['确定', '取消'],
-        btn1: function () {
-            add_order(1);
-        },
-        btn2: function () {
-            return false;
-        }
-    });
-});
+// $('#commit_order_button').click(function() {
+//     layer.confirm('确定添加订单并提交？（订单提交之后进入待审核状态，无法编辑）', {
+//         btn: ['确定', '取消'],
+//         btn1: function () {
+//             add_order(1);
+//         },
+//         btn2: function () {
+//             return false;
+//         }
+//     });
+// });
 
 /*in order_edit.html*/
 $('#edit_order_button').click(function() {

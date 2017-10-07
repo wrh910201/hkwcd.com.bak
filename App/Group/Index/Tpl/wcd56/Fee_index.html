@@ -21,9 +21,9 @@
                         <div class="box_c_item">
                             <label class="l_title">国家：</label>
                             <if condition="$client.single_country eq 0">
-                            <select class="w300" id="country" name="country">
+                            <select class="w300" id="country_list" name="country">
                                 <foreach name="country_list" item="v">
-                                    <option value="{$v.id}">{$v.name}</option>
+                                    <option value="{$v.id}">{$v.name} / {$v.ename}</option>
                                 </foreach>
                             </select>
                             <else />
@@ -121,6 +121,8 @@
 <script type="text/javascript">
     $(function () {
         menu1("#ud6", "#ud6 a", ".coin_6 a.nav_top_item");
+
+        $("#country_list").select2();
     });
 
     var package = {};
@@ -276,6 +278,8 @@
     }
 
 </script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/select2.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/layer/layer.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/laydate/laydate.js"></script>

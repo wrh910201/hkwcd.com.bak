@@ -1074,15 +1074,15 @@
                 </div>
 
             </div>
-            <div class="fr" style="display: none">
-                <label class="l_title">总运费（参考）：</label>
-                <span>1110</span>
-            </div>
+            <!--<div class="fr" style="display: none">-->
+                <!--<label class="l_title">总运费（参考）：</label>-->
+                <!--<span>1110</span>-->
+            <!--</div>-->
             <div class="clear"></div>
-            <div class="fr">
+            <div class="fr" id="operate">
                 <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add_order_button">添加</button> &nbsp;
-                <button class="btn btn_commit" type="button" id="commit_order_button">添加并提交</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="add_order_button" v-on:click="add_order(0)">添加</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="commit_order_button" v-on:click="add_order(1)">添加并提交</button> &nbsp;
                 <a href="javascript:;" class="btn btn_cancel">取消</a>
                 <input type="hidden" name="delivery_id" id="delivery_id"/>
                 <input type="hidden" name="receive_id" id="receive_id"/>
@@ -1145,6 +1145,7 @@
         el: "#addOrder",
         data: {
             deliveryInfo: {
+                delivery_id: 0,
                 company: default_company,
                 consignor: "",
                 country: "",
@@ -1174,6 +1175,7 @@
                 is_default: false
             },
             receiveInfo: {
+                receive_id: 0,
                 receiver_code:'',
                 company: "",
                 id:null,
@@ -1678,10 +1680,10 @@
                 var flag = true;
                 var msg = '';
                 var specOrder = this.specOrder;
-                var weight = parseFloat(specOrder.order_specifications_weight);
-                var length = parseFloat(specOrder.order_specifications_length);
-                var width = parseFloat(specOrder.order_specifications_width);
-                var height = parseFloat(specOrder.order_specifications_height);
+                var weight = parseFloat(specOrder.order_specifications_weight).toFixed(1);
+                var length = parseFloat(specOrder.order_specifications_length).toFixed(1);
+                var width = parseFloat(specOrder.order_specifications_width).toFixed(1);
+                var height = parseFloat(specOrder.order_specifications_height).toFixed(1);
                 var count = parseInt(specOrder.order_specifications_count);
                 var detail = [];
                 var detail_number = [];
@@ -1839,6 +1841,100 @@
                 this.resetId();
             }
         }
+    });
+
+    var operate = new Vue({
+        "el": '#operate',
+        data: {},
+        method: {
+            add_order: function(commit) {
+                var url = "/Order/ajaxAdd";
+
+                var delivery_id = selected_delivery_id;
+                var receive_id = selected_receive_id;
+                //备用收货地址
+                var spare_receive_company = addOrder.spareInfo.spare_receive_company;
+                var spare_receive_addressee = addOrder.spareInfo.spare_receive_addressee;
+                var spare_country = addOrder.spareInfo.spare_country;
+                var spare_state = addOrder.spareInfo.spare_state;
+                var spare_city = addOrder.spareInfo.spare_city;
+                var spare_receive_detail_address = addOrder.spareInfo.spare_receive_detail_address;
+                var spare_receive_phone = addOrder.spareInfo.spare_receive_phone;
+                var spare_receive_mobile = addOrder.spareInfo.spare_receive_mobile;
+                var spare_receive_postal_code = addOrder.spareInfo.spare_receive_postal_code;
+                var spare_receiver_code = addOrder.spareInfo.spare_receiver_code;
+                var enable_spare = addOrder.spareInfo.enable_spare;
+                //订单信息
+                var channel = addOrder.allInfo.channel;
+                var package_type = addOrder.allInfo.package_type;
+                var price_terms = addOrder.allInfo.price_terms;
+                var tariff_payment = addOrder.allInfo.tariff_payment;
+                var shipment_reference = addOrder.allInfo.shipment_reference;
+                var settlement = addOrder.allInfo.settlement;
+                var declaration_of_power_attorney = addOrder.allInfo.declaration_of_power_attorney;
+                var contract_num = addOrder.allInfo.contract_num;
+                var mode_of_transportation = addOrder.allInfo.mode_of_transportation;
+                var express_service = addOrder.allInfo.express_service;
+                var export_nature = addOrder.allInfo.export_nature;
+                var export_reason = addOrder.allInfo.export_reason;
+                var manufacturer = addOrder.allInfo.manufacturer;
+                var remark = addOrder.allInfo.remark;
+                var specifications_remark = $('#specifications_remark').val();
+                //订单详情 js
+                var param = {
+                    'delivery_id':delivery_id,
+                    'receive_id':receive_id,
+                    'order_specifications':orderSpec.specOrder,
+                    'order_detail': orderDetail.orderList,
+                    'spare_receive_company': spare_receive_company,
+                    'spare_receive_addressee':spare_receive_addressee,
+                    'spare_country': spare_country,
+                    'spare_state' : spare_state,
+                    'spare_city' : spare_city,
+                    'spare_receive_detail_address': spare_receive_detail_address,
+                    'spare_receive_phone': spare_receive_phone,
+                    'spare_receive_mobile': spare_receive_mobile,
+                    'spare_receive_postal_code': spare_receive_postal_code,
+                    'spare_receiver_code': spare_receiver_code,
+                    'enable_spare': enable_spare,
+                    'channel': channel,
+                    'package_type': package_type,
+                    'price_terms' : price_terms,
+                    'tariff_payment' : tariff_payment,
+                    'shipment_reference': shipment_reference,
+                    'settlement': settlement,
+                    'declaration_of_power_attorney': declaration_of_power_attorney,
+                    'contract_num': contract_num,
+                    'mode_of_transportation': mode_of_transportation,
+                    'express_service': express_service,
+                    'manufacturer': manufacturer,
+                    'export_nature' : export_nature,
+                    'export_reason': export_reason,
+                    'remark': remark,
+                    'specifications_remark': specifications_remark,
+                    'commit': commit
+                };
+                console.log(param);
+                show_loading();
+                $.post(url, param, add_order_handler, 'json');
+            },
+            confirm_add_order: function(commit) {
+                if( commit == 0 ) {
+                    var msg = "确定添加订单？";
+                } else {
+                    var msg = "确定添加订单并提交？（订单提交之后进入待审核状态，无法编辑）";
+                }
+                layer.confirm(msg, {
+                    btn: ['确定', '取消'],
+                    btn1: function () {
+                        add_order(commit);
+                    },
+                    btn2: function () {
+                        return false;
+                    }
+                });
+            }
+        },
     });
 
     $(document).ready(function () {
