@@ -941,7 +941,7 @@
                         </thead>
                         <tbody id="specifications-content">
                         <tr v-for="(spec,index) in specList">
-                            <td>1-2</td>
+                            <td>{{spec.id}}</td>
                             <td style="padding: 0">
                                 <table class="table" style="margin-bottom: -1px">
                                     <tbody>
@@ -1748,6 +1748,7 @@
                     }
                     console.log("specList,",this.specList);
                     this.recountTotal();
+                    this.resetId();
                     hide_order_specifications_form();
                     /*hide_order_specifications_form();
                     refresh_order_specifications();
@@ -1789,6 +1790,17 @@
                 this.total_rate = this.fixedNum(this.total_rate,2);
                 this.total_charging_weight = this.fixedNum(charging_weight,2);
             },
+            resetId : function () {
+                var count = 0,id = '',start = 1,end = 0,total = 0;
+                for(var i in this.specList){
+                    count = this.specList[i].count;
+                    total += count;
+                    end = start + count - 1;
+                    this.specList[i].id = start + '-' + end;
+                    start = total+1;
+//                    console.log("this.specList[i]",i,this.specList[i]);
+                }
+            },
             editSpecOrder: function (index) {
                 console.log("index",index);
                 this.editingIndex = index>=0 ? index : -1;
@@ -1823,7 +1835,8 @@
             },
             removeSpecOrder: function (index) {
                 this.specList.splice(index,1);
-                this.recountTotal()
+                this.recountTotal();
+                this.resetId();
             }
         }
     });

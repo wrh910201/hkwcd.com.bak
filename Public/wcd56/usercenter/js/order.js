@@ -666,9 +666,9 @@ function refresh_order_specifications(no_operate) {
         var j = 1;
         var rowspan = order_specifications[id].detail.length;
         var count_temp = parseInt(order_specifications[id]['count']);
-        var i_end = i + count_temp - 1;
         html += '<tr id="detail-'+id+'">';
-        html += '<td rowspan="'+rowspan+'">' + i + '-' + i_end + '</td>';
+        var i_end = i + count_temp - 1;
+        html += '<td rows`pan="'+rowspan+'">' + i + '-' + i_end + '</td>';
         for( var y in order_specifications[id].detail ) {
             var detail_index = order_specifications[id].detail[y];
             var temp_rate = order_specifications[id]['length'] *　order_specifications[id]['width'] * order_specifications[id]['height'] / 5000;
