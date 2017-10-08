@@ -1121,8 +1121,8 @@
 
     var is_default_delivery = {$has_default_delivery};
     var is_default_receive = {$has_default_receive};
-    var selected_delivery_id = {$default_delivery_id};
-    var selected_receive_id = {$default_receive_id};
+    var selected_delivery_id = 0;
+    var selected_receive_id = 0;
     //    var selected_delivery_data = {$json_delivery};
     //    var selected_receive_data = {$json_receive};
     var selected_delivery_data;
@@ -1146,7 +1146,7 @@
         data: {
             deliveryInfo: {
                 delivery_id: 0,
-                company: default_company,
+                company: "",
                 consignor: "",
                 country: "",
                 state: "",
@@ -1730,7 +1730,7 @@
                         length : length,
                         width : width,
                         height : height,
-                        charging_weight : (length * width * height)/5000,
+                        charging_weight : (length * width * height)/5000 > weight ? (length * width * height)/5000 : weight,
                         count : count
                     };
 
@@ -1741,6 +1741,8 @@
                         start += Number(count)
 //                        detail_number[i] = cargo[i].product_count;
                     }
+//                    console.log(detail);
+//                    return;
 
                     detailTemp.cargo = detail;
                     if(this.editingIndex>=0){
@@ -1882,11 +1884,22 @@
                 var manufacturer = addOrder.allInfo.manufacturer;
                 var remark = addOrder.allInfo.remark;
                 var specifications_remark = $('#specifications_remark').val();
+
+                var order_specifications = orderSpec.specList;
+                for(var id in orderSpec.specList) {
+                    order_specifications[id].cargo = [];
+                    for( var j in orderSpec.specList[id].cargo ) {
+                        order_specifications[id].cargo.push(orderSpec.specList[id].cargo[j]);
+                    }
+                }
+                console.log(order_specifications);
+                return false;
+
                 //订单详情 js
                 var param = {
                     'delivery_id':delivery_id,
                     'receive_id':receive_id,
-                    'order_specifications':orderSpec.specList,
+                    'order_specifications':order_specifications,
                     'order_detail': orderDetail.orderList,
                     'spare_receive_company': spare_receive_company,
                     'spare_receive_addressee':spare_receive_addressee,

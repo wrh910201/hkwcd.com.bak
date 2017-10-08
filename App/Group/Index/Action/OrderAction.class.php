@@ -296,6 +296,7 @@ class OrderAction extends BaseAction  {
 
         if( $transaction ) {
             foreach( $order_specifications as $k => $v ) {
+                unset($v['id']);
                 $v['order_num'] = $order_num;
                 $v['order_id'] = $order_id;
                 $temp_result = M('ClientOrderSpecifications')->add($v);
@@ -310,12 +311,12 @@ class OrderAction extends BaseAction  {
 
         if( $transaction ) {
             foreach( $order_specifications as $k => $v ) {
-                foreach( $v['detail'] as $d ) {
+                foreach( $v['cargo'] as $d ) {
                     $temp = [
                         'specifications_id' => $v['id'],
-                        'detail_id' => $order_detail[$d]['id'],
+                        'detail_id' => $order_detail[$d['product_index']]['id'],
 //                        'number' => $v['detail_number'][$d],
-                        'number' => $order_detail[$d]['count'],
+                        'number' => $d['product_count'],
                     ];
                     $temp_result = M('ClientOrderMap')->add($temp);
                     if( !$temp_result ) {

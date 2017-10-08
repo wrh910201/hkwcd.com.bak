@@ -239,7 +239,8 @@ function close_delivery_form() {
 function set_mode_of_transportation() {
     var str = '';
     if( selected_delivery_data && selected_receive_data ) {
-        var key = selected_delivery_data.country_id;
+        var key = selected_receive_data.country_id;
+
         var country;
         for( var id in country_list ) {
             if( country_list[id].id == key ) {
@@ -253,6 +254,7 @@ function set_mode_of_transportation() {
         }
     }
     // console.log(str);
+    addOrder.allInfo.mode_of_transportation = str;
     $('#mode_of_transportation').val(str);
 }
 
