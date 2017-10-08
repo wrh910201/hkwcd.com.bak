@@ -805,6 +805,7 @@ function remove_order_specifications(id) {
 
 //==========ajax开始============================================
 
+/**
 function add_order(commit) {
     var url = "/Order/ajaxAdd";
 
@@ -876,7 +877,7 @@ function add_order(commit) {
     show_loading();
     $.post(url, param, add_order_handler, 'json');
 }
-
+*/
 function edit_order(commit) {
     var url = "/Order/ajaxEdit";
     var delivery_id = $('#delivery_id').val();

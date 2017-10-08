@@ -1081,8 +1081,8 @@
             <div class="clear"></div>
             <div class="fr" id="operate">
                 <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add_order_button" v-on:click="add_order(0)">添加</button> &nbsp;
-                <button class="btn btn_commit" type="button" id="commit_order_button" v-on:click="add_order(1)">添加并提交</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="add_order_button" @click="confirm_add_order(0)">添加</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="commit_order_button" @click="confirm_add_order(1)">添加并提交</button> &nbsp;
                 <a href="javascript:;" class="btn btn_cancel">取消</a>
                 <input type="hidden" name="delivery_id" id="delivery_id"/>
                 <input type="hidden" name="receive_id" id="receive_id"/>
@@ -1624,9 +1624,9 @@
                 order_specifications_count: "",
                 order_specifications_cargo: [
                     {
-                        product_index:'',
-                        en_product_name:'',
-                        product_count: null
+//                        product_index:'',
+//                        en_product_name:'',
+//                        product_count: null
                     }
                 ]
             },
@@ -1843,10 +1843,12 @@
         }
     });
 
-    var operate = new Vue({
-        "el": '#operate',
-        data: {},
-        method: {
+    var addOrderOperate = new Vue({
+        "el": "#operate",
+        data: {
+
+        },
+        methods: {
             add_order: function(commit) {
                 var url = "/Order/ajaxAdd";
 
@@ -1884,7 +1886,7 @@
                 var param = {
                     'delivery_id':delivery_id,
                     'receive_id':receive_id,
-                    'order_specifications':orderSpec.specOrder,
+                    'order_specifications':orderSpec.specList,
                     'order_detail': orderDetail.orderList,
                     'spare_receive_company': spare_receive_company,
                     'spare_receive_addressee':spare_receive_addressee,
@@ -1901,7 +1903,7 @@
                     'package_type': package_type,
                     'price_terms' : price_terms,
                     'tariff_payment' : tariff_payment,
-                    'shipment_reference': shipment_reference,
+                    'shipmefnt_reference': shipment_reference,
                     'settlement': settlement,
                     'declaration_of_power_attorney': declaration_of_power_attorney,
                     'contract_num': contract_num,
@@ -1919,6 +1921,7 @@
                 $.post(url, param, add_order_handler, 'json');
             },
             confirm_add_order: function(commit) {
+                var that = this;
                 if( commit == 0 ) {
                     var msg = "确定添加订单？";
                 } else {
@@ -1927,7 +1930,7 @@
                 layer.confirm(msg, {
                     btn: ['确定', '取消'],
                     btn1: function () {
-                        add_order(commit);
+                        that.add_order(commit);
                     },
                     btn2: function () {
                         return false;

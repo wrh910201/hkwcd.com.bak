@@ -388,7 +388,7 @@ class OrderAction extends BaseAction  {
 
         $data['order_detail'] = $_POST['order_detail'];
         $data['order_specifications'] = $_POST['order_specifications'];
-
+//        var_dump($data);exit;
         return $data;
     }
 
@@ -517,8 +517,8 @@ class OrderAction extends BaseAction  {
                 foreach ($order_detail as $k => $v) {
                     $order_detail[$k]['product_name'] = isset($v['product_name']) ? $v['product_name'] : '';
                     $order_detail[$k]['en_product_name'] = isset($v['en_product_name']) ? $v['en_product_name'] : '';
-                    $order_detail[$k]['goods_code'] = isset($v['goods_code']) ? $v['goods_code'] : '';
-                    $order_detail[$k]['count'] = isset($v['count']) ? $v['count'] : 0;
+                    $order_detail[$k]['goods_code'] = isset($v['detail_goods_code']) ? $v['detail_goods_code'] : '';
+                    $order_detail[$k]['count'] = isset($v['detail_count']) ? $v['detail_count'] : 0;
                     $order_detail[$k]['unit'] = isset($v['unit']) ? $v['unit'] : '';
                     $order_detail[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
                     $order_detail[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
