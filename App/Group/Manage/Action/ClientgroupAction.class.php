@@ -12,11 +12,21 @@ class ClientgroupAction extends CommonContentAction
     public function index()
     {
 
+        $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字
+        $where = array();
+        $condition = array();
+        if (!empty($keyword)) {
+            $condition['name'] = ['like', '%'.$keyword.'%'];
+            $condition['en_name'] = ['like', '%'.$keyword.'%'];
+            $condition['_logic'] = 'OR';
+            $where['_complex'] = $condition;
+        }
+        $where['status'] = 1;
+
         //分页
         import('ORG.Util.Page');
         $count = M('clientGroup')->count();
 
-        $where = ['status' => 1];
         $page = new Page($count, 10);
         $limit = $page->firstRow . ',' . $page->listRows;
         $list = M('clientGroup')->where($where)->order('id')->limit($limit)->select();

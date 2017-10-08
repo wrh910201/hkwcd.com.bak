@@ -24,6 +24,14 @@
             <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientgroup/add')}')" class="btn_blue" value="添加会员组">
             <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Clientgroup/del', array('batchFlag' => 1))}', '确实要删除选择项吗？')" class="btn_blue" value="删除">
         </div>
+        <if condition='ACTION_NAME eq "index"'>
+            <div class="left_pad">
+                <form method="post" action="{:U(GROUP_NAME. '/Clientgroup/index')}">
+                    <input type="text" name="keyword" title="关键字" class="inp_default" value="{$keyword}">
+                    <input type="submit" class="btn_blue" value="查  询">
+                </form>
+            </div>
+        </if>
     </div>
     <div class="list">
         <form action="{:U(GROUP_NAME.'/Clientgroup/delAll')}" method="post" id="form_do" name="form_do">
