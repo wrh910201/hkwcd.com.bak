@@ -1029,8 +1029,9 @@
                                 <option v-for="(item,idx) in orderDetail.orderList" :value="idx"
                                         v-if="orderDetail.orderList.length > 0">{{item.product_name}}</option>
                             </select>
-                            <input disabled class="text_input w150" type="text"
-                                   :value="cargo.product_index >= 0 ?  cargo.en_product_name : ''"
+                            <input disabled class="text_input w150" type="text" v-show="cargo.product_index >= 0"
+                                   v-model="cargo.en_product_name" name="" placeholder="" />
+                            <input disabled class="text_input w150" type="text" v-show="cargo.product_index == undefined"
                                    name="" placeholder="" />
                             <input class="text_input w150 order_specification_detail_number" type="text" name=""
                                    v-model="cargo.product_count" :value="cargo.count" placeholder=""/>
@@ -1139,20 +1140,12 @@
     var default_company = {$default_company};
     var country_list = {$json_country_list};
     var ajax_edit = false;
-    var cloneObj = function(obj){
-        var str, newobj = obj.constructor === Array ? [] : {};
-        if(typeof obj !== 'object'){
-            return;
-        } else if(window.JSON){
-            str = JSON.stringify(obj), //系列化对象
-                newobj = JSON.parse(str); //还原
-        } else {
-            for(var i in obj){
-                newobj[i] = typeof obj[i] === 'object' ?
-                    cloneObj(obj[i]) : obj[i];
-            }
+    var cloneObj = function (source) {
+        var result = {};
+        for (var key in source) {
+            result[key] = typeof source[key] === 'object' ? this.cloneObj(source[key]) : source[key];
         }
-        return newobj;
+        return result;
     };
 </script>
 <script>
@@ -1909,7 +1902,7 @@
 //                    }
 //                }
                 console.log(order_specifications);
-//                return false;
+                return false;
 
                 //订单详情 js
                 var param = {
