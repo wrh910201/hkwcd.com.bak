@@ -818,7 +818,7 @@
                         </thead>
                         <tbody id="detail-content">
                         <tr v-for="(item,index) in orderList" :id="'detail-item-'+index">
-                            <td>{{index+1}}</td>
+                            <td>{{item.id}}</td>
                             <td>{{item.product_name + ' ' +item.en_product_name}}</td>
                             <td>{{item.detail_goods_code}}</td>
                             <td>{{item.detail_count+item.unit}}</td>
@@ -1131,8 +1131,8 @@
     var selected_receive_data;
     var delivery_list = [];
     var receive_list = [];
-    var order_specifications = {};
-    var order_detail = {};
+//    var order_specifications = {$order_specifications};
+//    var order_detail = {$order_detail};
     var s_editing = null;
     var s_cursor = 0;
     var d_editing = null;
@@ -1486,7 +1486,7 @@
             },
             editingIndex: null,
             emptyDetail:{},
-            orderList:[],
+            orderList:{$order_detail} || [],
             total_count:0,
             total_single_declared:0,
             total_declared:0
@@ -1494,6 +1494,11 @@
         mounted: function () {
             for(var i in this.newDetail){
                 this.emptyDetail[i] = this.newDetail[i]
+            }
+
+            for(var j in this.orderList){
+                this.orderList[j].detail_goods_code = Number(this.orderList[j].goods_code);
+                this.orderList[j].detail_count = Number(this.orderList[j].count);
             }
         },
         methods: {
@@ -1618,7 +1623,7 @@
     var orderSpec = new Vue({
         el:"#orderSpec",
         data: {
-            specList: [],
+            specList: {$order_specifications} || [],
             total_weight : 0,
             total_rate: 0,
             total_charging_weight: 0,
@@ -2092,6 +2097,8 @@
             }
         });
     }
+//    refresh_order_detail();
+//    refresh_order_specifications();
 </script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/order.js"></script>
 </body>
