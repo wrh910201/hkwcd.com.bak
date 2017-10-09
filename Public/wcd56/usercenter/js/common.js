@@ -1,6 +1,13 @@
 /**
  * Created by Carso on 2017/10/9.
  */
+var cloneObj = function (source) {
+    var result = {};
+    for (var key in source) {
+        result[key] = typeof source[key] === 'object' ? this.cloneObj(source[key]) : source[key];
+    }
+    return result;
+};
 Vue.config.devtools = true;
 Vue.directive('select2', {
     inserted: function (el, binding, vnode) {
