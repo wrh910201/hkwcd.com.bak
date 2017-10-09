@@ -1495,11 +1495,6 @@
             for(var i in this.newDetail){
                 this.emptyDetail[i] = this.newDetail[i]
             }
-
-            for(var j in this.orderList){
-                this.orderList[j].detail_goods_code = Number(this.orderList[j].goods_code);
-                this.orderList[j].detail_count = Number(this.orderList[j].count);
-            }
         },
         methods: {
             resetDetail: function (obj) {
