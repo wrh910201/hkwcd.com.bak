@@ -427,7 +427,7 @@
         <div class="box_c_item">
             <div class="fl">
                 <label class="l_title">总费用：</label>
-                <input id="order_total_fee" class="text_input w300" type="number" value="{$order_fee.total_fee}" name="total_fee" id="total_fee" placeholder="请输入总费用">
+                <input class="text_input w300" type="number" value="{$order_fee.total_fee}" name="total_fee" id="total_fee" placeholder="请输入总费用">
             </div>
             <div class="clear"></div>
         </div>
@@ -859,7 +859,7 @@
             }
         });
         total_fee.toFixed(1);
-        $("#order_total_fee").val(total_fee);
+        $("#total_fee").val(total_fee);
     });
 </script>
 </html>
