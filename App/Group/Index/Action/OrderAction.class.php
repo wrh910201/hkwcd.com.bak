@@ -1367,6 +1367,14 @@ class OrderAction extends BaseAction  {
             }
             $order_detail = $temp;
         }
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]["detail_goods_code"] = $v["goods_code"];
+                unset($order_detail[$k]["goods_code"]);
+                $order_detail[$k]["detail_count"] = $v["count"];
+                unset($order_detail[$k]["count"]);
+            }
+        }
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
             ->field('s.*, m.detail_id,m.number')
