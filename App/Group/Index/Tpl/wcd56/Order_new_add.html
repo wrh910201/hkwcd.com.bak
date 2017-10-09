@@ -1029,8 +1029,9 @@
                                 <option v-for="(item,idx) in orderDetail.orderList" :value="idx"
                                         v-if="orderDetail.orderList.length > 0">{{item.product_name}}</option>
                             </select>
-                            <input disabled class="text_input w150" type="text" v-model="cargo.en_product_name"
-                                   name="" placeholder="" :value="cargo.en_product_name"/>
+                            <input disabled class="text_input w150" type="text"
+                                   :value="cargo.product_index >= 0 ?  cargo.en_product_name : ''"
+                                   name="" placeholder="" />
                             <input class="text_input w150 order_specification_detail_number" type="text" name=""
                                    v-model="cargo.product_count" :value="cargo.count" placeholder=""/>
                             <span @click="removeSpecCargo(index)" v-show="index > 0" style="cursor: pointer">删除</span>
@@ -1138,7 +1139,21 @@
     var default_company = {$default_company};
     var country_list = {$json_country_list};
     var ajax_edit = false;
-
+    var cloneObj = function(obj){
+        var str, newobj = obj.constructor === Array ? [] : {};
+        if(typeof obj !== 'object'){
+            return;
+        } else if(window.JSON){
+            str = JSON.stringify(obj), //系列化对象
+                newobj = JSON.parse(str); //还原
+        } else {
+            for(var i in obj){
+                newobj[i] = typeof obj[i] === 'object' ?
+                    cloneObj(obj[i]) : obj[i];
+            }
+        }
+        return newobj;
+    };
 </script>
 <script>
     var addOrder = new Vue({
@@ -1662,7 +1677,7 @@
             },
             selectSpecDetail:function (index) {
                 var id = Number(event.target.value);
-                this.specOrder.order_specifications_cargo[index].en_product_name = orderDetail.orderList[id].en_product_name
+                this.specOrder.order_specifications_cargo[index].en_product_name = orderDetail.orderList[id].en_product_name;
                 this.specOrder.order_specifications_cargo[index].product_name = orderDetail.orderList[id].product_name
             },
             addSpecCargo: function () {
@@ -1885,15 +1900,16 @@
                 var remark = addOrder.allInfo.remark;
                 var specifications_remark = $('#specifications_remark').val();
 
-                var order_specifications = orderSpec.specList;
-                for(var id in orderSpec.specList) {
-                    order_specifications[id].cargo = [];
-                    for( var j in orderSpec.specList[id].cargo ) {
-                        order_specifications[id].cargo.push(orderSpec.specList[id].cargo[j]);
-                    }
-                }
+                var order_specifications = cloneObj(orderSpec.specList);
+
+//                for(var id in orderSpec.specList) {
+////                    order_specifications[id].cargo = [];
+//                    for( var j in orderSpec.specList[id].cargo ) {
+//                        order_specifications[id].cargo.push(orderSpec.specList[id].cargo[j]);
+//                    }
+//                }
                 console.log(order_specifications);
-                return false;
+//                return false;
 
                 //订单详情 js
                 var param = {
