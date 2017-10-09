@@ -611,10 +611,15 @@ class OrderAction extends BaseAction  {
         $selected_delivery = M('DeliveryAddress')->where(['id' => $order['delivery_id']])->find();
         $selected_receive = M('ReceiveAddress')->where(['id' => $order['receive_id']])->find();
 
-        $order_detail["detail_goods_code"] = $order_detail["goods_code"];
-        unset($order_detail["goods_code"]);
-        $order_detail["detail_count"] = $order_detail["count"];
-        unset($order_detail["count"]);
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]["detail_goods_code"] = $v["goods_code"];
+                unset($order_detail[$k]["goods_code"]);
+                $order_detail[$k]["detail_count"] = $v["count"];
+                unset($order_detail[$k]["count"]);
+            }
+        }
+
 
         $this->assign('order', $order);
         $this->assign('order_detail', json_encode($order_detail));
