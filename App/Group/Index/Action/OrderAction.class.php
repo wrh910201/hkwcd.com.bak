@@ -579,14 +579,14 @@ class OrderAction extends BaseAction  {
 
         $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
         $d_cursor = 0;
-        if( $order_detail ) {
-            $temp = [];
-            foreach( $order_detail as $k => $v ) {
-                $temp['item-'.$v['id']] = $v;
-                $d_cursor = $d_cursor < $v['id'] ? $v['id'] : $d_cursor;
-            }
-            $order_detail = $temp;
-        }
+//        if( $order_detail ) {
+//            $temp = [];
+//            foreach( $order_detail as $k => $v ) {
+//                $temp['item-'.$v['id']] = $v;
+//                $d_cursor = $d_cursor < $v['id'] ? $v['id'] : $d_cursor;
+//            }
+//            $order_detail = $temp;
+//        }
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
             ->field('s.*, m.detail_id, m.number')
@@ -595,18 +595,18 @@ class OrderAction extends BaseAction  {
             ->select();
 //        echo M('ClientOrderSpecifications')->getLastSql();exit;
         $s_cursor = 0;
-        if( $order_specifications ) {
-            $temp = [];
-            foreach( $order_specifications as $k => $v ) {
-                if( !isset($temp['item-'.$v['id']]) ) {
-                    $temp['item-'.$v['id']] = $v;
-                }
-                $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
-                $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
-                $s_cursor = $s_cursor < $v['id'] ? $v['id'] : $s_cursor;
-            }
-            $order_specifications = $temp;
-        }
+//        if( $order_specifications ) {
+//            $temp = [];
+//            foreach( $order_specifications as $k => $v ) {
+//                if( !isset($temp['item-'.$v['id']]) ) {
+//                    $temp['item-'.$v['id']] = $v;
+//                }
+//                $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
+//                $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
+//                $s_cursor = $s_cursor < $v['id'] ? $v['id'] : $s_cursor;
+//            }
+//            $order_specifications = $temp;
+//        }
 //        var_dump($order_specifications);exit;
         $selected_delivery = M('DeliveryAddress')->where(['id' => $order['delivery_id']])->find();
         $selected_receive = M('ReceiveAddress')->where(['id' => $order['receive_id']])->find();
@@ -1360,13 +1360,13 @@ class OrderAction extends BaseAction  {
         }
 
         $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
-        if( $order_detail ) {
-            $temp = [];
-            foreach( $order_detail as $k => $v ) {
-                $temp[$v['id']] = $v;
-            }
-            $order_detail = $temp;
-        }
+//        if( $order_detail ) {
+//            $temp = [];
+//            foreach( $order_detail as $k => $v ) {
+//                $temp[$v['id']] = $v;
+//            }
+//            $order_detail = $temp;
+//        }
         if( $order_detail ) {
             foreach( $order_detail as $k => $v ) {
                 $order_detail[$k]["detail_goods_code"] = $v["goods_code"];
@@ -1382,17 +1382,17 @@ class OrderAction extends BaseAction  {
             ->where(['s.order_num' => $order['order_num']])
             ->select();
 //        echo M('ClientOrderSpecifications')->getLastSql();exit;
-        if( $order_specifications ) {
-            $temp = [];
-            foreach( $order_specifications as $k => $v ) {
-                if( !isset($temp[$v['id']]) ) {
-                    $temp[$v['id']] = $v;
-                }
-                $temp[$v['id']]['detail'][] = $v['detail_id'];
-                $temp[$v['id']]['detail_number'][$v['detail_id']] = $v['number'];
-            }
-            $order_specifications = $temp;
-        }
+//        if( $order_specifications ) {
+//            $temp = [];
+//            foreach( $order_specifications as $k => $v ) {
+//                if( !isset($temp[$v['id']]) ) {
+//                    $temp[$v['id']] = $v;
+//                }
+//                $temp[$v['id']]['detail'][] = $v['detail_id'];
+//                $temp[$v['id']]['detail_number'][$v['detail_id']] = $v['number'];
+//            }
+//            $order_specifications = $temp;
+//        }
         $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
 
         $this->assign('order', $order);
