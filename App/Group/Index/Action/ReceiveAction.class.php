@@ -71,8 +71,8 @@ class ReceiveAction extends BaseAction {
         if( empty($data['postal_code']) ) {
             $this->error('请输入邮编');
         }
-        if( empty($data['mobile']) ) {
-            $this->error('请输入手机');
+        if( empty($data['mobile']) && empty($data['phone']) ) {
+            $this->error('手机与座机至少输入一个');
         }
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 
@@ -137,9 +137,10 @@ class ReceiveAction extends BaseAction {
             $has_error = true;
             $errorMsg .= empty($errorMsg) ? '请输入具体地址' : '<br />请输入具体地址';
         }
-        if( empty($data['mobile']) ) {
+
+        if( empty($data['mobile']) && empty($data['phone']) ) {
             $has_error = true;
-            $errorMsg .= empty($errorMsg) ? '请输入手机' : '<br />请输入手机';
+            $errorMsg .= empty($errorMsg) ? '手机与座机至少输入一个' : '<br />手机与座机至少输入一个';
         }
         if( $has_error ) {
             $response['msg'] = $errorMsg;
@@ -239,8 +240,8 @@ class ReceiveAction extends BaseAction {
         if( empty($data['postal_code']) ) {
             $this->error('请输入邮编');
         }
-        if( empty($data['mobile']) ) {
-            $this->error('请输入手机');
+        if( empty($data['mobile']) && empty($data['phone']) ) {
+            $this->error('手机与座机至少输入一个');
         }
         $data['is_default'] = $data['is_default'] == 1 ? 1:0;
 

@@ -368,15 +368,15 @@
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">* 手机：</label>
+                                <label class="l_title">*手机：</label>
                                 <input class="text_input w300" type="text" name="add_delivery_mobile" id="add_delivery_mobile"
-                                       placeholder="请输入手机" v-model="addDeliveryInfo.mobile"/>
+                                       placeholder="手机与座机至少输入一个" v-model="addDeliveryInfo.mobile"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">座机：</label>
+                                <label class="l_title">*座机：</label>
                                 <input class="text_input w300" type="text" name="add_delivery_phone" id="add_delivery_phone"
-                                       placeholder="请输入座机" v-model="addDeliveryInfo.phone"/>
+                                       placeholder="手机与座机至少输入一个" v-model="addDeliveryInfo.phone"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
@@ -454,7 +454,7 @@
                             </div>
                             <div class="box_c_item">
                                 <div class="fl">
-                                    <label class="l_title">联系人：</label>
+                                    <label class="l_title">*联系人：</label>
                                     <input class="text_input w300" type="text" name="add_receive_addressee" id="add_receive_addressee"
                                            placeholder="请输入联系人" v-model="addReceiveInfo.addressee">
                                 </div>
@@ -462,7 +462,7 @@
                             </div>
                             <div class="box_c_item">
                                 <div class="fl">
-                                    <label class="l_title">国家：</label>
+                                    <label class="l_title">*国家：</label>
                                     <select class="w300" id="add_receive_country" v-select2='add_receive_country'
                                             v-model="addReceiveInfo.country">
                                         <foreach name="country_list" item="v">
@@ -482,7 +482,7 @@
                             </div>
                             <div class="box_c_item">
                                 <div class="fl">
-                                    <label class="l_title">市：</label>
+                                    <label class="l_title">*市：</label>
                                     <input class="text_input w300" type="text" id="add_receive_city" name="add_receive_city"
                                            placeholder="请输入市" v-model="addReceiveInfo.city">
                                 </div>
@@ -490,7 +490,7 @@
                             </div>
                             <div class="box_c_item">
                                 <div class="fl">
-                                    <label class="l_title">具体地址：</label>
+                                    <label class="l_title">*具体地址：</label>
                                     <input class="text_input w300" type="text" id="add_receive_detail_address"
                                            name="add_receive_detail_address" placeholder="请输入地址 (P.O.Box地址不能填写)"
                                            v-model="addReceiveInfo.detail_address"/>
@@ -498,19 +498,19 @@
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">手机：</label>
+                                <label class="l_title">*手机：</label>
                                 <input class="text_input w300" type="text" name="add_receive_mobile" id="add_receive_mobile"
-                                       placeholder="请输入手机" v-model="addReceiveInfo.mobile"/>
+                                       placeholder="手机与座机至少输入一个" v-model="addReceiveInfo.mobile"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">座机：</label>
+                                <label class="l_title">*座机：</label>
                                 <input class="text_input w300" type="text" name="add_receive_phone" id="add_receive_phone"
-                                       placeholder="请输入座机" v-model="addReceiveInfo.phone"/>
+                                       placeholder="手机与座机至少输入一个" v-model="addReceiveInfo.phone"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">邮编：</label>
+                                <label class="l_title">*邮编：</label>
                                 <input class="text_input w300" type="text" name="add_receive_postal_code"
                                        id="add_receive_postal_code" placeholder="请输入邮编"
                                        v-model="addReceiveInfo.postal_code"/>
@@ -563,7 +563,7 @@
                                 <select class="w300" id="spare_country" name="spare_country"
                                         v-model="spareInfo.spare_country" v-select2="spare_country">
                                     <foreach name="country_list" item="v">
-                                        <option value="{$v.id}">{$v.name}</option>
+                                        <option value="{$v.id}">{$v.name} / {$v.ename}</option>
                                     </foreach>
                                 </select>
                                 <div class="clear"></div>
@@ -598,13 +598,13 @@
                             <div class="box_c_item">
                                 <label class="l_title">手机：</label>
                                 <input class="text_input w300" type="text" name="spare_receive_mobile"
-                                       placeholder="请输入手机" v-model="spareInfo.spare_receive_mobile"/>
+                                       placeholder="手机与座机至少输入一个" v-model="spareInfo.spare_receive_mobile"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">座机：</label>
                                 <input class="text_input w300" type="text" name="spare_receive_phone"
-                                       placeholder="请输入座机" v-model="spareInfo.spare_receive_phone"/>
+                                       placeholder="手机与座机至少输入一个" v-model="spareInfo.spare_receive_phone"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
@@ -1976,7 +1976,7 @@
             allowClear: true
         });
         $("#spare_country").select2({
-            dropdownParent: $('#add_receive_form'),
+            dropdownParent: $('#spare_receive_form'),
             placeholder: "請选择國家/地區",
             allowClear: true
         });

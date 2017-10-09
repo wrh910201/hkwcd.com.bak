@@ -78,8 +78,8 @@ class DeliveryAction extends BaseAction {
         if( empty($data['postal_code']) ) {
             $this->error('请输入邮编');
         }
-        if( empty($data['mobile']) ) {
-            $this->error('请输入手机');
+        if( empty($data['mobile']) && empty($data['phone']) ) {
+            $this->error('手机与座机至少输入一个');
         }
 
         if( empty($data['certificate_num'])  ) {
@@ -165,9 +165,9 @@ class DeliveryAction extends BaseAction {
             $errorMsg .= empty($errorMsg) ? '请输入邮编' : '<br />请输入邮编';
         }
 
-        if( empty($data['mobile'])  ) {
+        if( empty($data['mobile']) && empty($data['phone']) ) {
             $has_error = true;
-            $errorMsg .= empty($errorMsg) ? '请输入手机' : '<br />请输入手机';
+            $errorMsg .= empty($errorMsg) ? '手机与座机至少输入一个' : '<br />手机与座机至少输入一个';
         }
 
         if( empty($data['certificate_num'])  ) {
@@ -293,8 +293,8 @@ class DeliveryAction extends BaseAction {
         if( empty($data['postal_code']) ) {
             $this->error('请输入邮编');
         }
-        if( empty($data['mobile']) ) {
-            $this->error('请输入手机');
+        if( empty($data['mobile']) && empty($data['phone']) ) {
+            $this->error('手机与座机至少输入一个');
         }
 
         if( empty($data['certificate_num'])  ) {
