@@ -320,7 +320,7 @@ class DeliveryAction extends BaseAction {
             $data['id'] = $delivery['id'];
             $result1 = $this->_certificate_water($data, true, $delivery);
             if( $result1 ) {
-                $this->success('添加发货地址成功', U('Delivery/index'));
+                $this->success('编辑发货地址成功', U('Delivery/index'));
             } else {
                 $this->error('系统繁忙，请稍后重试');
             }
@@ -410,15 +410,23 @@ class DeliveryAction extends BaseAction {
         $map = [
             'id' => $delivery_id,
         ];
-        if( file_exists($save_name_1) && file_exists($save_name_2) ) {
+        if( $update_data ) {
+            if (file_exists($save_name_1) && file_exists($save_name_2)) {
 //            $update_data['status'] = 1;
-            M('DeliveryAddress')->where($map)->save($update_data);
-            return true;
+                M('DeliveryAddress')->where($map)->save($update_data);
+
+                return true;
+            } else {
+                if ($is_update == false) {
+                    M('DeliveryAddress')->where($map)->delete();
+                }
+                @unlink($save_name_1);
+                @unlink($save_name_2);
+
+                return false;
+            }
         } else {
-            M('DeliveryAddress')->where($map)->delete();
-            @unlink($save_name_1);
-            @unlink($save_name_2);
-            return false;
+            return true;
         }
     }
 
