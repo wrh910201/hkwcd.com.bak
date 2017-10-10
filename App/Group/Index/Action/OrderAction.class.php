@@ -589,26 +589,45 @@ class OrderAction extends BaseAction  {
 //        }
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
-            ->field('s.*, m.detail_id, m.number')
+            ->field('s.*, m.detail_id, m.number, cd.product_name, cd.en_product_name, cd.unit, cd.goods_code, cd.origin')
             ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+            ->join('left join hx_client_order_detail as cd on m.detail_id = cd.id')
             ->where(['s.order_num' => $order['order_num']])
             ->select();
 //        echo M('ClientOrderSpecifications')->getLastSql();exit;
         $s_cursor = 0;
-//        if( $order_specifications ) {
-//            $temp = [];
-//            foreach( $order_specifications as $k => $v ) {
-//                if( !isset($temp['item-'.$v['id']]) ) {
-//                    $temp['item-'.$v['id']] = $v;
-//                }
-//                $temp['item-'.$v['id']]['detail'][] = 'item-'.$v['detail_id'];
-//                $temp['item-'.$v['id']]['detail_number']['item-'.$v['detail_id']] = $v['number'];
-//                $s_cursor = $s_cursor < $v['id'] ? $v['id'] : $s_cursor;
-//            }
-//            $order_specifications = $temp;
-//        }
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp[$v['id']]) ) {
+                    $temp[$v['id']] = $v;
+                }
+                $temp[$v['id']]['cargo'][] = [
+                    'product_name' => $v['product_name'],
+                    'en_product_name' => $v['en_product_name'],
+                    'detail_goods_code' => $v['goods_code'],
+                    'origin' => $v['origin'],
+                ];
+            }
+            $order_specifications = $temp;
+            $temp = [];
+            $start = 1;
+            foreach( $order_specifications as $v ) {
+                $v['index'] = $v['id'];
+                $v['id'] = $start ."-". $v['count'];
+                $start = $start + $v['count'];
+                $v['charging_weight'] = $v['length'] * $v['width'] * $v['height'] / 5000;
+                $temp[] = $v;
+            }
+            $order_specifications = $temp;
+        }
 //        var_dump($order_specifications);exit;
-        $selected_delivery = M('DeliveryAddress')->where(['id' => $order['delivery_id']])->find();
+        $selected_delivery = M('DeliveryAddress')
+            ->alias("d")
+            ->field("d.*, c.name ")
+            ->join("left join hx_country as c on d.country_id = c.id")
+            ->where(['id' => $order['delivery_id']])
+            ->find();
         $selected_receive = M('ReceiveAddress')->where(['id' => $order['receive_id']])->find();
 
         if( $order_detail ) {
