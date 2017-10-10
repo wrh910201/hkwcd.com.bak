@@ -579,14 +579,14 @@ class OrderAction extends BaseAction  {
 
         $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
         $d_cursor = 0;
-//        if( $order_detail ) {
-//            $temp = [];
-//            foreach( $order_detail as $k => $v ) {
-//                $temp['item-'.$v['id']] = $v;
-//                $d_cursor = $d_cursor < $v['id'] ? $v['id'] : $d_cursor;
-//            }
-//            $order_detail = $temp;
-//        }
+        if( $order_detail ) {
+            $temp = [];
+            foreach( $order_detail as $k => $v ) {
+                $temp[$k] = $v;
+                $d_cursor = $d_cursor < $v['id'] ? $v['id'] : $d_cursor;
+            }
+            $order_detail = $temp;
+        }
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
             ->field('s.*, m.detail_id, m.number, cd.product_name, cd.en_product_name, cd.unit, cd.goods_code, cd.origin')
@@ -608,6 +608,12 @@ class OrderAction extends BaseAction  {
                     'detail_goods_code' => $v['goods_code'],
                     'origin' => $v['origin'],
                 ];
+                $last_index = count($temp[$v['id']]['cargo']) - 1;
+                foreach( $order_detail as $key => $d ) {
+                    if( $d['id'] == $v['detail_id'] ) {
+                        $temp[$v['id']]['cargo'][$last_index]['product_index'] = $key;
+                    }
+                }
             }
             $order_specifications = $temp;
             $temp = [];
