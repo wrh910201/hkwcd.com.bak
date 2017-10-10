@@ -1153,7 +1153,7 @@
         el: "#addOrder",
         data: {
             deliveryInfo: {
-                delivery_id: 0,
+                delivery_id: {$order.delivery_id},
                 company: "{$order.delivery_company}",
                 consignor: "{$order.delivery_consignor}",
                 country: "{$order.delivery_country_name}",
@@ -1183,7 +1183,7 @@
                 is_default: false
             },
             receiveInfo: {
-                receive_id: 0,
+                receive_id: {$order.receive_id},
                 receiver_code:'',
                 company: "{$order.receive_company}",
                 id:'{$order.receive_id}',
