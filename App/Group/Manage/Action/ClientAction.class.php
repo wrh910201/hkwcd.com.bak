@@ -753,6 +753,22 @@ class ClientAction extends CommonContentAction {
         $this->display();
     }
 
+    public function cert() {
+        $id = I("id");
+        $delivery = M('DeliveryAddress')->where(['id' => $id])->find();
+        $result = [
+            "title"=> '身份证',
+            "id" => $id,
+            "start" => 0,
+            "data" => [
+                ["alt" => "正面", "pid" => 0, "src" => "{$delivery['certificate1_url']}", "thumb" => "{$delivery['certificate1_url']}"],
+                ["alt" => "反面", "pid" => 1, "src" => "{$delivery['certificate2_url']}", "thumb" => "{$delivery['certificate2_url']}"],
+            ],
+        ];
+        echo json_encode($result);
+        exit;
+    }
+
     public function receive() {
         $id = I('get.id', 0, 'intval');
         $client = M('client')->where(['id' => $id])->find();
