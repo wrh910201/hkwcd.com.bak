@@ -55,7 +55,7 @@
                                 <div class="box_c_item">
                                     <div class="fl">
                                         <label class="l_title">国家：</label>
-                                        <span id="delivery_country" class="w300 l_con">{{deliveryInfo.country_name}}</span>
+                                        <span id="delivery_country" class="w300 l_con">{{deliveryInfo.country}}</span>
                                         <div class="clear"></div>
                                     </div>
                                 </div>
@@ -1167,18 +1167,18 @@
         el: "#addOrder",
         data: {
             deliveryInfo: {
-                delivery_id: 0,
-                company: "",
-                consignor: "",
-                country: "",
-                state: "",
-                city: "",
-                detail_address: "",
-                postal_code: "",
-                mobile: "",
-                phone: "",
-                exporter_code: "",
-                certificate_num:""
+                delivery_id: {$order.delivery_id},
+                company: "{$order.delivery_company}",
+                consignor: "{$order.delivery_consignor}",
+                country: "{$order.delivery_country_name}",
+                state: "{$order.delivery_state}",
+                city: "{$order.delivery_city}",
+                show_detail_address: "{$order.delivery_detail_address}",
+                postal_code: "{$order.delivery_postal_code}",
+                mobile: "{$order.delivery_mobile}",
+                phone: "{$order.delivery_phone}",
+                exporter_code: "{$order.delivery_exporter_code}",
+                certificate_num:"{$order.delivery_certificate_num}"
             },
             addDeliveryInfo: {
                 company: default_company,
@@ -1197,29 +1197,29 @@
                 is_default: false
             },
             receiveInfo: {
-                receive_id: 0,
+                receive_id: {$order.receive_id},
                 receiver_code:'',
-                company: "",
-                id:null,
-                client_id:"",
-                addressee: "",
-                country_id: "",
-                country_name: "",
-                en_country_name:"",
-                state: "",
-                status:"",
-                type:"",
-                city: "",
-                detail_address: "",
-                show_detail_address: "",
-                postal_code: "",
-                mobile: "",
-                phone: "",
-                exporter_code: "",
+                company: "{$order.receive_company}",
+                id:'{$order.receive_id}',
+                client_id:"{$order.receive_client_id}",
+                addressee: "{$order.receive_addressee}",
+                country_id: "{$order.receive_country_id}",
+                country_name: "{$order.receive_country_name}",
+                en_country_name:"{$order.receive_en_country_name}",
+                state: "{$order.receive_state}",
+                status:"{$order.receive_status}",
+                type:"{$order.receive_type}",
+                city: "{$order.receive_city}",
+                detail_address: "{$order.receive_detail_address}",
+                show_detail_address: "{$order.receive_detail_address}",
+                postal_code: "{$order.receive_postal_code}",
+                mobile: "{$order.receive_mobile}",
+                phone: "{$order.receive_phone}",
+                exporter_code: "{$order.receive_exporter_code}",
                 is_default: null,
-                remark:"",
-                created_at:"",
-                updated_at:""
+                remark:"{$order.receive_remark}",
+                created_at:"{$order.receive_created_at}",
+                updated_at:"{$order.receive_updated_at}"
             },
             addReceiveInfo: {
                 company: "",
