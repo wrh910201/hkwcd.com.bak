@@ -45,7 +45,7 @@
                                 <div class="box_c_item">
                                     <div class="fl">
                                         <label class="l_title">国家：</label>
-                                        <span id="delivery_country" class="w300 l_con">{{deliveryInfo.country_name}}</span>
+                                        <span id="delivery_country" class="w300 l_con">{{deliveryInfo.country}}</span>
                                         <div class="clear"></div>
                                     </div>
                                 </div>
@@ -691,7 +691,7 @@
                                 <div class="fl">
                                     <label class="l_title">装运参考：</label>
                                     <input class="text_input w300" type="text" name="shipment_reference"
-                                           id="shipment_reference" placeholder="货物上的标记，例如 WCD">
+                                           id="shipment_reference" placeholder="货物上的标记，例如 WCD" v-model="allInfo.shipment_reference">
                                     <div class="clear"></div>
                                 </div>
                                 <div class="fl">
@@ -710,12 +710,12 @@
                                 <div class="fl">
                                     <label class="l_title">相关委托书：</label>
                                     <input class="text_input w300" type="text" name="declaration_of_power_attorney"
-                                           id="declaration_of_power_attorney" placeholder="正式报关需填写，默认为 快件报关">
+                                           id="declaration_of_power_attorney" placeholder="正式报关需填写，默认为 快件报关" v-model="allInfo.declaration_of_power_attorney">
                                     <div class="clear"></div>
                                 </div>
                                 <div class="fl">
                                     <label class="l_title">合同号：</label>
-                                    <input class="text_input w300" type="text" name="contract_num" id="contract_num"
+                                    <input class="text_input w300" type="text" name="contract_num" id="contract_num" v-model="allInfo.contract_num"
                                            placeholder="">
                                     <div class="clear"></div>
                                 </div>
@@ -725,7 +725,7 @@
                                 <div class="fl">
                                     <label class="l_title">* 运输方式：</label>
                                     <input class="text_input w300" type="text" name="mode_of_transportation"
-                                           id="mode_of_transportation" placeholder="请输入运输方式">
+                                           id="mode_of_transportation" placeholder="请输入运输方式" v-model="allInfo.mode_of_transportation">
                                     <div class="clear"></div>
                                 </div>
                                 <div class="fl">
@@ -818,7 +818,7 @@
                         </thead>
                         <tbody id="detail-content">
                         <tr v-for="(item,index) in orderList" :id="'detail-item-'+index">
-                            <td>{{item.id}}</td>
+                            <td>{{index + 1}}</td>
                             <td>{{item.product_name + ' ' +item.en_product_name}}</td>
                             <td>{{item.detail_goods_code}}</td>
                             <td>{{item.detail_count+item.unit}}</td>
@@ -1159,7 +1159,7 @@
                 country: "{$order.delivery_country_name}",
                 state: "{$order.delivery_state}",
                 city: "{$order.delivery_city}",
-                detail_address: "{$order.delivery_detail_address}",
+                show_detail_address: "{$order.delivery_detail_address}",
                 postal_code: "{$order.delivery_postal_code}",
                 mobile: "{$order.delivery_mobile}",
                 phone: "{$order.delivery_phone}",
@@ -1197,7 +1197,7 @@
                 type:"{$order.receive_type}",
                 city: "{$order.receive_city}",
                 detail_address: "{$order.receive_detail_address}",
-                show_detail_address: "{$order.receive_show_detail_address}",
+                show_detail_address: "{$order.receive_detail_address}",
                 postal_code: "{$order.receive_postal_code}",
                 mobile: "{$order.receive_mobile}",
                 phone: "{$order.receive_phone}",
@@ -1221,17 +1221,19 @@
                 postal_code: null
             },
             spareInfo:{
-                spare_receive_company: '',
-                spare_receive_addressee: '',
-                spare_country: '',
-                spare_state: '',
-                spare_city: '',
-                spare_receive_detail_address: '',
-                spare_receive_phone: null,
-                spare_receive_mobile: null,
-                spare_receive_postal_code: '',
-                spare_receiver_code: '',
-                enable_spare: false
+                spare_receive_company: '{$order.spare_company}',
+                spare_receive_addressee: '{$order.spare_addressee}',
+                spare_country: '{$order.spare_country_name}',
+                spare_country_name: '{$order.spare_country_name}',
+                spare_country_en_name: '{$order.spare_country_en_name}',
+                spare_state: '{$order.spare_state}',
+                spare_city: '{$order.spare_city}',
+                spare_receive_detail_address: '{$order.spare_detail_address}',
+                spare_receive_phone: '{$order.spare_phone}',
+                spare_receive_mobile: '{$order.spare_mobile}',
+                spare_receive_postal_code: '{$order.spare_postal_code}',
+                spare_receiver_code: '{$order.spare_receiver_code}',
+                enable_spare: {$order.enable_spare} ? true : false,
             },
             emptyInfo:{},
             deliveryList: [],
@@ -1239,9 +1241,9 @@
             deliveryListRow: selected_delivery_id,
             receiveListRow: selected_receive_id,
             allInfo: {
-                channel:"{$order.channel}",
+                channel:"{$order.channel_id}",
                 package_type:"{$order.package_type}",
-                price_terms:"{$order.}",
+                price_terms:"{$order.price_terms}",
                 tariff_payment:"{$order.tariff_payment}",
                 shipment_reference:"{$order.shipment_reference}",
                 settlement:"{$order.settlement}",
@@ -1644,6 +1646,23 @@
             for(var i in this.specOrder){
                 this.emptyOrder[i] = this.specOrder[i];
             }
+            //计算合计
+            this.total_weight = 0;
+            this.total_rate = 0;
+            for( var i in this.specList ) {
+                this.specList[i].length = parseFloat(this.specList[i].length).toFixed(1);
+                this.specList[i].width = parseFloat(this.specList[i].width).toFixed(1);
+                this.specList[i].height  = parseFloat(this.specList[i].height).toFixed(1);
+                this.specList[i].weight = parseFloat(this.specList[i].weight).toFixed(1);
+                this.specList[i].charging_weight = parseFloat(this.specList[i].charging_weight).toFixed(1);
+
+                this.total_weight += this.specList[i].weight;
+                this.total_rate += this.specList[i].charging_weight;
+            }
+            this.total_weight = parseFloat(this.total_weight).toFixed(1);
+            this.total_rate = parseFloat(this.total_rate).toFixed(1);
+
+            this.total_charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
         },
         methods: {
             fixedNum: function(num,fix){
