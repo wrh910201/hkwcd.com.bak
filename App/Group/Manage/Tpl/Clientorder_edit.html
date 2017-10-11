@@ -1611,6 +1611,19 @@
                     if(this.editingIndex >=  0){
                         console.log("edit");
                         this.orderList[this.editingIndex] = detail;
+                        //更新已使用的规格
+                        for( var i in orderSpec.specList ) {
+                            for( var j in orderSpec.specList[i].cargo ) {
+                                if( this.editingIndex == orderSpec.specList[i].cargo[j].product_index ) {
+                                    orderSpec.specList[i].cargo[j].product_name = detail.product_name;
+                                    orderSpec.specList[i].cargo[j].en_product_name = detail.en_product_name;
+                                    orderSpec.specList[i].cargo[j].unit = detail.unit;
+                                    orderSpec.specList[i].cargo[j].origin = detail.origin;
+                                    orderSpec.specList[i].cargo[j].detail_goods_code = detail.detail_goods_code;
+                                }
+                            }
+                        }
+                        this.recountTotal();
                     }else{
                         console.log("push");
                         this.orderList.push(detail);
@@ -1636,15 +1649,34 @@
             },
             removeOrderDetail:function (index) {
                 var that = this;
-                layer.confirm('确定删除该项商品信息？', {
-                    btn: ['确定', '取消'],
-                    btn1: function () {
-                        that.orderList.splice(index,1);
-                    },
-                    btn2: function () {
-                        return false;
+                if( !that.checkUsed(index) ) {
+
+                    layer.confirm('确定删除该项商品信息？', {
+                        btn: ['确定', '取消'] //可以无限个按钮
+
+                    },  function(layer_index, layero){
+                        //按钮【按钮一】的回调
+                        that.orderList.splice(index, 1);
+                        layer.closeAll('dialog');
+                    }, function(index){
+                        //按钮【按钮二】的回调
+                    });
+                }
+            },
+            checkUsed: function(index) {
+                var detail = orderDetail.orderList[index];
+                console.log(detail);
+                for( var i in orderSpec.specList ) {
+                    for( var j in orderSpec.specList[i].cargo ) {
+                        if( index == orderSpec.specList[i].cargo[j].product_index ) {
+                            console.log(detail.product_name + "is used");
+                            layer.msg("请先删除或修改对应的规格");
+                            return true;
+                        }
                     }
-                });
+                }
+                console.log(detail.product_name + "is not used");
+                return false;
             }
         }
     });
@@ -1690,6 +1722,7 @@
 
                 this.total_weight += this.specList[i].weight;
                 this.total_rate += this.specList[i].charging_weight;
+                this.total_order_specifications_count += this.specList[i].count;
             }
             this.total_weight = parseFloat(this.total_weight).toFixed(1);
             this.total_rate = parseFloat(this.total_rate).toFixed(1);
@@ -1899,9 +1932,19 @@
                 this.showSpec()
             },
             removeSpecOrder: function (index) {
-                this.specList.splice(index,1);
-                this.recountTotal();
-                this.resetId();
+                var that = this;
+                layer.confirm('确定该项规格？', {
+                    btn: ['确定', '取消'] //可以无限个按钮
+
+                },  function(layer_index, layero){
+                    //按钮【按钮一】的回调
+                    that.specList.splice(index,1);
+                    that.recountTotal();
+                    that.resetId();
+                    layer.closeAll('dialog');
+                }, function(index){
+                    //按钮【按钮二】的回调
+                });
             }
         }
     });

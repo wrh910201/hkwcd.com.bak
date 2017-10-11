@@ -349,7 +349,7 @@ class OrderAction extends BaseAction  {
             $model->rollback();
 //            echo $model->getError();
             $this->response['msg'] = '系统繁忙，请稍后重试';
-            $this->response['msg'] = $model->getDbError();
+//            $this->response['msg'] = $model->getDbError();
         }
         echo json_encode($this->response);
         exit;
@@ -507,6 +507,7 @@ class OrderAction extends BaseAction  {
 
     private function _build_order_detail($order_detail) {
         //构造产品详情
+        $temp = [];
         if( !is_array($order_detail) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
@@ -516,14 +517,15 @@ class OrderAction extends BaseAction  {
                 $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
             } else {
                 foreach ($order_detail as $k => $v) {
-                    $order_detail[$k]['product_name'] = isset($v['product_name']) ? $v['product_name'] : '';
-                    $order_detail[$k]['en_product_name'] = isset($v['en_product_name']) ? $v['en_product_name'] : '';
-                    $order_detail[$k]['goods_code'] = isset($v['detail_goods_code']) ? $v['detail_goods_code'] : '';
-                    $order_detail[$k]['count'] = isset($v['detail_count']) ? $v['detail_count'] : 0;
-                    $order_detail[$k]['unit'] = isset($v['unit']) ? $v['unit'] : '';
-                    $order_detail[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
-                    $order_detail[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
+                    $temp[$k]['product_name'] = isset($v['product_name']) ? $v['product_name'] : '';
+                    $temp[$k]['en_product_name'] = isset($v['en_product_name']) ? $v['en_product_name'] : '';
+                    $temp[$k]['goods_code'] = isset($v['detail_goods_code']) ? $v['detail_goods_code'] : '';
+                    $temp[$k]['count'] = isset($v['detail_count']) ? $v['detail_count'] : 0;
+                    $temp[$k]['unit'] = isset($v['unit']) ? $v['unit'] : '';
+                    $temp[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
+                    $temp[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
                 }
+                $order_detail = $temp;
                 foreach( $order_detail as $k => $v ) {
                     if( $v['product_name'] == '' || $v['en_product_name'] == '' || $v['goods_code'] == '' || $v['count'] <= 0 || $v['unit'] == '' || $v['single_declared'] <= 0 || $v['origin'] == '' ) {
                         $this->has_error = true;
@@ -538,6 +540,7 @@ class OrderAction extends BaseAction  {
 
     private function _build_order_specification($order_specifications) {
         //构造产品规格
+        $temp = [];
         if( !is_array($order_specifications) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品规格' : '请输入产品规格';
@@ -547,12 +550,13 @@ class OrderAction extends BaseAction  {
                 $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请输入产品规格' : '请输入产品规格';
             } else {
                 foreach( $order_specifications as $k => $v ) {
-                    $order_specifications[$k]['count'] = intval($v['count']);
-                    $order_specifications[$k]['weight'] = floatval($v['weight']);
-                    $order_specifications[$k]['length'] = floatval($v['length']);
-                    $order_specifications[$k]['width'] = floatval($v['width']);
-                    $order_specifications[$k]['height'] = floatval($v['height']);
+                    $temp[$k]['count'] = intval($v['count']);
+                    $temp[$k]['weight'] = floatval($v['weight']);
+                    $temp[$k]['length'] = floatval($v['length']);
+                    $temp[$k]['width'] = floatval($v['width']);
+                    $temp[$k]['height'] = floatval($v['height']);
                 }
+                $order_specifications = $temp;
                 foreach( $order_specifications as $k => $v ) {
                     if( $v['weight'] <= 0 || $v['length'] < 0 || $v['width'] < 0 || $v['height'] < 0 || $v['count'] < 0 ) {
                         $this->has_error = true;
@@ -603,10 +607,13 @@ class OrderAction extends BaseAction  {
                     $temp[$v['id']] = $v;
                 }
                 $temp[$v['id']]['cargo'][] = [
+                    'detail_id' => $v['detail_id'],
+                    'specifications_id' => $v['id'],
                     'product_name' => $v['product_name'],
                     'en_product_name' => $v['en_product_name'],
                     'detail_goods_code' => $v['goods_code'],
                     'origin' => $v['origin'],
+                    'product_count' => $v['number'],
                 ];
                 $last_index = count($temp[$v['id']]['cargo']) - 1;
                 foreach( $order_detail as $key => $d ) {
@@ -698,6 +705,27 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
+
+        $order_detail = $data['order_detail'];
+        unset($data['order_detail']);
+        $order_detail = $this->_build_order_detail($order_detail);
+
+        if( $this->has_error ) {
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+        $order_specifications = $data['order_specifications'];
+        unset($data['order_specifications']);
+        $order_specifications = $this->_build_order_specification($order_specifications);
+//        var_dump($order_specifications);exit;
+
+        if( $this->has_error ) {
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+
         $commit = $data['commit'];
         unset($data['commit']);
         $data['client_status'] = $commit == 0 ? 0 : 1;
@@ -707,9 +735,135 @@ class OrderAction extends BaseAction  {
             $data['commit_time'] = date('Y-m-d H:i:s', $time);
         }
         $data['client_id'] = $client_id;
+
+
+        //事务开始
         //修改订单
+
+        $model = new Model();
+        $transaction = true;
+        $model->startTrans();
+
+        /**
+         * 1、更新订单
+         * 2、删除原订单详情，删除原订单规格，删除原详情和规格的映射
+         * 3、插入新的订单详情
+         * 4、插入新的订单规格
+         * 5、插入新的详情和规格的映射
+         */
+
         $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
-        if( is_numeric($result) ) {
+
+        if( !is_numeric($result) ) {
+            $transaction = false;
+        }
+
+        $old_specifications_list = [];
+        if( $transaction ) {
+            $old_specifications = M("ClientOrderSpecifications")
+                ->field("id")
+                ->where(["order_id" => $id])
+                ->select();
+            if( $old_specifications ) {
+                foreach( $old_specifications as $v ) {
+                    $old_specifications_list[] = $v['id'];
+                }
+            }
+        }
+
+        if( $transaction ) {
+            $truncate_order_detail = M("ClientOrderDetail")
+                ->where(['order_id' => $id])
+                ->delete();
+            if( !$truncate_order_detail ) {
+                $transaction = false;
+            }
+        }
+
+        if( $transaction ) {
+            $truncate_order_specifications = M("ClientOrderSpecifications")
+                ->where(['order_id' => $id])
+                ->delete();
+            if( !$truncate_order_specifications ) {
+                $transaction = false;
+            }
+        }
+
+
+
+        if( $transaction ) {
+            $truncate_map = M("ClientOrderMap")
+                ->where("specifications_id in (".implode(',', $old_specifications_list).")")
+                ->delete();
+            if( !is_numeric($truncate_map) ) {
+                $transaction = false;
+            }
+        }
+
+
+        if( $transaction ) {
+            foreach( $order_detail as $k => $v ) {
+                $v['order_num'] = $order['order_num'];
+                $v['order_id'] = $id;
+                $temp_result = M('ClientOrderDetail')->add($v);
+                if( !$temp_result ) {
+                    $transaction = false;
+                    break;
+                } else {
+                    $order_detail[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
+                }
+            }
+        }
+
+
+
+        if( $transaction ) {
+            foreach( $order_specifications as $k => $v ) {
+                unset($v['id']);
+                $v['order_num'] = $order['order_num'];
+                $v['order_id'] = $id;
+                $temp_result = M('ClientOrderSpecifications')->add($v);
+                if( !$temp_result ) {
+                    $transaction = false;
+                    break;
+                } else {
+                    $order_specifications[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
+                }
+            }
+        }
+
+//        $this->response['transaction'] = $transaction;
+//        $this->response['msg'] = M("ClientOrderSpecifications")->getLastSql();
+//        $model->rollback();
+//        var_dump($order_specifications);
+//        echo json_encode($this->response);exit;
+
+        if( $transaction ) {
+            foreach( $order_specifications as $k => $v ) {
+                foreach( $v['cargo'] as $d ) {
+                    $temp = [
+                        'specifications_id' => $v['id'],
+                        'detail_id' => $order_detail[$d['product_index']]['id'],
+//                        'number' => $v['detail_number'][$d],
+                        'number' => $d['product_count'],
+                    ];
+                    $temp_result = M('ClientOrderMap')->add($temp);
+                    if( !$temp_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
+                    break;
+                }
+            }
+        }
+
+
+
+
+        if( $transaction ) {
+            $model->commit();
             //插入操作日志
             $log_data = [
                 'order_num' => $order['order_num'],
@@ -724,7 +878,9 @@ class OrderAction extends BaseAction  {
             $this->response['msg'] = $msg;
             $this->response['url'] = U('Order/index');
         } else {
+            $model->rollback();
             $this->response['msg'] = '系统繁忙，请稍后重试';
+            $this->response['msg'] = $model->getDbError();
         }
         echo json_encode($this->response);
         exit;

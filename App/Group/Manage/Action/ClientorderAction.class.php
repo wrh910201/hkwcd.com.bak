@@ -571,10 +571,13 @@ class ClientorderAction extends CommonContentAction {
                     $temp[$v['id']] = $v;
                 }
                 $temp[$v['id']]['cargo'][] = [
+                    'detail_id' => $v['detail_id'],
+                    'specifications_id' => $v['id'],
                     'product_name' => $v['product_name'],
                     'en_product_name' => $v['en_product_name'],
                     'detail_goods_code' => $v['goods_code'],
                     'origin' => $v['origin'],
+                    'product_count' => $v['number'],
                 ];
             }
             $order_specifications = $temp;

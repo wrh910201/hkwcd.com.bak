@@ -1083,9 +1083,9 @@
             <div class="clear"></div>
             <div class="fr" id="operate">
                 <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add_order_button" @click="confirm_add_order(0)">添加</button> &nbsp;
-                <button class="btn btn_commit" type="button" id="commit_order_button" @click="confirm_add_order(1)">添加并提交</button> &nbsp;
-                <a href="javascript:;" class="btn btn_cancel">取消</a>
+                <button class="btn btn_commit" type="button" id="add_order_button" @click="confirm_edit_order(0)">修改</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="commit_order_button" @click="confirm_edit_order(1)">修改并提交</button> &nbsp;
+                <a href="javascript:window.history.go(-1);" class="btn btn_cancel">返回</a>
                 <input type="hidden" name="delivery_id" id="delivery_id"/>
                 <input type="hidden" name="receive_id" id="receive_id"/>
             </div>
@@ -1123,8 +1123,8 @@
 
     var is_default_delivery = {$has_default_delivery};
     var is_default_receive = {$has_default_receive};
-    var selected_delivery_id = 0;
-    var selected_receive_id = 0;
+    var selected_delivery_id = {$order.delivery_id};
+    var selected_receive_id = {$order.receive_id};
     //    var selected_delivery_data = {$json_delivery};
     //    var selected_receive_data = {$json_receive};
     var selected_delivery_data;
@@ -1579,6 +1579,19 @@
                     if(this.editingIndex >=  0){
                         console.log("edit");
                         this.orderList[this.editingIndex] = detail;
+                        //更新已使用的规格
+                        for( var i in orderSpec.specList ) {
+                            for( var j in orderSpec.specList[i].cargo ) {
+                                if( this.editingIndex == orderSpec.specList[i].cargo[j].product_index ) {
+                                    orderSpec.specList[i].cargo[j].product_name = detail.product_name;
+                                    orderSpec.specList[i].cargo[j].en_product_name = detail.en_product_name;
+                                    orderSpec.specList[i].cargo[j].unit = detail.unit;
+                                    orderSpec.specList[i].cargo[j].origin = detail.origin;
+                                    orderSpec.specList[i].cargo[j].detail_goods_code = detail.detail_goods_code;
+                                }
+                            }
+                        }
+
                     }else{
                         console.log("push");
                         this.orderList.push(detail);
@@ -1586,6 +1599,7 @@
                     hide_order_detail_form();
                     this.resetDetail();
                     this.recountTotal();
+
                 }
                 else{
                     layer.msg(check.msg);
@@ -1604,26 +1618,34 @@
             },
             removeOrderDetail:function (index) {
                 var that = this;
-                layer.confirm('确定删除该项商品信息？', {
-                    btn: ['确定', '取消'],
-                    btn1: function () {
-                        if( that.checkUsed(index) ) {
+                if( !that.checkUsed(index) ) {
 
-                        } else {
-                            that.orderList.splice(index,1);
-                        }
-                    },
-                    btn2: function () {
-                        return false;
-                    }
-                });
+                    layer.confirm('确定删除该项商品信息？', {
+                        btn: ['确定', '取消'] //可以无限个按钮
+
+                    },  function(layer_index, layero){
+                        //按钮【按钮一】的回调
+                            that.orderList.splice(index, 1);
+                            layer.closeAll('dialog');
+                    }, function(index){
+                        //按钮【按钮二】的回调
+                    });
+                }
             },
             checkUsed: function(index) {
-                for( var i in orderSpec ) {
-                    for( var j in orderSpec[i].cargo ) {
-
+                var detail = orderDetail.orderList[index];
+                console.log(detail);
+                for( var i in orderSpec.specList ) {
+                    for( var j in orderSpec.specList[i].cargo ) {
+                        if( index == orderSpec.specList[i].cargo[j].product_index ) {
+                            console.log(detail.product_name + "is used");
+                            layer.msg("请先删除或修改对应的规格");
+                            return true;
+                        }
                     }
                 }
+                console.log(detail.product_name + "is not used");
+                return false;
             }
         }
     });
@@ -1669,6 +1691,7 @@
 
                 this.total_weight += this.specList[i].weight;
                 this.total_rate += this.specList[i].charging_weight;
+                this.total_order_specifications_count += parseInt(this.specList[i].count);
             }
             this.total_weight = parseFloat(this.total_weight).toFixed(1);
             this.total_rate = parseFloat(this.total_rate).toFixed(1);
@@ -1751,6 +1774,7 @@
                     msg += '请输入箱数<br />';
                     flag = false;
                 }
+                console.log(cargo);
                 for(var i in cargo ){
                     for(var j in cargo[i]){
                         if(cargo[i][j] === '' || cargo[i][j] === null ){
@@ -1878,9 +1902,20 @@
                 this.showSpec()
             },
             removeSpecOrder: function (index) {
-                this.specList.splice(index,1);
-                this.recountTotal();
-                this.resetId();
+                var that = this;
+                layer.confirm('确定该项规格？', {
+                    btn: ['确定', '取消'] //可以无限个按钮
+
+                },  function(layer_index, layero){
+                    //按钮【按钮一】的回调
+                    that.specList.splice(index,1);
+                    that.recountTotal();
+                    that.resetId();
+                    layer.closeAll('dialog');
+                }, function(index){
+                    //按钮【按钮二】的回调
+                });
+
             }
         }
     });
@@ -1888,11 +1923,11 @@
     var addOrderOperate = new Vue({
         "el": "#operate",
         data: {
-
+            order_id: {$order.id},
         },
         methods: {
-            add_order: function(commit) {
-                var url = "/Order/ajaxAdd";
+            edit_order: function(commit) {
+                var url = "/Order/ajaxEdit";
 
                 var delivery_id = selected_delivery_id;
                 var receive_id = selected_receive_id;
@@ -1938,6 +1973,7 @@
 
                 //订单详情 js
                 var param = {
+                    'order_id': this.order_id,
                     'delivery_id':delivery_id,
                     'receive_id':receive_id,
                     'order_specifications':order_specifications,
@@ -1957,7 +1993,7 @@
                     'package_type': package_type,
                     'price_terms' : price_terms,
                     'tariff_payment' : tariff_payment,
-                    'shipmefnt_reference': shipment_reference,
+                    'shipment_reference': shipment_reference,
                     'settlement': settlement,
                     'declaration_of_power_attorney': declaration_of_power_attorney,
                     'contract_num': contract_num,
@@ -1974,17 +2010,18 @@
                 show_loading();
                 $.post(url, param, add_order_handler, 'json');
             },
-            confirm_add_order: function(commit) {
+            confirm_edit_order: function(commit) {
                 var that = this;
                 if( commit == 0 ) {
-                    var msg = "确定添加订单？";
+                    var msg = "确定修改订单？";
                 } else {
-                    var msg = "确定添加订单并提交？（订单提交之后进入待审核状态，无法编辑）";
+                    var msg = "确定修改订单并提交？（订单提交之后进入待审核状态，无法编辑）";
                 }
                 layer.confirm(msg, {
                     btn: ['确定', '取消'],
                     btn1: function () {
-                        that.add_order(commit);
+                        that.edit_order(commit);
+                        layer.closeAll('dialog');
                     },
                     btn2: function () {
                         return false;
