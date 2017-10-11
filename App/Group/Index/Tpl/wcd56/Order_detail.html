@@ -108,16 +108,6 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                                <div class="box_c_item">
-                                    <div class="fl" style="width:456px">
-                                        <label class="l_title"></label>
-                                        <button id="get-default-delivery" @click="setDefaultDelivery" class="btn btn_commit" type="button">使用默认</button>
-                                        <button id="get-delivery-list" @click="getDeliveryList" class="btn btn_commit" type="button">地址列表</button>
-                                        <button id="delivery-form" @click="showDeliveryForm" class="btn btn_commit" type="button">新地址</button>
-                                        <div class="clear"></div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
                             </fieldset>
                         </div>
                         <div class="box_c_item fl" id="receive-info">
@@ -225,9 +215,6 @@
                                 <div class="box_c_item">
                                     <div class="fl" style="width:516px">
                                         <label class="l_title"></label>
-                                        <button id="get-default-receive" @click="setDefaultReceive" class="btn btn_commit" type="button">使用默认</button>
-                                        <button id="get-receive-list" @click="getReceiveList" class="btn btn_commit" type="button">地址列表</button>
-                                        <button id="receive-form" @click="showReceiveForm" class="btn btn_commit" type="button">新地址</button>
                                         <button id="spare-receive" @click="showSpareForm" class="btn btn_commit" type="button">备用联系人</button>
                                         <div class="clear"></div>
                                     </div>
@@ -961,7 +948,6 @@
                             <td>{{total_rate}}KG</td>
                             <td></td>
                             <td>{{total_charging_weight}}KG</td>
-                            <td class="text-right"></td>
                         </tr>
                         </tbody>
                     </table>
