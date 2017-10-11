@@ -49,13 +49,13 @@
                     <th>座机</th>
                     <th>进口商代码</th>
                     <th>状态</th>
-                    <th>操作</th>
+                    <!--<th>操作</th>-->
                 </tr>
                 <foreach name='receive_list' item='v'>
                     <tr>
                         <!--<td><input type="checkbox" name="key[]" value="{$v.id}"></td>-->
                         <td>{$v.company}</td>
-                        <td>{$v.consignor}</td>
+                        <td>{$v.addressee}</td>
                         <td>{$v.country_name} / {$v.country_ename}</td>
                         <td>{$v.state}</td>
                         <td>{$v.city}</td>
@@ -65,9 +65,9 @@
                         <td>{$v.phone}</td>
                         <td>{$v.receiver_code}</td>
                         <td><if condition="$v['status']">正常<else/>已删除</if></td>
-                        <td>
-                            <a>查看身份证</a>
-                        </td>
+                        <!--<td>-->
+                            <!--<a>查看身份证</a>-->
+                        <!--</td>-->
                     </tr>
                 </foreach>
             </table>

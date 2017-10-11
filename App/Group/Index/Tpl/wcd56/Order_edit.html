@@ -971,7 +971,7 @@
                             <td>{{total_weight}}KG</td>
                             <td></td>
                             <td>{{total_rate}}KG</td>
-                            <td></td>
+                            <td>{{total_order_specifications_count}}</td>
                             <td>{{total_charging_weight}}KG</td>
                             <td class="text-right"></td>
                         </tr>
@@ -1607,12 +1607,23 @@
                 layer.confirm('确定删除该项商品信息？', {
                     btn: ['确定', '取消'],
                     btn1: function () {
-                        that.orderList.splice(index,1);
+                        if( that.checkUsed(index) ) {
+
+                        } else {
+                            that.orderList.splice(index,1);
+                        }
                     },
                     btn2: function () {
                         return false;
                     }
                 });
+            },
+            checkUsed: function(index) {
+                for( var i in orderSpec ) {
+                    for( var j in orderSpec[i].cargo ) {
+
+                    }
+                }
             }
         }
     });
@@ -1810,25 +1821,27 @@
                 var weight = 0/*重量*/ , rate = 0 /*材积重*/, charging_weight = 0/*计算重量*/;
                 for(var i in this.specList){
                     tempSpec = this.specList[i];
-                    weight = tempSpec.weight;
+                    weight = Number(tempSpec.weight);
                     this.total_weight += weight;
-                    rate = tempSpec.charging_weight;
+                    rate = Number(tempSpec.charging_weight);
                     this.total_rate += rate;
-                    charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
-                    console.log("charging_weight",charging_weight);
+//                    charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
+//                    console.log("charging_weight",charging_weight);
+                    this.total_order_specifications_count += Number(tempSpec.count);
                 }
                 this.total_weight = this.fixedNum(this.total_weight,2);
                 this.total_rate = this.fixedNum(this.total_rate,2);
+                charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
                 this.total_charging_weight = this.fixedNum(charging_weight,2);
             },
             resetId : function () {
                 var count = 0,id = '',start = 1,end = 0,total = 0;
                 for(var i in this.specList){
                     count = this.specList[i].count;
-                    total += count;
-                    end = start + count - 1;
+                    end = Number(start) + Number(count) - 1;
                     this.specList[i].id = start + '-' + end;
-                    start = total+1;
+                    start = Number(end) + 1;
+                    start = Number(start);
 //                    console.log("this.specList[i]",i,this.specList[i]);
                 }
             },
