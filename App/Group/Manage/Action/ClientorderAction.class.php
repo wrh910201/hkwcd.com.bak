@@ -10,7 +10,7 @@ class ClientorderAction extends CommonContentAction {
     public $has_error = false;
     public $error_msg = '';
     public $response = [
-        'error' => -1,
+        'code' => -1,
         'msg' => '',
     ];
 
@@ -310,6 +310,20 @@ class ClientorderAction extends CommonContentAction {
         $data['other_fee'] = I('other_fee', 0, 'floatval');
         $data['total_fee'] = I('total_fee', 0, 'floatval');
         $data['settlement_method'] = I('settlement_method', '', 'trim');
+
+
+        //总费用必须有
+        if( $data['total_fee'] <= 0 ) {
+            $this->response['msg'] = '请至少输入总费用';
+            echo json_encode($this->response);
+            exit;
+        }
+        //结算方式必须有
+        if( !in_array($data['settlement_method'], C('settlement_method')) ) {
+            $this->response['msg'] = '请选择一种结算方式';
+            echo json_encode($this->response);
+            exit;
+        }
 
         $exists = M('ClientOrderFee')->where(['order_id' => $id])->find();
         if( $exists ) {

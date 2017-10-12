@@ -23,7 +23,9 @@
     <div class="operate">
         <div class="left">
             <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index')}')" class="btn_blue" value="返回列表" />
+            <if condition="$order.pay_status neq 1">
             <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/edit', ['id' => $order['id']])}')" class="btn_blue" value="修改订单" />
+            </if>
         </div>
     </div>
     <div class="list">
