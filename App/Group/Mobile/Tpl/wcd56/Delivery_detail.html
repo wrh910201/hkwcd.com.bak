@@ -14,6 +14,18 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta name="format-detection" content="telephone=no, address=no">
     <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
+    <style>
+        .id-card{
+            width: 100%;
+            height: calc((100vw - 52px) * 0.625);
+            margin: 4px auto;
+            overflow: hidden;
+        }
+
+        .id-card img{
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <header class="header clear">
@@ -50,6 +62,18 @@
         <dd class="clear">
             <label class="fl">收货单位</label>
             <span class="fr">广州**有限公司<br/>李小姐 15555555555555</span>
+        </dd>
+        <dd class="clear" style="text-align:left;">
+            <div>身份证正面</div>
+            <div class="id-card">
+                <img src="/Public/wcd56/images/con_img.jpg">
+            </div>
+        </dd>
+        <dd class="clear" style="text-align:left;">
+            <div>身份证背面</div>
+            <div class="id-card">
+                <img src="/Public/wcd56/images/con_img.jpg">
+            </div>
         </dd>
     </dl>
 </section>
