@@ -139,9 +139,9 @@
                                 <div class="box_c_item">
                                     <div class="fl" style="width:456px">
                                         <label class="l_title"></label>
-                                        <button id="get-default-delivery" @click="setDefaultDelivery" class="btn btn_commit" type="button">使用默认</button>
-                                        <button id="get-delivery-list" @click="getDeliveryList" class="btn btn_commit" type="button">地址列表</button>
-                                        <button id="delivery-form" @click="showDeliveryForm" class="btn btn_commit" type="button">新地址</button>
+                                        <!--<button id="get-default-delivery" @click="setDefaultDelivery" class="btn btn_commit" type="button">使用默认</button>-->
+                                        <!--<button id="get-delivery-list" @click="getDeliveryList" class="btn btn_commit" type="button">地址列表</button>-->
+                                        <!--<button id="delivery-form" @click="showDeliveryForm" class="btn btn_commit" type="button">新地址</button>-->
                                         <div class="clear"></div>
                                     </div>
                                 </div>
@@ -253,9 +253,9 @@
                                 <div class="box_c_item">
                                     <div class="fl" style="width:516px">
                                         <label class="l_title"></label>
-                                        <button id="get-default-receive" @click="setDefaultReceive" class="btn btn_commit" type="button">使用默认</button>
-                                        <button id="get-receive-list" @click="getReceiveList" class="btn btn_commit" type="button">地址列表</button>
-                                        <button id="receive-form" @click="showReceiveForm" class="btn btn_commit" type="button">新地址</button>
+                                        <!--<button id="get-default-receive" @click="setDefaultReceive" class="btn btn_commit" type="button">使用默认</button>-->
+                                        <!--<button id="get-receive-list" @click="getReceiveList" class="btn btn_commit" type="button">地址列表</button>-->
+                                        <!--<button id="receive-form" @click="showReceiveForm" class="btn btn_commit" type="button">新地址</button>-->
                                         <button id="spare-receive" @click="showSpareForm" class="btn btn_commit" type="button">备用联系人</button>
                                         <div class="clear"></div>
                                     </div>
@@ -982,11 +982,11 @@
                                 </table>
                             </td>
 
-                            <td >{{spec.weight}}</td>
+                            <td >{{spec.weight}}KG</td>
                             <td >{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
-                            <td >{{spec.charging_weight}}</td>
+                            <td >{{spec.rate}}</td>
                             <td >{{spec.count}}</td>
-                            <td >{{spec.charging_weight > spec.weight ? spec.charging_weight : spec.weight}}</td>
+                            <td >{{spec.charging_weight}}KG</td>
                             <td >
                                 <a href="javascript:void(0)" @click="editSpecOrder(index)">编辑</a>
                                 |
@@ -999,7 +999,7 @@
                             <td>{{total_weight}}KG</td>
                             <td></td>
                             <td>{{total_rate}}KG</td>
-                            <td></td>
+                            <td>{{total_order_specifications_count}}</td>
                             <td>{{total_charging_weight}}KG</td>
                             <td class="text-right"></td>
                         </tr>
@@ -1111,8 +1111,8 @@
             <div class="clear"></div>
             <div class="fr" id="operate">
                 <label class="l_title"></label>
-                <button class="btn btn_commit" type="button" id="add_order_button" @click="confirm_add_order(0)">添加</button> &nbsp;
-                <button class="btn btn_commit" type="button" id="commit_order_button" @click="confirm_add_order(1)">添加并提交</button> &nbsp;
+                <button class="btn btn_commit" type="button" id="add_order_button" @click="confirm_edit_order(0)">修改</button> &nbsp;
+                <!--<button class="btn btn_commit" type="button" id="commit_order_button" @click="confirm_edit_order(1)">修改并提交</button> &nbsp;-->
                 <a href="javascript:;" class="btn btn_cancel">取消</a>
                 <input type="hidden" name="delivery_id" id="delivery_id"/>
                 <input type="hidden" name="receive_id" id="receive_id"/>
@@ -1155,8 +1155,8 @@
 
     var is_default_delivery = {$has_default_delivery};
     var is_default_receive = {$has_default_receive};
-    var selected_delivery_id = 0;
-    var selected_receive_id = 0;
+    var selected_delivery_id = {$order.delivery_id};
+    var selected_receive_id = {$order.receive_id};
     //    var selected_delivery_data = {$json_delivery};
     //    var selected_receive_data = {$json_receive};
     var selected_delivery_data;
@@ -1529,6 +1529,10 @@
             for(var i in this.newDetail){
                 this.emptyDetail[i] = this.newDetail[i]
             }
+            this.total_declared = 0;
+            for( var i in this.orderList ) {
+                this.total_declared += Number(this.orderList[i].single_declared) * Number(this.orderList[i].detail_count);
+            }
         },
         methods: {
             resetDetail: function (obj) {
@@ -1660,6 +1664,7 @@
                         layer.closeAll('dialog');
                     }, function(index){
                         //按钮【按钮二】的回调
+                        layer.closeAll('dialog');
                     });
                 }
             },
@@ -1718,16 +1723,18 @@
                 this.specList[i].width = parseFloat(this.specList[i].width).toFixed(1);
                 this.specList[i].height  = parseFloat(this.specList[i].height).toFixed(1);
                 this.specList[i].weight = parseFloat(this.specList[i].weight).toFixed(1);
-                this.specList[i].charging_weight = parseFloat(this.specList[i].charging_weight).toFixed(1);
-
-                this.total_weight += this.specList[i].weight;
-                this.total_rate += this.specList[i].charging_weight;
-                this.total_order_specifications_count += this.specList[i].count;
+                this.specList[i].rate = parseFloat(this.specList[i].rate).toFixed(1);
+                this.specList[i].charging_weight = this.specList[i].weight > this.specList[i].rate ? this.specList[i].weight: this.specList[i].rate
+                this.specList[i].charging_weight *= this.specList[i].count;
+                this.specList[i].count = parseInt(this.specList[i].count);
+                this.total_weight += this.specList[i].weight * this.specList[i].count;
+                this.total_rate += this.specList[i].rate * this.specList[i].count;
+                this.total_order_specifications_count += parseInt(this.specList[i].count);
             }
             this.total_weight = parseFloat(this.total_weight).toFixed(1);
             this.total_rate = parseFloat(this.total_rate).toFixed(1);
 
-            this.total_charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+            this.total_charging_weight = Number(this.total_weight) > Number(this.total_rate) ? Number(this.total_weight) : Number(this.total_rate);
         },
         methods: {
             fixedNum: function(num,fix){
@@ -1822,6 +1829,7 @@
                         length : length,
                         width : width,
                         height : height,
+                        rate: (length * width * height)/5000,
                         charging_weight : (length * width * height)/5000 > weight ? (length * width * height)/5000 : weight,
                         count : count
                     };
@@ -1877,8 +1885,10 @@
                     tempSpec = this.specList[i];
                     weight = Number(tempSpec.weight);
                     this.total_weight += weight;
-                    rate = Number(tempSpec.charging_weight);
+                    rate = Number(tempSpec.length) *  Number(tempSpec.width) *  Number(tempSpec.height) / 5000;
                     this.total_rate += rate;
+                    this.specList[i].charging_weight = weight > rate ? weight : rate;
+                    this.specList[i].charging_weight *= this.specList[i].count;
 //                    charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
 //                    console.log("charging_weight",charging_weight);
                     this.total_order_specifications_count += Number(tempSpec.count);
@@ -1886,7 +1896,8 @@
                 this.total_weight = this.fixedNum(this.total_weight,2);
                 this.total_rate = this.fixedNum(this.total_rate,2);
                 charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
-                this.total_charging_weight = this.fixedNum(charging_weight,2);
+                this.total_charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+                this.total_charging_weight *= this.total_order_specifications_count;
             },
             resetId : function () {
                 var count = 0,id = '',start = 1,end = 0,total = 0;
@@ -1933,7 +1944,7 @@
             },
             removeSpecOrder: function (index) {
                 var that = this;
-                layer.confirm('确定该项规格？', {
+                layer.confirm('确定删除该项规格？', {
                     btn: ['确定', '取消'] //可以无限个按钮
 
                 },  function(layer_index, layero){
@@ -1944,19 +1955,22 @@
                     layer.closeAll('dialog');
                 }, function(index){
                     //按钮【按钮二】的回调
+                    layer.closeAll('dialog');
                 });
+
             }
+
         }
     });
 
     var addOrderOperate = new Vue({
         "el": "#operate",
         data: {
-
+            order_id: {$order.id},
         },
         methods: {
-            add_order: function(commit) {
-                var url = "/Order/ajaxAdd";
+            edit_order: function(commit) {
+                var url = "/Manage/Clientorder/ajaxEdit";
 
                 var delivery_id = selected_delivery_id;
                 var receive_id = selected_receive_id;
@@ -1991,17 +2005,18 @@
 
                 var order_specifications = cloneObj(orderSpec.specList);
 
-//                for(var id in orderSpec.specList) {
-////                    order_specifications[id].cargo = [];
-//                    for( var j in orderSpec.specList[id].cargo ) {
-//                        order_specifications[id].cargo.push(orderSpec.specList[id].cargo[j]);
-//                    }
-//                }
+    //                for(var id in orderSpec.specList) {
+    ////                    order_specifications[id].cargo = [];
+    //                    for( var j in orderSpec.specList[id].cargo ) {
+    //                        order_specifications[id].cargo.push(orderSpec.specList[id].cargo[j]);
+    //                    }
+    //                }
                 console.log(order_specifications);
-//                return false;
+    //                return false;
 
                 //订单详情 js
                 var param = {
+                    'order_id': this.order_id,
                     'delivery_id':delivery_id,
                     'receive_id':receive_id,
                     'order_specifications':order_specifications,
@@ -2021,7 +2036,7 @@
                     'package_type': package_type,
                     'price_terms' : price_terms,
                     'tariff_payment' : tariff_payment,
-                    'shipmefnt_reference': shipment_reference,
+                    'shipment_reference': shipment_reference,
                     'settlement': settlement,
                     'declaration_of_power_attorney': declaration_of_power_attorney,
                     'contract_num': contract_num,
@@ -2038,19 +2053,21 @@
                 show_loading();
                 $.post(url, param, add_order_handler, 'json');
             },
-            confirm_add_order: function(commit) {
+            confirm_edit_order: function(commit) {
                 var that = this;
                 if( commit == 0 ) {
-                    var msg = "确定添加订单？";
+                    var msg = "确定修改订单？";
                 } else {
-                    var msg = "确定添加订单并提交？（订单提交之后进入待审核状态，无法编辑）";
+                    var msg = "确定修改订单并提交？（订单提交之后进入待审核状态，无法编辑）";
                 }
                 layer.confirm(msg, {
                     btn: ['确定', '取消'],
                     btn1: function () {
-                        that.add_order(commit);
+                        that.edit_order(commit);
+                        layer.closeAll('dialog');
                     },
                     btn2: function () {
+                        layer.closeAll('dialog');
                         return false;
                     }
                 });

@@ -123,7 +123,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '返回客户确认',
             ];
@@ -328,7 +328,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => $msg,
             ];
@@ -464,7 +464,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '驳回订单',
             ];
@@ -523,7 +523,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '订单处理备注',
             ];
@@ -536,7 +536,6 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function edit() {
-
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'status' => 1])->find();
         if( empty($order) ) {
@@ -545,6 +544,9 @@ class ClientorderAction extends CommonContentAction {
 //        if( $order['client_status'] != 0 ) {
 //            $this->error('当前订单不是可编辑状态');
 //        }
+        if( $order['pay_status'] == 1 ) {
+            $this->error('订单已收款，已不能编辑');
+        }
 
         $order_detail = M('ClientOrderDetail')->where(['order_id' => $id])->select();
         $d_cursor = 0;
@@ -556,6 +558,7 @@ class ClientorderAction extends CommonContentAction {
                 unset($order_detail[$k]["count"]);
             }
         }
+
         $order_specifications = M('ClientOrderSpecifications')
             ->alias('s')
             ->field('s.*, m.detail_id, m.number, cd.product_name, cd.en_product_name, cd.unit, cd.goods_code, cd.origin')
@@ -580,6 +583,12 @@ class ClientorderAction extends CommonContentAction {
                     'origin' => $v['origin'],
                     'product_count' => $v['number'],
                 ];
+                $last_index = count($temp[$v['id']]['cargo']) - 1;
+                foreach( $order_detail as $key => $d ) {
+                    if( $d['id'] == $v['detail_id'] ) {
+                        $temp[$v['id']]['cargo'][$last_index]['product_index'] = $key;
+                    }
+                }
             }
             $order_specifications = $temp;
             $temp = [];
@@ -588,7 +597,7 @@ class ClientorderAction extends CommonContentAction {
                 $v['index'] = $v['id'];
                 $v['id'] = $start ."-". $v['count'];
                 $start = $start + $v['count'];
-                $v['charging_weight'] = $v['length'] * $v['width'] * $v['height'] / 5000;
+                $v['rate'] = $v['length'] * $v['width'] * $v['height'] / 5000;
                 $temp[] = $v;
             }
             $order_specifications = $temp;
@@ -689,7 +698,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '已收款',
             ];
@@ -882,7 +891,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => $log_content,
             ];
@@ -1246,12 +1255,18 @@ class ClientorderAction extends CommonContentAction {
             echo json_encode($this->response);
             exit;
         }
+        if( $order['pay_status'] == 1 ) {
+            $this->response['msg'] = '订单已收款，已不能编辑';
+            echo json_encode($this->response);
+            exit;
+        }
 //        if( $order['client_status'] != 0 ) {
 //            $this->response['msg'] = '当前订单不是可编辑状态';
 //            echo json_encode($this->response);
 //            exit;
 //        }
         $data = $this->_get_order_params();
+        $data['client_id'] = $order['client_id'];
         $data = $this->_build_delivery_address($data);
         $data = $this->_build_receive_address($data);
         $data = $this->_build_spare_address($data);
@@ -1269,20 +1284,162 @@ class ClientorderAction extends CommonContentAction {
             echo json_encode($this->response);
             exit;
         }
-//        $commit = $data['commit'];
-        unset($data['commit']);
-//        $data['client_status'] = $commit == 0 ? 0 : 1;
-        $msg =  '修改订单成功';
 
-//        $data['client_id'] = $client_id;
+        $order_detail = $data['order_detail'];
+        unset($data['order_detail']);
+        $order_detail = $this->_build_order_detail($order_detail);
+
+        if( $this->has_error ) {
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+        $order_specifications = $data['order_specifications'];
+        unset($data['order_specifications']);
+        $order_specifications = $this->_build_order_specification($order_specifications);
+//        var_dump($order_specifications);exit;
+
+        if( $this->has_error ) {
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+
+        $msg = "修改订单成功";
+        unset($data['commit']);
+        $data['client_id'] = $order['client_id'];
+
+
+        //事务开始
         //修改订单
-        $result = M('ClientOrder')->where(['id' => $id])->save($data);
-        if( is_numeric($result) ) {
+
+        $model = new Model();
+        $transaction = true;
+        $model->startTrans();
+
+        /**
+         * 1、更新订单
+         * 2、删除原订单详情，删除原订单规格，删除原详情和规格的映射
+         * 3、插入新的订单详情
+         * 4、插入新的订单规格
+         * 5、插入新的详情和规格的映射
+         */
+
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
+
+        if( !is_numeric($result) ) {
+            $transaction = false;
+        }
+
+        $old_specifications_list = [];
+        if( $transaction ) {
+            $old_specifications = M("ClientOrderSpecifications")
+                ->field("id")
+                ->where(["order_id" => $id])
+                ->select();
+            if( $old_specifications ) {
+                foreach( $old_specifications as $v ) {
+                    $old_specifications_list[] = $v['id'];
+                }
+            }
+        }
+
+        if( $transaction ) {
+            $truncate_order_detail = M("ClientOrderDetail")
+                ->where(['order_id' => $id])
+                ->delete();
+            if( !$truncate_order_detail ) {
+                $transaction = false;
+            }
+        }
+
+        if( $transaction ) {
+            $truncate_order_specifications = M("ClientOrderSpecifications")
+                ->where(['order_id' => $id])
+                ->delete();
+            if( !$truncate_order_specifications ) {
+                $transaction = false;
+            }
+        }
+
+
+
+        if( $transaction ) {
+            $truncate_map = M("ClientOrderMap")
+                ->where("specifications_id in (".implode(',', $old_specifications_list).")")
+                ->delete();
+            if( !is_numeric($truncate_map) ) {
+                $transaction = false;
+            }
+        }
+
+
+        if( $transaction ) {
+            foreach( $order_detail as $k => $v ) {
+                $v['order_num'] = $order['order_num'];
+                $v['order_id'] = $id;
+                $temp_result = M('ClientOrderDetail')->add($v);
+                if( !$temp_result ) {
+                    $transaction = false;
+                    break;
+                } else {
+                    $order_detail[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
+                }
+            }
+        }
+
+
+
+        if( $transaction ) {
+            foreach( $order_specifications as $k => $v ) {
+                unset($v['id']);
+                $v['order_num'] = $order['order_num'];
+                $v['order_id'] = $id;
+                $temp_result = M('ClientOrderSpecifications')->add($v);
+                if( !$temp_result ) {
+                    $transaction = false;
+                    break;
+                } else {
+                    $order_specifications[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
+                }
+            }
+        }
+
+//        $this->response['transaction'] = $transaction;
+//        $this->response['msg'] = M("ClientOrderSpecifications")->getLastSql();
+//        $model->rollback();
+//        var_dump($order_specifications);
+//        echo json_encode($this->response);exit;
+
+        if( $transaction ) {
+            foreach( $order_specifications as $k => $v ) {
+                foreach( $v['cargo'] as $d ) {
+                    $temp = [
+                        'specifications_id' => $v['id'],
+                        'detail_id' => $order_detail[$d['product_index']]['id'],
+//                        'number' => $v['detail_number'][$d],
+                        'number' => $d['product_count'],
+                    ];
+                    $temp_result = M('ClientOrderMap')->add($temp);
+                    if( !$temp_result ) {
+                        $transaction = false;
+                        break;
+                    }
+                }
+                if( !$transaction ) {
+                    break;
+                }
+            }
+        }
+
+
+        if( $transaction ) {
+            $model->commit();
             //插入操作日志
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => $msg,
             ];
@@ -1290,9 +1447,11 @@ class ClientorderAction extends CommonContentAction {
 
             $this->response['code'] = 1;
             $this->response['msg'] = $msg;
-            $this->response['url'] = U('/Manage/Clientorder/detail', ['id' => $id]);
+            $this->response['url'] = U('/Manage/Clientorder/detail', ["id" => $id]);
         } else {
+            $model->rollback();
             $this->response['msg'] = '系统繁忙，请稍后重试';
+//            $this->response['msg'] = $model->getDbError();
         }
         echo json_encode($this->response);
         exit;
@@ -1379,7 +1538,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session(C('USER_AUTH_KEY')),
                 'type' => 2,
                 'content' => '添加商品信息成功',
             ];
@@ -1481,7 +1640,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session("yang_adm_user_id"),
                 'type' => 2,
                 'content' => '编辑商品信息成功',
             ];
@@ -1537,7 +1696,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '删除商品信息成功',
             ];
@@ -1692,7 +1851,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '添加订单规格成功',
             ];
@@ -1854,7 +2013,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '编辑订单规格成功',
             ];
@@ -1918,7 +2077,7 @@ class ClientorderAction extends CommonContentAction {
             $log_data = [
                 'order_num' => $order['order_num'],
                 'order_id' => $order['id'],
-                'operator_id' => session('yang_adm_uid'),
+                'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
                 'content' => '删除订单规格成功',
             ];
@@ -1970,13 +2129,13 @@ class ClientorderAction extends CommonContentAction {
 
         $data['order_detail'] = $_POST['order_detail'];
         $data['order_specifications'] = $_POST['order_specifications'];
-
+//        var_dump($data);exit;
         return $data;
     }
 
     private function _build_delivery_address($data) {
         //构造发货数据
-        $where = ['status' => 1, 'id' => $data['delivery_id']];
+        $where = ['status' => 1, 'client_id' => $data['client_id'], 'id' => $data['delivery_id']];
         $delivery = M('DeliveryAddress')->where($where)->find();
         if( empty($delivery) ) {
             $this->has_error = true;
@@ -2006,7 +2165,7 @@ class ClientorderAction extends CommonContentAction {
 
     private function _build_receive_address($data) {
         //构造收货数据
-        $where = ['status' => 1, 'id' => $data['receive_id']];
+        $where = ['status' => 1, 'client_id' => $data['client_id'], 'id' => $data['receive_id']];
         $receive = M('ReceiveAddress')->where($where)->find();
         if( empty($receive) ) {
             $this->has_error = true;
@@ -2088,6 +2247,7 @@ class ClientorderAction extends CommonContentAction {
 
     private function _build_order_detail($order_detail) {
         //构造产品详情
+        $temp = [];
         if( !is_array($order_detail) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
@@ -2097,14 +2257,15 @@ class ClientorderAction extends CommonContentAction {
                 $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
             } else {
                 foreach ($order_detail as $k => $v) {
-                    $order_detail[$k]['product_name'] = isset($v['product_name']) ? $v['product_name'] : '';
-                    $order_detail[$k]['en_product_name'] = isset($v['en_product_name']) ? $v['en_product_name'] : '';
-                    $order_detail[$k]['goods_code'] = isset($v['goods_code']) ? $v['goods_code'] : '';
-                    $order_detail[$k]['count'] = isset($v['count']) ? $v['count'] : 0;
-                    $order_detail[$k]['unit'] = isset($v['unit']) ? $v['unit'] : '';
-                    $order_detail[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
-                    $order_detail[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
+                    $temp[$k]['product_name'] = isset($v['product_name']) ? $v['product_name'] : '';
+                    $temp[$k]['en_product_name'] = isset($v['en_product_name']) ? $v['en_product_name'] : '';
+                    $temp[$k]['goods_code'] = isset($v['detail_goods_code']) ? $v['detail_goods_code'] : '';
+                    $temp[$k]['count'] = isset($v['detail_count']) ? $v['detail_count'] : 0;
+                    $temp[$k]['unit'] = isset($v['unit']) ? $v['unit'] : '';
+                    $temp[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
+                    $temp[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
                 }
+                $order_detail = $temp;
                 foreach( $order_detail as $k => $v ) {
                     if( $v['product_name'] == '' || $v['en_product_name'] == '' || $v['goods_code'] == '' || $v['count'] <= 0 || $v['unit'] == '' || $v['single_declared'] <= 0 || $v['origin'] == '' ) {
                         $this->has_error = true;

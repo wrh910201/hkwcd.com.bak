@@ -45,6 +45,7 @@ class LoginAction extends Action{
 
 		//保存Session
 		session(C('USER_AUTH_KEY'), $user['id']);
+        session("yang_adm_user_id", $user['id']);
 		session('yang_adm_username', $user['username']);
 		session('yang_adm_logintime', date('Y-m-d H:i:s', $user['logintime']));
 		session('yang_adm_loginip', $user['loginip']);
