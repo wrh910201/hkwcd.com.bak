@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>华度货运，香港华度货运</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="华度货运，香港华度货运">
+    <!--<link rel="apple-touch-icon-precomposed" href="images/touch/touch-icon-iphone.png">-->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/touch/touch-icon-ipad.png">-->
+    <!--<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/touch/touch-icon-iphone4.png">-->
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
+</head>
+<body class="login">
+<section>
+    <header>
+        <div class="logo" style="font-size: 1rem;padding-top: 7.5rem">
+            <i class="icon">
+                <!--&#xe635;-->
+                华 度 货 运
+            </i>
+        </div>
+    </header>
+    <div class="login_form">
+        <form action="login.html" method="post">
+            <div class="login_item login_item1">
+                <label class="icon">&#xe600;</label>
+                <input type="text" placeholder="账号" id="account"/>
+                <div class="clear"></div>
+            </div>
+            <div class="login_item login_item2">
+                <label class="icon">&#xe601;</label>
+                <input type="password" placeholder="密码" id="password"/>
+                <div class="clear"></div>
+            </div>
+            <div class="login_item login_item3">
+                <div class="login_btn comm_btn" id="comm_btn">
+                    <a href="javascript:;">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="login_footer" style="display: none">
+        <p style="text-align:center;">copyright&copy;2015</p>
+        <p style="text-align:center;">广州市威顿印务有限公司</p>
+        <p style="text-align:center;">All Rights Reserved</p>
+    </div>
+</section>
+<script type="text/javascript" src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
+<script>
+    function ajax(opt) {
+        opt = opt || {};
+        opt.method = opt.method.toUpperCase() || 'POST';
+        opt.url = opt.url || '';
+        opt.async = opt.async || true;
+        opt.data = opt.data || null;
+        opt.success = opt.success || function () {
+            };
+        var xmlHttp = null;
+        if (XMLHttpRequest) {
+            xmlHttp = new XMLHttpRequest();
+        }
+        else {
+            xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+        }
+        var params = [];
+        for (var key in opt.data) {
+            params.push(key + '=' + opt.data[key]);
+        }
+        var postData = params.join('&');
+        if (opt.method.toUpperCase() === 'POST') {
+            xmlHttp.open(opt.method, opt.url, opt.async);
+            xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
+            xmlHttp.send(postData);
+        }
+        else if (opt.method.toUpperCase() === 'GET') {
+            xmlHttp.open(opt.method, opt.url + '?' + postData, opt.async);
+            xmlHttp.send(null);
+        }
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                opt.success(xmlHttp.responseText);
+            }
+        };
+    }
+
+    var comm_btn = document.querySelector("#comm_btn");
+    comm_btn.addEventListener('click', function () {
+        var account = document.querySelector("#account").value,
+            password = document.querySelector("#password").value;
+        console.log("account", account, "password", password);
+        /*ajax({
+         method: 'POST',
+         url: '',
+         data: {
+         account: account,
+         password: password
+         },
+         success: function (res) {
+         console.log(res)
+         }
+         });*/
+    });
+</script>
+</body>
+</html>
