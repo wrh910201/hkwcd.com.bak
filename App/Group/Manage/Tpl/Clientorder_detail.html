@@ -204,9 +204,7 @@
                 <th>编号</th>
                 <th>品名</th>
                 <th>数量</th>
-                <th>长度</th>
-                <th>宽度</th>
-                <th>高度</th>
+                <th>长 宽 高</th>
                 <th>重量</th>
                 <th>材积重</th>
                 <th>箱数</th>
@@ -221,9 +219,7 @@
                         <td>{$d.number} * {$d.unit}</td>
                         </if>
                     </foreach>
-                    <td rowspan="{$v.rowspan}">{$v.length}cm</td>
-                    <td rowspan="{$v.rowspan}">{$v.width}cm</td>
-                    <td rowspan="{$v.rowspan}">{$v.height}cm</td>
+                    <td rowspan="{$v.rowspan}">{$v.length}*{$v.width}*{$v.height}</td>
                     <td rowspan="{$v.rowspan}">{$v.weight}kg</td>
                     <td rowspan="{$v.rowspan}">{$v.rate}kg</td>
                     <td rowspan="{$v.rowspan}">{$v.count}</td>
@@ -231,15 +227,15 @@
                 </tr>
                 <foreach name="v.detail" item="d" key="k">
                     <if condition="$k gt 0">
+                    <tr>
                     <td>{$d.product_name} {$d.en_product_name}</td>
                     <td>{$d.number} * {$d.unit}</td>
+                    </tr>
                     </if>
                 </foreach>
             </foreach>
             <tr>
                 <th>合计</th>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
