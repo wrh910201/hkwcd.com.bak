@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>威顿印务ERP系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="威顿印务ERP系统">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
+</head>
+<body>
+<header class="header clear">
+    <a href="javascript:history.back();" class="back">返回</a>
+    <h1><em class="icon">&#xe635;</em></h1>
+</header>
+<section class="crm manufacture clear">
+    <div class="box">
+        <div class="box_t clear">
+            <h3 class="fl">发货单</h3>
+            <div class="box_t_btn fr">
+                <a href="add_delivery.html"><i class="icon">&#xe613;</i>新增发货通知单</a>
+            </div>
+            <div class="search_box fr clear">
+                <input class="fl" type="text" placeholder="请输入关键字"/>
+                <button class="fl" type="submit"><i class="icon">&#xe617;</i></button>
+            </div>
+        </div>
+        <div class="box_c clear" id="orderList">
+            <a href="" title="玫瑰补水睡眠面膜">
+                <div class="manufacture_item">
+                    <div class="mf_item_h clear">
+                        <div class="fl">WPDDD-SSS</div>
+                        <div class="fr">
+                            <span>发货中</span>
+                            <span>烫金8900</span>
+                        </div>
+                    </div>
+                    <div class="mf_item_c">
+                        <div class="mf_item_c_m clear">
+                            <div class="mf_info fl">
+                                <p>广州睿新科技有限公司</p>
+                                <p>玫瑰补水睡眠面膜</p>
+                                <p>产品货号：T1000</p>
+                                <P>订单数量：1000</P>
+                            </div>
+                            <div class="mf_v">
+                                <i class="icon">&#xe60f;</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+<div style="height: 4rem;"></div>
+<script src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
+<script src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>
+<script>
+    var orderList = new Vue({
+        el: "#orderList",
+        data: {
+            list: [],
+            page: 1,
+            loading: false,
+            ended: false,
+            keyword: ""
+        },
+        mounted: function () {
+            this.getList()
+        },
+        methods: {
+            getList: function () {
+                $.ajax({
+
+                })
+            },
+            doSearch: function () {
+                var keyword = this.keyword;
+                this.page = 1;
+
+            }
+        },
+        filters: {
+            orderStatus: function (status) {
+
+            }
+        }
+    })
+</script>
+</body>
+</html>
