@@ -540,7 +540,6 @@ class OrderAction extends BaseAction  {
 
     private function _build_order_specification($order_specifications) {
         //构造产品规格
-        $temp = [];
         if( !is_array($order_specifications) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品规格' : '请输入产品规格';
@@ -550,13 +549,12 @@ class OrderAction extends BaseAction  {
                 $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请输入产品规格' : '请输入产品规格';
             } else {
                 foreach( $order_specifications as $k => $v ) {
-                    $temp[$k]['count'] = intval($v['count']);
-                    $temp[$k]['weight'] = floatval($v['weight']);
-                    $temp[$k]['length'] = floatval($v['length']);
-                    $temp[$k]['width'] = floatval($v['width']);
-                    $temp[$k]['height'] = floatval($v['height']);
+                    $order_specifications[$k]['count'] = intval($v['count']);
+                    $order_specifications[$k]['weight'] = floatval($v['weight']);
+                    $order_specifications[$k]['length'] = floatval($v['length']);
+                    $order_specifications[$k]['width'] = floatval($v['width']);
+                    $order_specifications[$k]['height'] = floatval($v['height']);
                 }
-                $order_specifications = $temp;
                 foreach( $order_specifications as $k => $v ) {
                     if( $v['weight'] <= 0 || $v['length'] < 0 || $v['width'] < 0 || $v['height'] < 0 || $v['count'] < 0 ) {
                         $this->has_error = true;
@@ -629,7 +627,7 @@ class OrderAction extends BaseAction  {
                 $v['index'] = $v['id'];
                 $v['id'] = $start ."-". $v['count'];
                 $start = $start + $v['count'];
-                $v['charging_weight'] = $v['length'] * $v['width'] * $v['height'] / 5000;
+                $v['rate'] = $v['length'] * $v['width'] * $v['height'] / 5000;
                 $temp[] = $v;
             }
             $order_specifications = $temp;
