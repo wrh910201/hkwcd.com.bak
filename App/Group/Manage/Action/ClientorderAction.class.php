@@ -230,7 +230,6 @@ class ClientorderAction extends CommonContentAction {
                 $order['specifications_total_weight'] += $v['weight'] * $v['count'];
                 $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
                 $order['specifications_total_count'] += $v['count'];
-                $order['specifications_calculate_weight'] += $order_specifications[$k]['calculate_weight'] * $v['count'];
                 $order_specifications[$k]['rowspan'] = count($v['detail']);
                 $start = $end + 1;
                 //real
@@ -245,10 +244,12 @@ class ClientorderAction extends CommonContentAction {
                 $order['real_specifications_total_weight'] += $v['real_weight'] * $v['real_count'];
                 $order['real_specifications_total_rate'] += $order_specifications[$k]['real_rate'] * $v['real_count'];
                 $order['real_specifications_total_count'] += $v['real_count'];
-                $order['real_specifications_calculate_weight'] += $order_specifications[$k]['real_calculate_weight'] * $v['real_count'];
                 $order_specifications[$k]['rowspan'] = count($v['detail']);
                 $real_start = $real_end + 1;
             }
+            $order['specifications_calculate_weight'] = $order['specifications_total_weight'] > $order['specifications_total_rate'] ? $order['specifications_total_weight']:$order['specifications_total_rate'];
+            $order['real_specifications_calculate_weight'] = $order['real_specifications_total_weight'] > $order['real_specifications_total_rate'] ? $order['real_specifications_total_weight'] : $order['real_specifications_total_rate'];
+
         }
 //        var_dump($order_specifications);exit;
         $order_log = M('ClientOrderLog')
