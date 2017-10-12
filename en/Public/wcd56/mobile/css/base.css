@@ -184,7 +184,7 @@ box-sizing: border-box;outline: 0;-webkit-appearance: none;border-radius: 0;
 .intro a{color:#ff0000;text-decoration:underline;}
 .askbar{ height:56px;position:relative;margin:10px 0px 0px;width:100%; }
 .askbar a{float:left;
-width:40%; height:36px; line-height:36px; margin:10px; text-align:center; font-size:120%;
+width:25%; height:36px; line-height:36px; margin:10px; text-align:center; font-size:120%;
 	background:#ceefef;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#b5e7de)); /* Saf4+, Chrome */
 	background-image: -webkit-linear-gradient(top, #ffffff, #b5e7de); /* Chrome 10+, Saf5.1+ */
