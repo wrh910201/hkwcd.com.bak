@@ -1609,6 +1609,7 @@
                         layer.closeAll("dialog");
                     },
                     btn2: function () {
+                        layer.closeAll("dialog");
                         return false;
                     }
                 });
@@ -1853,9 +1854,20 @@
                 this.showSpec()
             },
             removeSpecOrder: function (index) {
-                this.specList.splice(index,1);
-                this.recountTotal();
-                this.resetId();
+                var that = this;
+                layer.confirm('确定删除该项规格？', {
+                    btn: ['确定', '取消'] //可以无限个按钮
+
+                },  function(layer_index, layero){
+                    //按钮【按钮一】的回调
+                    that.specList.splice(index,1);
+                    that.recountTotal();
+                    that.resetId();
+                    layer.closeAll('dialog');
+                }, function(index){
+                    //按钮【按钮二】的回调
+                    layer.closeAll('dialog');
+                });
             }
         }
     });
@@ -1963,6 +1975,7 @@
                         layer.closeAll("dialog");
                     },
                     btn2: function () {
+                        layer.closeAll("dialog");
                         return false;
                     }
                 });
