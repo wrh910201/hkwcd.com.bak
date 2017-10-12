@@ -954,11 +954,11 @@
                                 </table>
                             </td>
 
-                            <td >{{spec.weight}}</td>
+                            <td >{{spec.weight}}KG</td>
                             <td >{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
-                            <td >{{spec.charging_weight}}</td>
+                            <td >{{spec.rate}}</td>
                             <td >{{spec.count}}</td>
-                            <td >{{spec.charging_weight > spec.weight ? spec.charging_weight : spec.weight}}</td>
+                            <td >{{spec.charging_weight}}KG</td>
                             <td >
                                 <a href="javascript:void(0)" @click="editSpecOrder(index)">编辑</a>
                                 |
@@ -971,7 +971,7 @@
                             <td>{{total_weight}}KG</td>
                             <td></td>
                             <td>{{total_rate}}KG</td>
-                            <td></td>
+                            <td>{{total_order_specifications_count}}</td>
                             <td>{{total_charging_weight}}KG</td>
                             <td class="text-right"></td>
                         </tr>
@@ -1738,6 +1738,7 @@
                         length : length,
                         width : width,
                         height : height,
+                        rate: (length * width * height)/5000,
                         charging_weight : (length * width * height)/5000 > weight ? (length * width * height)/5000 : weight,
                         count : count
                     };
@@ -1791,16 +1792,21 @@
                 var weight = 0/*重量*/ , rate = 0 /*材积重*/, charging_weight = 0/*计算重量*/;
                 for(var i in this.specList){
                     tempSpec = this.specList[i];
-                    weight = tempSpec.weight;
+                    weight = Number(tempSpec.weight);
                     this.total_weight += weight;
-                    rate = tempSpec.charging_weight;
+                    rate = Number(tempSpec.length) *  Number(tempSpec.width) *  Number(tempSpec.height) / 5000;
                     this.total_rate += rate;
-                    charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
-                    console.log("charging_weight",charging_weight);
+                    this.charging_weight = weight > rate ? weight : rate;
+                    this.specList[i].charging_weight *= this.specList[i].count;
+//                    charging_weight += (weight > rate ? weight*tempSpec.count : rate*tempSpec.count);
+//                    console.log("charging_weight",charging_weight);
+                    this.total_order_specifications_count += Number(tempSpec.count);
                 }
                 this.total_weight = this.fixedNum(this.total_weight,2);
                 this.total_rate = this.fixedNum(this.total_rate,2);
-                this.total_charging_weight = this.fixedNum(charging_weight,2);
+                charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+                this.total_charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+                this.total_charging_weight *= this.total_order_specifications_count;
             },
             resetId : function () {
                 var count = 0,id = '',start = 1,end = 0,total = 0;
