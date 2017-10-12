@@ -1606,6 +1606,7 @@
                     btn: ['确定', '取消'],
                     btn1: function () {
                         that.orderList.splice(index,1);
+                        layer.closeAll("dialog");
                     },
                     btn2: function () {
                         return false;
@@ -1959,6 +1960,7 @@
                     btn: ['确定', '取消'],
                     btn1: function () {
                         that.add_order(commit);
+                        layer.closeAll("dialog");
                     },
                     btn2: function () {
                         return false;
