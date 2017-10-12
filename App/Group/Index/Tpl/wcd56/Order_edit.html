@@ -956,7 +956,7 @@
 
                             <td >{{spec.weight}}</td>
                             <td >{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
-                            <td >{{spec.charging_weight}}</td>
+                            <td >{{spec.rate}}</td>
                             <td >{{spec.count}}</td>
                             <td >{{spec.charging_weight > spec.weight ? spec.charging_weight : spec.weight}}</td>
                             <td >
@@ -1687,16 +1687,18 @@
                 this.specList[i].width = parseFloat(this.specList[i].width).toFixed(1);
                 this.specList[i].height  = parseFloat(this.specList[i].height).toFixed(1);
                 this.specList[i].weight = parseFloat(this.specList[i].weight).toFixed(1);
-                this.specList[i].charging_weight = parseFloat(this.specList[i].charging_weight).toFixed(1);
+                this.specList[i].rate = parseFloat(this.specList[i].rate).toFixed(1);
+                this.specList[i].charging_weight = this.specList[i].weight > this.specList[i].rate ? this.specList[i].weight: this.specList[i].rate
 
-                this.total_weight += this.specList[i].weight;
-                this.total_rate += this.specList[i].charging_weight;
+                this.specList[i].count = parseInt(this.specList[i].count);
+                this.total_weight += this.specList[i].weight * this.specList[i].count;
+                this.total_rate += this.specList[i].rate * this.specList[i].count;
                 this.total_order_specifications_count += parseInt(this.specList[i].count);
             }
             this.total_weight = parseFloat(this.total_weight).toFixed(1);
             this.total_rate = parseFloat(this.total_rate).toFixed(1);
 
-            this.total_charging_weight = this.total_weight > this.total_rate ? this.total_weight : this.total_rate;
+            this.total_charging_weight = Number(this.total_weight) > Number(this.total_rate) ? Number(this.total_weight) : Number(this.total_rate);
         },
         methods: {
             fixedNum: function(num,fix){
