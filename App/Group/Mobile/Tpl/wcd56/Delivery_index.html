@@ -26,49 +26,51 @@
         <div class="box_t clear">
             <h3 class="fl">发货地址</h3>
             <!--<div class="box_t_btn fr">-->
-                <!--<a href="add_delivery.html"><i class="icon">&#xe613;</i>新增发货通知单</a>-->
+            <!--<a href="add_delivery.html"><i class="icon">&#xe613;</i>新增发货通知单</a>-->
             <!--</div>-->
             <!--<div class="search_box fr clear">-->
-                <!--<input class="fl" type="text" placeholder="请输入关键字"/>-->
-                <!--<button class="fl" type="submit"><i class="icon">&#xe617;</i></button>-->
+            <!--<input class="fl" type="text" placeholder="请输入关键字"/>-->
+            <!--<button class="fl" type="submit"><i class="icon">&#xe617;</i></button>-->
             <!--</div>-->
         </div>
         <div class="box_c clear" id="deliveryList">
             <foreach name="delivery_list" item="v">
-            <a href="" title="{$v.company}">
-                <div class="manufacture_item">
-                    <div class="mf_item_h clear">
-                        <!--<div class="fl">{$v.company}</div>-->
-                        <div class="fl">Guangzhou Vdoou Network Technology Co.Lmt.td</div>
-                        <div class="fr">
-                            <if condition="$v['is_default'] eq 1">
-                            <span>默认地址</span>
-                            </if>
-                        </div>
-                    </div>
-                    <div class="mf_item_c">
-                        <div class="mf_item_c_m clear">
-                            <div class="mf_info fl">
-                                <if condition="$v['company']">
-                                <p>公司名称：{$v.company}</p>
+                <a href="" title="{$v.company}">
+                    <div class="manufacture_item">
+                        <div class="mf_item_h clear">
+                            <!--<div class="fl">{$v.company}</div>-->
+                            <div class="fl">Guangzhou Vdoou Network Technology Co.Lmt.td</div>
+                            <div class="fr">
+                                <if condition="$v['is_default'] eq 1">
+                                    <span>默认地址</span>
                                 </if>
-                                <p>联系人：{$v.consignor}</p>
-                                <if condition="$v['mobile']">
-                                <p>手机：{$v.mobile}</p>
-                                </if>
-                                <if condition="$v['phone']">
-                                <p>座机：{$v.phone}</p>
-                                </if>
-                                <!--<p style="width: 75%">详细地址：{$v.detail_address}</p>-->
-                            </div>
-                            <div class="mf_v">
-                                <i class="icon">&#xe60f;</i>
                             </div>
                         </div>
+                        <div class="mf_item_c">
+                            <div class="mf_item_c_m clear">
+                                <div class="mf_info fl">
+                                    <if condition="$v['company']">
+                                        <p>公司名称：{$v.company}</p>
+                                    </if>
+                                    <p>联系人：{$v.consignor}</p>
+                                    <if condition="$v['mobile']">
+                                        <p>手机：{$v.mobile}</p>
+                                    </if>
+                                    <if condition="$v['phone']">
+                                        <p>座机：{$v.phone}</p>
+                                    </if>
+                                    <!--<p style="width: 75%">详细地址：{$v.detail_address}</p>-->
+                                </div>
+                                <div class="mf_v">
+                                    <i class="icon">&#xe60f;</i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
             </foreach>
+
+            <div class="load-more" @click="loadNext">点击加载更多</div>
         </div>
     </div>
 </section>
@@ -90,14 +92,32 @@
         },
         methods: {
             getList: function () {
-                $.ajax({
+                var that = this;
+                if (!this.loading) {
+                    this.loading = true;
+                    $.ajax({
+                        url: "/Mobile/Delivery/getData",
+                        data: {
+                            p : that.page
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        success: function () {
 
-                })
+                        }
+                    })
+                }
             },
             doSearch: function () {
                 var keyword = this.keyword;
                 this.page = 1;
 
+            },
+            loadNext: function () {
+                if (!this.loading) {
+                    this.page++;
+                    this.getList();
+                }
             }
         },
         filters: {
