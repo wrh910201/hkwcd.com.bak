@@ -71,7 +71,8 @@
                     </div>
                 </a>
             </template>
-            <div class="load-more" @click="loadNext">{{loading ? '加载中' : '点击加载更多'}}</div>
+            <div v-show="!ending" class="load-more" @click="loadNext">{{loading ? '加载中' : '点击加载更多'}}</div>
+            <div v-show="ending" class="load-more">已全部加载完毕</div>
         </div>
     </div>
 </section>
@@ -87,7 +88,8 @@
             page: 1,
             loading: false,
             ended: false,
-            keyword: ""
+            keyword: "",
+            ending: false,
         },
         mounted: function () {
             this.getList()
@@ -107,8 +109,12 @@
                         success: function (res) {
                             console.log("res",res);
                             var resData = res;
-                            for(var i = 0 , len = resData.length;i<len;i++){
-                                that.list.push(resData[i])
+                            if( res.length > 0 ) {
+                                for (var i = 0, len = resData.length; i < len; i++) {
+                                    that.list.push(resData[i])
+                                }
+                            } else {
+                                that.ending = true;
                             }
                             that.loading = false;
                         }

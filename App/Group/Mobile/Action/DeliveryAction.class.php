@@ -40,15 +40,20 @@ class DeliveryAction extends Action {
         import('ORG.Util.Page');
         $count = M('DeliveryAddress')->where($where)->count();
 
-        $page = new Page($count, C('usercenter_page_count'));
-        $limit = $page->firstRow. ',' .$page->listRows;
+        $page = I("p", 1, "intval");
+        $count = 10;
+        $offset = ($page - 1) * $count;
+        $limit = "{$offset},{$count}";
 
         $delivery_list =M('DeliveryAddress')->where($where)->limit($limit)->order('is_default desc, id asc')->select();
         if( $delivery_list ) {
             foreach( $delivery_list  as $k => $v ) {
                 $delivery_list[$k]['index'] = $k+1;
             }
+        } else {
+            $delivery_list = [];
         }
+//        $delivery_list = [];
 //        $this->assign('delivery_list',$delivery_list);// 赋值数据集
 //        $this->assign("json_delivery_list", json_encode($delivery_list));
         echo json_encode($delivery_list);
