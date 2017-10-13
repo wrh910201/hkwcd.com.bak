@@ -10,6 +10,11 @@ class DeliveryAction extends Action {
 
     public function index() {
 
+        $this->display();
+
+    }
+
+    public function getData() {
         $where['client_id'] = session('hkwcd_user.user_id');
         $where['status'] = 1;
         // 进行分页数据查询 注意limit方法的参数要使用Page类的属性
@@ -26,10 +31,10 @@ class DeliveryAction extends Action {
                 $delivery_list[$k]['index'] = $k+1;
             }
         }
-        $this->assign('delivery_list',$delivery_list);// 赋值数据集
-
-        $this->display();
-
+//        $this->assign('delivery_list',$delivery_list);// 赋值数据集
+//        $this->assign("json_delivery_list", json_encode($delivery_list));
+        echo json_encode($delivery_list);
+        exit;
     }
 
     public function detail() {
