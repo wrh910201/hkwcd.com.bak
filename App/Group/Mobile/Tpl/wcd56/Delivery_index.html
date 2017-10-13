@@ -81,7 +81,7 @@
     var deliveryList = new Vue({
         el: "#deliveryList",
         data: {
-            list: [],
+            list: {$json_delivery_list},
             page: 1,
             loading: false,
             ended: false,
