@@ -6,7 +6,7 @@
  * Time: 14:19
  */
 
-class DeliveryAction extends Action {
+class DeliveryAction extends BaseAction {
 
     public function index() {
         $where['client_id'] = session('hkwcd_user.user_id');

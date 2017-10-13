@@ -129,7 +129,18 @@ class UserAction extends Action {
     }
 
     public function index() {
+        if( empty(session('hkwcd_user')) ) {
+            $this->error('请先登录', '/Mobile/User/login');
+        }
         $this->display();
+    }
+
+    public function logout() {
+        $furl = '/';
+        session('hkwcd_user', null);
+        redirect("/Mobile/Index/index");
+        exit;
+//        $this->success('安全退出', $furl);
     }
 
 }

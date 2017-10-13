@@ -6,7 +6,7 @@
  * Time: 14:20
  */
 
-class ReceiveAction extends Action {
+class ReceiveAction extends BaseAction {
 
     public function index() {
         $this->display();

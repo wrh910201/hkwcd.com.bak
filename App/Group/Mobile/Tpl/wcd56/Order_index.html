@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>威顿印务ERP系统</title>
+    <title>华度货运，香港华度货运</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport"
           content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="application-name" content="威顿印务ERP系统">
+    <meta name="application-name" content="华度货运，香港华度货运">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="www.kwanson.com">
@@ -15,49 +15,64 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta name="format-detection" content="telephone=no, address=no">
     <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
+    <style>
+        .load-more{
+            border:1px solid #7aca48 ;
+            width: 50%;
+            font-size: 14px;
+            margin: 1rem auto;
+            text-align: center;
+            padding: .25rem;
+        }
+    </style>
 </head>
 <body>
 <header class="header clear">
     <a href="javascript:history.back();" class="back">返回</a>
-    <h1><em class="icon">&#xe635;</em></h1>
+    <!--<h1><em class="icon">&#xe635;</em></h1>-->
 </header>
 <section class="crm manufacture clear">
-    <div class="box">
+    <div class="box" id="order">
         <div class="box_t clear">
-            <h3 class="fl">发货单</h3>
-            <div class="box_t_btn fr">
-                <a href="add_delivery.html"><i class="icon">&#xe613;</i>新增发货通知单</a>
-            </div>
+            <h3 class="fl">订单列表</h3>
+            <!--<div class="box_t_btn fr">-->
+            <!--<a href="add_order.html"><i class="icon">&#xe613;</i>新增发货通知单</a>-->
+            <!--</div>-->
             <div class="search_box fr clear">
-                <input class="fl" type="text" placeholder="请输入关键字"/>
-                <button class="fl" type="submit"><i class="icon">&#xe617;</i></button>
+                <input v-model="start_date" style="width:5rem" class="fl" type="date" placeholder="起始日期"/>&nbsp;
+                <input v-model="end_date" style="width:5rem" class="fl" type="date" placeholder="结束日期"/>
+                <button class="fl" type="button" @click="doSearch"><i class="icon">&#xe617;</i></button>
             </div>
         </div>
-        <div class="box_c clear" id="orderList">
-            <a href="" title="玫瑰补水睡眠面膜">
-                <div class="manufacture_item">
-                    <div class="mf_item_h clear">
-                        <div class="fl">WPDDD-SSS</div>
-                        <div class="fr">
-                            <span>发货中</span>
-                            <span>烫金8900</span>
-                        </div>
-                    </div>
-                    <div class="mf_item_c">
-                        <div class="mf_item_c_m clear">
-                            <div class="mf_info fl">
-                                <p>广州睿新科技有限公司</p>
-                                <p>玫瑰补水睡眠面膜</p>
-                                <p>产品货号：T1000</p>
-                                <P>订单数量：1000</P>
-                            </div>
-                            <div class="mf_v">
-                                <i class="icon">&#xe60f;</i>
+        <div class="box_c clear" id="orderList" v-cloak>
+            <template v-for="item in list">
+                <a :href="'/Mobile/Order/detail/id/' + item.id" :title="item.company">
+                    <div class="manufacture_item">
+                        <div class="mf_item_h clear">
+                            <!--<div class="fl">{$v.company}</div>-->
+                            <div class="fl" style="max-width: 60%">{{item.order_num}}</div>
+                            <div class="fr">
+                                <span>状态：{{item.status_str}}</span>
                             </div>
                         </div>
+                        <div class="mf_item_c">
+                            <div class="mf_item_c_m clear">
+                                <div class="mf_info fl" style="max-width: 80%">
+                                    <!--<p v-show="item.company">公司名称：{{item.company}}</p>-->
+                                    <p>收货公司：{{item.receive_company}}</p>
+                                    <p>收货联系人：{{item.receive_addressee}}</p>
+                                    <p>下单时间：{{item.add_time}}</p>
+                                </div>
+                                <div class="mf_v">
+                                    <i class="icon">&#xe60f;</i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </template>
+            <div v-show="!ending" class="load-more" @click="loadNext">{{loading ? '加载中' : '点击加载更多'}}</div>
+            <div v-show="ending" class="load-more">已全部加载完毕</div>
         </div>
     </div>
 </section>
@@ -65,28 +80,62 @@
 <script src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
 <script src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>
 <script>
+    Vue.config.devtools = true;
     var orderList = new Vue({
-        el: "#orderList",
+        el: "#order",
         data: {
             list: [],
             page: 1,
             loading: false,
             ended: false,
-            keyword: ""
+            keyword: "",
+            ending: false,
+            start_date: "",
+            end_date: "",
         },
         mounted: function () {
             this.getList()
         },
         methods: {
             getList: function () {
-                $.ajax({
-
-                })
+                var that = this;
+                if (!this.loading) {
+                    this.loading = true;
+                    $.ajax({
+                        url: "/Mobile/Order/getData",
+                        data: {
+                            p : that.page,
+                            start_date: that.start_date,
+                            end_date: that.end_date,
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        success: function (res) {
+                            console.log("res",res);
+                            var resData = res;
+                            if( res.length > 0 ) {
+                                for (var i = 0, len = resData.length; i < len; i++) {
+                                    that.list.push(resData[i])
+                                }
+                            } else {
+                                that.ending = true;
+                            }
+                            that.loading = false;
+                        }
+                    })
+                }
             },
             doSearch: function () {
-                var keyword = this.keyword;
-                this.page = 1;
-
+                this.page = 0;
+                this.list = [];
+                this.ending = false;
+                this.loadNext();
+            },
+            loadNext: function () {
+                if (!this.loading) {
+                    this.page++;
+                    this.getList();
+                }
             }
         },
         filters: {
