@@ -22,6 +22,7 @@
         }
 
         .table {
+            text-align: left;
         }
     </style>
 </head>
@@ -56,10 +57,10 @@
     </dl>
     <dl class="common_list dl_detail" id="dl_1">
         <if condition="$order.delivery_company neq ''">
-        <dd class="clear">
-            <label class="fl">发货公司</label>
-            <span class="fr">{$order.delivery_company}</span>
-        </dd>
+            <dd class="clear">
+                <label class="fl">发货公司</label>
+                <span class="fr">{$order.delivery_company}</span>
+            </dd>
         </if>
         <dd class="clear">
             <label class="fl">联系人</label>
@@ -100,10 +101,10 @@
     </dl>
     <dl class="common_list dl_detail" id="dl_2">
         <if condition="$order.receive_company neq ''">
-        <dd class="clear">
-            <label class="fl">收货公司</label>
-            <span class="fr">{$order.receive_company}</span>
-        </dd>
+            <dd class="clear">
+                <label class="fl">收货公司</label>
+                <span class="fr">{$order.receive_company}</span>
+            </dd>
         </if>
         <dd class="clear">
             <label class="fl">联系人</label>
@@ -242,15 +243,15 @@
                             <table class="table" style="margin-bottom: -1px">
                                 <thead>
                                 <tr>
-                                    <th>品名</th>
-                                    <th>商品编码</th>
-                                    <th>原产地</th>
+                                    <th style="min-width: 75px;box-sizing: border-box">品名</th>
+                                    <th style="min-width: 75px;box-sizing: border-box">商品编码</th>
+                                    <th style="min-width: 75px;box-sizing: border-box">原产地</th>
                                 </tr>
                                 </thead>
                             </table>
                         </th>
                         <th>重量</th>
-                        <th>长 宽 高</th>
+                        <th>长×宽×高(cm)</th>
                         <th>材积重</th>
                         <th>箱数</th>
                         <th>计费重量</th>
@@ -262,7 +263,7 @@
                         <td style="padding: 0">
                             <table class="table" style="margin-bottom: -1px">
                                 <tbody>
-                                <tr v-for="cargo in spec.cargo">
+                                <tr v-for="cargo in spec.cargo" style="min-width: 75px;box-sizing: border-box">
                                     <td>{{cargo.product_name}} {{cargo.en_product_name}}</td>
                                     <td>{{cargo.detail_goods_code}}</td>
                                     <td>{{cargo.origin}}</td>
@@ -354,6 +355,7 @@
 <script type="text/javascript" src="/Public/wcd56/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>
 <script type="text/javascript">
+    Vue.config.devtools = true;
     $(function () {
         $(".dt_menu").hide();
         $(".dl_detail").hide();
@@ -382,16 +384,59 @@
         data: {
             orderList: {$order_detail},
             specList: {$order_specifications},
-            total_weight:"",
-            total_rate:"",
-            total_order_specifications_count:"",
-            total_charging_weight:"",
-            single_declared:0
+            total_weight: 0,
+            total_rate: 0,
+            total_count: 0,
+            total_order_specifications_count: 0,
+            total_charging_weight: 0,
+            single_declared: 0,
+            total_declared: 0
+        },
+        mounted: function () {
+            this.recountTotal();
+            this.recountSpecTotal();
         },
         methods: {
-            fixedNum: function(num,fix){
-                var $num = Number(num),$fix = Number(fix);
+            fixedNum: function (num, fix) {
+                var $num = Number(num), $fix = Number(fix);
                 return $num.toFixed($fix)
+            },
+            recountTotal: function () {
+                this.total_count = 0;
+                this.single_declared = 0;
+                this.total_declared = 0;
+                for (var i in this.orderList) {
+                    this.total_count += Number(this.orderList[i].detail_count);
+                    this.single_declared += Number(this.orderList[i].single_declared);
+                    this.total_declared += Number(this.orderList[i].single_declared) * Number(this.orderList[i].detail_count);
+                }
+            },
+            recountSpecTotal: function () {
+                this.total_order_specifications_count = this.total_weight = this.total_rate = this.total_charging_weight = 0;
+                var tempSpec;
+                var weight = 0/*重量*/, rate = 0 /*材积重*/, charging_weight = 0/*计算重量*/,count = 0;
+                for (var i = 0 ,len = this.specList.length;i<len;i++) {
+                    this.specList[i].length = parseFloat(this.specList[i].length).toFixed(2);
+                    this.specList[i].width = parseFloat(this.specList[i].width).toFixed(2);
+                    this.specList[i].height  = parseFloat(this.specList[i].height).toFixed(2);
+                    this.specList[i].weight = parseFloat(this.specList[i].weight).toFixed(2);
+                    this.specList[i].rate = parseFloat(this.specList[i].rate).toFixed(2);
+                    this.specList[i].charging_weight = this.specList[i].weight > this.specList[i].rate ? this.specList[i].weight: this.specList[i].rate;
+                    this.specList[i].charging_weight *= this.specList[i].count;
+                    this.specList[i].charging_weight = this.specList[i].charging_weight.toFixed(2);
+                    this.specList[i].count = parseInt(this.specList[i].count);
+                    tempSpec = this.specList[i];
+                    count = Number(tempSpec.count);
+                    weight = Number(tempSpec.weight);
+                    this.total_weight += weight;
+                    rate = Number(tempSpec.charging_weight);
+                    this.total_rate += rate;
+                    charging_weight += (weight > rate ? weight : rate ) * count;
+                    this.total_order_specifications_count += parseInt(this.specList[i].count)
+                }
+                this.total_weight = this.fixedNum(this.total_weight, 2);
+                this.total_rate = this.fixedNum(this.total_rate, 2);
+                this.total_charging_weight = this.fixedNum(charging_weight, 2);
             }
         }
     })
