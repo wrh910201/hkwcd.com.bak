@@ -22,7 +22,13 @@
         }
 
         .table {
+            background-color: #fff;
             text-align: left;
+        }
+
+        td,th{
+            min-width: 70px;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 </head>
@@ -274,6 +280,8 @@
                     </template>
                     <tr v-show="specList.length > 0">
                         <td class="table-total">合计</td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td>{{total_weight}}KG</td>
                         <td></td>
