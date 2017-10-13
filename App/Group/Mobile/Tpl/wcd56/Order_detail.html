@@ -22,7 +22,6 @@
         }
 
         .table {
-            background-color: #fff;
             text-align: left;
         }
     </style>
@@ -240,20 +239,9 @@
                     <thead>
                     <tr>
                         <th>编号</th>
-                        <!--<th style="padding: 0">
-                            <table class="table" style="margin-bottom: -1px">
-                                <thead>
-                                <tr>
-                                    <th>品名</th>
-                                    <th>商品编码</th>
-                                    <th>原产地</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </th>-->
-                        <th>品名</th>
-                        <th>商品编码</th>
-                        <th>原产地</th>
+                        <th style="min-width: 75px;box-sizing: border-box">品名</th>
+                        <th style="min-width: 75px;box-sizing: border-box">商品编码</th>
+                        <th style="min-width: 75px;box-sizing: border-box">原产地</th>
                         <th>重量</th>
                         <th>长×宽×高(cm)</th>
                         <th>材积重</th>
@@ -262,12 +250,13 @@
                     </tr>
                     </thead>
                     <tbody id="specifications-content">
-                    <tr v-for="(spec,index) in specList">
+                    <template v-for="(spec,index) in specList">
+                    <tr>
                         <td :rowspan="spec.cargo.length">{{spec.id}}</td>
-                        <template v-for="(cargo,index) in spec.cargo">
-                            <td v-if="index == 0">{{cargo.product_name}} {{cargo.en_product_name}}</td>
-                            <td v-if="index == 0">{{cargo.detail_goods_code}}</td>
-                            <td v-if="index == 0">{{cargo.origin}}</td>
+                        <template v-for="(cargo,i) in spec.cargo">
+                            <td v-show="i==0" >{{cargo.product_name}} {{cargo.en_product_name}}</td>
+                            <td v-show="i==0" >{{cargo.detail_goods_code}}</td>
+                            <td v-show="i==0" >{{cargo.origin}}</td>
                         </template>
                         <td :rowspan="spec.cargo.length">{{spec.weight}}KG</td>
                         <td :rowspan="spec.cargo.length">{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
@@ -275,17 +264,16 @@
                         <td :rowspan="spec.cargo.length">{{spec.count}}</td>
                         <td :rowspan="spec.cargo.length">{{spec.charging_weight}}KG</td>
                     </tr>
-                    <template v-for="item in specList">
-                        <template v-if="item.cargo.length > 1" v-for="(cargo,index) in item.cargo" style="min-width: 75px">
-                            <td v-if="index>=1">{{cargo.product_name}} {{cargo.en_product_name}}</td>
-                            <td v-if="index>=1">{{cargo.detail_goods_code}}</td>
-                            <td v-if="index>=1">{{cargo.origin}}</td>
-                        </template>
+                    <template v-for="(cargo,i) in spec.cargo">
+                    <tr v-show="i>0">
+                        <td v-show="i>0" >{{cargo.product_name}} {{cargo.en_product_name}}</td>
+                        <td v-show="i>0" >{{cargo.detail_goods_code}}</td>
+                        <td v-show="i>0" >{{cargo.origin}}</td>
+                    </tr>
+                    </template>
                     </template>
                     <tr v-show="specList.length > 0">
                         <td class="table-total">合计</td>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td>{{total_weight}}KG</td>
                         <td></td>
