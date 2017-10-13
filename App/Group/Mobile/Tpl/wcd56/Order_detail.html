@@ -3,7 +3,8 @@
 <head>
     <title>威顿印务ERP系统</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="application-name" content="威顿印务ERP系统">
@@ -13,14 +14,23 @@
     <meta name="version" content="v.1.0.0">
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="/Public/wcd56/mobile/css/base.css">
     <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
+    <style>
+        .box_c.box_c_reset {
+            overflow-x: scroll;
+        }
+
+        .table {
+        }
+    </style>
 </head>
 <body>
 <header class="header clear">
     <a href="javascript:history.back();" class="back">返回</a>
     <h1><em class="icon">&#xe635;</em></h1>
 </header>
-<section class="manufacture_detail clear">
+<section id="detail" class="manufacture_detail clear">
     <dl class="common_list">
         <dt>生产单-详情</dt>
         <dd class="clear">
@@ -135,35 +145,102 @@
         </dd>
     </dl>
     <dl class="common_list dl_detail" id="dl_4">
-        <dd class="clear">
-            <label class="fl">工序要求</label>
-            <span class="fr">开料-柯式（印刷A）-烫金（706）-单线（精细线）-粘盒（药水）</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">开料</label>
-            <span class="fr">11000</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">柯式</label>
-            <span class="fr">2233</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">烫金</label>
-            <span class="fr">333</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">单线</label>
-            <span class="fr"></span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">粘盒</label>
-            <span class="fr"></span>
+        <dd>
+            <div class="box_c box_c_reset">
+                <table class="table" style="min-width: 600px">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>品名</th>
+                        <th>商品编码</th>
+                        <th>数量</th>
+                        <th>单件申报价值(USD)</th>
+                        <th>总申报价值(USD)</th>
+                        <th>原产地</th>
+                    </tr>
+                    </thead>
+                    <tbody id="detail-content">
+                    <tr v-for="(item,index) in orderList" :id="'detail-item-'+index">
+                        <td>{{index+1}}</td>
+                        <td>{{item.product_name + ' ' +item.en_product_name}}</td>
+                        <td>{{item.detail_goods_code}}</td>
+                        <td>{{item.detail_count+item.unit}}</td>
+                        <td>{{fixedNum(item.single_declared,2)}}</td>
+                        <td>{{fixedNum((item.detail_count*item.single_declared),2)}}</td>
+                        <td>{{item.origin}}</td>
+                    </tr>
+                    <!--<tr v-show="total_declared>0">
+                        <td class="table-total">合计</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{total_declared.toFixed(2)}}</td>
+                        <td></td>
+                    </tr>-->
+                    </tbody>
+                </table>
+            </div>
         </dd>
     </dl>
     <dl class="common_list dl_detail" id="dl_5">
-        <dd class="clear">
-            <label class="fl">包装要求</label>
-            <span class="fr">T334K</span>
+        <dd>
+            <div class="box_c box_c_reset">
+                <table class="table" style="min-width: 600px">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th style="padding: 0">
+                            <table class="table" style="margin-bottom: -1px">
+                                <thead>
+                                <tr>
+                                    <th>品名</th>
+                                    <th>商品编码</th>
+                                    <th>原产地</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </th>
+                        <th>重量</th>
+                        <th>长 宽 高</th>
+                        <th>材积重</th>
+                        <th>箱数</th>
+                        <th>计费重量</th>
+                    </tr>
+                    </thead>
+                    <tbody id="specifications-content">
+                    <tr v-for="(spec,index) in specList">
+                        <td>{{spec.id}}</td>
+                        <td style="padding: 0">
+                            <table class="table" style="margin-bottom: -1px">
+                                <tbody>
+                                <tr v-for="cargo in spec.cargo">
+                                    <td>{{cargo.product_name}} {{cargo.en_product_name}}</td>
+                                    <td>{{cargo.detail_goods_code}}</td>
+                                    <td>{{cargo.origin}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+
+                        <td>{{spec.weight}}KG</td>
+                        <td>{{spec.length}} * {{spec.width}} * {{spec.height}}</td>
+                        <td>{{spec.rate}}</td>
+                        <td>{{spec.count}}</td>
+                        <td>{{spec.charging_weight}}KG</td>
+                    </tr>
+                    <tr v-show="specList.length > 0">
+                        <td class="table-total">合计</td>
+                        <td></td>
+                        <td>{{total_weight}}KG</td>
+                        <td></td>
+                        <td>{{total_rate}}KG</td>
+                        <td>{{total_order_specifications_count}}</td>
+                        <td>{{total_charging_weight}}KG</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </dd>
     </dl>
     <dl class="common_list dl_detail" id="dl_6">
@@ -227,29 +304,50 @@
 </section>
 <div style="height: 4rem;"></div>
 <script type="text/javascript" src="/Public/wcd56/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>
 <script type="text/javascript">
-    $(function(){
+    $(function () {
         $(".dt_menu").hide();
         $(".dl_detail").hide();
         $("#dl_1").show();
-        $("#dt_menu").click(function(){
-            if($(".dt_menu").is(':hidden')){
+        $("#dt_menu").click(function () {
+            if ($(".dt_menu").is(':hidden')) {
                 $(".dt_menu").slideDown();
                 $("#dt_menu .icon").html('&#xe643;');
-            }else{
+            } else {
                 $(".dt_menu").slideUp();
                 $("#dt_menu .icon").html('&#xe642;');
             }
         });
-        $(".dt_menu li").click(function(){
+        $(".dt_menu li").click(function () {
             $(".dl_detail").hide();
-            var dl_index = "#dl_"+($(this).index()+1);
+            var dl_index = "#dl_" + ($(this).index() + 1);
             $(dl_index).show();
             $("#dt_menu_text").text($(this).text());
             $(".dt_menu").slideUp();
             $("#dt_menu .icon").html('&#xe642;');
         })
+    });
+
+    var detail = new Vue({
+        el: "#detail",
+        data: {
+            orderList: [],
+            specList: [],
+            total_weight:"",
+            total_rate:"",
+            total_order_specifications_count:"",
+            total_charging_weight:"",
+            single_declared:0
+        },
+        methods: {
+            fixedNum: function(num,fix){
+                var $num = Number(num),$fix = Number(fix);
+                return $num.toFixed($fix)
+            }
+        }
     })
+
 </script>
 </body>
 </html>

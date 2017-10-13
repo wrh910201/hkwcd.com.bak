@@ -740,3 +740,10 @@ span.select2-selection__arrow{
 .select2-results__options{
     font-size: .7rem;
 }
+
+span.fr{
+    -webkit-width: max-content;
+    width: max-content;
+    max-width: 60%;
+    text-align: left;
+}
