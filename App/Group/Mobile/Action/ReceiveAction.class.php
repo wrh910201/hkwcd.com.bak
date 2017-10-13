@@ -38,6 +38,7 @@ class ReceiveAction extends Action {
     }
 
     public function detail() {
+
         $this->display();
     }
 
