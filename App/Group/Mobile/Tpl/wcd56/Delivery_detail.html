@@ -79,6 +79,10 @@
             <label class="fl">身份证号码</label>
             <span class="fr">{$delivery.certificate_num}</span>
         </dd>
+        <dd class="clear">
+            <label class="fl">是否默认</label>
+            <span class="fr"><if condition="$delivery.is_default eq 1">是<else />否</if></span>
+        </dd>
         <dd class="clear" style="text-align:left;">
             <div>身份证正面</div>
             <div class="id-card">

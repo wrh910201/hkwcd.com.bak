@@ -75,6 +75,10 @@
             <label class="fl">进口商代码</label>
             <span class="fr">{$receive.receiver_code}</span>
         </dd>
+        <dd class="clear">
+            <label class="fl">是否默认</label>
+            <span class="fr"><if condition="$receive.is_default eq 1">是<else />否</if></span>
+        </dd>
     </dl>
 </section>
 <div style="height: 4rem;"></div>
