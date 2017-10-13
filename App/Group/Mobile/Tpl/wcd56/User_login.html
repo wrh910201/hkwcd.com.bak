@@ -50,65 +50,49 @@
     </div>
     <div class="login_footer" style="display: none">
         <p style="text-align:center;">copyright&copy;2015</p>
-        <p style="text-align:center;">广州市威顿印务有限公司</p>
+        <p style="text-align:center;">华度货运</p>
         <p style="text-align:center;">All Rights Reserved</p>
     </div>
 </section>
-<script type="text/javascript" src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
-<script>
-    function ajax(opt) {
-        opt = opt || {};
-        opt.method = opt.method.toUpperCase() || 'POST';
-        opt.url = opt.url || '';
-        opt.async = opt.async || true;
-        opt.data = opt.data || null;
-        opt.success = opt.success || function () {
-            };
-        var xmlHttp = null;
-        if (XMLHttpRequest) {
-            xmlHttp = new XMLHttpRequest();
-        }
-        else {
-            xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
-        }
-        var params = [];
-        for (var key in opt.data) {
-            params.push(key + '=' + opt.data[key]);
-        }
-        var postData = params.join('&');
-        if (opt.method.toUpperCase() === 'POST') {
-            xmlHttp.open(opt.method, opt.url, opt.async);
-            xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
-            xmlHttp.send(postData);
-        }
-        else if (opt.method.toUpperCase() === 'GET') {
-            xmlHttp.open(opt.method, opt.url + '?' + postData, opt.async);
-            xmlHttp.send(null);
-        }
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                opt.success(xmlHttp.responseText);
-            }
-        };
+<!--<script type="text/javascript" src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>-->
+<script type="text/javascript" src="/Public/wcd56/usercenter/js/jquery.js"></script>
+<script src="https://cdn.bootcss.com/layer/3.0.3/layer.js"></script>
+<!--<script type="text/javascript" src="/Public/wcd56/usercenter/layer/layer.js"></script>-->
+<script type="text/javascript">
+
+    var loading = null;
+    function show_loading() {
+        loading = layer.load(0, { shade: 0.4 });
+    }
+
+    function hide_loading() {
+        layer.close(loading);
     }
 
     var comm_btn = document.querySelector("#comm_btn");
     comm_btn.addEventListener('click', function () {
         var account = document.querySelector("#account").value,
             password = document.querySelector("#password").value;
-        console.log("account", account, "password", password);
-        /*ajax({
-         method: 'POST',
-         url: '',
-         data: {
-         account: account,
-         password: password
-         },
-         success: function (res) {
-         console.log(res)
-         }
-         });*/
+//        console.log("account", account, "password", password);
+        show_loading();
+        $.post("/Mobile/User/doLogin", {username: account, password: password}, function(response) {
+            hide_loading();
+            if( response.code == 0 ) {
+                layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                    window.location.href = '/';
+                } );
+            } else if( response.code == 1 ) {
+                layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                    window.location.href = response.url;
+                } );
+            } else if( response.code == -1 ) {
+                layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
+            }
+        },'json');
     });
+
+
+
 </script>
 </body>
 </html>
