@@ -16,20 +16,22 @@
 </header>
 <div class="trace-container" id="trace">
     <div class="trace-header">
-        <div class="trace-header-info">订单编号：</div>
-        <div class="trace-header-info">承运人/公司：</div>
-        <div class="trace-header-info">联系方式：</div>
-        <div class="trace-header-info">预计送达：</div>
+        <div class="trace-header-info">订单编号：{$order.order_num}</div>
+        <div class="trace-header-info">状态：{$order.status_str}</div>
+        <!--<div class="trace-header-info">联系方式：</div>-->
+        <!--<div class="trace-header-info">预计送达：</div>-->
     </div>
 
     <div class="trace-body">
+        <tempalte v-show="traceList.length > 0" v-for="item in traceList">
         <div class="trace-item">
-            <div class="trace-item-content">Foo bar baz</div>
-            <div class="trace-item-footer">2017-10-08 10:00:34</div>
+            <div class="trace-item-content">{{item.context}}</div>
+            <div class="trace-item-footer">{{item.time}}</div>
         </div>
-        <div class="trace-item">
-            <div class="trace-item-content">Foo bar baz</div>
-            <div class="trace-item-footer">2017-10-08 10:00:34</div>
+        </tempalte>
+        <div class="trace-item" v-show="traceList.length == 0">
+            <div class="trace-item-content">{{error_msg}}</div>
+            <!--<div class="trace-item-footer">{{item.time}}</div>-->
         </div>
     </div>
 </div>
@@ -39,11 +41,28 @@
     var trace = new Vue({
         el: "#trace",
         data: {
-            traceList: []
+            order_id: {$order.id},
+            traceList: [],
+            error_msg: '抱歉，暂无查询记录',
         },
         methods: {
             getTraceList: function () {
-
+                var that = this;
+                $.ajax({
+                    url: "/Order/trace",
+                    data: {"id":that.order_id},
+                    dataType: "json",
+                    type: "POST",
+                    success: function(res) {
+                        console.log(res.data);
+                        if( res.code == 1 ) {
+                            that.traceList = res.data.data;
+                        } else {
+                            that.traceList = [];
+                            that.error_msg = res.msg;
+                        }
+                    }
+                });
             }
         },
         mounted: function () {

@@ -153,6 +153,17 @@ class OrderAction extends BaseAction {
     }
 
     public function trace() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+        $order['status_str'] = _order_status($order);
+        $this->assign("order", $order);
         $this->display();
     }
 
