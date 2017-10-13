@@ -29,6 +29,7 @@ class DeliveryAction extends BaseAction {
         $this->page = $page->show();
 
         $this->assign('delivery_list',$delivery_list);// 赋值数据集
+        $this->assign("json_delivery_list", json_encode($delivery_list));
         $this->display(); // 输出模板
     }
 
