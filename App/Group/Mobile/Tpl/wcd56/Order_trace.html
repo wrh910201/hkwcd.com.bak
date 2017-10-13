@@ -14,7 +14,7 @@
     <a href="javascript:history.back();" class="back">返回</a>
     <h1><em class="icon">&#xe635;</em></h1>
 </header>
-<div class="trace-container">
+<div class="trace-container" id="trace">
     <div class="trace-header">
         <div class="trace-header-info">订单编号：</div>
         <div class="trace-header-info">承运人/公司：</div>
@@ -33,6 +33,23 @@
         </div>
     </div>
 </div>
+<script src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
+<script src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>
+<script>
+    var trace = new Vue({
+        el: "#trace",
+        data: {
+            traceList: []
+        },
+        methods: {
+            getTraceList: function () {
 
+            }
+        },
+        mounted: function () {
+            this.getTraceList()
+        }
+    })
+</script>
 </body>
 </html>
