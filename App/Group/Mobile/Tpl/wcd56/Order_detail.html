@@ -224,7 +224,7 @@
                         <td>{{fixedNum((item.detail_count*item.single_declared),2)}}</td>
                         <td>{{item.origin}}</td>
                     </tr>
-                    <!--<tr v-show="total_declared>0">
+                    <tr v-show="total_declared>0">
                         <td class="table-total">合计</td>
                         <td></td>
                         <td></td>
@@ -232,7 +232,7 @@
                         <td></td>
                         <td>{{total_declared.toFixed(2)}}</td>
                         <td></td>
-                    </tr>-->
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -404,41 +404,32 @@
                 return $num.toFixed($fix)
             },
             recountTotal: function () {
-                this.total_count = 0;
-                this.single_declared = 0;
                 this.total_declared = 0;
-                for (var i in this.orderList) {
-                    this.total_count += Number(this.orderList[i].detail_count);
-                    this.single_declared += Number(this.orderList[i].single_declared);
+                for( var i in this.orderList ) {
                     this.total_declared += Number(this.orderList[i].single_declared) * Number(this.orderList[i].detail_count);
                 }
             },
             recountSpecTotal: function () {
-                this.total_order_specifications_count = this.total_weight = this.total_rate = this.total_charging_weight = 0;
-                var tempSpec;
-                var weight = 0/*重量*/, rate = 0 /*材积重*/, charging_weight = 0/*计算重量*/,count = 0;
-                for (var i = 0 ,len = this.specList.length;i<len;i++) {
-                    this.specList[i].length = parseFloat(this.specList[i].length).toFixed(2);
-                    this.specList[i].width = parseFloat(this.specList[i].width).toFixed(2);
-                    this.specList[i].height  = parseFloat(this.specList[i].height).toFixed(2);
-                    this.specList[i].weight = parseFloat(this.specList[i].weight).toFixed(2);
-                    this.specList[i].rate = parseFloat(this.specList[i].rate).toFixed(2);
-                    this.specList[i].charging_weight = this.specList[i].weight > this.specList[i].rate ? this.specList[i].weight: this.specList[i].rate;
+                //计算合计
+                this.total_weight = 0;
+                this.total_rate = 0;
+                for( var i in this.specList ) {
+                    this.specList[i].length = parseFloat(this.specList[i].length).toFixed(1);
+                    this.specList[i].width = parseFloat(this.specList[i].width).toFixed(1);
+                    this.specList[i].height  = parseFloat(this.specList[i].height).toFixed(1);
+                    this.specList[i].weight = parseFloat(this.specList[i].weight).toFixed(1);
+                    this.specList[i].rate = parseFloat(this.specList[i].rate).toFixed(1);
+                    this.specList[i].charging_weight = this.specList[i].weight > this.specList[i].rate ? this.specList[i].weight: this.specList[i].rate
                     this.specList[i].charging_weight *= this.specList[i].count;
-                    this.specList[i].charging_weight = this.specList[i].charging_weight.toFixed(2);
                     this.specList[i].count = parseInt(this.specList[i].count);
-                    tempSpec = this.specList[i];
-                    count = Number(tempSpec.count);
-                    weight = Number(tempSpec.weight);
-                    this.total_weight += weight;
-                    rate = Number(tempSpec.charging_weight);
-                    this.total_rate += rate;
-                    charging_weight += (weight > rate ? weight : rate ) * count;
-                    this.total_order_specifications_count += parseInt(this.specList[i].count)
+                    this.total_weight += this.specList[i].weight * this.specList[i].count;
+                    this.total_rate += this.specList[i].rate * this.specList[i].count;
+                    this.total_order_specifications_count += parseInt(this.specList[i].count);
                 }
-                this.total_weight = this.fixedNum(this.total_weight, 2);
-                this.total_rate = this.fixedNum(this.total_rate, 2);
-                this.total_charging_weight = this.fixedNum(charging_weight, 2);
+                this.total_weight = parseFloat(this.total_weight).toFixed(1);
+                this.total_rate = parseFloat(this.total_rate).toFixed(1);
+
+                this.total_charging_weight = Number(this.total_weight) > Number(this.total_rate) ? Number(this.total_weight) : Number(this.total_rate);
             }
         }
     })
