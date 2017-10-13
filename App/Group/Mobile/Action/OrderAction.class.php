@@ -77,6 +77,78 @@ class OrderAction extends BaseAction {
     }
 
     public function detail() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+        $order['status_str'] = _order_status($order);
+
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+
+        if( $order_detail ) {
+            foreach( $order_detail as $k => $v ) {
+                $order_detail[$k]["detail_goods_code"] = $v["goods_code"];
+                unset($order_detail[$k]["goods_code"]);
+                $order_detail[$k]["detail_count"] = $v["count"];
+                unset($order_detail[$k]["count"]);
+            }
+        }
+        $order_specifications = M('ClientOrderSpecifications')
+            ->alias('s')
+            ->field('s.*, m.detail_id, m.number, cd.product_name, cd.en_product_name, cd.unit, cd.goods_code, cd.origin')
+            ->join('inner join hx_client_order_map as m on m.specifications_id = s.id')
+            ->join('left join hx_client_order_detail as cd on m.detail_id = cd.id')
+            ->where(['s.order_num' => $order['order_num']])
+            ->select();
+//        echo M('ClientOrderSpecifications')->getLastSql();exit;
+        $s_cursor = 0;
+        if( $order_specifications ) {
+            $temp = [];
+            foreach( $order_specifications as $k => $v ) {
+                if( !isset($temp[$v['id']]) ) {
+                    $temp[$v['id']] = $v;
+                }
+                $temp[$v['id']]['cargo'][] = [
+                    'detail_id' => $v['detail_id'],
+                    'specifications_id' => $v['id'],
+                    'product_name' => $v['product_name'],
+                    'en_product_name' => $v['en_product_name'],
+                    'detail_goods_code' => $v['goods_code'],
+                    'origin' => $v['origin'],
+                    'product_count' => $v['number'],
+                ];
+                $last_index = count($temp[$v['id']]['cargo']) - 1;
+                foreach( $order_detail as $key => $d ) {
+                    if( $d['id'] == $v['detail_id'] ) {
+                        $temp[$v['id']]['cargo'][$last_index]['product_index'] = $key;
+                    }
+                }
+            }
+            $order_specifications = $temp;
+            $temp = [];
+            $start = 1;
+            foreach( $order_specifications as $v ) {
+                $v['index'] = $v['id'];
+                $v['id'] = $start ."-". $v['count'];
+                $start = $start + $v['count'];
+                $v['rate'] = $v['length'] * $v['width'] * $v['height'] / 5000;
+                $temp[] = $v;
+            }
+            $order_specifications = $temp;
+        }
+
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+
+        $this->assign('order', $order);
+        $this->assign('order_detail', json_encode($order_detail));
+        $this->assign('order_specifications', json_encode($order_specifications));
+        $this->assign('order_fee', $order_fee);
+        $this->assign('settlement_method', C('settlement_method'));
         $this->display();
     }
 

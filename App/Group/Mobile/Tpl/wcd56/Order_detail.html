@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>威顿印务ERP系统</title>
+    <title>华度货运，香港华度货运</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport"
           content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="application-name" content="威顿印务ERP系统">
+    <meta name="application-name" content="华度货运，香港华度货运">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="www.kwanson.com">
@@ -32,34 +32,18 @@
 </header>
 <section id="detail" class="manufacture_detail clear">
     <dl class="common_list">
-        <dt>生产单-详情</dt>
+        <dt>订单-详情</dt>
         <dd class="clear">
-            <label class="fl">威顿单号</label>
-            <span class="fr">WP334A1</span>
+            <label class="fl">订单号</label>
+            <span class="fr">{$order.order_num}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">公司名称</label>
-            <span class="fr">广州睿新生物技术有限公司</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">产品品名</label>
-            <span class="fr">玫瑰补水睡眠面膜</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">产品货号</label>
-            <span class="fr">T120a</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">产品规格</label>
-            <span class="fr">1000g</span>
-        </dd>
-        <dd class="clear">
-            <label class="fl">产品数量</label>
-            <span class="fr">10002</span>
+            <label class="fl">状态</label>
+            <span class="fr">{$order.status_str}</span>
         </dd>
     </dl>
     <dl class="common_list">
-        <dt id="dt_menu">生产单-<em id="dt_menu_text">发货地址</em><i class="icon">&#xe642;</i></dt>
+        <dt id="dt_menu"><em id="dt_menu_text">发货地址</em><i class="icon">&#xe642;</i></dt>
         <div class="dt_menu">
             <ul>
                 <li>发货地址</li>
@@ -71,83 +55,147 @@
         </div>
     </dl>
     <dl class="common_list dl_detail" id="dl_1">
+        <if condition="$order.delivery_company neq ''">
         <dd class="clear">
-            <label class="fl">生产样板</label>
-            <span class="fr">2个</span>
+            <label class="fl">发货公司</label>
+            <span class="fr">{$order.delivery_company}</span>
+        </dd>
+        </if>
+        <dd class="clear">
+            <label class="fl">联系人</label>
+            <span class="fr">{$order.delivery_consignor}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">客签OK办</label>
-            <span class="fr">2个</span>
+            <label class="fl">国家</label>
+            <span class="fr">{$order.delivery_country_name} / {$order.delivery_country_en_name}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">来办</label>
-            <span class="fr">2个</span>
+            <label class="fl">省</label>
+            <span class="fr">{$order.delivery_state}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">稿件</label>
-            <span class="fr">1件</span>
+            <label class="fl">城市</label>
+            <span class="fr">{$order.delivery_city}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">实物</label>
-            <span class="fr">2个</span>
+            <label class="fl">具体地址</label>
+            <span class="fr">{$order.delivery_detail_address}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">邮编</label>
+            <span class="fr">{$order.delivery_postal_code}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">手机</label>
+            <span class="fr">{$order.delivery_mobile}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">座机</label>
+            <span class="fr">{$order.delivery_phone}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">出口商代码</label>
+            <span class="fr">{$order.exporter_code}</span>
         </dd>
     </dl>
     <dl class="common_list dl_detail" id="dl_2">
+        <if condition="$order.receive_company neq ''">
         <dd class="clear">
-            <label class="fl">卡号</label>
-            <span class="fr">T334K</span>
+            <label class="fl">收货公司</label>
+            <span class="fr">{$order.receive_company}</span>
+        </dd>
+        </if>
+        <dd class="clear">
+            <label class="fl">联系人</label>
+            <span class="fr">{$order.receive_addressee}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">卡种</label>
-            <span class="fr"></span>
+            <label class="fl">国家</label>
+            <span class="fr">{$order.receive_country_name} / {$order.receive_country_en_name}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">存货</label>
-            <span class="fr"></span>
+            <label class="fl">省</label>
+            <span class="fr">{$order.receive_state}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">成品尺寸</label>
-            <span class="fr">50*40*30MM</span>
+            <label class="fl">城市</label>
+            <span class="fr">{$order.receive_city}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">成品盒款</label>
-            <span class="fr">自动扣底折盒</span>
+            <label class="fl">具体地址</label>
+            <span class="fr">{$order.receive_detail_address}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">邮编</label>
+            <span class="fr">{$order.receive_postal_code}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">手机</label>
+            <span class="fr">{$order.receive_mobile}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">座机</label>
+            <span class="fr">{$order.receive_phone}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">进口商代码</label>
+            <span class="fr">{$order.receiver_code}</span>
         </dd>
     </dl>
     <dl class="common_list dl_detail" id="dl_3">
         <dd class="clear">
-            <label class="fl">印面</label>
-            <span class="fr">T334K</span>
+            <label class="fl">渠道</label>
+            <span class="fr">{$order.channel_name} / {$order.channel_en_name}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">菲林用/档案名称</label>
-            <span class="fr">面膜玫瑰正装</span>
+            <label class="fl">寄件类型</label>
+            <span class="fr">{$order['package_type'] == 1 ? '文件' : '包裹' }</span>
         </dd>
         <dd class="clear">
-            <label class="fl">电脑纹</label>
-            <span class="fr"></span>
+            <label class="fl">价格条款</label>
+            <span class="fr">{$order.price_terms}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">新模</label>
-            <span class="fr">hs1230</span>
+            <label class="fl">关税支付</label>
+            <span class="fr">{$order.tariff_payment}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">印刷颜色按照</label>
-            <span class="fr">新标样指示</span>
+            <label class="fl">装运参考</label>
+            <span class="fr">{$order.shipment_reference}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">印刷尺寸按照</label>
-            <span class="fr">新标样指示</span>
+            <label class="fl">结汇方式</label>
+            <span class="fr">{$order.settlement}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">印刷文图按照</label>
-            <span class="fr">新标样指示</span>
+            <label class="fl">运输方式</label>
+            <span class="fr">{$order.mode_of_transportation}. {$order.express_service}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">出口原因</label>
+            <span class="fr">{$order.export_reason}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">出口性质</label>
+            <span class="fr">{$order.export_nature}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">制造商或出口商及地址</label>
+            <span class="fr">{$order.manufacturer}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">备注</label>
+            <span class="fr">{$order.remark}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">托运备注</label>
+            <span class="fr">{$order.specifications_remark}</span>
         </dd>
     </dl>
     <dl class="common_list dl_detail" id="dl_4">
         <dd>
             <div class="box_c box_c_reset">
-                <table class="table" style="min-width: 600px">
+                <table class="table" style="min-width: 800px">
                     <thead>
                     <tr>
                         <th>编号</th>
@@ -332,8 +380,8 @@
     var detail = new Vue({
         el: "#detail",
         data: {
-            orderList: [],
-            specList: [],
+            orderList: {$order_detail},
+            specList: {$order_specifications},
             total_weight:"",
             total_rate:"",
             total_order_specifications_count:"",
