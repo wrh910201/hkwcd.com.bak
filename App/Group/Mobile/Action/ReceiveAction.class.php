@@ -38,7 +38,19 @@ class ReceiveAction extends Action {
     }
 
     public function detail() {
-
+        $id = I('get.id', 0, 'intval');
+        $client_id = session('hkwcd_user.user_id');
+        $where = ['da.id' => $id, 'da.status' => 1, 'client_id' => $client_id];
+        $receive = M('ReceiveAddress')
+            ->alias("da")
+            ->field("da.*, c.name, c.ename")
+            ->join("left join hx_country as c on c.id = da.country_id")
+            ->where($where)
+            ->find();
+        if( empty($receive) ) {
+            $this->error('地址不存在');
+        }
+        $this->assign("receive", $receive);
         $this->display();
     }
 

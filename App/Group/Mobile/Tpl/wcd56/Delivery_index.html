@@ -45,23 +45,23 @@
         </div>
         <div class="box_c clear" id="deliveryList" v-cloak>
             <template v-for="item in list">
-                <a href="" :title="item.company">
+                <a :href="'/Mobile/Delivery/detail/id/' + item.id" :title="item.company">
                     <div class="manufacture_item">
                         <div class="mf_item_h clear">
                             <!--<div class="fl">{$v.company}</div>-->
-                            <div class="fl" style="max-width: 60%">Guangzhou Vdoou Network Technology Co.Lmt.td</div>
+                            <div class="fl" style="max-width: 60%">{{item.company}}</div>
                             <div class="fr" v-if="item.is_default == 1">
                                     <span>默认地址</span>
                             </div>
                         </div>
                         <div class="mf_item_c">
                             <div class="mf_item_c_m clear">
-                                <div class="mf_info fl">
-                                    <p v-show="item.company">公司名称：{{item.company}}</p>
+                                <div class="mf_info fl" style="max-width: 80%">
+                                    <!--<p v-show="item.company">公司名称：{{item.company}}</p>-->
                                     <p>联系人：{{item.consignor}}</p>
                                         <p v-show="item.mobile">手机：{{item.mobile}}</p>
                                         <p v-show="item.phone">座机：{{item.phone}}</p>
-                                    <!--<p style="width: 75%">详细地址：{$v.detail_address}</p>-->
+                                    <p>详细地址：{{item.detail_address}}</p>
                                 </div>
                                 <div class="mf_v">
                                     <i class="icon">&#xe60f;</i>

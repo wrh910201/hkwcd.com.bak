@@ -61,6 +61,19 @@ class DeliveryAction extends Action {
     }
 
     public function detail() {
+        $id = I('get.id', 0, 'intval');
+        $client_id = session('hkwcd_user.user_id');
+        $where = ['da.id' => $id, 'da.status' => 1, 'client_id' => $client_id];
+        $delivery = M('DeliveryAddress')
+            ->alias("da")
+            ->field("da.*, c.name, c.ename")
+            ->join("left join hx_country as c on c.id = da.country_id")
+            ->where($where)
+            ->find();
+        if( empty($delivery) ) {
+            $this->error('地址不存在');
+        }
+        $this->assign("delivery", $delivery);
         $this->display();
 
     }

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>威顿印务ERP系统</title>
+    <title>华度货运，香港华度货运</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="application-name" content="威顿印务ERP系统">
+    <meta name="application-name" content="华度货运，香港华度货运">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="www.kwanson.com">
@@ -34,45 +34,61 @@
 </header>
 <section class="delivery_detail clear">
     <dl class="common_list">
-        <dt>发货单-详情</dt>
-        <dd class="clear">
-            <label class="fl">送货编号</label>
-            <span class="fr">WP334A1</span>
-        </dd>
+        <dt>发货地址</dt>
         <dd class="clear">
             <label class="fl">公司名称</label>
-            <span class="fr">广州睿新生物技术有限公司</span>
+            <span class="fr">{$delivery.company}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">产品品名</label>
-            <span class="fr">玫瑰补水睡眠面膜</span>
+            <label class="fl">联系人</label>
+            <span class="fr">{$delivery.consignor}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">产品货号</label>
-            <span class="fr">T120a</span>
+            <label class="fl">国家</label>
+            <span class="fr">{$delivery.name} / {$delivery.ename}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">产品规格</label>
-            <span class="fr">1000g</span>
+            <label class="fl">省</label>
+            <span class="fr">{$delivery.state}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">发货数量</label>
-            <span class="fr">10002</span>
+            <label class="fl">城市</label>
+            <span class="fr">{$delivery.city}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">收货单位</label>
-            <span class="fr">广州**有限公司<br/>李小姐 15555555555555</span>
+            <label class="fl">具体地址</label>
+            <span class="fr">{$delivery.detail_address}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">邮编</label>
+            <span class="fr">{$delivery.postal_code}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">手机</label>
+            <span class="fr">{$delivery.mobile}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">座机</label>
+            <span class="fr">{$delivery.phone}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">出口商代码</label>
+            <span class="fr">{$delivery.exporter_code}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">身份证号码</label>
+            <span class="fr">{$delivery.certificate_num}</span>
         </dd>
         <dd class="clear" style="text-align:left;">
             <div>身份证正面</div>
             <div class="id-card">
-                <img src="/Public/wcd56/images/con_img.jpg">
+                <img src="{$delivery.certificate1_url}">
             </div>
         </dd>
         <dd class="clear" style="text-align:left;">
             <div>身份证背面</div>
             <div class="id-card">
-                <img src="/Public/wcd56/images/con_img.jpg">
+                <img src="{$delivery.certificate2_url}">
             </div>
         </dd>
     </dl>
