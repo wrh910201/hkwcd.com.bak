@@ -294,7 +294,13 @@
         <if condition="$order.pay_status eq 1">
             <if condition="$order.express_status eq 1">
                 <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="装箱信息"/>
+                <if condition="$order.self_express eq 0">
+                <input type="button" class="btn btn_blue" id="self_express" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/selfExpress',array('id' => $order['id']), '')}';" value="自定义物流信息">
                 <input type="button" class="btn btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
+                </if>
+                <if condition="$order.self_express eq 1">
+                <input type="button" class="btn btn_blue" id="input_self_express" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/inputSelfExpress',array('id' => $order['id']), '')}';" value="物 流">
+                </if>
                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/transfer',array('id' => $order['id']), '')}" class="btn btn_blue" id="transfer">交接单</a>
                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $order['id']), '')}" class="btn btn_blue" id="packing" >装箱单</a>
                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $order['id']), '')}" class="btn btn_blue" id="invoice" >发票</a>

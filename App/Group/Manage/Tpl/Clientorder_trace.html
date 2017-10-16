@@ -20,7 +20,7 @@
     <div class="pos">{$type} | 订单号:{$order.order_num} </div>
     <div class="operate">
         <div class="left">
-            <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index')}')" class="btn_blue" value="返回列表" />
+            <input type="button" onclick="window.history.go(-1);" class="btn_blue" value="返回" />
         </div>
     </div>
     <div class="list">

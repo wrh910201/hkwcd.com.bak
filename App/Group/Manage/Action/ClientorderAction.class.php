@@ -2109,6 +2109,14 @@ class ClientorderAction extends CommonContentAction {
         exit;
     }
 
+    public function selfExpress() {
+        
+    }
+
+    public function inputSelfExpress() {
+
+    }
+
     private function _get_order_params() {
         $data = [];
         $data['delivery_id'] = I('post.delivery_id', 0, 'intval');

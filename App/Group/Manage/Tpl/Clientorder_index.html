@@ -73,7 +73,12 @@
                                 <a href="{:U(GROUP_NAME. '/Clientorder/delivery',array('id' => $v['id']), '')}">装箱发货</a>
                             </if>
                             <if condition="$v.express_status eq 1">
+                                <if condition="$v.self_express eq 0">
                                 <a href="{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $v['id']), '')}">跟踪</a>
+                                </if>
+                                <if condition="$v.self_express eq 1">
+                                <a href="{:U(GROUP_NAME. '/Clientorder/inputSelfExpress',array('id' => $v['id']), '')}">跟踪</a>
+                                </if>
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/transfer',array('id' => $v['id']), '')}">交接单</a>
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/express',array('id' => $v['id']), '')}">快递单</a>
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $v['id']), '')}">装箱单</a>
