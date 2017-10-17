@@ -41,7 +41,7 @@
     <div class="delivery_notice_header">
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
         <div class="delivery_notice_title" style="width: 500px;">
-            <if condition="$client">
+            <if condition="$is_client eq 1">
                 <if condition="$client.company">
                     <h3 style="line-height: normal">
                         <php>

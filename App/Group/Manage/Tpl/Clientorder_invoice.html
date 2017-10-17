@@ -41,7 +41,7 @@
     <div class="delivery_notice_header">
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
         <div class="delivery_notice_title" style="width: 500px;">
-            <if condition="$client">
+            <if condition="$is_client eq 1">
             <if condition="$client.company">
             <h3 style="line-height: normal">
                 <php>
@@ -285,8 +285,14 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company|default="&nbsp;"}</td>
-                <td class="w340">公司或单位地址/Address of Company / Firm<br />{$order.delivery_detail_address}</td>
+                <td class="w340">公司或单位名称/Name of Company / Firm<br />
+                    <if condition="$client.en_company">
+                        {$client.en_company}
+                    <else />
+                        {$client.company|default="&nbsp;"}
+                    </if>
+                </td>
+                <td class="w340">公司或单位地址/Address of Company / Firm<br />{$client.address|default="&nbsp;"}</td>
             </tr>
             </tbody>
         </table>

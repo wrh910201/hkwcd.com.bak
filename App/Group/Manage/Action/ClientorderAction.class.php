@@ -1016,8 +1016,12 @@ class ClientorderAction extends CommonContentAction {
                 $real_start = $real_end + 1;
             }
         }
+        $order["mode_of_transportation"] = str_replace("From ", "From: ", $order["mode_of_transportation"]);
+        $order["mode_of_transportation"] = str_replace("to ", "To: ", $order["mode_of_transportation"]);
+        $client = M("Client")->find($order["client_id"]);
 
-
+        $this->assign("client", $client);
+        $this->assign("is_client", 0);
         $this->assign('order', $order);
         $this->assign('order_detail', $order_detail);
         $this->assign('order_detail_remain', $order_detail_remain);
@@ -1107,8 +1111,10 @@ class ClientorderAction extends CommonContentAction {
         for( $i = 0; $i < 4 - count($order_specifications); $i++ ) {
             $order_detail_remain[] = [];
         }
-
+        $order["mode_of_transportation"] = str_replace("From ", "From: ", $order["mode_of_transportation"]);
+        $order["mode_of_transportation"] = str_replace("to ", "To: ", $order["mode_of_transportation"]);
 //        var_dump($order_specifications['detail']);exit;
+        $this->assign("is_client", 0);
 
         $this->assign('order', $order);
         $this->assign('order_specifications', $order_specifications);

@@ -2009,11 +2009,15 @@ class OrderAction extends BaseAction  {
             }
         }
 
+        $order["mode_of_transportation"] = str_replace("From ", "From: ", $order["mode_of_transportation"]);
+        $order["mode_of_transportation"] = str_replace("to ", "To: ", $order["mode_of_transportation"]);
+
 
         $this->assign('order', $order);
         $this->assign('order_detail', $order_detail);
         $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '商业发票';
+        $this->assign("is_client", 1);
 //        $this->display();
         $this->display("./App/Group/Manage/Tpl/Clientorder_invoice.html");
 
@@ -2106,8 +2110,11 @@ class OrderAction extends BaseAction  {
             $order_detail_remain[] = [];
         }
 
-//        var_dump($order_specifications['detail']);exit;
+        $order["mode_of_transportation"] = str_replace("From ", "From: ", $order["mode_of_transportation"]);
+        $order["mode_of_transportation"] = str_replace("to ", "To: ", $order["mode_of_transportation"]);
 
+//        var_dump($order_specifications['detail']);exit;
+        $this->assign("is_client", 1);
         $this->assign('order', $order);
         $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail_remain', $order_detail_remain);
