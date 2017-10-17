@@ -585,7 +585,7 @@
     <fieldset>
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">下家：</label>
+                <label class="l_title">*下家：</label>
                 <select class="w300" name="express_type_id">
                     <option value="0">未选择下家</option>
                     <foreach name="express_type" item="v">
@@ -597,28 +597,28 @@
         </div>
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">转运单号：</label>
+                <label class="l_title">*转运单号：</label>
                 <input class="text_input w300" type="text" value="{$order.express_order_num}" name="express_order_num" id="" placeholder="请输入转运单号">
             </div>
             <div class="clear"></div>
         </div>
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">报关员：</label>
+                <label class="l_title">*报关员：</label>
                 <input class="text_input w300" type="text" value="{$order.customs_broker}" name="customs_broker" id="" placeholder="请输入报关员">
             </div>
             <div class="clear"></div>
         </div>
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">出口端：</label>
+                <label class="l_title">*出口端：</label>
                 <input class="text_input w300" type="text" value="{$order.exit_end}" name="exit_end" id="" placeholder="请输入出口端">
             </div>
             <div class="clear"></div>
         </div>
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">发票号：</label>
+                <label class="l_title">*发票号：</label>
                 <input class="text_input w300" type="text" value="{$order.invoice_num}" name="invoice_num" id="" placeholder="请输入发票号">
             </div>
             <div class="clear"></div>
@@ -626,7 +626,7 @@
         <if condition="$order.express_service eq 'air'">
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">空运提单号：</label>
+                <label class="l_title">*空运提单号：</label>
                 <input class="text_input w300" type="text" value="{$order.awb}" name="awb" id="awb" placeholder="请输入空运提单号">
             </div>
             <div class="clear"></div>
@@ -635,7 +635,7 @@
         <if condition="$order.express_service eq 'sea shipping'">
         <div class="box_c_item">
             <div class="fl">
-                <label class="l_title">海运提单号：</label>
+                <label class="l_title">*海运提单号：</label>
                 <input class="text_input w300" type="text" value="{$order.obl}" name="obl" id="obl" placeholder="请输入海运提单号">
             </div>
             <div class="clear"></div>
