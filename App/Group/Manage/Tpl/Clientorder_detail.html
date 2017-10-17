@@ -292,23 +292,24 @@
             <input type="button" class="btn btn_blue" id="receive_money" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/pay',array('id' => $order['id']), '')}', '确定该订单已收款吗？')" value="已收款">
         </if>
         <if condition="$order.pay_status eq 1">
-            <if condition="$order.express_status eq 1">
-                <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="装箱信息"/>
-                <if condition="$order.self_express eq 0">
-                <input type="button" class="btn btn_blue" id="self_express" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/selfExpress',array('id' => $order['id']), '')}';" value="自定义物流信息">
-                <input type="button" class="btn btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
-                </if>
-                <if condition="$order.self_express eq 1">
-                <input type="button" class="btn btn_blue" id="input_self_express" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/inputSelfExpress',array('id' => $order['id']), '')}';" value="物 流">
-                </if>
-                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/transfer',array('id' => $order['id']), '')}" class="btn btn_blue" id="transfer">交接单</a>
-                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $order['id']), '')}" class="btn btn_blue" id="packing" >装箱单</a>
-                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $order['id']), '')}" class="btn btn_blue" id="invoice" >发票</a>
-                <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/express',array('id' => $order['id']), '')}" class="btn btn_blue" id="express" >快递单</a>
-            <else />
-            <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="发 货"/>
-            </if>
-
+            <switch name="order.express_status" >
+                <case value="1">
+                    <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="装箱信息"/>
+                    <php>if($order.self_express == 1){</php>
+                        <input type="button" class="btn btn_blue" id="self_express" onclick="show_set_self_express();" value="自定义物流信息">
+                        <input type="button" class="btn btn_blue" id="trace" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
+                    <php>}else{</php>
+                        <input type="button" class="btn btn_blue" id="input_self_express" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/inputSelfExpress',array('id' => $order['id']), '')}';" value="物 流">
+                    <php>}</php>
+                    <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/transfer',array('id' => $order['id']), '')}" class="btn btn_blue" id="transfer">交接单</a>
+                    <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $order['id']), '')}" class="btn btn_blue" id="packing" >装箱单</a>
+                    <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $order['id']), '')}" class="btn btn_blue" id="invoice" >发票</a>
+                    <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/express',array('id' => $order['id']), '')}" class="btn btn_blue" id="express" >快递单</a>
+                </case>
+                <case value="0">
+                    <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="发 货"/>
+                </case>
+            </switch>
         </if>
     </div>
     </if>
@@ -733,6 +734,8 @@
 </body>
 <script type="text/javascript">
     var tips = null;
+    var order_id = {$order.id};
+    var loading = null;
 
     function open_delivery_form() {
         tips = layer.open({
@@ -805,6 +808,34 @@
         });
     }
 
+    function show_set_self_express() {
+        tips = layer.confirm(
+            "是否开启自定义物流信息？",{
+            btn: ["确认", "取消"]
+        },function() {
+            show_loading();
+            set_self_express();
+        },function(){
+            layer.close(tips);
+        });
+    }
+
+    function set_self_express() {
+        var url = "/Manage/Clientorder/selfExpress";
+        var data = {order_id:order_id};
+        $.post(url, data, function(response) {
+            hide_loading();
+            if( response.code == 0 ) {
+                layer.msg(response.msg);
+            } else if( response.code == 1 ) {
+                window.location.reload();
+            } else if( response.code == -1 ) {
+                layer.msg(response.msg);
+            }
+        }, 'json');
+    }
+
+
     function show_input_fee_disabled_form() {
         tips = layer.open({
             type: 1,
@@ -865,5 +896,13 @@
         total_fee.toFixed(1);
         $("#total_fee").val(total_fee);
     });
+
+    function show_loading() {
+        loading = layer.load(0, { shade: 0.4 });
+    }
+
+    function hide_loading() {
+        layer.close(loading);
+    }
 </script>
 </html>

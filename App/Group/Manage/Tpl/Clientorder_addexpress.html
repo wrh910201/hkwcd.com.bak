@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel='stylesheet' type="text/css" href="__PUBLIC__/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/admin.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery-ui.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.form.min.js"></script>
+    <script type="text/javascript" src="/Public/config/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Public/config/js/messages_cn.js"></script>
+    <link type="text/css" rel="stylesheet" href="/Public/config/css/msg.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.autocomplete.js"></script>
+    <link type="text/css" rel="Stylesheet" href="__PUBLIC__/css/jquery.autocomplete.css" />
+    <script type="text/javascript" language="javascript" src="__PUBLIC__/js/localdata.js" charset="utf-8"></script>
+    <script type="text/javascript" language="javascript" src="__PUBLIC__/js/autocompleteSoFn.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.ui.datepicker-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-ui-timepicker-zh-CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //表单验证JS
+            $("#form_do").validate({
+                //出错时添加的标签
+                errorElement: "span",
+                success: function (label) {
+                    //正确时的样式
+                    label.text(" ").addClass("success");
+                }
+            });
+        });
+        var data_path = "__DATA__";
+        var tpl_public = "__PUBLIC__";
+    </script>
+    <style type="text/css">
+        .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+        .ui-timepicker-div dl { text-align: left; }
+        .ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
+        .ui-timepicker-div dl dd { margin: 0 10px 10px 45%; }
+        .ui-timepicker-div td { font-size: 90%; }
+        .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+        .ui-timepicker-rtl{ direction: rtl; }
+        .ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
+        .ui-timepicker-rtl dl dt{ float: right; clear: right; }
+        .ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="pos">添加运单详细资料</div>
+    <div class="operate">
+        <div class="left">
+            <input type="button" onclick="window.history.go(-1)" class="btn_blue" value="返回" />
+        </div>
+    </div>
+    <div class="list form">
+        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Clientorder/addExpress')}">
+
+            <dl>
+                <dt> 派件日期：</dt>
+                <dd>
+                    <input type="text" class="inp_w250 required" name="sj" id="publishtime" value="{:date('Y-m-d H:i',time())}"  style="cursor:pointer;"/>
+                </dd>
+            </dl>
+
+            <dl>
+                <dt> 目的国家\地区：</dt>
+                <dd>
+                    <input type="text" name="gj" id="gj" class="inp_w250" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 城市：</dt>
+                <dd>
+                    <input type="text" name="chs"  id="chs"  class="inp_w250" />
+                </dd>
+            </dl>
+            <dl>
+                <dt> 派件状态：</dt>
+                <dd>
+                    <select name="hwz" >
+                        <foreach name='progress' item='v'>
+                            <option value="{$v}">{$v}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt> 备注：</dt>
+                <dd>
+                    <select name="info" >
+                        <foreach name='remark' item='v'>
+                            <option value="{$v}">{$v}</option>
+                        </foreach>
+                    </select>
+                </dd>
+            </dl>
+
+
+            <div class="form_b">
+                <input type="hidden" name="fkid" value="{$fkid}" />
+                <input type="submit" class="btn_blue" id="submit" value="提 交">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#publishtime").datetimepicker();
+</script>
+</body>
+</html>

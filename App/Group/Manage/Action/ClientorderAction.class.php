@@ -2110,11 +2110,205 @@ class ClientorderAction extends CommonContentAction {
     }
 
     public function selfExpress() {
-        
+        if( !IS_POST ) {
+            exit;
+        }
+        $order_id = I("order_id", 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $order_id,  'status' => 1])->find();
+        if( empty($order) ) {
+            $this->response['msg'] = '订单不存在';
+            echo json_encode($this->response);
+            exit;
+        }
+        if( $order['express_status'] != 1 ) {
+            $this->response['msg'] = '未发货';
+            echo json_encode($this->response);
+            exit;
+        }
+        $map = ["id" => $order_id];
+        $data = ["self_express" => 1];
+        $result = M("ClientOrder")->where($map)->save($data);
+        if( is_numeric($result) ) {
+            $this->response['code'] = 1;
+            $this->response['msg'] = "设置成功";
+
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_user_id'),
+                'type' => 2,
+                'content' => '将订单设置为自定义物流信息',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+        } else {
+            $this->response['msg'] = "设置失败";
+        }
+        echo json_encode($this->response);
+        exit;
     }
 
     public function inputSelfExpress() {
 
+        $order_id = I("id", 0, "intval");
+        $order = M('ClientOrder')->where(['id' => $order_id,  'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error("订单不存在");
+        }
+
+        $order["package_type_name"] = $order['package_type'] == 1 ? "文件" : "包裹";
+        $order['status_str'] = _order_status($order);
+        $express_detail = M("ClientOrderSelfExpress")->where(['order_id' => $order_id])->select();
+
+        $this->assign("express_detail", $express_detail);
+        $this->assign("order", $order);
+        $this->display("inputselfexpress");
+    }
+
+    public function addExpress() {
+        if( IS_GET ) {
+
+            $order_id = I("order_id", 0, "intval");
+
+            $this->type = '添加运单详细资料';
+            $this->progress = getArrayOfItem('progress');
+            $this->remark = getArrayOfItem('remark');
+            $this->fkid = $order_id;
+            $this->display("addexpress");
+        } else {
+            $order_id = I("fkid");
+            $time = I("sj");
+            $country = I("gj");
+            $city = I("chs");
+            $status = I("hwz");
+            $remark = I("info");
+
+            $order = M('ClientOrder')->where(['id' => $order_id,  'status' => 1])->find();
+            if( empty($order) ) {
+                $this->error("订单不存在");
+            }
+
+            if( empty($time) ) {
+                $this->error("请选择时间");
+            }
+
+            if( empty($country) ) {
+                $this->error("请选择国家");
+            }
+
+            if( empty($status) ) {
+                $this->error("请选择派件状态");
+            }
+
+            $data = [
+                "time" => $time,
+                "order_id" => $order_id,
+                "country" => $country,
+                "city" => $city,
+                "remark" => $remark,
+                "status" => $status,
+                "content" => "[{$country}-{$city}] {$status}" . ($remark ? "[{$remark}]" : ""),
+            ];
+            $result = M("ClientOrderSelfExpress")->add($data);
+            if( $result ) {
+                //插入操作日志
+                $log_data = [
+                    'order_num' => $order['order_num'],
+                    'order_id' => $order['id'],
+                    'operator_id' => session('yang_adm_user_id'),
+                    'type' => 2,
+                    'content' => '添加运单进展',
+                ];
+                M('ClientOrderLog')->add($log_data);
+                $this->success("添加运单进展成功", U("/Manage/Clientorder/inputSelfExpress", ["id" => $order_id]));
+            } else {
+                $this->error("添加运单进展失败");
+            }
+        }
+    }
+
+    public function editExpress() {
+        if( IS_GET ) {
+            $id = I("id");
+            $vo = M("ClientOrderSelfExpress")->find($id);
+            $this->assign("vo", $vo);
+            $this->type = '编辑运单详细资料';
+            $this->progress = getArrayOfItem('progress');
+            $this->remark = getArrayOfItem('remark');
+            $this->display("editexpress");
+        } else {
+            $id = I("id");
+            $order_id = I("fkid");
+            $time = I("sj");
+            $country = I("gj");
+            $city = I("chs");
+            $status = I("hwz");
+            $remark = I("info");
+
+            $order = M('ClientOrder')->where(['id' => $order_id,  'status' => 1])->find();
+            if( empty($order) ) {
+                $this->error("订单不存在");
+            }
+
+            if( empty($time) ) {
+                $this->error("请选择时间");
+            }
+
+            if( empty($country) ) {
+                $this->error("请选择国家");
+            }
+
+            if( empty($status) ) {
+                $this->error("请选择派件状态");
+            }
+
+            $data = [
+                "time" => $time,
+                "order_id" => $order_id,
+                "country" => $country,
+                "city" => $city,
+                "remark" => $remark,
+                "status" => $status,
+                "content" => "[{$country}-{$city}] {$status}" . ($remark ? "[{$remark}]" : ""),
+            ];
+            $map = ["id" => $id];
+            $result = M("ClientOrderSelfExpress")->where($map)->save($data);
+            if( is_numeric($result) ) {
+                //插入操作日志
+                $log_data = [
+                    'order_num' => $order['order_num'],
+                    'order_id' => $order['id'],
+                    'operator_id' => session('yang_adm_user_id'),
+                    'type' => 2,
+                    'content' => '编辑运单进展',
+                ];
+                M('ClientOrderLog')->add($log_data);
+                $this->success("编辑运单进展成功", U("/Manage/Clientorder/inputSelfExpress", ["id" => $order_id]));
+            } else {
+                $this->error("编辑运单进展失败");
+            }
+        }
+    }
+
+    public function delExpress() {
+        $id = I('id',0 , 'intval');
+        $vo = M("ClientOrderSelfExpress")->find($id);
+        $order = M('ClientOrder')->where(['id' => $vo['order_id'],  'status' => 1])->find();
+        if (M('ClientOrderSelfExpress')->delete($id)) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_user_id'),
+                'type' => 2,
+                'content' => '删除运单进展',
+            ];
+            M('ClientOrderLog')->add($log_data);
+            $this->success("彻底删除成功", U("/Manage/Clientorder/inputSelfExpress", ["id" => $vo['order_id']]));
+        }else {
+            $this->error('彻底删除失败');
+        }
     }
 
     private function _get_order_params() {

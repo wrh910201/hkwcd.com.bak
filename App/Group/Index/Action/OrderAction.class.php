@@ -1672,26 +1672,43 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
-//        $express_type = M('ExpressType')->where(['id' => $order['express_type_id']])->find();
-//        if( empty($express_type) ) {
-//            $this->response['msg'] = '运单异常';
-//            echo json_encode($this->response);
-//            exit;
-//        }
-        $trace_result = S('hkwcd_trace_result_'.$order['order_num']);
-        if( !$trace_result ) {
-            $trace_result = query_express($order['express_type'], $order['express_order_num']);
-            S('hkwcd_trace_result_'.$order['order_number'], $trace_result, 7200);
-        }
 
-        $trace_result_array = json_decode($trace_result, true);
-        if( $trace_result_array['message'] == 'ok' ) {
-            $this->response['code'] = 1;
-            $this->response['data'] = $trace_result_array;
-            $this->response['msg'] = '查询成功';
+        if( $order['self_express'] == 0 ) {
+
+            $trace_result = S('hkwcd_trace_result_' . $order['order_num']);
+            if (!$trace_result) {
+                $trace_result = query_express($order['express_type'], $order['express_order_num']);
+                S('hkwcd_trace_result_' . $order['order_number'], $trace_result, 7200);
+            }
+
+            $trace_result_array = json_decode($trace_result, true);
+            if ($trace_result_array['message'] == 'ok') {
+                $this->response['code'] = 1;
+                $this->response['data'] = $trace_result_array;
+                $this->response['msg'] = '查询成功';
+            } else {
+                $this->response['msg'] = '抱歉，暂无查询记录';
+                $this->response['data'] = [];
+            }
         } else {
-            $this->response['msg'] = '抱歉，暂无查询记录';
-            $this->response['data'] = [];
+            $trace_result = M("ClientOrderSelfExpress")->where(['order_id' => $id])->order("id desc")->select();
+            if( $trace_result ) {
+                $result["message"] = "ok";
+                $temp = [];
+                foreach( $trace_result as $v ) {
+                    $temp[] = [
+                        "time" => $v["time"],
+                        "context" => $v["content"],
+                    ];
+                }
+                $result["data"] = $temp;
+                $this->response['code'] = 1;
+                $this->response['data'] = $result;
+                $this->response['msg'] = '查询成功';
+            } else {
+                $this->response['msg'] = '抱歉，暂无查询记录';
+                $this->response['data'] = [];
+            }
         }
         echo json_encode($this->response);
         exit;
