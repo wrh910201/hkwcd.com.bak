@@ -117,16 +117,16 @@
         <table>
             <tbody>
             <tr>
-                <td colspan="2" style="width: 50%;">公司名称 / Company name<br />{$order.receive_company}</td>
-                <td colspan="2" style="width: 50%;">公司名称 / Company name<br />{$order.spare_receive_company}</td>
+                <td colspan="2" style="width: 50%;">公司名称 / Company name<br />{$order.receive_company|default="&nbsp;"}</td>
+                <td colspan="2" style="width: 50%;">公司名称 / Company name<br />{$order.spare_receive_company|default="&nbsp;"}</td>
             </tr>
             <tr>
-                <td colspan="2" class="w226">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
-                <td colspan="2" class="w227">地址 / add:<br />{$order.spare_receive_detail_address}</td>
+                <td colspan="2" class="w226">地址 / add:(PO BOX address cannot be delivered)<br />{$order.rececive_detail_address}</td>
+                <td colspan="2" class="w227">地址 / add:<br />{$order.spare_receive_detail_address|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td colspan="2" class="w226">省、市 / province、city<br />{$order.receive_state}&nbsp;{$order.receive_city}</td>
-                <td colspan="2" class="w227">省、市 / province、city<br />{$order.spare_receive_state}&nbsp;{$order.spare_receive_city}</td>
+                <td colspan="2" class="w227">省、市 / province、city<br />{$order.spare_receive_state|default=""}&nbsp;{$order.spare_receive_city}</td>
             </tr>
             <tr>
                 <td colspan="2" class="w226">国家 / Country<br />{$order.receive_country_name}/{$order.receive_country_en_name}</td>
@@ -134,15 +134,15 @@
             </tr>
             <tr>
                 <td colspan="2" class="w226">邮政编码 / Post code<br />{$order.receive_postal_code}</td>
-                <td colspan="2" class="w227">邮政编码 / Post code<br />{$order.spare_receive_postal_code}</td>
+                <td colspan="2" class="w227">邮政编码 / Post code<br />{$order.spare_receive_postal_code|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td colspan="2" class="w226">联系人电话 / Telephone<br />{$order.receive_phone} {$order.receive_mobile}</td>
-                <td colspan="2" class="w454">联系人电话 / Telephone<br />{$order.spare_receive_phone} {$order.spare_receive_mobile}</td>
+                <td colspan="2" class="w454">联系人电话 / Telephone<br />{$order.spare_receive_phone|default=""} {$order.spare_receive_mobile|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td colspan="2" class="w226">联系人 / Contact name<br />{$order.receive_addressee}</td>
-                <td colspan="2" class="w454">联系人 / Contact name<br />{$order.spare_receive_addressee}</td>
+                <td colspan="2" class="w454">联系人 / Contact name<br />{$order.spare_receive_addressee|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td><if condition="$order.express_service eq 'express service'">快件单号/Shipment No.<br />{$order.order_num}</if><if condition="$order.express_service eq 'air'">空运提单号/AWB<br />{$order.awb}</if><if condition="$order.express_service eq 'sea shipping'">海运提单号/OBL<br />{$order.obl}</if></td>
