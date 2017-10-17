@@ -2014,7 +2014,9 @@ class OrderAction extends BaseAction  {
         $this->assign('order_detail', $order_detail);
         $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '商业发票';
-        $this->display();
+//        $this->display();
+        $this->display("./App/Group/Manage/Tpl/Clientorder_invoice.html");
+
     }
 
     public function packing() {
@@ -2110,7 +2112,7 @@ class OrderAction extends BaseAction  {
         $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '装箱单';
-        $this->display();
+        $this->display("./App/Group/Manage/Tpl/Clientorder_packing.html");
     }
 
     public function getDeliveryList() {

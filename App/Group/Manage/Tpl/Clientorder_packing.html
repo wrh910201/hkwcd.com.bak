@@ -41,8 +41,21 @@
     <div class="delivery_notice_header">
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
         <div class="delivery_notice_title" style="width: 500px;">
-            <h3 style="line-height: normal">香&nbsp;港&nbsp;华&nbsp;度&nbsp;货&nbsp;运&nbsp;有&nbsp;限&nbsp;公&nbsp;司</h3>
-            <p>HONG KONG WCD EXPRESS COMPANY LIMITED</p>
+            <if condition="$client">
+                <if condition="$client.company">
+                    <h3 style="line-height: normal">
+                        <php>
+                            for($i =0 ; $i < mb_strlen($client['company']) ; $i++) {echo mb_substr($client['company'], $i, 1)."&nbsp;";}
+                        </php>
+                    </h3>
+                </if>
+                <if condition="$client.en_company">
+                    <p>{$client.en_company}</p>
+                </if>
+                <else />
+                <h3 style="line-height: normal">香&nbsp;港&nbsp;华&nbsp;度&nbsp;货&nbsp;运&nbsp;有&nbsp;限&nbsp;公&nbsp;司</h3>
+                <p>HONG KONG WCD EXPRESS COMPANY LIMITED</p>
+            </if>
             <p style="font-size:15px">装箱单 / PACKING LIST</p>
         </div>
         <div class="delivery_notice_no">
@@ -78,11 +91,11 @@
             </tr>
             <tr>
                 <td class="w340">国家 / Country<br />{$order.country_name}/{$order.country_ename}</td>
-                <td class="w340" colspan="2">出口商代码 / Exporter code<br />{$order.exporter_code}</td>
+                <td class="w340" colspan="2">出口商代码 / Exporter code<br />{$order.exporter_code|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td class="w340">邮政编码 / Post code<br />{$order.receive_postal_code}</td>
-                <td class="w340"  colspan="2">进口商代码 / Receiver's VAT<br />{$order.receiver_code}</td>
+                <td class="w340"  colspan="2">进口商代码 / Receiver's VAT<br />{$order.receiver_code|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td class="w340">联系人电话 / Telephone<br />{$order.receive_phone} {$order.receive_mobile}</td>
@@ -120,7 +133,7 @@
                 <td class="">箱数/ Box number (CTNS)</td>
             </tr>
             <foreach name="order_specifications" item="v">
-            <tr>
+            <tr style="border:1px solid #000">
             <foreach name="v.detail" item="d" key="j">
                 <if condition="$j eq 0">
                 <td style="border-top: none; border-bottom: none">{$d.en_product_name}&nbsp;{$d.product_name}</td>
@@ -130,12 +143,12 @@
                 </if>
             </foreach>
                 <td rowspan="{$v.rowspan}">{$v.real_weight}KG</td>
-                <td rowspan="{$v.rowspan}">{$v.real_rate}KG</td>
+                <td rowspan="{$v.rowspan}">{$v["real_rate"] / 20}</td>
                 <td rowspan="{$v.rowspan}">{$v.real_count}</td>
             </tr>
             <foreach name="v.detail" item="d" key="j">
                 <if condition="$j gt 0">
-                <tr>
+                <tr style="border:1px solid #000">
                     <td style="border-top: none; border-bottom: none">{$d.en_product_name}&nbsp;{$d.product_name}</td>
                     <td style="border-top: none; border-bottom: none">{$d.number}</td>
                     <td style="border-top: none; border-bottom: none">{$d.goods_code}</td>

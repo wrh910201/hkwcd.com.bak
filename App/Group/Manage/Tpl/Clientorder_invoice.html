@@ -41,8 +41,21 @@
     <div class="delivery_notice_header">
         <!--<img width="60px" height="80px" src="/Public/wcd56/usercenter/images/purchase_logo.jpg" />-->
         <div class="delivery_notice_title" style="width: 500px;">
+            <if condition="$client">
+            <if condition="$client.company">
+            <h3 style="line-height: normal">
+                <php>
+                    for($i =0 ; $i < mb_strlen($client['company']) ; $i++) {echo mb_substr($client['company'], $i, 1)."&nbsp;";}
+                </php>
+            </h3>
+            </if>
+            <if condition="$client.en_company">
+            <p>{$client.en_company}</p>
+            </if>
+            <else />
             <h3 style="line-height: normal">香&nbsp;港&nbsp;华&nbsp;度&nbsp;货&nbsp;运&nbsp;有&nbsp;限&nbsp;公&nbsp;司</h3>
             <p>HONG KONG WCD EXPRESS COMPANY LIMITED</p>
+            </if>
             <p style="font-size:15px">商业发票 / COMMERCIAL INVOICE</p>
         </div>
         <div class="delivery_notice_no">
@@ -79,14 +92,14 @@
                 <td class="w227">发票号 / Invoice number<br />{$order.invoice_num}</td>
             </tr>
             <tr>
-                <td class="w226">地址 / add:(PO BOX address cannot be delivered)<br />{$order.delivery_detail_address}</td>
+                <td class="w226">地址 / add:(PO BOX address cannot be delivered)<br />{$order.receive_detail_address}</td>
                 <td class="w227">渠道类型 / Services type<br />{$order.channel_name}</td>
                 <td class="w227">装运参考 / Shipment Reference<br />{$order.shipment_reference}</td>
             </tr>
             <tr>
                 <td class="w226">省、市 / province、city<br />{$order.receive_state}&nbsp;{$order.receive_city}</td>
-                <td class="w227">出口商代码 / Exporter code<br />{$order.exporter_code}</td>
-                <td class="w227">进口商代码 / Receiver's VAT<br />{$order.receiver_code}</td>
+                <td class="w227">出口商代码 / Exporter code<br />{$order.exporter_code|default="&nbsp;"}</td>
+                <td class="w227">进口商代码 / Receiver's VAT<br />{$order.receiver_code|default="&nbsp;"}</td>
             </tr>
             <tr>
                 <td class="w226">国家 / Country<br />{$order.country_name}/{$order.country_ename}</td>
@@ -272,7 +285,7 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company}</td>
+                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company|default="&nbsp;"}</td>
                 <td class="w340">公司或单位地址/Address of Company / Firm<br />{$order.delivery_detail_address}</td>
             </tr>
             </tbody>
