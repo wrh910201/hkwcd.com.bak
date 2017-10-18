@@ -70,7 +70,7 @@
                                 <a href="{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $v['id']), '')}">驳回</a>
                             </if>
                             <if condition="$v.exam_status eq 1 && $v.express_status eq 0">
-                                <a href="{:U(GROUP_NAME. '/Clientorder/delivery',array('id' => $v['id']), '')}">装箱发货</a>
+                                <!--<a href="{:U(GROUP_NAME. '/Clientorder/delivery',array('id' => $v['id']), '')}">装箱发货</a>-->
                             </if>
                             <if condition="$v.express_status eq 1">
                                 <if condition="$v.self_express eq 0">

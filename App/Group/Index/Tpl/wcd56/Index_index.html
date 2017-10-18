@@ -24,10 +24,10 @@
 
     <div class="main_a">
     <div class="m_1100">
-	  <div class="ser_kk"><li style="margin-top:14px;"><font style="font-size:40px;">随时都能追踪</font><br>您最多可以输入1个追踪查询号码</li>
+	  <div class="ser_kk"><li style="margin-top:14px;"><font style="font-size:40px;">随时都能追踪</font><br>您最多可以输入5个追踪查询号码,用;分隔开</li>
         <li><input type="text" id="dda" placeholder="输入运单号查询" style="border:1px solid #ccc; border-radius:3px; width:380px; height:70px; font-size:36px; color:#666; font-family:Arial, Helvetica, sans-serif; padding-left:20px;"></li>
         <li style="width:150px; height:70px; border:1px solid #ccc; border-radius:3px; background:url(__PUBLIC__/images/butn_re.jpg); font-size:30px; font-family:'微软雅黑'; line-height:70px; text-align:center;text-shadow: 1px 1px 1px #fff;">
-        <a href="javascript:void(0)" onclick="tipsWinComm()">立即查询</a></li>
+        <a href="javascript:void(0)" onclick="tipsWinQuery()">立即查询</a></li>
         <li style="width:150px; height:70px; border:1px solid #ccc; border-radius:3px; background:url(__PUBLIC__/images/butn_re.jpg); font-size:30px; font-family:'微软雅黑'; line-height:70px; text-align:center;text-shadow: 1px 1px 1px #fff;">
         <a href="/tijizhongliangliangfa">体积算法</a></li>
 	</div>
@@ -238,6 +238,16 @@
         var dda = $("#dda").val();
         if (dda != "") {
             url = "/Express/zh/dda/" + dda;
+            tipsWindown("运单跟踪进度列表", "iframe:" + url, "840", "350", "true", "", "false", "leotheme");
+        } else {
+            alert("请您输入查询运单号！");
+        }
+    }
+
+    function tipsWinQuery() {
+        var dda = $("#dda").val();
+        if (dda != "") {
+            var url = "/Express/query/?order_id=" + dda;
             tipsWindown("运单跟踪进度列表", "iframe:" + url, "840", "350", "true", "", "false", "leotheme");
         } else {
             alert("请您输入查询运单号！");
