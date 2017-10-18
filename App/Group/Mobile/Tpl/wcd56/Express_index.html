@@ -48,10 +48,10 @@
                 font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
                 邮编号
             </td>
-           <td width="15%" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;
-                font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">
-                取件日期
-            </td>
+           <!--<td width="15%" style="background: #64AADB; border: 1px solid #75C2EF; color: #FFFFFF;-->
+                <!--font-size: 14px; font-weight: bold; height: 28px; line-height: 28px; text-indent: 15px;">-->
+                <!--取件日期-->
+            <!--</td>-->
         </tr>
         <tr>
             <td  style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
@@ -75,10 +75,10 @@
                 padding: 3px 5px;">
                   {$data.ckh} 
             </td>
-             <td   style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;
-                padding: 3px 5px;">
-                  {$data.qjrq} 
-            </td>
+             <!--<td  style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;-->
+                <!--padding: 3px 5px;">-->
+                  <!---->
+            <!--</td>-->
         </tr>
     </tbody>
  </table> 
@@ -101,10 +101,10 @@
        <foreach name='vlist' item='v'> 
         <tr>
             <td style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;padding: 3px 5px;">
-                {$v.sj}
+                {$v.time}
             </td>
             <td  style="border: 1px solid #DDDDDD; font-size: 12px; line-height: 22px;padding: 3px 5px;">
-                [{$v.chs} - {$v.gj}] {$v.hwz} 
+                {$v.context}
             </td>
         </tr> 
         </foreach>
