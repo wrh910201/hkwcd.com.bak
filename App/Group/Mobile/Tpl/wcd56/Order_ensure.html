@@ -75,17 +75,17 @@
             </div>
             <div>
                 <label class="fl">签名</label>
-                <input class="fr" type="text"
+                <input class="fr" type="text" id="autograph"
                        style="border: 1px solid #efefef;padding:.15rem;color:#000;text-align:right;width: 70%">
             </div>
         </dd>
     </dl>
 </section>
-<div class="trace-btn" >确认发货</div>
+<div class="trace-btn" onclick="ensure_delivery()">确认发货</div>
 <div style="height: 4rem;"></div>
 <script type="text/javascript" src="/Public/wcd56/usercenter/js/base.js"></script>
 <script src="/Public/wcd56/usercenter/js/jquery.js"></script>
-<script src="/Public/wcd56/usercenter/layer/mobile/layer.js"></script>
+<script src="/Public/wcd56/usercenter/layer/layer.js"></script>
 <script>
     function show_agreement() {
         tips = layer.open({
@@ -96,6 +96,44 @@
             shadeClose: true,
             content: '/pdf.pdf'
         });
+    }
+    function ensure_delivery() {
+        layer.confirm('确定发货？', {
+            btn: ['确定', '取消'],
+            btn1: function () {
+
+                var agree = $('#agree').is(':checked');
+                if( !agree ) {
+                    layer.msg("请同意华度运输协议");
+                    return;
+                }
+                var url = '/Order/doEnsure';
+                var param = {
+                        'id': {$order.id},
+                        'autograph': $('#autograph').val()
+            };
+                show_loading();
+                $.post(url, param, ensure_delivery_handler, 'json');
+            },
+            btn2: function () {
+                return false;
+            }
+        });
+    }
+
+    function ensure_delivery_handler(response) {
+        hide_loading();
+        if( response.code == 0 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = '/';
+            } );
+        } else if( response.code == 1 ) {
+            layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
+                window.location.href = response.url;
+            } );
+        } else if( response.code == -1 ) {
+            layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });
+        }
     }
 </script>
 </body>
