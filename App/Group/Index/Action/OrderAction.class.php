@@ -2122,6 +2122,64 @@ class OrderAction extends BaseAction  {
         $this->display("./App/Group/Manage/Tpl/Clientorder_packing.html");
     }
 
+    public function transfer() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+        $this->assign('client', $client);
+
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1) ) {
+            $this->error('当前订单不能打印交接清单');
+        }
+
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $order['id']])->find();
+
+        $today_time = strtotime(date('Y-m-d', strtotime($order['add_time'])));
+        $tomorrow_time = $today_time + 3600 * 24;
+        $start_time = date('Y-m-d H:i:s', $today_time);
+        $end_time = date('Y-m-d H:i:s', $tomorrow_time);
+        $map = [
+            'add_time' => ['between', [$start_time, $end_time]],
+            'express_status' => 1,
+        ];
+
+        $client = M('Client')->where(['id' => $order['client_id']])->find();
+
+        $order_package_total_count = 0;
+        $order_document_total_count = 0;
+        $order_total_count = 0;
+        $order_list = M('ClientOrder')->where($map)->select();
+        if( $order_list ) {
+            foreach( $order_list as $k => $v ) {
+                if( $v['package_type'] == 1 ) {
+                    $order_document_total_count++;
+                }
+                if( $v['package_type'] == 2 ) {
+                    $order_package_total_count++;
+                }
+                $order_total_count += $v['total_count'];
+            }
+        }
+
+        $order_count = count($order_list);
+        $detail_end = $order_count > 3 ? $order_count : 3;
+
+        $this->assign('order_fee', $order_fee);
+        $this->assign('client', $client);
+        $this->assign('order_list', $order_list);
+        $this->assign('order_count', $order_count);
+        $this->assign('detail_start', $order_count);
+        $this->assign('detail_end', $detail_end);
+        $this->assign('order_total_count', $order_total_count);
+        $this->assign('order_package_total_count', $order_package_total_count);
+        $this->assign('order_document_total_count', $order_document_total_count);
+        $this->display("./App/Group/Manage/Tpl/Clientorder_transfer.html");
+    }
+
     public function getDeliveryList() {
         $client_id = $client_id = session('hkwcd_user.user_id');
         $where = [

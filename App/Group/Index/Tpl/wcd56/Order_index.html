@@ -54,6 +54,7 @@
                                     </if>
                                     <if condition="$v.express_status eq 1">
                                         | <a href="javascript:void(0);" onclick="trace_order({$v.id})">跟踪</a>
+                                        | <a target="_blank" href="{:U('Order/transfer', ['id' => $v['id']])}">交接清单</a>
                                         | <a target="_blank" href="{:U('Order/packing', ['id' => $v['id']])}">装箱单</a>
                                         | <a target="_blank" href="{:U('Order/invoice', ['id' => $v['id']])}">商业发票</a>
                                         <if condition="$v.receive_status eq 0">
