@@ -15,6 +15,9 @@
     <meta name="format-detection" content="telephone=no, address=no">
     <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
     <style>
+        body{
+            margin:0;
+        }
         .id-card{
             width: 100%;
             height: calc((100vw - 52px) * 0.625);
@@ -61,10 +64,39 @@
             <label class="fl">结算方式</label>
             <span class="fr">{$order.settlement}</span>
         </dd>
+        <dd class="clear">
+            <div style="text-align:center;margin-bottom: .5rem">
+                <label>
+                    <input type="checkbox" name="agree" id="agree" value="1"/>&nbsp;&nbsp;
+                    <span id="show-agreement" >
+                    我已阅读并同意<a href="javascript:void(0)" onclick="show_agreement();">《华度运输协议》</a>
+                </span>
+                </label>
+            </div>
+            <div>
+                <label class="fl">签名</label>
+                <input class="fr" type="text"
+                       style="border: 1px solid #efefef;padding:.15rem;color:#000;text-align:right;width: 70%">
+            </div>
+        </dd>
     </dl>
 </section>
 <div class="trace-btn" >确认发货</div>
 <div style="height: 4rem;"></div>
-<script src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
+<script type="text/javascript" src="/Public/wcd56/usercenter/js/base.js"></script>
+<script src="/Public/wcd56/usercenter/js/jquery.js"></script>
+<script src="/Public/wcd56/usercenter/layer/mobile/layer.js"></script>
+<script>
+    function show_agreement() {
+        tips = layer.open({
+            type: 2,
+            title: false,
+            skin: '', //加上边框
+            area: ['90vw', '70vh'], //宽高,
+            shadeClose: true,
+            content: '/pdf.pdf'
+        });
+    }
+</script>
 </body>
 </html>
