@@ -82,7 +82,7 @@ class OrderAction extends BaseAction {
             $this->error('订单不存在');
         }
         if( (!$order['exam_status'] == 1 && $order['ensure_status'] == 0) ) {
-            $this->error('订单不是待确认状态');
+//            $this->error('订单不是待确认状态');
         }
         $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
 
