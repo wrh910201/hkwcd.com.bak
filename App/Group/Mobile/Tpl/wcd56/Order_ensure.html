@@ -129,7 +129,7 @@
             } );
         } else if( response.code == 1 ) {
             layer.msg(response.msg, { icon: 1, time: 3000, shift: -1, btn: ['确定'] }, function() {
-                window.location.href = response.url;
+                window.location.href = "/Mobile/Order/detail/id/{$order.id}";
             } );
         } else if( response.code == -1 ) {
             layer.msg(response.msg, { icon: 2, time: 3000, shift: -1, btn: ['确定'] });

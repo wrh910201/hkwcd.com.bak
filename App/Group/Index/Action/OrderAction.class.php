@@ -1750,7 +1750,7 @@ class OrderAction extends BaseAction  {
 
         }
         if( !($order['exam_status'] == 1 && $order['ensure_status'] == 0 ) ) {
-//            $this->error('当前订单不是待确认状态');
+            $this->error('当前订单不是待确认状态');
         }
         $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
 

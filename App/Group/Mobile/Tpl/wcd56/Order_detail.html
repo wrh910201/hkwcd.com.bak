@@ -367,7 +367,7 @@
 <if condition="$order.express_status eq 1">
     <div class="trace-btn" onclick="window.location.href='/Mobile/Order/trace/id/{$order.id}'">跟踪</div>
 </if>
-<if condition="true || $order.exam_status eq 1 && $order.ensure_status eq 0">
+<if condition="$order.exam_status eq 1 && $order.ensure_status eq 0">
     <div class="trace-btn" onclick="window.location.href='/Mobile/Order/ensure/id/{$order.id}'">订单确认</div>
 </if>
 
