@@ -364,8 +364,13 @@
         </div>
     </dl>
 </section>
+<if condition="$order.express_status eq 1">
+    <div class="trace-btn" onclick="window.location.href='/Mobile/Order/trace/id/{$order.id}'">跟踪</div>
+</if>
+<if condition="$order.exam_status eq 1 && $order.ensure_status eq 0">
+    <div class="trace-btn" onclick="window.location.href='/Mobile/Order/ensure/id/{$order.id}'">订单确认</div>
+</if>
 
-<div class="trace-btn" onclick="window.location.href='/Mobile/Order/trace/id/{$order.id}'">跟踪</div>
 <div style="height: 4rem;"></div>
 <script type="text/javascript" src="/Public/wcd56/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>

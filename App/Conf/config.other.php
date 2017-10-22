@@ -79,4 +79,21 @@ return [
         '月结' => '月结',
     ],
 
+    'fee_list' => [
+        'delivery_fee' => '运费',
+        'fuel_cost' => '燃油费',
+        'customs_charges' => '报关费',
+        'pick_up_charge' => '提货费',
+        'express_fee' => '快递费',
+        'insurance_premium' => '保险费',
+        'packing_charges' => '包装费',
+        'inspection_fee' => '验货费',
+        'remote_fee' => '偏远费',
+        'over_weight_fee' => '超重费',
+        'over_length_fee' => '超长费',
+        'storage_fee' => '储存费',
+        'incidental' => '杂费',
+        'other_fee' => '其他费用',
+    ],
+
 ];

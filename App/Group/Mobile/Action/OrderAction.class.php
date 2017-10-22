@@ -73,6 +73,23 @@ class OrderAction extends BaseAction {
     }
 
     public function ensure() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( (!$order['exam_status'] == 1 && $order['ensure_status'] == 0) ) {
+            $this->error('订单不是待确认状态');
+        }
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+
+        $fee_list = C("fee_list");
+        $this->assign('order', $order);
+        $this->assign('order_fee', $order_fee);
+        $this->assign("fee_list", $fee_list);
         $this->display();
     }
 

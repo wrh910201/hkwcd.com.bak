@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>华度货运，香港华度货运</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="华度货运，香港华度货运">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="/Public/wcd56/mobile/css/mobile.css">
+    <style>
+        .id-card{
+            width: 100%;
+            height: calc((100vw - 52px) * 0.625);
+            margin: 4px auto;
+            overflow: hidden;
+        }
+
+        .id-card img{
+            width: 100%;
+        }
+
+        .trace-btn{
+            text-align: center;
+            background-color: #7aca48;
+            color: #fff;
+            font-size: 16px;
+            padding: .25rem;
+            width: 50%;
+            margin: 1rem auto;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+<header class="header clear">
+    <a href="javascript:history.back();" class="back">返回</a>
+    <!--<h1><em class="icon">&#xe635;</em></h1>-->
+</header>
+<section class="delivery_detail clear">
+    <dl class="common_list">
+        <dt>订单确认</dt>
+        <foreach name="fee_list" key="k" item="v">
+        <dd class="clear">
+            <label class="fl">{$v}</label>
+            <span class="fr">{$order_fee[$k]}</span>
+        </dd>
+        </foreach>
+        <dd class="clear">
+            <label class="fl">总费用</label>
+            <span class="fr">{$order_fee.total_fee}</span>
+        </dd>
+        <dd class="clear">
+            <label class="fl">结算方式</label>
+            <span class="fr">{$order.settlement}</span>
+        </dd>
+    </dl>
+</section>
+<div class="trace-btn" >确认发货</div>
+<div style="height: 4rem;"></div>
+<script src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
+</body>
+</html>
