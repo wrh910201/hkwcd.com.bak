@@ -35,6 +35,13 @@
                 </if>
                 </volist>
             </select>
+            <if condition="$channel_id">
+            <if condition="$price.has_extra_fee eq 0">
+                (不计燃油附加费)
+                <else />
+                (已计燃油附加费)
+            </if>
+            </if>
             <input type="button" id="query_price" class="btn_blue" value="查询">
             <input type="button" onclick="javascript:window.location.go(-1);" class="btn_blue" value="返回">
         </div>

@@ -245,6 +245,9 @@ class ClientgroupAction extends CommonContentAction
             exit;
         }
         $data['channel_id'] = I('post.channel_id', 0, 'intval');
+        $data['has_extra_fee'] = I('post.has_extra_fee', 0, 'intval');
+        $data['has_extra_fee'] = $data['has_extra_fee'] == 1 ? 1 : 0;
+
         $channel = M('Channel')->where(['id' => $data['channel_id']])->find();
         if( empty($channel) || $channel['status'] == 0 ) {
             $this->error('渠道不存在');

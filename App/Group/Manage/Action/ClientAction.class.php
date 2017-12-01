@@ -838,6 +838,8 @@ class ClientAction extends CommonContentAction {
         }
 
         $data['country_id'] = I('post.country_id', 0, 'intval');
+        $data['has_extra_fee'] = I('post.has_extra_fee', 0, 'intval');
+        $data['has_extra_fee'] = $data['has_extra_fee'] == 1 ? 1 : 0;
 
         $path = I('post.url', '', 'trim');
 
