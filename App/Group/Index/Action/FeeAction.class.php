@@ -47,37 +47,7 @@ class FeeAction extends BaseAction  {
             $result = [];
             if( $this->client['single_country'] == 0 ) {
 
-                $data = M('ChannelMapPrice')->query(
-"SELECT c.name,c.en_name, cmp.status, cmp.price, cmp.min_weight, cmp.max_weight, cmp.per_kilo, country.name as country_name, country.ename as country_ename, r.prescription,c.remark
- FROM `hx_channel_map_price` as cmp
- left join hx_channel_map as cm on cmp.map_id = cm.id
- left join hx_region as r on r.id = cmp.region_id
- left join hx_region_map as rm on rm.region_id = r.id
- left join hx_channel as c on c.id = cm.channel_id
- left join hx_country as country on country.id = rm.country_id
- where rm.country_id = {$country_id} and cm.group_id = {$group_id} and cm.type = {$package_type}
- order by cmp.min_weight");
-//                echo M('ChannelMapPrice')->getLastSql();exit;
-//                var_dump($data);
-                foreach($data as $k => $v) {
-                    if( $v['status'] == 1 ) {
-                        if (sprintf("%.1f", $real_weight) == $v['min_weight']) {
-                            $v['real_weight'] = $real_weight;
-                            $result[] = $v;
-                        }
-                    }
-                }
-                if( empty($result) ) {
-                    foreach($data as $k => $v) {
-                        if( $v['status'] == 2 ) {
-                            if (sprintf("%.1f", $real_weight) >= $v['min_weight'] && sprintf("%.1f", $real_weight) <= $v['max_weight']) {
-                                $v['price'] = $v['price'] * $real_weight;
-                                $v['real_weight'] = $real_weight;
-                                $result[] = $v;
-                            }
-                        }
-                    }
-                }
+                $result = $this->_multiCountry($country_id, $group_id, $real_weight, $package_type);
 
             } else {
                 $data = M('ClientPirceDetail')->query(
@@ -121,6 +91,85 @@ class FeeAction extends BaseAction  {
         }
         echo json_encode($this->response);
         exit;
+    }
+
+    private function _multiCountry($country_id, $group_id, $real_weight, $package_type) {
+        //是否有满足单独重量的纪录
+//        var_dump($real_weight);exit;
+        $temp_weight = floor($real_weight);
+        $diff = $real_weight - $temp_weight;
+//        var_dump($temp_weight);exit;
+        if( $diff == 0 ) {
+            //整数，无需处理
+        } else {
+            if( $diff > 0.5 ) {
+                $real_weight += 1;
+            } elseif( $diff < 0.5 ) {
+                $real_weight += 0.5;
+            }
+        }
+
+        $data = M('ChannelMapPrice')->query(
+            "SELECT c.name,c.en_name, cm.has_extra_fee, cmp.status, cmp.price, cmp.min_weight, cmp.max_weight, cmp.per_kilo, country.name as country_name, country.ename as country_ename, r.prescription,c.remark
+ FROM `hx_channel_map_price` as cmp
+ left join hx_channel_map as cm on cmp.map_id = cm.id
+ left join hx_region as r on r.id = cmp.region_id
+ left join hx_region_map as rm on rm.region_id = r.id
+ left join hx_channel as c on c.id = cm.channel_id
+ left join hx_country as country on country.id = rm.country_id
+ where rm.country_id = {$country_id} and cm.group_id = {$group_id} and cm.type = {$package_type} and min_weight = {$real_weight}
+ order by cmp.min_weight");
+//                echo M('ChannelMapPrice')->getLastSql();exit;
+//                var_dump($data);
+        if( $data ) {
+            foreach( $data as $k => $v ) {
+                $data[$k]['real_weight'] = $v['min_weight'];
+            }
+        } else {
+            $data = M("ChannelMapPrice")->query(
+                "SELECT c.name,c.en_name, cm.has_extra_fee, cmp.status, cmp.price, cmp.min_weight, cmp.max_weight, cmp.per_kilo, country.name as country_name, country.ename as country_ename, r.prescription,c.remark
+ FROM `hx_channel_map_price` as cmp
+ left join hx_channel_map as cm on cmp.map_id = cm.id
+ left join hx_region as r on r.id = cmp.region_id
+ left join hx_region_map as rm on rm.region_id = r.id
+ left join hx_channel as c on c.id = cm.channel_id
+ left join hx_country as country on country.id = rm.country_id
+ where rm.country_id = {$country_id} and cm.group_id = {$group_id} 
+ and cm.type = {$package_type} and cmp.status = 2 and cmp.min_weight < {$real_weight} and cmp.max_weight >= {$real_weight} 
+ order by cmp.min_weight");
+//            echo M('ChannelMapPrice')->getLastSql();exit;
+//            var_dump($data);exit;
+            if( empty($data) ) {
+                $data = M("ChannelMapPrice")->query(
+                    "SELECT c.name,c.en_name, cm.has_extra_fee, cmp.status, cmp.price, cmp.min_weight, cmp.max_weight, cmp.per_kilo, country.name as country_name, country.ename as country_ename, r.prescription,c.remark
+ FROM `hx_channel_map_price` as cmp
+ left join hx_channel_map as cm on cmp.map_id = cm.id
+ inner join hx_region as r on r.id = cmp.region_id
+ inner join hx_region_map as rm on rm.region_id = r.id
+ left join hx_channel as c on c.id = cm.channel_id
+ left join hx_country as country on country.id = rm.country_id
+ where rm.country_id = {$country_id} and cm.group_id = {$group_id} 
+ and cm.type = {$package_type} and cmp.status = 3 and cmp.max_weight < {$real_weight} 
+ order by cmp.min_weight");
+            }
+        }
+        if( $data ) {
+            foreach($data as $k => $v) {
+                if( $v['status'] == 2 ) {
+                    if (sprintf("%.1f", $real_weight) >= $v['min_weight'] && sprintf("%.1f", $real_weight) <= $v['max_weight']) {
+                        $v['price'] = $v['price'] * $real_weight;
+                        $v['real_weight'] = $real_weight;
+                        $result[] = $v;
+                    }
+                }
+                if( $v["status"] == 3 ) {
+                    $v['price'] = $v['price'] * $real_weight;
+                    $v['real_weight'] = $real_weight;
+                    $result[] = $v;
+                }
+            }
+        }
+        return $result;
     }
 
 }

@@ -36,9 +36,10 @@
                 </volist>
             </select>
             <if condition="$channel_id">
-            <if condition="$price.has_extra_fee eq 0">
+            <if condition="$price_title['has_extra_fee'] eq '0'">
                 (不计燃油附加费)
-                <else />
+            </if>
+            <if condition="$price_title['has_extra_fee'] eq '1'">
                 (已计燃油附加费)
             </if>
             </if>

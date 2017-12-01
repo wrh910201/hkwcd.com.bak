@@ -179,6 +179,7 @@ class ClientgroupAction extends CommonContentAction
             'status' => 1,
         ];
         $price = M('ChannelMap')->where($where)->find();
+        $price_title = $price;
 //        echo M('ChannelMap')->getLastSql();exit;
 //        var_dump($price);exit;
         $content = $price['content'] ? json_decode($price['content'], true) : null;
@@ -207,6 +208,7 @@ class ClientgroupAction extends CommonContentAction
                 }
             }
         }
+        $this->assign("price_title", $price_title);
         $this->assign('price', $price);
         $this->assign('region_list', $region_list);
         $this->assign('package_type', $type);
@@ -246,7 +248,8 @@ class ClientgroupAction extends CommonContentAction
         }
         $data['channel_id'] = I('post.channel_id', 0, 'intval');
         $data['has_extra_fee'] = I('post.has_extra_fee', 0, 'intval');
-        $data['has_extra_fee'] = $data['has_extra_fee'] == 1 ? 1 : 0;
+        //$data['has_extra_fee'] = $data['has_extra_fee'] == 1 ? 1 : 0;
+//        var_dump($data['has_extra_fee']);exit;
 
         $channel = M('Channel')->where(['id' => $data['channel_id']])->find();
         if( empty($channel) || $channel['status'] == 0 ) {
@@ -277,10 +280,11 @@ class ClientgroupAction extends CommonContentAction
         $exists = M('ChannelMap')->where($where)->find();
         if( $exists ) {
             $map_id = $exists['id'];
-            $result = M('ChannelMap')->where($where)->save(['content' => $data['content']]);
+            $result = M('ChannelMap')->where($where)->save(['content' => $data['content'], 'has_extra_fee' => $data['has_extra_fee']]);
             if( !is_numeric($result) ) {
                 $transaction = false;
             }
+//            echo M('ChannelMap')->getLastSql();exit;
             $delete_result = M('ChannelMapPrice')->where(['map_id' => $map_id])->delete();
             if( !is_numeric($delete_result) ) {
                 $transaction = false;
@@ -361,7 +365,7 @@ class ClientgroupAction extends CommonContentAction
         $exists = M('ChannelMap')->where($where)->find();
         if( $exists ) {
             $map_id = $exists['id'];
-            $result = M('ChannelMap')->where($where)->save(['content' => $data['content']]);
+            $result = M('ChannelMap')->where($where)->save(['content' => $data['content'], 'has_extra_fee' => $data['has_extra_fee']]);
             if( !is_numeric($result) ) {
                 $transaction = false;
             }

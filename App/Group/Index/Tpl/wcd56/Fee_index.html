@@ -230,7 +230,7 @@
     function calculate_fee() {
         var url = '/Fee/calculate';
         var data = {
-            country_id: $('#country').val(),
+            country_id: $('#country_list').val(),
             package_type: $('#package_type').val(),
             total_weight: $('.total_weight').val(),
             total_rate: $('.total_rate').val(),
@@ -259,6 +259,7 @@
         html += "<td>国家</td>";
         html += "<td>计费重</td>";
         html += "<td>运费</td>";
+        html += "<td>是否计算燃油附加费</td>";
         html += "<td>时效</td>";
         html += '<td class="text-right">备注</td>';
         html += "</tr>";
@@ -266,8 +267,9 @@
             html += "<tr>";
             html += "<td>"+ data[i].name + data[i].en_name +"</td>";
             html += "<td>"+ data[i].country_ename +"</td>";
-            html += "<td>"+ data[i].real_weight +"</td>";
-            html += "<td>"+ data[i].price +"</td>";
+            html += "<td>"+ parseFloat(data[i].real_weight).toFixed(1) +"KG</td>";
+            html += "<td>￥"+ parseFloat(data[i].price).toFixed(1) +"</td>";
+            html += "<td>"+ (parseInt(data[i].has_extra_fee) == 0 ? '否' : '是')+"</td>";
             html += "<td>"+ data[i].prescription +"</td>";
             html += '<td class="text-right">' +data[i].remark+ '</td>';
             html += "</tr>";
