@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>华度货运，香港华度货运</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="华度货运，香港华度货运">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link href="/Public/wcd56/mobile/css/mobile.css" rel="stylesheet">
+    <link href="/Public/wcd56/mobile/css/form.css" rel="stylesheet">
+    <!--<link href="__PUBLIC__/css/base.css" rel="stylesheet"/>-->
+    <style>
+        .id-card {
+            width: 100%;
+            height: calc((100vw - 52px) * 0.625);
+            margin: 4px auto;
+            overflow: hidden;
+        }
+
+        .id-card img {
+            width: 100%;
+        }
+
+        .box_c.box_c_reset {
+            overflow-x: scroll;
+        }
+
+        .common_list dd {
+            text-align: left;
+        }
+
+        .edit-pane {
+            padding: 16px;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            background-color: #fff;
+            z-index: 10;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .pane-header{
+            height: 32px;
+        }
+
+        .close-pane{
+            width: 16px;
+            height: 16px;
+            position: relative;
+            border-radius: 50%;
+            color: #78cc40;
+            border: 1px solid #78cc40;
+            text-align: center;
+            font-size: 12px;
+            line-height: 16px;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<header class="header clear">
+    <a href="javascript:history.back();" class="back">返回</a>
+    <!--<h1><em class="icon">&#xe635;</em></h1>-->
+</header>
+
+<div id="fee">
+    <section class="clear">
+        <dl class="common_list form-container">
+            <dt>运费预算</dt>
+            <dd class="clear">
+                <div class="form-group flex-row flex-center">
+                    <label class="control-label">国家</label>
+                    <div class="flex-1">
+                        <select class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group flex-row flex-center">
+                    <label class="control-label">国家</label>
+                    <div class="flex-1">
+                        <select class="form-control"></select>
+                    </div>
+                </div>
+            </dd>
+        </dl>
+        <dl class="common_list">
+            <dd>
+                <div class="box_c box_c_reset">
+                    <table class="table" style="min-width: 800px">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>重量</th>
+                            <th>长</th>
+                            <th>宽</th>
+                            <th>高</th>
+                            <th>材积重</th>
+                            <th>箱数</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="detail-content">
+                        <tr v-for="(item,index) in feeList" :id="'detail-item-'+index">
+                            <td>{{index+1}}</td>
+                            <td>{{item.weight}}</td>
+                            <td>{{item.length}}</td>
+                            <td>{{item.weight}}</td>
+                            <td>{{item.height}}</td>
+                            <td>{{item.rate}}</td>
+                            <td>{{item.count}}</td>
+                            <td style="min-width: 30px">
+                                <div @click="editPackage(index)">编辑</div>
+                                <div @click="removePackage(index)">删除</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-total">合计</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="btn btn-primary" @click="addPackage">添加包裹</div>
+                <div class="btn btn-primary">运费预算</div>
+            </dd>
+        </dl>
+    </section>
+    <div class="edit-pane flex-col" v-show="showEditPanel">
+        <div class="pane-header">
+            <div class="close-pane" @click="showEditPanel = false">×</div>
+        </div>
+        <div class="form-container">
+            <div class="form-group flex-row flex-center">
+                <label class="control-label">重量</label>
+                <input class="form-control flex-1" v-model="tempData.weight">
+            </div>
+            <div class="form-group flex-row flex-center">
+                <label class="control-label">长</label>
+                <input class="form-control flex-1" v-model="tempData.length">
+            </div>
+            <div class="form-group flex-row flex-center">
+                <label class="control-label">宽</label>
+                <input class="form-control flex-1" v-model="tempData.width">
+            </div>
+            <div class="form-group flex-row flex-center">
+                <label class="control-label">高</label>
+                <input class="form-control flex-1" v-model="tempData.height">
+            </div>
+            <div class="form-group flex-row flex-center">
+                <label class="control-label">材积重</label>
+                <input class="form-control flex-1" v-model="tempData.rate">
+            </div>
+            <div class="form-group flex-row flex-center">
+                <label class="control-label">箱数</label>
+                <input class="form-control flex-1" v-model="tempData.count">
+            </div>
+            <div class="btn btn-primary" style="margin-top: 1rem" @click="savePackage">
+                保存
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/Public/wcd56/zepto/1.2.0/zepto.min.js"></script>
+<script src="/Public/wcd56/vue/2.3.4/vue.min.js"></script>
+<script>
+    var fee = new Vue({
+        el: "#fee",
+        data: {
+            showEditPanel: true,
+            feeList: [
+                {
+                    weight: 1,
+                    length: 10,
+                    width: 20,
+                    height: 10,
+                    rate: 100,
+                    count: 10
+                }
+            ],
+            currPackageIndex : 0,
+            tempData: {}
+        },
+        methods: {
+            toggleEditPanel: function () {
+                this.showEditPanel = !this.showEditPanel;
+            },
+            addPackage: function () {
+                this.feeList.push({
+                    weight: 0,
+                    length: 0,
+                    width: 0,
+                    height: 0,
+                    rate: 0,
+                    count: 0
+                })
+            },
+            editPackage: function (index) {
+                if (index >= 0) {
+                    this.tempData = this.feeList[index];
+                    this.currPackageIndex = index;
+                } else {
+                    this.currPackageIndex = -1;
+                    this.tempData = {
+                        weight: 0,
+                        length: 0,
+                        width: 0,
+                        height: 0,
+                        rate: 0,
+                        count: 0
+                    }
+                }
+
+                this.showEditPanel = true
+            },
+            removePackage: function (index) {
+                this.feeList.splice(index, 1)
+            },
+            savePackage: function () {
+                if(this.currPackageIndex>=0){
+                    this.feeList[this.currPackageIndex] = this.tempData;
+                    this.showEditPanel = false;
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
