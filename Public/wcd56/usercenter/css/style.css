@@ -409,6 +409,11 @@ fieldset span.l_con{
     height: 30px;
     line-height: 30px;
 }
+fieldset span.w300.l_con{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
 fieldset .l_t_mid{
     text-align: center;
 }
