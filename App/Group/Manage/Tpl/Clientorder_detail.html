@@ -295,7 +295,7 @@
             <switch name="order.express_status" >
                 <case value="1">
                     <input type="button" class="btn btn_blue" id="delivery" onclick="open_delivery_form()" value="装箱信息"/>
-                    <php>if($order.self_express == 1){</php>
+                    <php>if($order.self_express == 0){</php>
                         <input type="button" class="btn btn_blue" id="self_express" onclick="show_set_self_express();" value="自定义物流信息">
                         <input type="button" class="btn btn_blue" id="input_self_express" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/trace',array('id' => $order['id']), '')}';" value="物 流">
                     <php>}else{</php>
