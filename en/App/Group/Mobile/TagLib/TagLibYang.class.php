@@ -112,8 +112,9 @@ class TagLibYang extends TagLib {
 		'gbookaddurl'	=> array('close' => 0),
 		'vcodeurl'	=> array('close' => 0),		
 		'sharecode'	=> array('close' => 0),	
-		'countcode'	=> array('close' => 0),	
-		'mobileauto'	=> array(
+		'countcode'	=> array('close' => 0),
+        'beian'	=> array('close' => 0),
+        'mobileauto'	=> array(
 			'attr'	=> 'flag',//0自动,1是php,2是js
 			'close' => 0
 		),
@@ -1361,7 +1362,9 @@ str;
 	public function _countcode($attr, $content) {
 		return C('cfg_countcode');
 	}
-	
+    public function _beian($attr, $content) {
+        return C('cfg_beian');
+    }
 	public function _sharecode($attr, $content) {
 		return C('cfg_sharecode');
 	}
