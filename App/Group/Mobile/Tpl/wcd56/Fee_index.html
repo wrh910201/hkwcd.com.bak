@@ -49,11 +49,11 @@
             box-sizing: border-box;
         }
 
-        .pane-header{
+        .pane-header {
             height: 32px;
         }
 
-        .close-pane{
+        .close-pane {
             width: 16px;
             height: 16px;
             position: relative;
@@ -64,6 +64,12 @@
             font-size: 12px;
             line-height: 16px;
             float: right;
+        }
+
+        .opt2 {
+            position: absolute;
+            right: 0;
+            background-color: #fff;
         }
     </style>
 </head>
@@ -95,41 +101,35 @@
         <dl class="common_list">
             <dd>
                 <div class="box_c box_c_reset">
-                    <table class="table" style="min-width: 800px">
+                    <table class="table" style="min-width: 600px">
                         <thead>
                         <tr>
                             <th>序号</th>
                             <th>重量</th>
-                            <th>长</th>
-                            <th>宽</th>
-                            <th>高</th>
+                            <th>长*宽*高 (cm)</th>
                             <th>材积重</th>
                             <th>箱数</th>
-                            <th>操作</th>
+                            <th class="opt">操作</th>
                         </tr>
                         </thead>
                         <tbody id="detail-content">
                         <tr v-for="(item,index) in feeList" :id="'detail-item-'+index">
                             <td>{{index+1}}</td>
                             <td>{{item.weight}}</td>
-                            <td>{{item.length}}</td>
-                            <td>{{item.weight}}</td>
-                            <td>{{item.height}}</td>
+                            <td>{{item.length}}*{{item.weight}}*{{item.height}}</td>
                             <td>{{item.rate}}</td>
                             <td>{{item.count}}</td>
-                            <td style="min-width: 30px">
+                            <td class="opt">
                                 <div @click="editPackage(index)">编辑</div>
                                 <div @click="removePackage(index)">删除</div>
                             </td>
                         </tr>
                         <tr>
                             <td class="table-total">合计</td>
+                            <td>{{totalWeight}}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{totalRate}}</td>
+                            <td>{{totalCount}}</td>
                             <td></td>
                         </tr>
                         </tbody>
@@ -147,27 +147,27 @@
         <div class="form-container">
             <div class="form-group flex-row flex-center">
                 <label class="control-label">重量</label>
-                <input class="form-control flex-1" v-model="tempData.weight">
+                <input type="number" class="form-control flex-1" v-model="tempData.weight" @blur="countRate">
             </div>
             <div class="form-group flex-row flex-center">
                 <label class="control-label">长</label>
-                <input class="form-control flex-1" v-model="tempData.length">
+                <input type="number" class="form-control flex-1" v-model="tempData.length" @blur="countRate">
             </div>
             <div class="form-group flex-row flex-center">
                 <label class="control-label">宽</label>
-                <input class="form-control flex-1" v-model="tempData.width">
+                <input type="number" class="form-control flex-1" v-model="tempData.width" @blur="countRate">
             </div>
             <div class="form-group flex-row flex-center">
                 <label class="control-label">高</label>
-                <input class="form-control flex-1" v-model="tempData.height">
+                <input type="number" class="form-control flex-1" v-model="tempData.height" @blur="countRate">
             </div>
             <div class="form-group flex-row flex-center">
                 <label class="control-label">材积重</label>
-                <input class="form-control flex-1" v-model="tempData.rate">
+                <input type="number" class="form-control flex-1" v-model="tempData.rate" disabled>
             </div>
             <div class="form-group flex-row flex-center">
                 <label class="control-label">箱数</label>
-                <input class="form-control flex-1" v-model="tempData.count">
+                <input type="number" class="form-control flex-1" v-model="tempData.count">
             </div>
             <div class="btn btn-primary" style="margin-top: 1rem" @click="savePackage">
                 保存
@@ -182,19 +182,22 @@
     var fee = new Vue({
         el: "#fee",
         data: {
-            showEditPanel: true,
+            showEditPanel: false,
             feeList: [
                 {
                     weight: 1,
                     length: 10,
                     width: 20,
                     height: 10,
-                    rate: 100,
+                    rate: 1,
                     count: 10
                 }
             ],
-            currPackageIndex : 0,
-            tempData: {}
+            currPackageIndex: 0,
+            tempData: {},
+            totalWeight: 0,
+            totalRate: 0,
+            totalCount: 0
         },
         methods: {
             toggleEditPanel: function () {
@@ -228,16 +231,45 @@
 
                 this.showEditPanel = true
             },
+            countRate: function () {
+                var tempData = this.tempData;
+                if (tempData.length && tempData.width && tempData.height) {
+                    var t1 = (tempData.length * tempData.width * tempData.height) / 5000,
+                        t2 = tempData.weight;
+                    this.tempData.rate = t1 > t2 ? t1 : t2;
+                }
+            },
+            countTotal: function () {
+                var len = this.feeList.length, feeList = this.feeList;
+                var weight = 0, rate = 0, count = 0;
+                if (len > 0) {
+                    for (var i = 0; i < len; i++) {
+                        weight += Number(feeList[i].weight);
+                        rate += Number(feeList[i].weight);
+                        count += Number(feeList[i].count);
+                    }
+                    this.totalWeight = weight;
+                    this.totalRate = rate;
+                    this.totalCount = count;
+                }
+            },
             removePackage: function (index) {
-                this.feeList.splice(index, 1)
+                this.feeList.splice(index, 1);
+                this.countTotal();
             },
             savePackage: function () {
-                if(this.currPackageIndex>=0){
+                if (this.currPackageIndex >= 0) {
                     this.feeList[this.currPackageIndex] = this.tempData;
                     this.showEditPanel = false;
                 }
+                this.countTotal()
             }
-        }
+        },
+        mounted: function () {
+            this.countTotal()
+        },
+        watch: {}
+
     })
 </script>
 </body>
