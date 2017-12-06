@@ -71,6 +71,14 @@
             right: 0;
             background-color: #fff;
         }
+        .notice{
+            font-size: 14px;
+            color: #888;
+        }
+
+        .notice-title{
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -139,7 +147,18 @@
                 <div class="btn btn-primary">运费预算</div>
             </dd>
         </dl>
+        <dl class="common_list" style="margin-top: 0">
+            <dd>
+                <div class="notice">
+                    <div class="notice-title">THE THREE LAWS OF ROBOTICS</div>
+                    <div class="desc">Ⅰ. A ROBOT MAY NOT INJURE A HUMAN BEING OR, THROUGH INACTION, ALLOW A HUMAN BEING TO COME TO HARM.</div>
+                    <div class="desc">Ⅱ. A ROBOT MUST OBEY ORDERS GIVEN IT BY HUMAN BEINGS EXCEPT WHERE SUCH ORDERS WOULD CONFLICT WITH THE FIRST LAW.</div>
+                    <div class="desc">Ⅲ. A ROBOT MUST PROTECT ITS OWN EXISTENCE AS LONG AS SUCH PROTECTION DOES NOT CONFLICT WITH THE FIRST OR SECOND LAW.</div>
+                </div>
+            </dd>
+        </dl>
     </section>
+
     <div class="edit-pane flex-col" v-show="showEditPanel">
         <div class="pane-header">
             <div class="close-pane" @click="showEditPanel = false">×</div>

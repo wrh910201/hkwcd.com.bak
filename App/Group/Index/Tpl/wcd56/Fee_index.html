@@ -1,4 +1,14 @@
 <include file="Usercenter:header" />
+<style>
+    .notice{
+        font-size: 14px;
+        color: #888;
+        width: 75%;
+    }
+    .notice-title{
+        font-weight: 600;
+    }
+</style>
 <body>
 <include file="Usercenter:aside" />
 <!-- main -->
@@ -77,6 +87,12 @@
                                 </tbody>
                             </table>
                             <div class="clear"></div>
+                            <div class="notice fl">
+                                <div class="notice-title">THE THREE LAWS OF ROBOTICS</div>
+                                <div class="desc">Ⅰ. A ROBOT MAY NOT INJURE A HUMAN BEING OR, THROUGH INACTION, ALLOW A HUMAN BEING TO COME TO HARM.</div>
+                                <div class="desc">Ⅱ. A ROBOT MUST OBEY ORDERS GIVEN IT BY HUMAN BEINGS EXCEPT WHERE SUCH ORDERS WOULD CONFLICT WITH THE FIRST LAW.</div>
+                                <div class="desc">Ⅲ. A ROBOT MUST PROTECT ITS OWN EXISTENCE AS LONG AS SUCH PROTECTION DOES NOT CONFLICT WITH THE FIRST OR SECOND LAW.</div>
+                            </div>
                             <div class="fr">
                                 <label class="l_title"></label>
                                 <button class="btn btn_commit" type="button" id="calculate_fee_button">运费预算</button> &nbsp;
@@ -106,6 +122,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </fieldset>
                 </div>
             </div>
