@@ -76,7 +76,7 @@
             <span class="fr">{$delivery.exporter_code}</span>
         </dd>
         <dd class="clear">
-            <label class="fl">身份证号码</label>
+            <label class="fl">有效证件号码</label>
             <span class="fr">{$delivery.certificate_num}</span>
         </dd>
         <dd class="clear">
@@ -84,13 +84,13 @@
             <span class="fr"><if condition="$delivery.is_default eq 1">是<else />否</if></span>
         </dd>
         <dd class="clear" style="text-align:left;">
-            <div>身份证正面</div>
+            <div>有效证件正面</div>
             <div class="id-card">
                 <img src="{$delivery.certificate1_url}">
             </div>
         </dd>
         <dd class="clear" style="text-align:left;">
-            <div>身份证背面</div>
+            <div>有效证件背面</div>
             <div class="id-card">
                 <img src="{$delivery.certificate2_url}">
             </div>

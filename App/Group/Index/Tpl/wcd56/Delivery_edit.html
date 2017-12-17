@@ -72,8 +72,8 @@
                             <div class="clear"></div>
                         </div>
                         <div class="box_c_item">
-                            <label class="l_title">* 身份证号码：</label>
-                            <input class="text_input w300" type="text" name="certificate_num" placeholder="请输入身份证号码" value="{$delivery.certificate_num}">
+                            <label class="l_title">* 有效证件号码：</label>
+                            <input class="text_input w300" type="text" name="certificate_num" placeholder="请输入有效证件号码" value="{$delivery.certificate_num}">
                             <div class="clear"></div>
                         </div>
                         <div class="clear"></div>
@@ -84,7 +84,7 @@
                             <!--</div>-->
                             <div id="show-image-1" class="fl product_img_show select-image" style="position: relative; width: 408px;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
                                 <input type="hidden" name="certificate1_url" id="certificate1_url" value="{$delivery.certificate1_url}" />
-                                <img src="{$delivery.certificate1_url}" alt="身份证正面"  width='408' height='248'/>
+                                <img src="{$delivery.certificate1_url}" alt="有效证件正面"  width='408' height='248'/>
                                 <input name="mypic" type="file" id="change-certificate-upload-1" value="{$delivery.certificate1_url}" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
                             </div>
                             <!--<div class="fl add_product_img select-image" id="select-image-2" style="display: none;position: relative;position: relative;margin-top: 0px;margin-left: 10px;width: 400px; height: 240px">-->
@@ -93,7 +93,7 @@
                             <!--</div>-->
                             <div id="show-image-2" class="fl product_img_show select-image" style="position: relative; width: 408px;position: relative;margin-top: 0px;margin-left: 50px;margin-right: 10px; margin-bottom: 5px;">
                                 <input type="hidden" name="certificate2_url" id="certificate2_url" value="{$delivery.certificate2_url}"/>
-                                <img src="{$delivery.certificate2_url}" alt="身份证反面"  width='408' height='248'/>
+                                <img src="{$delivery.certificate2_url}" alt="有效证件反面"  width='408' height='248'/>
                                 <input name="mypic" type="file" id="change-certificate-upload-2" value="" style="cursor: pointer;width: 408px; height: 248px;opacity: 0;position: absolute;top: 0; right: 0;">
                             </div>
                         </div>
@@ -139,7 +139,7 @@
 
         //上传
         $("#certificate-upload-1").wrap('<form id="myupload-1" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
-        $('#myupload-1').append('<i class="icon">&#xe629;</i> <p>上传身份证正面</p>');
+        $('#myupload-1').append('<i class="icon">&#xe629;</i> <p>上传有效证件正面</p>');
         $("#certificate-upload-1").change(function() {
             upload_certificate_1('myupload-1');
         });
@@ -151,7 +151,7 @@
 
 
         $("#certificate-upload-2").wrap('<form id="myupload-2" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
-        $('#myupload-2').append('<i class="icon">&#xe629;</i> <p>上传身份证反面</p>');
+        $('#myupload-2').append('<i class="icon">&#xe629;</i> <p>上传有效证件反面</p>');
         $("#certificate-upload-2").change(function() {
             upload_certificate_2('myupload-2');
         });
@@ -181,7 +181,7 @@
             success: function(data) {
                 //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
                 if(data.state == 'SUCCESS'){
-                    $('#show-result-1 label').html("身份证正面 上传成功("+data.size+"k)");
+                    $('#show-result-1 label').html("有效证件正面 上传成功("+data.size+"k)");
                     var img = data.url;
                     var timg = data.turl;
 //                        $('#show-image-1').empty();
@@ -217,7 +217,7 @@
             success: function(data) {
                 //litpic_tip.html("<b>"+data.title+"("+data.size+"k)</b> <span class='delimg' rel='"+data.url+"'>删除</span>");
                 if(data.state == 'SUCCESS'){
-                    $('#show-result-1 label').html("身份证反面 上传成功("+data.size+"k)");
+                    $('#show-result-1 label').html("有效证件反面 上传成功("+data.size+"k)");
                     var img = data.url;
                     var timg = data.turl;
                     $('#show-image-2 img').attr("src", img);
