@@ -45,7 +45,7 @@
                                 <div class="box_c_item">
                                     <div class="fl">
                                         <label class="l_title">国家：</label>
-                                        <span id="delivery_country" class="w300 l_con">{{deliveryInfo.country_name}}</span>
+                                        <span id="delivery_country" class="w300 l_con">{{deliveryInfo.country_name}}&nbsp;/&nbsp;{{deliveryInfo.en_country_name}}</span>
                                         <div class="clear"></div>
                                     </div>
                                 </div>
@@ -146,7 +146,7 @@
                                     <div class="fl">
                                         <label class="l_title">国家：</label>
                                         <span id="receive_country" class="w300 l_con">
-                                        {{receiveInfo.country_name}}
+                                        {{receiveInfo.country_name}}&nbsp;/&nbsp;{{receiveInfo.en_country_name}}
                                     </span>
                                         <div class="clear"></div>
                                     </div>
@@ -1157,6 +1157,8 @@
                 company: "",
                 consignor: "",
                 country: "",
+                country_name: "",
+                en_country_name:"",
                 state: "",
                 city: "",
                 detail_address: "",
