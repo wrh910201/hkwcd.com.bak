@@ -2313,17 +2313,15 @@ class OrderAction extends BaseAction  {
     }
 
     private function _total_to_str($total) {
-        $temp_total = '00000'.$total;
+        $temp_total = '000'.$total;
         $length = strlen($temp_total);
         $number = '';
         switch($length) {
-            case 6: $number = $temp_total;break;
-            case 7: $number = '00000'.$total;break;
-            case 8: $number = '0000'.$total;break;
-            case 9: $number = '000'.$total;break;
-            case 10: $number = '00'.$total;break;
-            case 11: $number = '0'.$total;break;
-            case 12: $number = $total;break;
+            case 4: $number = $temp_total;break;
+            case 5: $number = '000'.$total;break;
+            case 6: $number = '00'.$total;break;
+            case 7: $number = '0'.$total;break;
+            case 8: $number = $total;break;
         }
         return $number;
     }
