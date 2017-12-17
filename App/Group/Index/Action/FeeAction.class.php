@@ -11,7 +11,12 @@ class FeeAction extends BaseAction  {
     public function index() {
         $this->client_id = session('hkwcd_user.user_id');
         $this->client = M('Client')->where(['status' => 1, 'id' => $this->client_id])->find();
-
+        $statement = M("Dictionary")
+            ->where(["id" => 1])
+            ->find();
+        $this->content = $statement["content"];
+        $this->content = explode("\n", $this->content);
+//        var_dump($this->content);exit;
         //国家
         $where = array('pid' => 0,'types'=>0);
         $country_list = M('country')->where($where)->order('sort,id')->select();
