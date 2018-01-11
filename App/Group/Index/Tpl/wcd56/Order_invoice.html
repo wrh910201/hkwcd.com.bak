@@ -99,8 +99,8 @@
             </tr>
             <tr>
                 <td class="w226">邮政编码 / Post code<br />{$order.receive_postal_code}</td>
-                <td class="w227">箱数 / Box number<br />{$order.real_specifications_total_count} CTNS</td>
-                <td class="w227">总重量 / Gross weight<br />{$order.real_specifications_calculate_weight}KG</td>
+                <td class="w227">箱数 / Box number<br />{$order.specifications_total_count} CTNS</td>
+                <td class="w227">总重量 / Gross weight<br />{$order.specifications_calculate_weight}KG</td>
             </tr>
             <tr>
                 <td class="w226">联系人电话 / Telephone<br />{$order.receive_phone} {$order.receive_mobile}</td>
@@ -147,8 +147,8 @@
             <tr>
                 <td><if condition="$order.express_service eq 'express service'">快件单号/Shipment No.<br />{$order.order_num}</if><if condition="$order.express_service eq 'air'">空运提单号/AWB<br />{$order.awb}</if><if condition="$order.express_service eq 'sea shipping'">海运提单号/OBL<br />{$order.obl}</if></td>
                 <td>发票号 / Invoice number<br />{$order.invoice_num}</td>
-                <td>箱数/ Box number (CTNS)<br />{$order.real_specifications_total_count}&nbsp;CTNS</td>
-                <td>总重量 / Gross weight<br />{$order.real_specifications_calculate_weight}KG</td>
+                <td>箱数/ Box number (CTNS)<br />{$order.specifications_total_count}&nbsp;CTNS</td>
+                <td>总重量 / Gross weight<br />{$order.specifications_calculate_weight}KG</td>
             </tr>
             <tr>
                 <td>出口商代码 / Exporter code<br />{$order.exporter_code}</td>
