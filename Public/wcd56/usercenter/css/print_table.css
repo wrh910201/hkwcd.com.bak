@@ -140,7 +140,7 @@ body{
 }
 
 .delivery_notice_table{
-    width: 680px;
+    width: 780px;
     margin-top: 4px;
     margin-right: auto;
     margin-left: auto;
@@ -173,7 +173,7 @@ body{
     padding: 65px 0 0 0;
 }
 .delivery_notice_info table,.delivery_notice_con table,.delivery_notice_footer table{
-    width: 680px;
+    width: 780px;
 }
 .delivery_notice_info table tr{
     height: 16px;
@@ -184,6 +184,7 @@ body{
 .delivery_notice_con table{
     border: 1px solid #000;
 }
+
 .delivery_notice_con table th,.delivery_notice_con table td{
     font-size: 14px;
     text-align: center;
