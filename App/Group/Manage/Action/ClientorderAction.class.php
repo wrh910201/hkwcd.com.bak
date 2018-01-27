@@ -881,6 +881,7 @@ class ClientorderAction extends CommonContentAction {
                 ];
                 $order_data['total_weight'] += floatval($v['real_weight']) * intval($v['real_count']);
                 $order_data['total_rate'] += floatval($v['real_length']) * floatval($v['real_width']) * floatval($v['real_height']) / 5000 * intval($v['real_count']);
+                //算错了。
                 $order_data['delivery_weight'] += $order_data['total_weight'] > $order_data['total_rate'] ? $order_data['total_weight'] : $order_data['total_rate'];
                 $order_data['total_count'] += intval($v['real_count']);
 
