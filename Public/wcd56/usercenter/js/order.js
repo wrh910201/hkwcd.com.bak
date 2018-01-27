@@ -239,7 +239,12 @@ function close_delivery_form() {
 function set_mode_of_transportation() {
     var str = '';
     if( selected_delivery_data && selected_receive_data ) {
-        var key = selected_receive_data.country_id;
+
+        if( selected_receive_data.type == 0 ) {
+            var key = selected_receive_data.country_id;
+        } else {
+            var key = selected_delivery_data.country_id;
+        }
 
         var country;
         for( var id in country_list ) {
