@@ -2019,7 +2019,7 @@ class OrderAction extends BaseAction  {
         $this->type = '商业发票';
         $this->assign("is_client", 1);
 //        $this->display();
-        $this->display("./App/Group/Manage/Tpl/Clientorder_invoice.html");
+        $this->display("./App/Group/Index/Tpl/Order_invoice.html");
 
     }
 
@@ -2119,7 +2119,7 @@ class OrderAction extends BaseAction  {
         $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '装箱单';
-        $this->display("./App/Group/Manage/Tpl/Clientorder_packing.html");
+        $this->display("./App/Group/Index/Tpl/Order_packing.html");
     }
 
     public function transfer() {
