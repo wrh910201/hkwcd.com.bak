@@ -1175,7 +1175,7 @@ function show_fee() {
     tips = layer.open({
         type: 1,
         skin: 'layui-layer-rim', //加上边框
-        area: ['550px', '600px'], //宽高
+        area: ['550px', '80%'], //宽高
         title: false,
         closeBtn: 1,
         shadeClose: false,
