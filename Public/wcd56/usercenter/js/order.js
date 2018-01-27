@@ -240,11 +240,14 @@ function set_mode_of_transportation() {
     var str = '';
     if( selected_delivery_data && selected_receive_data ) {
 
-        if( selected_receive_data.type == 0 ) {
-            var key = selected_receive_data.country_id;
-        } else {
+        if( parseInt(selected_receive_data.type) == 0 ) {
             var key = selected_delivery_data.country_id;
+        } else {
+            var key = selected_receive_data.country_id;
         }
+
+        // console.log("type = " + selected_receive_data.type);
+        // console.log("key = " + key);
 
         var country;
         for( var id in country_list ) {
