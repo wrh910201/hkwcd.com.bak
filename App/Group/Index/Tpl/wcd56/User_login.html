@@ -95,7 +95,7 @@
     function login_handler(response) {
         loading = 0;
         if( response.code == 1 ) {
-            parent.window.location.href = "{:U('Order/index')}";
+            parent.window.location.href = "{:U('/Order/index')}";
         } else {
             changeVcode(null);
             alert(response.msg);
