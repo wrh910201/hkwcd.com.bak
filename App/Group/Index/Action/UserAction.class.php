@@ -41,7 +41,7 @@ class UserAction extends Action {
         $furl = I('post.furl', '','htmlspecialchars,trim');
         if (empty($furl) || strpos($furl, 'register') || strpos($furl, 'login') || strpos($furl, 'logout') || strpos($furl, 'activate') || strpos($furl, 'sendActivate')) {
 //            $furl = U(GROUP_NAME. '/User/index');
-            $furl = '/Profile/index';
+            $furl = '/Order/index';
         }
 
         $username = I('post.username','','htmlspecialchars,trim');
