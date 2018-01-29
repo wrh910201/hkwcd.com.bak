@@ -3,7 +3,7 @@
 <link href="__PUBLIC__/select2/4.0.3/css/select2.min.css" rel="stylesheet">
 <style>
     [v-cloak]{
-        display: none;
+        display: none!important;
     }
 
 </style>
@@ -886,7 +886,7 @@
                 </form>
             </div>
 
-            <div class="box" id="orderSpec">
+            <div class="box" id="orderSpec" v-cloak>
                 <div class="box_t box_t_bottom">
                     <h3 class="fl">规格详情（材积重=长*宽*高/5000，重量与材积重两者取大收费）</h3>
                     <!--<button id="calculate" class="btn btn_add fr" type="button"><i class="icon">&#xe61e;</i>&nbsp;计费</button>-->
@@ -1054,7 +1054,7 @@
             <!--<span>1110</span>-->
             <!--</div>-->
             <div class="clear"></div>
-            <div class="fr" id="operate">
+            <div class="fr" id="operate" v-cloak>
                 <label class="l_title"></label>
                 <!--<button class="btn btn_commit" type="button" id="add_order_button" @click="confirm_add_order(0)">添加</button> &nbsp;-->
                 <!--<button class="btn btn_commit" type="button" id="commit_order_button" @click="confirm_add_order(1)">添加并提交</button> &nbsp;-->
