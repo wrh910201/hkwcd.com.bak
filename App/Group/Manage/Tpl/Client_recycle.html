@@ -21,7 +21,7 @@
     </div>
     <div class="operate">
         <div class="left">
-            <!--<input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Client/add')}')" class="btn_blue" value="撤销">-->
+            <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Client/index')}')" class="btn_blue" value="返回">
             <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Client/revoke', array('batchFlag' => 1))}', '确实要撤销删除选择项吗？')" class="btn_blue" value="撤销">
         </div>
         <if condition='ACTION_NAME eq "recyle"'>
@@ -56,7 +56,7 @@
                         <td>{$v.last_login}</td>
                         <td>{$v.last_ip}</td>
                         <td>
-                            <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Client/remove',array('id' => $v['id']), '')}', '确实彻底删除选择项吗？')">彻底删除</a>
+                            <!--<a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Client/remove',array('id' => $v['id']), '')}', '确实彻底删除选择项吗？')">彻底删除</a>-->
                             <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Client/revoke',array('id' => $v['id']), '')}', '确实撤销删除选择项吗？')">撤销删除</a>
                         </td>
                     </tr>

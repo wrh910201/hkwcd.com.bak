@@ -23,6 +23,7 @@
         <div class="left">
             <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Client/add')}')" class="btn_blue" value="添加会员">
             <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Client/del', array('batchFlag' => 1))}', '确实要删除选择项吗？')" class="btn_blue" value="删除">
+            <input type="button" onclick="goUrl('{:U(GROUP_NAME.'/Client/recycle')}')" class="btn_green" value="回收站">
         </div>
         <if condition='ACTION_NAME eq "index"'>
             <div class="left_pad">
