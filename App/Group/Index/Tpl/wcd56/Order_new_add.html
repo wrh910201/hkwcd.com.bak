@@ -552,14 +552,14 @@
                             </div>
                             <div class="box_c_item">
                                 <div class="fl">
-                                    <label class="l_title">备用联系人：</label>
+                                    <label class="l_title">* 备用联系人：</label>
                                     <input class="text_input w300" type="text" name="spare_receive_addressee"
                                            placeholder="请输入备用联系人" v-model="spareInfo.spare_receive_addressee">
                                 </div>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">国家：</label>
+                                <label class="l_title">* 国家：</label>
                                 <select class="w300" id="spare_country" name="spare_country"
                                         v-model="spareInfo.spare_country" v-select2="spare_country">
                                     <foreach name="country_list" item="v">
@@ -575,14 +575,14 @@
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">市：</label>
+                                <label class="l_title">* 市：</label>
                                 <input class="text_input w300" type="text" name="spare_city"
                                        placeholder="请输入市" v-model="spareInfo.spare_city">
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
                                 <div class="fl">
-                                    <label class="l_title">具体地址：</label>
+                                    <label class="l_title">* 具体地址：</label>
                                     <input class="text_input w300" type="text" name="spare_receive_detail_address"
                                            v-model="spareInfo.spare_receive_detail_address"
                                            placeholder="请输入地址 (P.O.Box地址不能填写)"/>
@@ -590,19 +590,19 @@
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">邮编：</label>
+                                <label class="l_title">* 邮编：</label>
                                 <input class="text_input w300" type="text" name="spare_receive_postal_code"
                                        placeholder="请输入邮编" v-model="spareInfo.spare_receive_postal_code"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">手机：</label>
+                                <label class="l_title">* 手机：</label>
                                 <input class="text_input w300" type="text" name="spare_receive_mobile"
                                        placeholder="手机与座机至少输入一个" v-model="spareInfo.spare_receive_mobile"/>
                                 <div class="clear"></div>
                             </div>
                             <div class="box_c_item">
-                                <label class="l_title">座机：</label>
+                                <label class="l_title">* 座机：</label>
                                 <input class="text_input w300" type="text" name="spare_receive_phone"
                                        placeholder="手机与座机至少输入一个" v-model="spareInfo.spare_receive_phone"/>
                                 <div class="clear"></div>
