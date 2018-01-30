@@ -34,4 +34,39 @@
     </div>
     <div class="clear"></div>
 </div>
+
+<script>
+    function showBrowserTips() {
+        document.getElementsByTagName('body')[0].innerHTML = '<div id="browser-tips" class="browser-wrapper"><div class="tips"><div>当前浏览器版本过低导致系统部分功能将无法正常使用</div><div>请使用新版的谷歌浏览器、火狐浏览器打开本页面</div></div></div>';
+        document.getElementById('browser-tips').style.display = 'block'
+    }
+
+    window.Browser();
+    var browser = {
+        name: window.browser,
+        version: Number(window.version)
+    };
+
+    switch (browser.name) {
+        case 'IE' : {
+            if (browser.version < 8) {
+                showBrowserTips()
+            }
+            break;
+        }
+        case 'Chrome' : {
+            if (browser.version < 30) {
+                showBrowserTips()
+            }
+            break;
+        }
+        case 'FireFox' : {
+            if (browser.version < 30) {
+                showBrowserTips()
+            }
+        }
+    }
+    // switch
+
+</script>
 <!--END 顶部top_bar-->
