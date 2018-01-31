@@ -326,8 +326,8 @@
                             <div class="box_c_item">
                                 <div class="fl">
                                     <label class="l_title">* 国家：</label>
-                                    <select class="w300 text_input" id="add_delivery_country"
-                                            v-select2='add_delivery_country' v-model="addDeliveryInfo.country">
+                                    <select class="w300 text_input" id="add_delivery_country" @change=""
+                                             v-model="addDeliveryInfo.country">
                                         <foreach name="country_list" item="v">
                                             <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                                         </foreach>
@@ -463,7 +463,7 @@
                             <div class="box_c_item">
                                 <div class="fl">
                                     <label class="l_title">*国家：</label>
-                                    <select class="w300" id="add_receive_country" v-select2='add_receive_country'
+                                    <select class="w300" id="add_receive_country"
                                             v-model="addReceiveInfo.country">
                                         <foreach name="country_list" item="v">
                                             <option value="{$v.id}">{$v.ename} / {$v.name}</option>
@@ -560,8 +560,8 @@
                             </div>
                             <div class="box_c_item">
                                 <label class="l_title">* 国家：</label>
-                                <select class="w300" id="spare_country" name="spare_country"
-                                        v-model="spareInfo.spare_country" v-select2="spare_country">
+                                <select class="w300" id="spare_country" name="spare_country" @change="spareInfo.spare_country = event.target.value"
+                                        v-model="spareInfo.spare_country">
                                     <foreach name="country_list" item="v">
                                         <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                                     </foreach>
