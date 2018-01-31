@@ -31,7 +31,7 @@
                             <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
                                 <foreach name="country_list" item="v">
-                                    <option value="{$v.id}" <if condition="$v.id eq $delivery['country_id']">selected="selected"</if>>{$v.name} / {$v.ename}</option>
+                                    <option value="{$v.id}" <if condition="$v.id eq $delivery['country_id']">selected="selected"</if>>{$v.ename} / {$v.name}</option>
                                 </foreach>
                             </select>
                             <div class="clear"></div>
@@ -135,7 +135,9 @@
 <script type="text/javascript">
     $(function () {
 
-        $("#country").select2();
+        $("#country").select2({
+            matcher: matchStart
+        });
 
         //上传
         $("#certificate-upload-1").wrap('<form id="myupload-1" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');

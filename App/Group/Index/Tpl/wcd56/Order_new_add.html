@@ -329,7 +329,7 @@
                                     <select class="w300 text_input" id="add_delivery_country"
                                             v-select2='add_delivery_country' v-model="addDeliveryInfo.country">
                                         <foreach name="country_list" item="v">
-                                            <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                                            <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                                         </foreach>
                                     </select>
                                 </div>
@@ -466,7 +466,7 @@
                                     <select class="w300" id="add_receive_country" v-select2='add_receive_country'
                                             v-model="addReceiveInfo.country">
                                         <foreach name="country_list" item="v">
-                                            <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                                            <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                                         </foreach>
                                     </select>
                                 </div>
@@ -563,7 +563,7 @@
                                 <select class="w300" id="spare_country" name="spare_country"
                                         v-model="spareInfo.spare_country" v-select2="spare_country">
                                     <foreach name="country_list" item="v">
-                                        <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                                        <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                                     </foreach>
                                 </select>
                                 <div class="clear"></div>
@@ -1990,18 +1990,21 @@
         $("#add_delivery_country").select2({
             dropdownParent: $('#add_delivery_form'),
             placeholder: "請选择國家/地區",
-            allowClear: true
+            allowClear: true,
+            matcher: matchStart,
         });
 
         $("#add_receive_country").select2({
             dropdownParent: $('#add_receive_form'),
             placeholder: "請选择國家/地區",
-            allowClear: true
+            allowClear: true,
+            matcher: matchStart
         });
         $("#spare_country").select2({
             dropdownParent: $('#spare_receive_form'),
             placeholder: "請选择國家/地區",
-            allowClear: true
+            allowClear: true,
+            matcher: matchStart
         });
 
         $("#orderInfo select").each(function () {
