@@ -30,8 +30,9 @@
                         <div class="box_c_item">
                             <label class="l_title">* 国家：</label>
                             <select class="w300" id="country" name="country">
+                                <!--<option value="0">请选择国家</option>-->
                             <foreach name="country_list" item="v">
-                                <option value="{$v.id}">{$v.name} / {$v.ename}</option>
+                                <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                             </foreach>
                             </select>
                             <div class="clear"></div>
@@ -133,7 +134,9 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        $("#country").select2();
+        $("#country").select2({
+            matcher: matchStart
+        });
 
         //上传
         $("#certificate-upload-1").wrap('<form id="myupload-1" style="width:408px;height:248px" class="fl" action="{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}" method="post" enctype="multipart/form-data"></form>');
