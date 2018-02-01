@@ -326,8 +326,10 @@
                             <div class="box_c_item">
                                 <div class="fl">
                                     <label class="l_title">* 国家：</label>
-                                    <select class="w300 text_input" id="add_delivery_country" @change=""
-                                             v-model="addDeliveryInfo.country">
+                                    <select class="w300 text_input" id="add_delivery_country"
+                                            v-select2="addDeliveryInfo.country"
+                                            onchange = "modelEvent('addOrder.addDeliveryInfo.country')"
+                                            v-model="addDeliveryInfo.country">
                                         <foreach name="country_list" item="v">
                                             <option value="{$v.id}">{$v.ename} / {$v.name}</option>
                                         </foreach>
@@ -1096,6 +1098,8 @@
     <!--END content-->
 </div>
 <!-- END main -->
+
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/sweetalert/1.1.3/sweetalert.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
@@ -1111,13 +1115,47 @@
         inserted: function (el, binding, vnode) {
             var options = binding.value || {};
             $(el).select2(options).on("select2:select", function (e){
-                el.dispatchEvent(new Event('change', { target: e.target })); //说好的双向绑定，竟然不安套路
+
+                if (document.createEvent) {
+                    var event = document.createEvent('HTMLEvents');
+                    event.initEvent('change', true, false);
+                    event.target = e.target;
+                    el.dispatchEvent(event);
+                    console.log("event dispatched");
+                } else {
+                    el.fireEvent('onchange');
+                }
+
+                // el.dispatchEvent()
+                // $(el).trigger('change',{ target: e.target })
+                // el.dispatchEvent(new Event('change', { target: e.target })); //说好的双向绑定，竟然不安套路
             });
         },
         update: function(el, binding, vnode) {
             $(el).trigger("change");
         }
     });
+
+    Vue.directive('select', {
+        twoWay: true,
+        priority: 1000,
+        params: ['onChange'],
+        bind: function () {
+            var self = this
+            $(this.el)
+                .select2({})
+                .on('change', function () {
+                    self.params.onChange(this.value)
+                })
+        },
+        update: function (value) {
+            $(this.el).val(value).trigger('change')
+        },
+        unbind: function () {
+            $(this.el).off().select2('destroy')
+        }
+    })
+
     var tips;
     var loading;
 
@@ -1984,31 +2022,53 @@
             }
         },
     });
-
+    function replaceOriginSelect(el,config) {
+        $(el).select2(config).on("select2:select", function (e){
+            $(el).val(e.target.value).trigger('click change');
+        });
+        // console.log("addd",addOrder.addDeliveryInfo)
+    }
+    function modelEvent(target) {
+        var event = event || window.event;
+        var $target = target.split('.');
+        for(var i = 0,l= $target.length;i<l;i++){
+            var str = [];
+        }
+        console.log("target");
+    }
+    replaceOriginSelect('#add_delivery_country',{
+        dropdownParent: $('#add_delivery_form'),
+        placeholder: "請选择國家/地區",
+        allowClear: true,
+        matcher: matchStart,
+    });
     $(document).ready(function () {
         hide_loading();
-        $("#add_delivery_country").select2({
-            dropdownParent: $('#add_delivery_form'),
-            placeholder: "請选择國家/地區",
-            allowClear: true,
-            matcher: matchStart,
-        });
+
 
         $("#add_receive_country").select2({
             dropdownParent: $('#add_receive_form'),
             placeholder: "請选择國家/地區",
             allowClear: true,
             matcher: matchStart
+        }).on("select2:select", function (e){
+            document.getElementById('add_receive_country').dispatchEvent(new Event('change', { target: e.target }));
         });
         $("#spare_country").select2({
             dropdownParent: $('#spare_receive_form'),
             placeholder: "請选择國家/地區",
             allowClear: true,
             matcher: matchStart
+        }).on("select2:select", function (e){
+            document.getElementById('spare_country').dispatchEvent(new Event('change', { target: e.target }));
         });
 
         $("#orderInfo select").each(function () {
-            $(this).select2()
+            replaceOriginSelect(this,{})
+            /*$(this).select2().on("select2:select", function (e){
+                // console.log("changed you idiot");
+                document.getElementById('add_delivery_country').dispatchEvent(new Event('change', { target: e.target }));
+            });*/
         });
 
         function resFormatter(res) {
