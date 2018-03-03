@@ -627,7 +627,8 @@ class OrderAction extends BaseAction  {
             $start = 1;
             foreach( $order_specifications as $v ) {
                 $v['index'] = $v['id'];
-                $v['id'] = $start ."-". $v['count'];
+                $end = $start + $v["count"] - 1;
+                $v['id'] = $start ."-". $end;
                 $start = $start + $v['count'];
                 $v['rate'] = $v['length'] * $v['width'] * $v['height'] / 5000;
                 $temp[] = $v;
@@ -1577,7 +1578,8 @@ class OrderAction extends BaseAction  {
             $start = 1;
             foreach( $order_specifications as $v ) {
                 $v['index'] = $v['id'];
-                $v['id'] = $start ."-". $v['count'];
+                $end = $start + $v['count'] - 1;
+                $v['id'] = $start ."-". $end;
                 $start = $start + $v['count'];
                 $v['rate'] = $v['length'] * $v['width'] * $v['height'] / 5000;
                 $temp[] = $v;
@@ -1798,7 +1800,8 @@ class OrderAction extends BaseAction  {
             $start = 1;
             foreach( $order_specifications as $v ) {
                 $v['index'] = $v['id'];
-                $v['id'] = $start ."-". $v['count'];
+                $end = $start + $v['count'] - 1;
+                $v['id'] = $start ."-". $end;
                 $start = $start + $v['count'];
                 $v['rate'] = $v['length'] * $v['width'] * $v['height'] / 5000;
                 $temp[] = $v;
