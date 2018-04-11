@@ -1345,8 +1345,7 @@ class ClientorderAction extends CommonContentAction {
          * 4、插入新的订单规格
          * 5、插入新的详情和规格的映射
          */
-
-        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
+        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $data['client_id']])->save($data);
 
         if( !is_numeric($result) ) {
             $transaction = false;
