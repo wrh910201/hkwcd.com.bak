@@ -1434,6 +1434,9 @@ class ClientorderAction extends CommonContentAction {
         if( $transaction ) {
             foreach( $order_specifications as $k => $v ) {
                 foreach( $v['cargo'] as $d ) {
+                    if( empty($order_detail[$d['product_index']]['id']) ) {
+                        continue;
+                    }
                     $temp = [
                         'specifications_id' => $v['id'],
                         'detail_id' => $order_detail[$d['product_index']]['id'],
