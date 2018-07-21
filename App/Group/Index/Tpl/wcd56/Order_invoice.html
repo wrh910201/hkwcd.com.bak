@@ -276,7 +276,7 @@
         <table>
             <tbody>
             <tr>
-                <td class="w340">公司或单位名称/Name of Company / Firm<br />{$order.delivery_company} </td>
+                <td class="w340">公司或单位名称/Name of Company / Firm<br /><if condition="$order.delivery_company">{$order.delivery_company}<else />{$order.delivery_consignor}</if></td>
                 <td class="w340">公司或单位地址/Address of Company / Firm<br />{$order.delivery_detail_address} </td>
             </tr>
             </tbody>
