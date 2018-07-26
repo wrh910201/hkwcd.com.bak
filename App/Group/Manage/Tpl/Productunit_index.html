@@ -20,30 +20,30 @@
     <div class="pos">{$type}</div>
     <div class="operate">
         <div class="left">
-            <input type="button" onclick="goUrl('{:U(GROUP_NAME.'/Currency/add')}')" class="btn_blue" value="添加币种">
-            <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Currency/del', array('batchFlag' => 1))}', '确实要删除选择项吗？')" class="btn_blue" value="删除">
+            <input type="button" onclick="goUrl('{:U(GROUP_NAME.'/Productunit/add')}')" class="btn_blue" value="添加单位">
+            <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Productunit/del', array('batchFlag' => 1))}', '确实要删除选择项吗？')" class="btn_blue" value="删除">
         </div>
     </div>
 </div>
 <div class="list">
-    <form action="{:U(GROUP_NAME.'/Currency/sort', array('pid' => $pid))}" method="post" id="form_do" name="form_do">
+    <form action="{:U(GROUP_NAME.'/Productunit/sort', array('pid' => $pid))}" method="post" id="form_do" name="form_do">
         <table width="100%">
             <tr>
                 <th><input type="checkbox" id="check"></th>
                 <th>编号</th>
-                <th>币种</th>
-                <th>汇率</th>
+                <th>名称</th>
+                <th>英文名称</th>
                 <th>操作</th>
             </tr>
-            <foreach name='currency_list' item='v'>
+            <foreach name='unit_list' item='v'>
                 <tr>
                     <td><input type="checkbox" name="key[]" value="{$v.id}"></td>
                     <td>{$v.id}</td>
-                    <td>{$v.name}({$v.code})</td>
-                    <td>{$v.rate}</td>
+                    <td>{$v.name}</td>
+                    <td>{$v.en_name}</td>
                     <td>
-                        <a href="{:U(GROUP_NAME.'/Currency/edit',array('id' => $v['id']))}">详情</a>
-                        <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Currency/del', array('id' => $v['id']))}', '确实要删除选择项吗？')">删除</a>
+                        <a href="{:U(GROUP_NAME.'/Productunit/edit',array('id' => $v['id']))}">详情</a>
+                        <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Productunit/del', array('id' => $v['id']))}', '确实要删除选择项吗？')">删除</a>
                     </td>
                 </tr>
             </foreach>

@@ -12,7 +12,7 @@
 <div class="main">
     <div class="pos">{$type}</div>
     <div class="form">
-        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Currency/doAdd')}">
+        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Productunit/doAdd')}">
             <dl>
                 <dt>名称：</dt>
                 <dd>
@@ -20,21 +20,9 @@
                 </dd>
             </dl>
             <dl>
-                <dt>编码：</dt>
+                <dt>英文名称：</dt>
                 <dd>
-                    <input type="text" name="code" class="inp_one" value="" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>汇率：</dt>
-                <dd>
-                    <input type="text" name="rate" class="inp_one" value="" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>符号：</dt>
-                <dd>
-                    <input type="text" name="symbol" class="inp_one" value="" />
+                    <input type="text" name="en_name" class="inp_one" value="" />
                 </dd>
             </dl>
             <div class="form_b">

@@ -12,33 +12,21 @@
 <div class="main">
     <div class="pos">{$type}</div>
     <div class="form">
-        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Currency/doEdit')}">
+        <form method='post' id="form_do" name="form_do" action="{:U(GROUP_NAME. '/Productunit/doEdit')}">
             <dl>
                 <dt>名称：</dt>
                 <dd>
-                    <input type="text" name="name" class="inp_one" value="{$currency.name}" />
+                    <input type="text" name="name" class="inp_one" value="{$unit.name}" />
                 </dd>
             </dl>
             <dl>
-                <dt>编码：</dt>
+                <dt>英文名称：</dt>
                 <dd>
-                    <input type="text" name="code" class="inp_one" value="{$currency.code}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>汇率：</dt>
-                <dd>
-                    <input type="text" name="rate" class="inp_one" value="{$currency.rate}" />
-                </dd>
-            </dl>
-            <dl>
-                <dt>符号：</dt>
-                <dd>
-                    <input type="text" name="symbol" class="inp_one" value="{$currency.symbol}" />
+                    <input type="text" name="en_name" class="inp_one" value="{$unit.en_name}" />
                 </dd>
             </dl>
             <div class="form_b">
-                <input type="hidden" name="id" value="{$currency.id}" />
+                <input type="hidden" name="id" value="{$unit.id}" />
                 <input type="submit" class="btn_blue" id="submit" value="提 交">
             </div>
         </form>
