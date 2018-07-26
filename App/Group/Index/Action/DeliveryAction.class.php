@@ -37,7 +37,7 @@ class DeliveryAction extends BaseAction {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['client_id' => $client_id])->find();
         $where = array('pid' => 0,'types'=>0);
-        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
 
         $this->assign('country_list', $country_list);
         $this->assign('title', '添加发货地址');
@@ -242,7 +242,8 @@ class DeliveryAction extends BaseAction {
             $this->error('地址不存在');
         }
         $where = array('pid' => 0,'types'=>0);
-        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
+
         foreach( $country_list as $k => $v ) {
             $country_list[$k]['id'] = intval($v['id']);
             if( $delivery['country_id'] == $v['id'] ) {

@@ -56,7 +56,8 @@ class OrderAction extends BaseAction  {
         $this->assign('channel_list', $channel_list);
         //国家
         $where = array('pid' => 0,'types'=>0);
-        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
+
         $this->assign('country_list', $country_list);
         if( $country_list ) {
             $temp = [];

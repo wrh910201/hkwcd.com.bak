@@ -34,7 +34,7 @@ class ReceiveAction extends BaseAction {
 
     public function add() {
         $where = array('pid' => 0,'types'=>0);
-        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
         $this->assign('country_list', $country_list);
         $this->assign('title', '添加收货地址');
         $this->display(); // 输出模板
@@ -191,7 +191,7 @@ class ReceiveAction extends BaseAction {
             $this->error('地址不存在');
         }
         $where = array('pid' => 0,'types'=>0);
-        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
         foreach( $country_list as $k => $v ) {
             $country_list[$k]['id'] = intval($v['id']);
             if( $receive['country_id'] == $v['id'] ) {
