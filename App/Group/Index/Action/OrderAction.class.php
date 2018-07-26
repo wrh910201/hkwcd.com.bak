@@ -33,7 +33,18 @@ class OrderAction extends BaseAction  {
         $this->client_id = session('hkwcd_user.user_id');
         $this->client = M('Client')->where(['status' => 1, 'id' => $this->client_id])->find();
 
-        $this->assign('order_detail_unit', C('order_detail_unit'));
+        $order_detail_unit = [];
+        $order_detail_unit = M("ProductUnit")
+            ->select();
+        if( $order_detail_unit ) {
+            $temp = [];
+            foreach( $order_detail_unit as $k => $v ) {
+                $temp[$v["en_name"]] = $v["name"];
+            }
+            $order_detail_unit = $temp;
+        }
+
+        $this->assign('order_detail_unit', $order_detail_unit);
         $this->assign('package_type', C('package_type'));
         $this->assign('price_terms', C('price_terms'));
         $this->assign('tariff_payment', C('tariff_payment'));

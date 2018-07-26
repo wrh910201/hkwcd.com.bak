@@ -13,6 +13,21 @@ class ClientorderAction extends CommonContentAction {
         'code' => -1,
         'msg' => '',
     ];
+    public $order_detail_unit = [];
+
+    public function _initialize()
+    {
+        parent::_initialize();
+        $order_detail_unit = M("ProductUnit")
+            ->select();
+        if( $order_detail_unit ) {
+            $temp = [];
+            foreach( $order_detail_unit as $k => $v ) {
+                $temp[$v["en_name"]] = $v["name"];
+            }
+            $this->order_detail_unit = $temp;
+        }
+    }
 
     public function index() {
         $keyword = I('keyword', '', 'htmlspecialchars,trim');//关键字
@@ -632,7 +647,7 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('d_cursor', $d_cursor);
 
 
-        $this->assign('order_detail_unit', C('order_detail_unit'));
+        $this->assign('order_detail_unit', $this->order_detail_unit);
         $this->assign('package_type', C('package_type'));
         $this->assign('price_terms', C('price_terms'));
         $this->assign('tariff_payment', C('tariff_payment'));
@@ -644,7 +659,7 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('channel_list', $channel_list);
         //国家
         $where = array('pid' => 0,'types'=>0);
-        $country_list = M('country')->where($where)->order('sort,id')->select();
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
         $this->assign('country_list', $country_list);
         if( $country_list ) {
             $temp = [];
