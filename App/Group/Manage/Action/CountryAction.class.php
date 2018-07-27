@@ -24,7 +24,7 @@ class CountryAction extends Action{
 
 		$page = new Page($count, 20);
 		$limit = $page->firstRow. ',' .$page->listRows;
-		$list = M('country')->where($where)->order('sort,id')->limit($limit)->select();
+		$list = M('country')->where($where)->order('sort,ename')->limit($limit)->select();
 
         $region_list = M('Region')->select();
         $this->region_list = $region_list;
@@ -45,7 +45,7 @@ class CountryAction extends Action{
 
 		$page = new Page($count, 20);
 		$limit = $page->firstRow. ',' .$page->listRows;
-		$list = M('country')->where(array('pid' => $pid,'types'=>1))->order('sort,id')->limit($limit)->select();
+		$list = M('country')->where(array('pid' => $pid,'types'=>1))->order('sort,ename')->limit($limit)->select();
 
 		$this->page = $page->show();
 		$this->vlist = $list;
