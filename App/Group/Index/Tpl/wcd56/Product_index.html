@@ -1,0 +1,74 @@
+<include file="Usercenter:header" />
+<body>
+<include file="Usercenter:aside" />
+<!-- main -->
+<div class="main">
+    <include file="Usercenter:top" />
+
+    <!--content-->
+    <div class="content">
+        <!--{$title}-->
+        <div class="profile">
+            <div class="box">
+                <div class="box_t box_t_bottom">
+                    <h3>{$title}</h3>
+                    <div class="clear"></div>
+                </div>
+                <div class="box_c box_c_reset">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>品名</th>
+                            <th>材质</th>
+                            <th>商品编号</th>
+                            <th>单位</th>
+                            <th>单件申报价值</th>
+                            <th>原产地</th>
+                            <th class="text-right">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name='product_list' item='v'>
+                            <tr>
+                                <td>{$v.product_name} / {$v.en_product_name}</td>
+                                <td>{$v.texture}</td>
+                                <td>{$v.goods_code}</td>
+                                <td>{$v.unit}</td>
+                                <td>{$v.single_declared}</td>
+                                <td>{$v.origin}</td>
+                                <td class="text-right">
+                                    <a href="{:U('Product/edit', array('id' => $v['id']))}">编辑</a> | <a href="javascript:void(0);" onclick="remove({$v.id})">删除</a>
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                    <div class="fr">
+                        <div class="pages">{$page}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--END 个人信息-->
+    </div>
+    <!--END content-->
+</div>
+<!-- END main -->
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript">
+    $(function () {
+        menu1("#ud7", "#ud7 a", ".coin_7 a.nav_top_item");
+    })
+
+
+    function remove(id) {
+        if( confirm('确认删除该商品？') ) {
+            window.location.href = "/Product/del/id/" + id;
+        }
+    }
+
+</script>
+</body>
+</html>

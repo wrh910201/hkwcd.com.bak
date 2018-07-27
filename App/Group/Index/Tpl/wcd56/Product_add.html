@@ -1,0 +1,84 @@
+<include file="Usercenter:header" />
+<body>
+<include file="Usercenter:aside" />
+<!-- main -->
+<div class="main">
+    <include file="Usercenter:top" />
+
+    <!--content-->
+    <div class="content">
+        <!--{$title}-->
+        <div class="profile">
+            <div class="box">
+                <div class="box_t">
+                    <h3>{$title}</h3>
+                </div>
+            </div>
+            <div class="box_c">
+                <form action="{:U('Product/doAdd')}" method="post">
+                    <fieldset>
+                        <div class="box_c_item">
+                            <label class="l_title">* 中文品名：</label>
+                            <input class="text_input w300" type="text" name="product_name" placeholder="请输入中文品名" value="">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 英文品名 ：</label>
+                            <input class="text_input w300" type="text" name="en_product_name" placeholder="请输入英文品名" value="">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 商品编号 ：</label>
+                            <input class="text_input w300" type="text" name="goods_code" placeholder="请输入商品编号" value="">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 单位：</label>
+                            <select class="w300" id="unit" name="unit">
+                                <foreach name="order_detail_unit" item="v" key="k">
+                                    <option value="{$k}">{$v} / {$k}</option>
+                                </foreach>
+                            </select>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 单件申报价值 ：</label>
+                            <input class="text_input w300" type="number" name="single_declared" placeholder="请输入单件申报价值" value="">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title">* 原产地：</label>
+                            <input class="text_input w300" type="text" name="origin" placeholder="请输入原产地">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title"> 材质：</label>
+                            <input class="text_input w300" type="text" name="texture" placeholder="">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="box_c_item">
+                            <label class="l_title"></label>
+                            <button class="btn btn_commit" type="submit">确认</button> &nbsp;
+                            <a class="btn btn_commit" href="https://www.censtatd.gov.hk/trader/hscode/index_tc.jsp" target="_blank">编码查询</a> &nbsp;
+                            <a href="{:U('Product/index')}" class="btn btn_cancel">取消</a> &nbsp;
+                            <div class="clear"></div>
+                        </div>
+                    </fieldset>
+                </form>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!--END 个人信息-->
+    </div>
+    <!--END content-->
+</div>
+<!-- END main -->
+<script type="text/javascript" src="__PUBLIC__/usercenter/js/base.js"></script>
+<script type="text/javascript">
+    $(function () {
+        menu1("#ud7", "#ud7 a", ".coin_7 a.nav_top_item");
+
+    })
+</script>
+</body>
+</html>
