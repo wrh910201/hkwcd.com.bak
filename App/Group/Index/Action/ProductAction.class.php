@@ -105,6 +105,67 @@ class ProductAction extends BaseAction
         }
     }
 
+    public function ajaxAdd() {
+        if( IS_POST ) {
+            $data["product_name"] = I("product_name", "", "trim");
+            $data["en_product_name"] = I("en_product_name", "", "trim");
+            $data["goods_code"] = I("goods_code", "", "trim");
+            $data["unit"] = I("unit", "", "trim");
+            $data["single_declared"] = I("single_declared", "", "trim");
+            $data["origin"] = I("origin", "", "trim");
+            $data["texture"] = I("texture", "", "trim");
+
+            $has_error = false;
+            $errorMsg = "";
+
+            if( empty($data["product_name"]) ) {
+                $has_error = true;
+                $errorMsg .= empty($errorMsg) ? '请输入中文品名' : '<br />请输入中文品名';
+            }
+            if( empty($data["en_product_name"]) ) {
+                $has_error = true;
+                $errorMsg .= empty($errorMsg) ? '请输入英文品名' : '<br />请输入英文品名';
+            }
+            if( empty($data["goods_code"]) ) {
+                $has_error = true;
+                $errorMsg .= empty($errorMsg) ? '请输入商品编号' : '<br />请输入商品编号';
+            }
+            if( empty($data["unit"]) ) {
+                $has_error = true;
+                $errorMsg .= empty($errorMsg) ? '请输入单位' : '<br />请输入单位';
+            }
+            if( empty($data["single_declared"]) ) {
+                $has_error = true;
+                $errorMsg .= empty($errorMsg) ? '请输入单件申报价值' : '<br />请输入单件申报价值';
+                $this->error('请输入单件申报价值');
+            }
+            if( empty($data["origin"]) ) {
+                $has_error = true;
+                $errorMsg .= empty($errorMsg) ? '请输入原产地' : '<br />请输入原产地';
+            }
+
+            if( $has_error ) {
+                $response['msg'] = $errorMsg;
+                echo json_encode($response);
+                exit;
+            }
+
+            $data["client_id"] = $this->client_id;
+            $result = M("ClientProduct")
+                ->add($data);
+            if( $result ) {
+                $response['code'] = 1;
+                $response['msg'] = '添加商品成功';
+                $response['data'] = $data;
+            } else {
+                $response['msg'] = '系统繁忙，请稍后重试';
+            }
+            echo json_encode($response);
+            exit;
+        }
+    }
+
+
     public function edit() {
         $id = I('get.id', 0, 'intval');
         $where = ['id' => $id, 'status' => 1, 'client_id' => $this->client_id];
