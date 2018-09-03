@@ -50,7 +50,7 @@
                                         </if>
                                     </if>
                                     <if condition="$v.exam_status eq 1 && $v.ensure_status eq 0">
-                                        | <a href="{:U('Order/ensure', array('id' => $v['id']))}">确认</a>
+                                        | <a href="{:U('Order/ensure', array('id' => $v['id']))}">待确认</a>
                                     </if>
                                     <if condition="$v.express_status eq 1">
                                         | <a href="javascript:void(0);" onclick="trace_order({$v.id})">跟踪</a>
