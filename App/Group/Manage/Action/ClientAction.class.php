@@ -29,7 +29,7 @@ class ClientAction extends CommonContentAction {
 
         $page = new Page($count, 10);
         $limit = $page->firstRow. ',' .$page->listRows;
-        $list = M('client')->where($where)->order('id')->limit($limit)->select();
+        $list = M('client')->where($where)->order('id desc')->limit($limit)->select();
         if( $list ) {
             foreach( $list as $k => $v ) {
                 $list[$k]['company'] = mb_strlen($v['company'], 'utf-8') > 13 ? mb_substr($v['company'], 0, 13, 'utf-8').'...' : $v['company'];
