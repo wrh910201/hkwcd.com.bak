@@ -1,0 +1,90 @@
+.webuploader-container {
+	position: relative;
+}
+
+#filePicker{
+	display: inline-block;
+	margin-right: 8px;
+}
+
+.progress{
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	height: 2rem;
+	position: absolute;
+	margin-bottom: 0;
+	border-radius: 0;
+	background-color: transparent;
+}
+
+.webuploader-element-invisible {
+	position: absolute !important;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+}
+.webuploader-pick {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	background: #00b7ee;
+	padding: 10px 15px;
+	color: #fff;
+	text-align: center;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.webuploader-pick-hover {
+	background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+	opacity: 0.6;
+	pointer-events:none;
+}
+
+#fileUpload.webuploader-pick{
+	background-color: #f0f0f0;
+	border:1px solid #efefef;
+	color: #14A2BA;
+}
+
+.file-item.thumbnail{
+	vertical-align: top;
+	display: inline-block;
+	position: relative;
+	width: 150px;
+	height: 150px;
+	margin-right: 10px;
+}
+
+.file-item.thumbnail .info,.file-item.thumbnail .error{
+	position: absolute;
+	width: 100%;
+	padding: 4px 0;
+	word-wrap: break-word;
+	bottom: 0;
+	background-color: rgba(100,100,100,.5);
+	left: 0;
+	color: #fff;
+	text-align: center;
+	font-size: .8rem;
+}
+
+.file-item.thumbnail .error{
+	background-color: rgba(200,100,100,.5);
+}
+
+.remove-file{
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	line-height:20px;
+	border-radius: 50%;
+	text-align: center;
+	color: rgba(200,100,100,1);
+	background-color: #fff;
+	border:1px solid rgba(200,100,100,1);
+	right:-4px;
+	top:-4px;
+}

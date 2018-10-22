@@ -14,6 +14,8 @@ class BaseAction extends Action {
     ];
 
     public function _initialize() {
+        C("DEFAULT_THEME", "client");
+        C("TMPL_FILE_DEPR", "/");
         if( IS_AJAX ) {
             if (empty(session('hkwcd_user'))) {
                 echo json_encode(

@@ -1,0 +1,47 @@
+#swiper {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    display: none;
+    background-color: rgba(0, 0, 0, .8);
+}
+
+.swiper-container {
+    height: 100%;
+}
+
+.swiper-close {
+    z-index: 99;
+    margin-top: 16px;
+    margin-right: 16px;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    color: #888;
+    position: absolute;
+    border: 1px solid #efefef;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.swiper-close:after {
+    content: '×';
+}
+
+.swiper-slide {
+    display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#vue-swiper .swiper-slide img {
+    max-height: 90%;
+    max-width: 96%;
+    height: auto;
+}

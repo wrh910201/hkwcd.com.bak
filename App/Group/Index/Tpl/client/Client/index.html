@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title>华度货运</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Public/client/static/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/Public/client/static/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/Public/client/static/fonticonpicker/css/jquery.fonticonpicker.css" rel="stylesheet" />
+    <link href="/Public/client/static/fonticonpicker/css/jquery.fonticonpicker.bootstrap.css" rel="stylesheet" />
+    <link href="/Public/client/static/fonticonpicker/css/fontello.css" rel="stylesheet" />
+    <!--<link href="/static/static/layer/layim/layim.css" rel="stylesheet" />-->
+    <link href="/Public/client/static/layer/3.0.1/skin/moon/style.css" rel="stylesheet" />
+
+    <style>
+        .my-tab-right {
+            right: 200px;
+        }
+
+        .my-tab-group {
+            right: 140px;
+        }
+
+        .my-tab-platform {
+            right: 80px;
+        }
+
+        .my-tab-exit {
+            right: 20px;
+        }
+
+        .platform-list {
+            max-height: 500px;
+            overflow: scroll;
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            height: 1rem;
+            width: 1rem;
+            top: 0;
+            left: 6px;
+            color: #ccc;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .search-icon + input {
+            border: 0;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .J_tabCloseAll a {
+            display: block;
+        }
+
+        .J_tabClose.switch-platform {
+            overflow: hidden;
+        }
+
+        @media (max-width: 992px) {
+            #page-wrapper{
+                margin: 0;
+            }
+
+            body.body-small.fixed-sidebar.mini-navbar #page-wrapper, body.fixed-sidebar.mini-navbar #page-wrapper{
+                margin: 0;
+            }
+
+            .mini-navbar .navbar-default.navbar-static-side{
+                opacity: 0;
+                width: 0;
+                z-index: -1;
+            }
+        }
+
+        .close-nav{
+            z-index: 1000
+        }
+
+        .display_style {
+            display: block;
+        }
+
+        .chat_tab_hidden {
+            right: -232px;
+        }
+
+        .chat_tab_show {
+            right: 1px;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close visible-xs visible-sm "><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span><img alt="image" class="img-container" src="/Public/wcd56/images/t_b.gif"></span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                               <span class="block m-t-xs"><strong class="font-bold">{$Think.session.hkwcd_user.full_name}</strong></span>
+                                <!--<span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>-->
+                                </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li>
+                                <a class="J_menuItem" href="form_avatar.html" data-index="0">修改头像</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="profile.html" data-index="1">个人资料</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="contacts.html" data-index="2">联系我们</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="mailbox.html" data-index="3">信箱</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="login.html">安全退出</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">H+
+                    </div>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-home"></i> <span class="nav-label">主页</span> <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a class="J_menuItem" href="index_v1.html" data-index="0">主页示例一</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="index_v2.html" data-index="5">主页示例二</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="index_v3.html" data-index="6">主页示例三</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="index_v4.html" data-index="7">主页示例四</a>
+                        </li>
+                        <li>
+                            <a href="index_v5.html" target="_blank">主页示例五</a>
+                        </li>
+                    </ul>
+
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header" style="width: 100%">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#collapse-bar" aria-expanded="false"
+                            style="color: #00AA91">
+                        <!--<span class="icon-bar"></span>-->
+                        <!--<span class="icon-bar"></span>-->
+                        <!--<span class="icon-bar"></span>-->
+                    </button>
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary" href="#"><i class="fa fa-bars"></i>
+                    </a>
+                    <div class="collapse navbar-collapse" id="collapse-bar">
+                        <ul class="nav navbar-nav navbar-right">
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active J_menuTab" data-id="/Order/index.html">首页</a>
+                </div>
+            </nav>
+            <button class="roll-nav roll-right J_tabRightt" style="right: 140px;"><i class="fa fa-forward"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right  my-tab-group" style="right: 60px;">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">常用操作<span class="caret"></span>
+
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li class="J_tabGo"><a>前进</a>
+                    </li>
+                    <li class="J_tabBack"><a>后退</a>
+                    </li>
+                    <li class="J_tabFresh"><a>刷新</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="J_tabShowActive"><a>定位当前选项卡</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+                    </li>
+                    <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+                    </li>
+                </ul>
+            </div>
+            <a href="/User/logout" style="right: 0px;" class="roll-nav roll-right J_tabExit my-tab-exit"><i
+                    class="fa fa fa-sign-out"></i> 退出</a>
+        </div>
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" width="99%" height="100%" src="/Order/index.html"
+                    frameborder="0" data-id="/Order/index.html" seamless></iframe>
+        </div>
+
+    </div>
+    <!--右侧部分结束-->
+    <!--右侧边栏开始-->
+    <!--右侧边栏结束-->
+</div>
+
+<script src="/Public/client/static/jquery/2.1.4/jquery.min.js"></script>
+<script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/Public/client/static/metisMenu/1.1.3/metisMenu.min.js"></script>
+<script src="/Public/client/static/jQuery-slimScroll/1.3.0/jquery.slimscroll.min.js"></script>
+<script src="/Public/client/static/pace/0.5.1/pace.min.js"></script>
+<script src="/Public/client/static/layer/3.0.1/layer.min.js"></script>
+<script src="/Public/client/static/vue/2.1.6/vue.min.js"></script>
+<script src="/Public/client/hplus/js/hplus.min.js?v=4.1.0"></script>
+<script src="/Public/client/hplus/js/contabs.js" type="text/javascript"></script>
+</body>
+<script>
+
+    $(".close-nav").click(function () {
+        event.preventDefault();
+        event.stopPropagation();
+        $("body").toggleClass("mini-navbar");
+        SmoothlyMenu()
+    });
+
+
+    var $platforms = [];
+    $(function () {
+        for (var i = 0; i < $(".platform-list li").length; i++) {
+            $platforms.push($(".platform-list li a").eq(i).html());
+        }
+    });
+    function searchPlatform() {
+        var keyword = $("#searchPlatform").val();
+        if (keyword == '') {
+            $(".platform-list li a").each(function () {
+                $(this).show()
+            });
+        }
+        for (var j = 0; j < $platforms.length; j++) {
+            if ($platforms[j].indexOf(keyword) == -1) {
+                $(".platform-list li").eq(j).hide()
+            } else {
+                $(".platform-list li").eq(j).show();
+            }
+        }
+    }
+
+    //    var isIOS = navigator.userAgent.match(/iPad|iPhone/i),frameWidth = '';
+    //    frameWidth = isIOS ? '':'';
+
+    //这是一个好方法
+    var notIOS = (!navigator.userAgent.match(/iPad|iPhone/i)),frameWidth = '100%';
+    if(notIOS){
+//        alert("not IOS")
+    }else{
+//        alert("isIos");
+        frameWidth = document.body.clientWidth+'px';
+    }
+    function createNewTab(href,text){
+        var o = href, m = 1, l = $.trim(text), k = true;
+        if (o == undefined || $.trim(o).length == 0) {
+            return false
+        }
+        $(".J_menuTab").each(function () {
+            if ($(this).data("id") == o) {
+                if (!$(this).hasClass("active")) {
+                    $(this).addClass("active").siblings(".J_menuTab").removeClass("active");
+                    g(this);
+                    $(".J_mainContent .J_iframe").each(function () {
+                        if ($(this).data("id") == o) {
+                            $(this).show().siblings(".J_iframe").hide();
+                            return false
+                        }
+                    })
+                }
+                k = false;
+                return false
+            }
+        });
+        if (k) {
+            var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="fa fa-times-circle"></i></a>';
+            $(".J_menuTab").removeClass("active");
+            var n = '<iframe class="J_iframe" name="iframe' + m + '" width="'+frameWidth+'" height="100%" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
+            $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
+            $(".J_menuTabs .page-tabs-content").append(p);
+            g($(".J_menuTab.active"))
+        }
+        return false
+    }
+
+    function g(n) {
+        var o = f($(n).prevAll()), q = f($(n).nextAll());
+        var l = f($(".content-tabs").children().not(".J_menuTabs"));
+        var k = $(".content-tabs").outerWidth(true) - l;
+        var p = 0;
+        if ($(".page-tabs-content").outerWidth() < k) {
+            p = 0
+        } else {
+            if (q <= (k - $(n).outerWidth(true) - $(n).next().outerWidth(true))) {
+                if ((k - $(n).next().outerWidth(true)) > q) {
+                    p = o;
+                    var m = n;
+                    while ((p - $(m).outerWidth()) > ($(".page-tabs-content").outerWidth() - k)) {
+                        p -= $(m).prev().outerWidth();
+                        m = $(m).prev()
+                    }
+                }
+            } else {
+                if (o > (k - $(n).outerWidth(true) - $(n).prev().outerWidth(true))) {
+                    p = o - $(n).prev().outerWidth(true)
+                }
+            }
+        }
+        $(".page-tabs-content").animate({marginLeft: 0 - p + "px"}, "fast")
+    }
+
+    function f(l) {
+        var k = 0;
+        $(l).each(function () {
+            k += $(this).outerWidth(true)
+        });
+        return k
+    }
+
+
+</script>
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:17:11 GMT -->
+</html>
