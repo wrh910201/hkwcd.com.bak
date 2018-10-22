@@ -7,16 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>H+ 后台主题UI框架 - 基本表单</title>
-    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
-    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+    <title>华度货运 - {$title}</title>
 
     <link rel="shortcut icon" href="favicon.ico">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.staticfile.org/font-awesome/4.4.0/css/font-awesome.css?v=4.4.0" rel="stylesheet">
-    <link href="css/plugins/iCheck/custom.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.min.css?v=4.1.0" rel="stylesheet">
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.4.0/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+    <link href="/Public/client/hplus/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/style.min.css?v=4.1.0" rel="stylesheet">
 
 </head>
 
@@ -26,8 +24,8 @@
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>所有表单元素
-                        <small>包括自定义样式的复选和单选按钮</small>
+                    <h5>账号信息
+                        <small></small>
                     </h5>
                     <div class="ibox-tools">
                         <a class="collapse-link">
@@ -53,11 +51,193 @@
                     <form method="get" class="form-horizontal">
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">禁用</label>
-
-                            <div class="col-sm-10">
-                                <input type="text" disabled="" placeholder="已被禁用" class="form-control">
+                            <label class="col-sm-2 control-label">账号</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.username}" disabled="" placeholder="" class="form-control">
                             </div>
+                        </div>
+                        <if condition="$client.is_person eq 1">
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">公司</label>
+                                <div class="col-sm-6">
+                                    <input type="text" value="{$user.company}" disabled="" placeholder="" class="form-control">
+                                </div>
+                            </div>
+                        </if>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">姓名</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.full_name}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.email}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">手机</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.mobile}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备用手机</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.spare_mobile}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">微信</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.care_of}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">QQ</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.qq}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地址1</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">国家</label>
+                            <div class="col-sm-6">
+                                <select class="form-control m-b" name="account" disabled>
+                                    <option value="">--</option>
+                                    <foreach name="country_list" item="v">
+                                        <if condition="$v.id eq $user['country_id']">
+                                            <option value="{$v.id}" selected="selected" >{$v.name} / {$v.ename}</option>
+                                        </if>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">省</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.state}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">城市</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.city}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮编</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.postal_code}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">详细地址</label>
+                            <div class="col-sm-10">
+                                <input type="text" value="{$user.address}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地址2</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">国家</label>
+                            <div class="col-sm-6">
+                                <select class="form-control m-b" name="account" disabled>
+                                    <option value="">--</option>
+                                    <foreach name="country_list" item="v">
+                                        <if condition="$v.id eq $user['spare_country_id']">
+                                            <option value="{$v.id}" selected="selected" >{$v.name} / {$v.ename}</option>
+                                        </if>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">省</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.spare_state}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">城市</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.spare_city}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮编</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.spare_postal_code}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">详细地址</label>
+                            <div class="col-sm-10">
+                                <input type="text" value="{$user.spare_address}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">座机</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.phone}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">传真</label>
+                            <div class="col-sm-6">
+                                <input type="text" value="{$user.fax}" disabled="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">已上传资料
+                            </label>
+                            <if condition="$user.is_person && ($user.certificate1 eq '' || $user.certificate2 eq '')">
+                                <div class="col-sm-10">
+                                    <div class="checkbox i-checks">
+                                        <label>
+                                            <input type="checkbox" value="" disabled="">
+                                            <i></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            <else />
+                                <if condition="$user.is_person eq 0 && ($user.license eq '')">
+                                    <div class="col-sm-10">
+                                        <div class="checkbox i-checks">
+                                            <label>
+                                                <input type="checkbox" value="" disabled="">
+                                                <i></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <else />
+                                    <div class="col-sm-10">
+                                        <div class="checkbox i-checks">
+                                            <label>
+                                                <input type="checkbox" value="" disabled="" checked>
+                                                <i></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </if>
+                            </if>
                         </div>
                     </form>
                 </div>
@@ -66,11 +246,15 @@
     </div>
 </div>
 
-<script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="js/content.min.js?v=1.0.0"></script>
-<script src="js/plugins/iCheck/icheck.min.js"></script>
-
+<script src="/Public/client/hplus/js/jquery.min.js?v=1.0.0"></script>
+<script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/Public/client/hplus/js/content.min.js?v=1.0.0"></script>
+<script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+    });
+</script>
 </body>
 
 </html>
