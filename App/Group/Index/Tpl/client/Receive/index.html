@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$title}</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Public/client/static/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Public/client/static/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <link href="/Public/client/static/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/Public/client/hplus/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+    <link href="/Public/client/static/finance/css/fm.selectator.jquery.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{$title}</h5>
+
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="table_data_tables.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="table_data_tables.html#">选项1</a>
+                            </li>
+                            <li><a href="table_data_tables.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="table-bar"></div>
+                    <table id="example"></table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="addShopModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/tomatoes/background/addShop" method="post" id="addShopForm" onsubmit="return doAdd()">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <!--<i class="fa fa-laptop modal-icon"></i>-->
+                    <h4 class="modal-title">添加店铺</h4>
+                    <small class="font-bold"></small>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>店铺名称</label>
+                        <input type="text" placeholder="店铺名称" class="form-control" name="shop_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>平台</label>
+                        <select placeholder="" class="form-control" name="platform_id" id="add_platform_id">
+                            <option value="0">请选择平台</option>
+                            {foreach name="platform_list" item="v"}
+                            <option value="{$v.platform_id}">{$v.nick_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>学校</label>
+                        <select placeholder="" class="form-control" name="school_id" id="add_school_id">
+                            <option value="0">请选择学校</option>
+                            {foreach name="school_list" item="v"}
+                            <option value="{$v.id}">{$v.school_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>地址</label>
+                        <input type="text" placeholder="店铺的具体地址" class="form-control" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>手机</label>
+                        <input type="text" placeholder="手机" class="form-control" name="mobile" required>
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="text" placeholder="邮箱" class="form-control" name="email" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal inmodal" id="editShopModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/tomatoes/background/editShop" method="post" id="editShopForm" onsubmit="return doEdit('editShopForm')">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <!--<i class="fa fa-laptop modal-icon"></i>-->
+                    <h4 class="modal-title">编辑店铺</h4>
+                    <small class="font-bold"></small>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>店铺名称</label>
+                        <input type="text" placeholder="店铺名称" class="form-control" name="shop_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>平台</label>
+                        <select placeholder="" class="form-control" name="platform_id" id="edit_platform_id">
+                            <option value="0">请选择平台</option>
+                            {foreach name="platform_list" item="v"}
+                            <option value="{$v.platform_id}">{$v.nick_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>学校</label>
+                        <select placeholder="" class="form-control" name="school_id" id="edit_school_id">
+                            <option value="0">请选择学校</option>
+                            {foreach name="school_list" item="v"}
+                            <option value="{$v.id}">{$v.school_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>地址</label>
+                        <input type="text" placeholder="店铺的具体地址" class="form-control" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>手机</label>
+                        <input type="text" placeholder="手机" class="form-control" name="mobile" required>
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="text" placeholder="邮箱" class="form-control" name="email" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="shop_id" name="shop_id" />
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal inmodal" id="showLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <!--<i class="fa fa-laptop modal-icon"></i>-->
+                <h4 class="modal-title">链接</h4>
+                <small class="font-bold"></small>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/Public/client/static/jquery/2.1.4/jquery.min.js"></script>
+<script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/Public/client/static/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<script src="/Public/client/hplus/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="/Public/client/static/layer/2.1/layer.min.js"></script>
+<script src="/Public/client/static/finance/js/fm.selectator.jquery.js"></script>
+
+
+<script>
+    var $example = $('#example'),$details=$("#details"), $shopDetails = $('#shop_details'),
+        selections = [];
+    var editing_index = -1;
+    var editing_row = '';
+    var selected_row = '';
+
+    $("#addShopModal").on("show.bs.modal",function () {
+        $("#selectator_add_platform_id,#selectator_add_school_id").remove();
+        $("#add_platform_id,#add_school_id").selectator({
+            labels: {
+                search: '搜索关键字'
+            },
+            showAllOptionsOnFocus: true,
+            keepOpen: false,
+            useSearch: true
+        });
+    });
+    $("#editShopModal").on("show.bs.modal",function () {
+        $("#selectator_edit_platform_id,#selectator_edit_school_id").remove();
+        $("#edit_platform_id,#edit_school_id").selectator({
+            labels: {
+                search: '搜索关键字'
+            },
+            showAllOptionsOnFocus: true,
+            keepOpen: false,
+            useSearch: true
+        });
+    });
+
+    function initTable() {
+        $example.bootstrapTable({
+            method: "get",  //使用get请求到服务器获取数据
+            url: "/Receive/getList", //获取数据的Servlet地址
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            pageSize: 10,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [5, 10, 15, 20, 25],  //记录数可选列表
+            search: false,  //是否启用查询
+            showColumns: false,  //显示下拉框勾选要显示的列
+            showRefresh: true,  //显示刷新按钮
+            sidePagination: "server", //表示服务端请求
+            dataType: 'json',
+            sortOrder: 'desc',
+            showExport: false,
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParamsType: "limit",
+            queryParams: function queryParams(params) {   //设置查询参数
+                var temp_params = dataQueryParams(params);
+//                temp_params.user_id = id;
+                return temp_params
+            },
+            responseHandler: function responseHandler(res) {
+                var result = {
+                    rows: res.data,
+                    total: res.total
+                };
+                return result;
+            },
+            columns: [
+                {
+                    title: '收货人',
+                    field: 'addressee',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '收货地址',
+                    field: 'detail_address',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '是否默认',
+                    field: 'is_default',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    formatter: isDefaultFormatter
+                },
+                {
+                    title: '操作',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    events: operateEvents,
+                    formatter: operateFormatter
+                }
+            ]
+        });
+
+        setTimeout(function () {
+            $example.bootstrapTable('resetView');
+        }, 200);
+        $example.on('check.bs.table uncheck.bs.table ' +
+            'check-all.bs.table uncheck-all.bs.table', function () {
+
+            selections = getIdSelections();
+
+        });
+        $example.on('expand-row.bs.table', function (e, index, row, $detail) {
+
+        });
+        $example.on('all.bs.table', function (e, name, args) {
+
+        });
+    }
+
+    function dataQueryParams(params) {
+        return {
+            limit: params.limit,
+            order: params.order,
+            page: params.offset,
+            keywords: params.search
+        }
+    }
+
+    /*formatters*/
+
+    function nameFormatter(value, row) {
+        if( row.is_top == 1 || row.is_top == "1" ) {
+            return value + '(置顶)';
+        } else {
+            return value;
+        }
+    }
+
+    function statusFormatter(value, row) {
+        if ( value == 1 || value == "1" ) {
+            return '可用';
+        } else {
+            return '不可用';
+        }
+    }
+
+    function openFormatter(value, row) {
+        if ( value == 0 || value == "0" ) {
+            return '开放';
+        } else {
+            return '不开放';
+        }
+    }
+
+    function operateFormatter(value, row) {
+        var operate = [
+        ];
+        if( 1 !== parseInt(row.is_default) ) {
+            operate.push('<a class="default" href="javascript:void(0)" title="设为默认">设为默认</a>&nbsp;');
+        }
+        operate.push('<a class="edit" href="javascript:void(0)" title="编辑">编辑</a>&nbsp;');
+        operate.push('<a class="del" href="javascript:void(0)" title="删除">删除</a>&nbsp;');
+        return operate.join('');
+    }
+    /*formatters*/
+
+    /*operate events*/
+    window.operateEvents = {
+        'click .default': function (e, value, row, index) {
+
+        },
+        'click .edit': function (e, value, row, index) {
+
+        },
+        'click .del': function (e, value, row, index) {
+
+        }
+    };
+
+    /*operate events*/
+    $(function () {
+        var scripts = [
+                '/Public/client/static/bootstrap/js/bootstrap-table.js',
+                '/Public/client/static/bootstrap/js/bootstrap-table-export.js',
+                '/Public/client/static/bootstrap/js/tableExport.js',
+                '/Public/client/static/bootstrap/js/bootstrap-table-editable.min.js',
+                '/Public/client/static/bootstrap/js/bootstrap-editable.js'
+            ],
+            eachSeries = function (arr, iterator, callback) {
+                callback = callback || function () {
+                };
+                if (!arr.length) {
+                    return callback();
+                }
+                var completed = 0;
+                var iterate = function () {
+                    iterator(arr[completed], function (err) {
+                        if (err) {
+                            callback(err);
+                            callback = function () {
+                            };
+                        }
+                        else {
+                            completed += 1;
+                            if (completed >= arr.length) {
+                                callback(null);
+                            }
+                            else {
+                                iterate();
+                            }
+                        }
+                    });
+                };
+                iterate();
+            };
+        eachSeries(scripts, getScript, initTable);
+    });
+
+    function getScript(url, callback) {
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = url;
+
+        var done = false;
+        // Attach handlers for all browsers
+        script.onload = script.onreadystatechange = function () {
+            if (!done && (!this.readyState ||
+                this.readyState == 'loaded' || this.readyState == 'complete')) {
+                done = true;
+                if (callback)
+                    callback();
+                // Handle memory leak in IE
+                script.onload = script.onreadystatechange = null;
+            }
+        };
+        head.appendChild(script);
+        // We handle everything using the script element injection
+        return undefined;
+    }
+
+
+    function isDefaultFormatter(value, row) {
+        var str = '';
+        value = parseInt(value);
+        switch(value) {
+            case 1: str = '是';break;
+            default: str = '否';break;
+        }
+        return str;
+    }
+
+
+
+    function doAdd() {
+        var jz;
+        var url = $('#addShopForm').attr('action');
+        $.ajax({
+            type:"POST",
+            url:url,
+            data:{'data' : $('#addShopForm').serialize()},// 你的formid
+            async: false,
+            beforeSend:function(){
+                jz = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+            },
+            error: function(request) {
+                layer.close(jz);
+                swal("网络错误!", "", "error");
+            },
+            success: function(data) {
+                //关闭加载层
+                layer.close(jz);
+                if(data.code == 1){
+                    swal(data.msg, "", "success");
+                    //更新数据
+                    $('#addShopModal').modal('hide');
+                    $example.bootstrapTable('refresh');
+//                    initTable();
+                }else{
+                    swal(data.msg, "", "error");
+                }
+
+            }
+        });
+
+        return false;
+    }
+
+    function doEdit(key) {
+        var jz;
+        var url = $('#' + key).attr('action');
+        $.ajax({
+            type:"POST",
+            url:url,
+            data:{'data' : $('#' + key).serialize()},// 你的formid
+            async: false,
+            dataType: 'json',
+            beforeSend:function(){
+                jz = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+            },
+            error: function(request) {
+                layer.close(jz);
+                swal("网络错误!", "", "error");
+            },
+            success: function(data) {
+                //关闭加载层
+                layer.close(jz);
+                if(data.code == 1){
+                    swal(data.msg, "", "success");
+                    //更新数据
+                    $('#editShopModal').modal('hide');
+                    $('#shopProfitModal').modal('hide');
+                    $example.bootstrapTable('refresh');
+                }else{
+                    swal(data.msg, "", "error");
+                }
+            }
+        });
+
+        return false;
+    }
+
+</script>
+
+
+</body>
+</html>

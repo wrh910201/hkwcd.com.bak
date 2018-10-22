@@ -33,6 +33,32 @@ class DeliveryAction extends BaseAction {
         $this->display(); // 输出模板
     }
 
+    public function getList() {
+        $where['client_id'] = session('hkwcd_user.user_id');
+        $where['status'] = 1;
+        // 进行分页数据查询 注意limit方法的参数要使用Page类的属性
+        //分页
+        import('ORG.Util.Page');
+        $count = M('DeliveryAddress')->where($where)->count();
+
+        $page = new Page($count, C('usercenter_page_count'));
+        $limit = $page->firstRow. ',' .$page->listRows;
+
+        $delivery_list = M('DeliveryAddress')->where($where)->limit($limit)->order('is_default desc, id asc')->select();
+        if( $delivery_list ) {
+            foreach( $delivery_list  as $k => $v ) {
+                $delivery_list[$k]['index'] = $k+1;
+            }
+        }
+
+        $response = [
+            "data" => $delivery_list,
+            "total" => $count,
+        ];
+        echo json_encode($response);
+        exit;
+    }
+
     public function add() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['client_id' => $client_id])->find();
