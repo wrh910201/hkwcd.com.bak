@@ -604,7 +604,7 @@ class ClientAction extends CommonContentAction {
             mkdir($savename_prefix.'/certificate1');
         }
         $image = new ThinkImage(THINKIMAGE_GD, $certificate1);
-        $result = $image->water($shuiyin);
+        $result = $image->water($shuiyin, [10,10]);
         $result->save($savename);
 
         $certificate2 = I('post.certificate2', '', 'trim');
@@ -623,7 +623,7 @@ class ClientAction extends CommonContentAction {
             mkdir($savename_prefix.'/certificate2');
         }
         $image = new ThinkImage(THINKIMAGE_GD, $certificate2);
-        $result = $image->water($shuiyin);
+        $result = $image->water($shuiyin, [10, 10]);
         $result->save($savename);
 
 
