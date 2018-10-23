@@ -16,90 +16,99 @@
     <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="/Public/client/hplus/css/style.min.css?v=4.1.0" rel="stylesheet">
     <link href="/Public/client/hplus/css/plugins/webuploader/webuploader.css" rel="stylesheet" type="text/css" >
+    <link href="/Public/client/static/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!--<link href="/Public/client/hplus/css/demo/webuploader-demo.min.css" rel="stylesheet" type="text/css" >-->
 
+    <style>
+        [v-cloak]{
+            display: none!important;
+        }
+
+    </style>
 </head>
 
 <body class="gray-bg">
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" id="addOrder" v-cloak>
     <div class="row">
-        <div class="col-sm-4">
+        <div v-bind:class="{ 'col-sm-4': hasSpare, 'col-sm-6': !hasSpare }">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>发货地址</h5>
                     <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
                     </div>
                 </div>
                 <div class="ibox-content">
                     <address>
-                        <strong>阿里巴巴集团.</strong><br> 上海市闵行区绿地科技岛广场A座2606室<br> <abbr title="Phone">Tel:</abbr> (123)
-                        456-7890
+                        <strong>{{deliveryInfo.company}}</strong><br>
+                        <p>{{deliveryInfo.detail_address}}</p><br>
+                        <abbr title="Phone" v-if="deliveryInfo.phone">Tel:</abbr> {{deliveryInfo.phone}}<br />
+                        <abbr title="Mobile" v-if="deliveryInfo.mobile">手机:</abbr> {{deliveryInfo.mobile}}<br />
+                        <abbr title="ExporterCode" v-if="deliveryInfo.exporter_code">出口商代码:</abbr> {{deliveryInfo.exporter_code}}<br />
+                        <abbr title="PostalCode" v-if="deliveryInfo.postal_code">邮编:</abbr> {{deliveryInfo.postal_code}}<br />
                     </address>
-
                     <address>
-                        <strong>上海市</strong><br>
-                        <a href="mailto:#">i@zi-han.net</a>
+                        <strong v-if="deliveryInfo.country_name">{{deliveryInfo.country_name}} / {{deliveryInfo.en_country_name}}</strong><br />
+                        <strong>{{deliveryInfo.state}}</strong>&nbsp;<strong>{{deliveryInfo.city}}</strong><br>
+                        <a href="#">{{deliveryInfo.consignor}}</a>
                     </address>
-
+                    <button class="btn btn-primary" type="button" @click="getDefaultDelivery">默认地址</button>
+                    <button class="btn btn-primary" type="button" @click="showDeliveryList">列表</button>
+                    <button class="btn btn-primary" type="button" @click="showAddDelivery">新建</button>
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div v-bind:class="{ 'col-sm-4': hasSpare, 'col-sm-6': !hasSpare }">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>收货地址</h5>
                     <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
+
                     </div>
                 </div>
                 <div class="ibox-content">
                     <address>
-                        <strong>阿里巴巴集团.</strong><br> 上海市闵行区绿地科技岛广场A座2606室<br> <abbr title="Phone">Tel:</abbr> (123)
-                        456-7890
+                        <strong>{{receiveInfo.company}}</strong><br>
+                        <p>{{receiveInfo.detail_address}}</p><br>
+                        <abbr title="Phone" v-if="receiveInfo.phone">Tel:</abbr> {{receiveInfo.phone}}<br />
+                        <abbr title="Mobile" v-if="receiveInfo.mobile">手机:</abbr> {{receiveInfo.mobile}}<br />
+                        <abbr title="ExporterCode" v-if="receiveInfo.receiver_code">进口商代码:</abbr> {{receiveInfo.receiver_code}}<br />
+                        <abbr title="PostalCode" v-if="receiveInfo.postal_code">邮编:</abbr> {{receiveInfo.postal_code}}<br />
                     </address>
-
                     <address>
-                        <strong>上海市</strong><br>
-                        <a href="mailto:#">i@zi-han.net</a>
+                        <strong v-if="receiveInfo.country_name">{{receiveInfo.country_name}} / {{receiveInfo.en_country_name}}</strong><br />
+                        <strong>{{receiveInfo.state}}</strong>&nbsp;<strong>{{receiveInfo.city}}</strong><br>
+                        <a href="#">{{receiveInfo.addressee}}</a>
                     </address>
-
+                    <button class="btn btn-primary" type="button" @click="getDefaultReceive">默认地址</button>
+                    <button class="btn btn-primary" type="button" @click="showReceiveList">列表</button>
+                    <button class="btn btn-primary" type="button" @click="showAddReceive">新建</button>
+                    <button class="btn btn-primary" type="button" v-if="!hasSpare" @click="showEditSpare">{{hasSpare?'备用地址':'备用地址'}}</button>
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" v-if="hasSpare">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>备用收货地址</h5>
                     <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
                     </div>
                 </div>
                 <div class="ibox-content">
                     <address>
-                        <strong>阿里巴巴集团.</strong><br> 上海市闵行区绿地科技岛广场A座2606室<br> <abbr title="Phone">Tel:</abbr> (123)
-                        456-7890
+                        <strong>{{spareReceiveInfo.company}}</strong><br>
+                        <p>{{spareReceiveInfo.detail_address}}</p><br><br />
+                        <abbr title="Phone" v-if="spareReceiveInfo.phone">Tel:</abbr> {{spareReceiveInfo.phone}}<br />
+                        <abbr title="Mobile" v-if="spareReceiveInfo.mobile">手机:</abbr> {{spareReceiveInfo.mobile}}<br />
+                        <abbr title="ExporterCode" v-if="spareReceiveInfo.receiver_code">进口商代码:</abbr> {{spareReceiveInfo.receiver_code}}<br />
+                        <abbr title="PostalCode" v-if="spareReceiveInfo.postal_code">邮编:</abbr> {{spareReceiveInfo.postal_code}}<br />
                     </address>
-
                     <address>
-                        <strong>上海市</strong><br>
-                        <a href="mailto:#">i@zi-han.net</a>
+                        <strong v-if="spareReceiveInfo.country_name">{{spareReceiveInfo.country_name}} / {{spareReceiveInfo.en_country_name}}</strong><br />
+                        <strong>{{spareReceiveInfo.state}}</strong>&nbsp;<strong>{{spareReceiveInfo.city}}</strong><br>
+                        <a href="#">{{spareReceiveInfo.addressee}}</a>
                     </address>
+                    <button class="btn btn-primary" type="button" @click="showEditSpare">编辑</button>
+                    <button class="btn btn-primary" type="button" @click="toggleSpareReceive">取消备用</button>
 
                 </div>
             </div>
@@ -141,12 +150,126 @@
     </div>
 </div>
 
+<div class="modal inmodal fade" id="deliveryListModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">窗口标题</h4>
+                <small class="font-bold">这里可以显示副标题。
+            </div>
+            <div class="modal-body">
+                <p><strong>H+</strong>
+                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal fade" id="receiveListModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">窗口标题</h4>
+                <small class="font-bold">这里可以显示副标题。
+            </div>
+            <div class="modal-body">
+                <p><strong>H+</strong>
+                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="addDeliveryModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">窗口标题</h4>
+                <small class="font-bold">这里可以显示副标题。
+            </div>
+            <div class="modal-body">
+                <p><strong>H+</strong>
+                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="addReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">窗口标题</h4>
+                <small class="font-bold">这里可以显示副标题。
+            </div>
+            <div class="modal-body">
+                <p><strong>H+</strong>
+                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="editSpareReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">窗口标题</h4>
+                <small class="font-bold">这里可以显示副标题。
+            </div>
+            <div class="modal-body">
+                <p><strong>H+</strong>
+                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/Public/client/hplus/js/jquery.min.js?v=1.0.0"></script>
 <script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="/Public/client/hplus/js/content.min.js?v=1.0.0"></script>
 <script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
 <script src="/Public/client/hplus/js/plugins/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
 <!--<script src="/Public/client/hplus/js/demo/webuploader-demo.min.js"></script>-->
 <script>
     $(document).ready(function () {
@@ -337,6 +460,139 @@
     });
 
 </script>
+
+<script>
+    var addOrder = new Vue({
+        el: "#addOrder",
+        data: {
+            deliveryInfo: {
+                id: 0,
+                company: "",
+                country_name: "",
+                enc_country_name: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                consignor: "",
+                mobile: "",
+                phone: "",
+                postal_code: "",
+                exporter_code: "",
+                certificate_num: "",
+                certificate1_url: "",
+                certificate2_url: ""
+            },
+            receiveInfo: {
+                id: 0,
+                company: "",
+                country_name: "",
+                enc_country_name: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                addressee: "",
+                mobile: "",
+                phone: "",
+                postal_code: "",
+                receiver_code: "",
+            },
+            hasSpare: false,
+            spareReceiveInfo: {
+                company: "",
+                country_id: 0,
+                state: "",
+                city: "",
+                detail_address: "",
+                addressee: "",
+                mobile: "",
+                phone: "",
+                postal_code: "",
+                receiver_code: "",
+            },
+        },
+        mounted: function() {
+            this.getDefaultDelivery();
+            this.getDefaultReceive();
+        },
+        methods: {
+            getDefaultDelivery: function() {
+                var that = this;
+                var url = "/Order/getDefaultDelivery";
+                $.post(url, {}, function(response) {
+                    if( response.code == 1 ) {
+                        if( response.data ) {
+                            that.setDelivery(response.data);
+                        }
+                    }
+                }, "json")
+            },
+            setDelivery: function(data) {
+                this.deliveryInfo.id = data.id;
+                this.deliveryInfo.company = data.company;
+                this.deliveryInfo.country_name = data.country_name;
+                this.deliveryInfo.en_country_name = data.en_country_name;
+                this.deliveryInfo.state = data.state;
+                this.deliveryInfo.city = data.city;
+                this.deliveryInfo.detail_address = data.detail_address;
+                this.deliveryInfo.consignor = data.consignor;
+                this.deliveryInfo.mobile = data.mobile;
+                this.deliveryInfo.phone = data.phone;
+                this.deliveryInfo.postal_code = data.postal_code;
+                this.deliveryInfo.exporter_code = data.exporter_code;
+                this.deliveryInfo.certificate_num = data.certificate_num;
+                this.deliveryInfo.certificate1_url = data.certificate1_url;
+                this.deliveryInfo.certificate2_url = data.certificate2_url;
+            },
+            getDefaultReceive: function() {
+                var that = this;
+                var url = "/Order/getDefaultReceive";
+                $.post(url, {}, function(response) {
+                    if( response.code == 1 ) {
+                        if( response.data ) {
+                            that.setReceive(response.data);
+                        }
+                    }
+                }, "json")
+            },
+            setReceive: function(data) {
+                this.receiveInfo.id = data.id;
+                this.receiveInfo.company = data.company;
+                this.receiveInfo.country_name = data.country_name;
+                this.receiveInfo.en_country_name = data.en_country_name;
+                this.receiveInfo.state = data.state;
+                this.receiveInfo.city = data.city;
+                this.receiveInfo.detail_address = data.detail_address;
+                this.receiveInfo.addressee = data.addressee;
+                this.receiveInfo.mobile = data.mobile;
+                this.receiveInfo.phone = data.phone;
+                this.receiveInfo.postal_code = data.postal_code;
+                this.receiveInfo.receiver_code = data.receiver_code;
+            },
+            toggleSpareReceive: function() {
+                this.hasSpare = !this.hasSpare;
+            },
+            showDeliveryList: function() {
+                $("#deliveryListModal").modal();
+            },
+            showAddDelivery: function() {
+                $("#addDeliveryModal").modal();
+
+            },
+            showReceiveList: function() {
+                $("#receiveListModal").modal();
+
+            },
+            showAddReceive: function() {
+                $("#addReceiveModal").modal();
+            },
+            showEditSpare: function() {
+                $("#editSpareReceiveModal").modal();
+            }
+
+        }
+    });
+</script>
+
 </body>
 
 </html>
