@@ -46,8 +46,15 @@ class ReceiveAction extends BaseAction {
         $page = new Page($count, C('usercenter_page_count'));
         $limit = $page->firstRow. ',' .$page->listRows;
 
+        $page = I("page", 1, "intval");
+        if( $page <= 0 ) {
+            $page = 1;
+        }
+        $limit = C('usercenter_page_count');
+        $offset = ($page - 1) * $limit;
 
-        $receive_list =M('ReceiveAddress')->where($where)->limit($limit)->order('is_default desc, id asc')->select();
+
+        $receive_list =M('ReceiveAddress')->where($where)->limit($offset, $limit)->order('is_default desc, id asc')->select();
         if( $receive_list ) {
             foreach( $receive_list  as $k => $v ) {
                 $receive_list[$k]['index'] = $k+1;

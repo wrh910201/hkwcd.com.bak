@@ -52,7 +52,14 @@ class DeliveryAction extends BaseAction {
         $page = new Page($count, C('usercenter_page_count'));
         $limit = $page->firstRow. ',' .$page->listRows;
 
-        $delivery_list = M('DeliveryAddress')->where($where)->limit($limit)->order('is_default desc, id asc')->select();
+        $page = I("page", 1, "intval");
+        if( $page <= 0 ) {
+            $page = 1;
+        }
+        $limit = C('usercenter_page_count');
+        $offset = ($page - 1) * $limit;
+
+        $delivery_list = M('DeliveryAddress')->where($where)->limit($offset, $limit)->order('is_default desc, id asc')->select();
         if( $delivery_list ) {
             foreach( $delivery_list  as $k => $v ) {
                 $delivery_list[$k]['index'] = $k+1;
