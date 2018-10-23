@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>华度货运 - {$title}</title>
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.4.0/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+    <link href="/Public/client/hplus/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/Public/client/static/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/style.min.css?v=4.1.0" rel="stylesheet">
+    <link href="/Public/client/hplus/css/plugins/webuploader/webuploader.css" rel="stylesheet" type="text/css" >
+    <!--<link href="/Public/client/hplus/css/demo/webuploader-demo.min.css" rel="stylesheet" type="text/css" >-->
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>发货地址</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <address>
+                        <strong>阿里巴巴集团.</strong><br> 上海市闵行区绿地科技岛广场A座2606室<br> <abbr title="Phone">Tel:</abbr> (123)
+                        456-7890
+                    </address>
+
+                    <address>
+                        <strong>上海市</strong><br>
+                        <a href="mailto:#">i@zi-han.net</a>
+                    </address>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>收货地址</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <address>
+                        <strong>阿里巴巴集团.</strong><br> 上海市闵行区绿地科技岛广场A座2606室<br> <abbr title="Phone">Tel:</abbr> (123)
+                        456-7890
+                    </address>
+
+                    <address>
+                        <strong>上海市</strong><br>
+                        <a href="mailto:#">i@zi-han.net</a>
+                    </address>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>备用收货地址</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <address>
+                        <strong>阿里巴巴集团.</strong><br> 上海市闵行区绿地科技岛广场A座2606室<br> <abbr title="Phone">Tel:</abbr> (123)
+                        456-7890
+                    </address>
+
+                    <address>
+                        <strong>上海市</strong><br>
+                        <a href="mailto:#">i@zi-han.net</a>
+                    </address>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>订单信息
+                        <small></small>
+                    </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal">
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">公司</label>
+                            <div class="col-sm-4">
+                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                            </div>
+                            <label class="col-sm-1 control-label">公司</label>
+                            <div class="col-sm-4">
+                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/Public/client/hplus/js/jquery.min.js?v=1.0.0"></script>
+<script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/Public/client/hplus/js/content.min.js?v=1.0.0"></script>
+<script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/Public/client/hplus/js/plugins/webuploader/webuploader.min.js"></script>
+<!--<script src="/Public/client/hplus/js/demo/webuploader-demo.min.js"></script>-->
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+    });
+
+    var BASE_URL = "/Public/client/hplus/js/plugins/webuploader";
+
+    var $list1 = $("#fileList-1");
+    var $list2 = $("#fileList-2");
+
+    var thumbnailWidth = 408;
+    var thumbnailHeight = 248;
+    var uploader1 = WebUploader.create({
+
+        // 选完文件后，是否自动上传。
+        auto: true,
+
+        // swf文件路径
+        swf: BASE_URL + '/Uploader.swf',
+
+        // 文件接收服务端。
+        server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#filePicker-1',
+
+        // 只允许选择图片文件。
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+
+    uploader1.on( 'fileQueued', function( file ) {
+        var $li = $(
+            '<div id="' + file.id + '" class="file-item thumbnail">' +
+            '<img>' +
+            '<div class="info">' + file.name + '</div>' +
+            '</div>'
+            ),
+            $img = $li.find('img');
+
+
+        // $list1为容器jQuery实例
+        $list1.append( $li );
+
+        // 创建缩略图
+        // 如果为非图片文件，可以不用调用此方法。
+        // thumbnailWidth x thumbnailHeight 为 100 x 100
+        uploader1.makeThumb( file, function( error, src ) {
+            if ( error ) {
+                $img.replaceWith('<span>不能预览</span>');
+                return;
+            }
+
+            $img.attr( 'src', src );
+        }, thumbnailWidth, thumbnailHeight );
+    });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader1.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+            $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<p class="progress"><span></span></p>')
+                .appendTo( $li )
+                .find('span');
+        }
+
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader1.on( 'uploadSuccess', function( file, response ) {
+        $( '#'+file.id ).addClass('upload-state-done');
+        $('#certificate1_url').val(response.url);
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader1.on( 'uploadError', function( file ) {
+        var $li = $( '#'+file.id ),
+            $error = $li.find('div.error');
+
+        // 避免重复创建
+        if ( !$error.length ) {
+            $error = $('<div class="error"></div>').appendTo( $li );
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader1.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').remove();
+    });
+
+    var uploader2 = WebUploader.create({
+
+        // 选完文件后，是否自动上传。
+        auto: true,
+
+        // swf文件路径
+        swf: BASE_URL + '/Uploader.swf',
+
+        // 文件接收服务端。
+        server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#filePicker-2',
+
+        // 只允许选择图片文件。
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+
+    uploader2.on( 'fileQueued', function( file ) {
+        var $li = $(
+            '<div id="' + file.id + '" class="file-item thumbnail">' +
+            '<img>' +
+            '<div class="info">' + file.name + '</div>' +
+            '</div>'
+            ),
+            $img = $li.find('img');
+
+
+        // $list1为容器jQuery实例
+        $list2.append( $li );
+
+        // 创建缩略图
+        // 如果为非图片文件，可以不用调用此方法。
+        // thumbnailWidth x thumbnailHeight 为 100 x 100
+        uploader2.makeThumb( file, function( error, src ) {
+            if ( error ) {
+                $img.replaceWith('<span>不能预览</span>');
+                return;
+            }
+
+            $img.attr( 'src', src );
+        }, thumbnailWidth, thumbnailHeight );
+    });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader2.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+            $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<p class="progress"><span></span></p>')
+                .appendTo( $li )
+                .find('span');
+        }
+
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader2.on( 'uploadSuccess', function( file, response ) {
+        $( '#'+file.id ).addClass('upload-state-done');
+        $('#certificate2_url').val(response.url);
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader2.on( 'uploadError', function( file ) {
+        var $li = $( '#'+file.id ),
+            $error = $li.find('div.error');
+
+        // 避免重复创建
+        if ( !$error.length ) {
+            $error = $('<div class="error"></div>').appendTo( $li );
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader2.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').remove();
+    });
+
+</script>
+</body>
+
+</html>
