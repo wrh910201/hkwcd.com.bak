@@ -28,6 +28,14 @@ class DeliveryAction extends BaseAction {
         $this->assign('title', '发货地址列表');
         $this->page = $page->show();
 
+
+        $where = array('pid' => 0,'types'=>0);
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
+
+        foreach( $country_list as $k => $v ) {
+            $country_list[$k]['id'] = intval($v['id']);
+        }
+        $this->assign('country_list', $country_list);
         $this->assign('delivery_list',$delivery_list);// 赋值数据集
         $this->assign("json_delivery_list", json_encode($delivery_list));
         $this->display(); // 输出模板
@@ -409,7 +417,7 @@ class DeliveryAction extends BaseAction {
             mkdir(THINK_PATH.'../uploads/client/'.$username.'/delivery');
         }
         //正面
-        if( $is_update == false || ($is_update == true && $delivery['certificate1_url'] != $data['certificate1_url']) ) {
+        if( $is_update == false || ($is_update == true && false === strpos($data['certificate1_url'],$delivery_id . '_front')) ) {
             $url = realpath(THINK_PATH . '../' . $data['certificate1_url']);
             $ext_array = explode('.', $data['certificate1_url']);
             $ext1 = $ext_array[1];
@@ -423,11 +431,11 @@ class DeliveryAction extends BaseAction {
         }
 
         //反面
-        if( $is_update == false || ($is_update == true && $delivery['certificate2_url'] != $data['certificate2_url']) ) {
+        if( $is_update == false || ($is_update == true && false === strpos($data['certificate2_url'],$delivery_id . '_back')) ) {
             $url = realpath(THINK_PATH . '../' . $data['certificate2_url']);
             $ext_array = explode('.', $data['certificate2_url']);
             $ext2 = $ext_array[1];
-            $save_name_2 = THINK_PATH . '../uploads/client/' . $username . '/delivery/' . $delivery_id . '_back.' . $ext1;
+            $save_name_2 = THINK_PATH . '../uploads/client/' . $username . '/delivery/' . $delivery_id . '_back.' . $ext2;
             $update_save_name_2 = '/uploads/client/' . $username . '/delivery/' . $delivery_id . '_back.' . $ext2;
             $result = $this->_add_water($url, $save_name_2);
             if ($result) {
@@ -438,6 +446,7 @@ class DeliveryAction extends BaseAction {
         $map = [
             'id' => $delivery_id,
         ];
+
         if( $update_data ) {
             if (file_exists($save_name_1) && file_exists($save_name_2)) {
 //            $update_data['status'] = 1;
@@ -463,7 +472,7 @@ class DeliveryAction extends BaseAction {
         import('ORG.Util.Image.ThinkImage');
         $shuiyin = realpath(THINK_PATH.'../Public/config/images/shuiyin.png');
         $image = new ThinkImage(THINKIMAGE_GD, $url);
-        $result = $image->water($shuiyin);
+        $result = $image->water($shuiyin, [10,10]);
         $result->save($savename);
         return true;
     }

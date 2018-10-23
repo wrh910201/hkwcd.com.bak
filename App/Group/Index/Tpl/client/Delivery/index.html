@@ -15,8 +15,9 @@
     <link href="/Public/client/static/animate.css/3.5.2/animate.min.css" rel="stylesheet">
     <link href="/Public/client/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
     <link href="/Public/client/hplus/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
-
+    <link href="/Public/client/hplus/css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="/Public/client/static/finance/css/fm.selectator.jquery.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/plugins/webuploader/webuploader.css" rel="stylesheet" type="text/css" >
 
 </head>
 
@@ -56,133 +57,146 @@
     </div>
 </div>
 
-<div class="modal inmodal" id="addShopModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <form action="/tomatoes/background/addShop" method="post" id="addShopForm" onsubmit="return doAdd()">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-                    <!--<i class="fa fa-laptop modal-icon"></i>-->
-                    <h4 class="modal-title">添加店铺</h4>
-                    <small class="font-bold"></small>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>店铺名称</label>
-                        <input type="text" placeholder="店铺名称" class="form-control" name="shop_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>平台</label>
-                        <select placeholder="" class="form-control" name="platform_id" id="add_platform_id">
-                            <option value="0">请选择平台</option>
-                            {foreach name="platform_list" item="v"}
-                            <option value="{$v.platform_id}">{$v.nick_name}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>学校</label>
-                        <select placeholder="" class="form-control" name="school_id" id="add_school_id">
-                            <option value="0">请选择学校</option>
-                            {foreach name="school_list" item="v"}
-                            <option value="{$v.id}">{$v.school_name}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>地址</label>
-                        <input type="text" placeholder="店铺的具体地址" class="form-control" name="address" required>
-                    </div>
-                    <div class="form-group">
-                        <label>手机</label>
-                        <input type="text" placeholder="手机" class="form-control" name="mobile" required>
-                    </div>
-                    <div class="form-group">
-                        <label>邮箱</label>
-                        <input type="text" placeholder="邮箱" class="form-control" name="email" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<div class="modal inmodal" id="editShopModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <form action="/tomatoes/background/editShop" method="post" id="editShopForm" onsubmit="return doEdit('editShopForm')">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-                    <!--<i class="fa fa-laptop modal-icon"></i>-->
-                    <h4 class="modal-title">编辑店铺</h4>
-                    <small class="font-bold"></small>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>店铺名称</label>
-                        <input type="text" placeholder="店铺名称" class="form-control" name="shop_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>平台</label>
-                        <select placeholder="" class="form-control" name="platform_id" id="edit_platform_id">
-                            <option value="0">请选择平台</option>
-                            {foreach name="platform_list" item="v"}
-                            <option value="{$v.platform_id}">{$v.nick_name}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>学校</label>
-                        <select placeholder="" class="form-control" name="school_id" id="edit_school_id">
-                            <option value="0">请选择学校</option>
-                            {foreach name="school_list" item="v"}
-                            <option value="{$v.id}">{$v.school_name}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>地址</label>
-                        <input type="text" placeholder="店铺的具体地址" class="form-control" name="address" required>
-                    </div>
-                    <div class="form-group">
-                        <label>手机</label>
-                        <input type="text" placeholder="手机" class="form-control" name="mobile" required>
-                    </div>
-                    <div class="form-group">
-                        <label>邮箱</label>
-                        <input type="text" placeholder="邮箱" class="form-control" name="email" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" id="shop_id" name="shop_id" />
-                    <button type="submit" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<div class="modal inmodal" id="showLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content animated bounceInRight">
+<div class="modal inmodal fade" id="editDeliveryModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span
-                        aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <!--<i class="fa fa-laptop modal-icon"></i>-->
-                <h4 class="modal-title">链接</h4>
+                <h4 class="modal-title">编辑发货人地址</h4>
                 <small class="font-bold"></small>
             </div>
             <div class="modal-body">
+                <form id="editDeliveryForm" action="{:U('Delivery/doEdit')}" method="post" class="form-horizontal">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">公司</label>
+                        <div class="col-sm-6">
+                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 联系人</label>
+                        <div class="col-sm-6">
+                            <input name="consignor" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">国家</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="country">
+                                <foreach name="country_list" item="v">
+                                    <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 省</label>
+                        <div class="col-sm-6">
+                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 市</label>
+                        <div class="col-sm-6">
+                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 具体地址</label>
+                        <div class="col-sm-10">
+                            <input name="detail_address" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 邮编</label>
+                        <div class="col-sm-6">
+                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 手机</label>
+                        <div class="col-sm-6">
+                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">座机</label>
+                        <div class="col-sm-6">
+                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">出口商代码</label>
+                        <div class="col-sm-6">
+                            <input name="exporter_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 有效证件号码</label>
+                        <div class="col-sm-6">
+                            <input name="certificate_num" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
 
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 身份证正面</label>
+                        <div class="col-sm-10">
+                            <div id="certificate-upload-1">
+                                <!--用来存放item-->
+                                <div id="fileList-1" class="uploader-list"></div>
+                                <div id="filePicker-1">选择图片</div>
+                                <input id="certificate1_url" name="certificate1_url" type="hidden"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 身份证反面</label>
+                        <div class="col-sm-10">
+                            <div id="certificate-upload-2">
+                                <!--用来存放item-->
+                                <div id="fileList-2" class="uploader-list"></div>
+                                <div id="filePicker-2">选择图片</div>
+                                <input id="certificate2_url" name="certificate2_url" type="hidden"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">默认
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="checkbox i-checks">
+                                <label>
+                                    <input name="is_default" type="checkbox" value="1">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id"/>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                        </div>
+                    </div>
+                </form>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
             </div>
@@ -196,7 +210,8 @@
 <script src="/Public/client/hplus/js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="/Public/client/static/layer/2.1/layer.min.js"></script>
 <script src="/Public/client/static/finance/js/fm.selectator.jquery.js"></script>
-
+<script src="/Public/client/hplus/js/plugins/webuploader/webuploader.min.js"></script>
+<script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
 
 <script>
     var $example = $('#example'),$details=$("#details"), $shopDetails = $('#shop_details'),
@@ -216,7 +231,7 @@
             useSearch: true
         });
     });
-    $("#editShopModal").on("show.bs.modal",function () {
+    $("#editDeliveryModal").on("show.bs.modal",function () {
         $("#selectator_edit_platform_id,#selectator_edit_school_id").remove();
         $("#edit_platform_id,#edit_school_id").selectator({
             labels: {
@@ -331,30 +346,6 @@
 
     /*formatters*/
 
-    function nameFormatter(value, row) {
-        if( row.is_top == 1 || row.is_top == "1" ) {
-            return value + '(置顶)';
-        } else {
-            return value;
-        }
-    }
-
-    function statusFormatter(value, row) {
-        if ( value == 1 || value == "1" ) {
-            return '可用';
-        } else {
-            return '不可用';
-        }
-    }
-
-    function openFormatter(value, row) {
-        if ( value == 0 || value == "0" ) {
-            return '开放';
-        } else {
-            return '不开放';
-        }
-    }
-
     function operateFormatter(value, row) {
         var operate = [
         ];
@@ -370,13 +361,79 @@
     /*operate events*/
     window.operateEvents = {
         'click .default': function (e, value, row, index) {
-
+            swal({
+                title:"",
+                text:"是否设置为默认",
+                type:"info",
+                confirmButtonText:"确定",
+                cancelButtonText:"取消",
+                closeOnConfirm:true,
+                closeOnCancel:true,
+            }, function(confirm){
+                if( confirm ) {
+                    window.location.href = "/Delivery/setDefault?id=" + row.id;
+                }
+            });
         },
         'click .edit': function (e, value, row, index) {
+            $('#editDeliveryForm input[name=company]').val(row.company);
+            $('#editDeliveryForm input[name=consignor]').val(row.consignor);
+            $('#editDeliveryForm select[name=country]').val(row.country_id);
+            $('#editDeliveryForm input[name=company]').val(row.company);
+            $('#editDeliveryForm input[name=state]').val(row.state);
+            $('#editDeliveryForm input[name=city]').val(row.city);
+            $('#editDeliveryForm input[name=detail_address]').val(row.detail_address);
+            $('#editDeliveryForm input[name=postal_code]').val(row.postal_code);
+            $('#editDeliveryForm input[name=mobile]').val(row.mobile);
+            $('#editDeliveryForm input[name=phone]').val(row.phone);
+            $('#editDeliveryForm input[name=exporter_code]').val(row.exporter_code);
+            $('#editDeliveryForm input[name=certificate_num]').val(row.certificate_num);
+            $('#editDeliveryForm input[name=certificate1_url]').val(row.certificate1_url);
+            $('#editDeliveryForm input[name=certificate2_url]').val(row.certificate2_url);
+            $('#editDeliveryModal input[id=id]').val(row.id);
+            if( 1 == parseInt(row.is_default) ) {
+                $('#editDeliveryModal input[name=is_default]').iCheck('check');
+            } else {
+                $('#editDeliveryModal input[name=is_default]').iCheck('uncheck');
+            }
+            var $li = $(
+                '<div id="temp_1" class="file-item thumbnail">' +
+                '<img src="' + row.certificate1_url + '" style="width:140px;height:85.9px">' +
+                '<div class="info">正面</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
 
+            $list1.empty();
+            $list1.append($li);
+
+            var $li = $(
+                '<div id="temp_2" class="file-item thumbnail">' +
+                '<img src="' + row.certificate2_url + '" style="width:140px;height:85.9px">' +
+                '<div class="info">反面</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
+
+            $list2.empty();
+            $list2.append($li);
+
+            $("#editDeliveryModal").modal();
         },
         'click .del': function (e, value, row, index) {
-
+            swal({
+                title:"",
+                text:"是否删除",
+                type:"info",
+                confirmButtonText:"确定",
+                cancelButtonText:"取消",
+                closeOnConfirm:true,
+                closeOnCancel:true,
+            }, function(confirm){
+                if( confirm ) {
+                    window.location.href = "/Delivery/del?id=" + row.id;
+                }
+            });
         }
     };
 
@@ -510,7 +567,7 @@
                 if(data.code == 1){
                     swal(data.msg, "", "success");
                     //更新数据
-                    $('#editShopModal').modal('hide');
+                    $('#editDeliveryModal').modal('hide');
                     $('#shopProfitModal').modal('hide');
                     $example.bootstrapTable('refresh');
                 }else{
@@ -523,7 +580,206 @@
     }
 
 </script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+    });
 
+    var BASE_URL = "/Public/client/hplus/js/plugins/webuploader";
+
+    var $list1 = $("#fileList-1");
+    var $list2 = $("#fileList-2");
+
+    var thumbnailWidth = 408;
+    var thumbnailHeight = 248;
+    var uploader1;
+    var uploader2;
+
+    $("#editDeliveryModal").on("shown.bs.modal",function() {
+
+        uploader1 = WebUploader.create({
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: BASE_URL + '/Uploader.swf',
+
+            // 文件接收服务端。
+            server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker-1',
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+
+        uploader1.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                '<img>' +
+                '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
+
+            $list1.empty();
+            // $list1为容器jQuery实例
+            $list1.append($li);
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader1.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader1.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo($li)
+                    .find('span');
+            }
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader1.on('uploadSuccess', function (file, response) {
+            $('#' + file.id).addClass('upload-state-done');
+            $('#certificate1_url').val(response.url);
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader1.on('uploadError', function (file) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader1.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').remove();
+        });
+
+        uploader2 = WebUploader.create({
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: BASE_URL + '/Uploader.swf',
+
+            // 文件接收服务端。
+            server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker-2',
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+
+        uploader2.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                '<img>' +
+                '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
+
+            $list2.empty();
+
+            // $list1为容器jQuery实例
+            $list2.append($li);
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader2.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader2.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo($li)
+                    .find('span');
+            }
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader2.on('uploadSuccess', function (file, response) {
+            $('#' + file.id).addClass('upload-state-done');
+            $('#certificate2_url').val(response.url);
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader2.on('uploadError', function (file) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader2.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').remove();
+        });
+    });
+
+    $("#editDeliveryModal").on("hidden.bs.modal",function() {
+        uploader1.destroy();
+        uploader2.destroy();
+    });
+</script>
 
 </body>
 </html>
