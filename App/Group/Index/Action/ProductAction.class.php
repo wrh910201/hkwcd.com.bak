@@ -43,9 +43,53 @@ class ProductAction extends BaseAction
         $this->assign('title', '商品列表');
         $this->page = $page->show();
 
+        $order_detail_unit = M("ProductUnit")
+            ->select();
+        if( $order_detail_unit ) {
+            $temp = [];
+            foreach( $order_detail_unit as $k => $v ) {
+                $temp[$v["en_name"]] = $v["name"];
+            }
+            $order_detail_unit = $temp;
+        }
+
+        $this->assign('order_detail_unit', $order_detail_unit);
         $this->assign('product_list',$product_list);// 赋值数据集
         $this->assign("json_product_list", json_encode($product_list));
         $this->display(); // 输出模板
+    }
+
+    public function getList() {
+        $where['client_id'] = $this->client_id;
+        $where['status'] = 1;
+        // 进行分页数据查询 注意limit方法的参数要使用Page类的属性
+        //分页
+        import('ORG.Util.Page');
+        $count = M('ClientProduct')->where($where)->count();
+
+        $page = new Page($count, C('usercenter_page_count'));
+        $limit = $page->firstRow. ',' .$page->listRows;
+
+        $page = I("page", 1, "intval");
+        if( $page <= 0 ) {
+            $page = 1;
+        }
+        $limit = C('usercenter_page_count');
+        $offset = ($page - 1) * $limit;
+
+        $product_list =M('ClientProduct')->where($where)->limit($offset, $limit)->order('id asc')->select();
+        if( $product_list ) {
+            foreach( $product_list  as $k => $v ) {
+                $product_list[$k]['index'] = $k+1;
+            }
+        }
+        $response = [
+            "data" => $product_list,
+            "total" => $count,
+        ];
+        echo json_encode($response);
+        exit;
+
     }
 
     public function add() {
