@@ -151,6 +151,7 @@
                         <input type="hidden" id="id" name="id"/>
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-primary" type="submit">保存内容</button>
+                            <button class="btn btn-primary" type="button" onclick="remoteQuery();">偏远查询</button>
                         </div>
                     </div>
                 </form>
@@ -544,6 +545,9 @@
         $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
     });
 
+    function remoteQuery() {
+        window.open("{:U('Remote/index')}");
+    }
 </script>
 
 </body>
