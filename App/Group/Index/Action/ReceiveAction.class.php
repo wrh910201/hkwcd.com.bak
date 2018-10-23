@@ -26,6 +26,9 @@ class ReceiveAction extends BaseAction {
                 $receive_list[$k]['index'] = $k+1;
             }
         }
+        $country_list = M('country')->where($where)->order('sort,ename')->select();
+        $this->assign('country_list', $country_list);
+
         $this->page = $page->show();
         $this->assign('title', '收货地址列表');
         $this->assign('receive_list',$receive_list);// 赋值数据集
@@ -114,7 +117,7 @@ class ReceiveAction extends BaseAction {
         $result = M('ReceiveAddress')->add($data);
 //        echo M('ReceiveAddress')->getLastSql();exit;
         if( $result ) {
-            $this->success('添加收货地址成功', U('Receive/index'));
+            $this->success('添加收货地址成功', U('Receive/add'));
         } else {
             $this->error('系统繁忙，请稍后重试');
         }
