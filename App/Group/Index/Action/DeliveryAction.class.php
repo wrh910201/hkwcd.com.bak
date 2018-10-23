@@ -136,7 +136,7 @@ class DeliveryAction extends BaseAction {
             $result1 = $this->_certificate_water($data);
 
             if( $result1 ) {
-                $this->success('添加发货地址成功', U('Delivery/index'));
+                $this->success('添加发货地址成功', U('Delivery/add'));
             } else {
                 $this->error('系统繁忙，请稍后重试');
             }
