@@ -156,13 +156,10 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">窗口标题</h4>
-                <small class="font-bold">这里可以显示副标题。
+                <h4 class="modal-title">发货地址列表</h4>
             </div>
             <div class="modal-body">
-                <p><strong>H+</strong>
-                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
-                </p>
+
             </div>
 
             <div class="modal-footer">
@@ -178,13 +175,10 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">窗口标题</h4>
-                <small class="font-bold">这里可以显示副标题。
+                <h4 class="modal-title">收货地址列表</h4>
             </div>
             <div class="modal-body">
-                <p><strong>H+</strong>
-                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
-                </p>
+
             </div>
 
             <div class="modal-footer">
@@ -201,13 +195,138 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">窗口标题</h4>
-                <small class="font-bold">这里可以显示副标题。
+                <h4 class="modal-title">添加发货地址</h4>
             </div>
             <div class="modal-body">
-                <p><strong>H+</strong>
-                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
-                </p>
+                <form id="addDeliveryForm" action="{:U('Delivery/doEdit')}" method="post" class="form-horizontal">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">公司</label>
+                        <div class="col-sm-6">
+                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 联系人</label>
+                        <div class="col-sm-6">
+                            <input name="consignor" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">国家</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="country">
+                                <foreach name="country_list" item="v">
+                                    <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 省</label>
+                        <div class="col-sm-6">
+                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 市</label>
+                        <div class="col-sm-6">
+                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 具体地址</label>
+                        <div class="col-sm-10">
+                            <input name="detail_address" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 邮编</label>
+                        <div class="col-sm-6">
+                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 手机</label>
+                        <div class="col-sm-6">
+                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">座机</label>
+                        <div class="col-sm-6">
+                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">出口商代码</label>
+                        <div class="col-sm-6">
+                            <input name="exporter_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 有效证件号码</label>
+                        <div class="col-sm-6">
+                            <input name="certificate_num" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 身份证正面</label>
+                        <div class="col-sm-10">
+                            <div id="certificate-upload-1">
+                                <!--用来存放item-->
+                                <div id="fileList-1" class="uploader-list"></div>
+                                <div id="filePicker-1">选择图片</div>
+                                <input id="certificate1_url" name="certificate1_url" type="hidden"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 身份证反面</label>
+                        <div class="col-sm-10">
+                            <div id="certificate-upload-2">
+                                <!--用来存放item-->
+                                <div id="fileList-2" class="uploader-list"></div>
+                                <div id="filePicker-2">选择图片</div>
+                                <input id="certificate2_url" name="certificate2_url" type="hidden"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">默认
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="checkbox i-checks">
+                                <label>
+                                    <input name="is_default" type="checkbox" value="1">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id"/>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
 
             <div class="modal-footer">
@@ -224,13 +343,107 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">窗口标题</h4>
-                <small class="font-bold">这里可以显示副标题。
+                <h4 class="modal-title">添加收货地址</h4>
             </div>
             <div class="modal-body">
-                <p><strong>H+</strong>
-                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
-                </p>
+                <form id="addReceiveForm" action="{:U('Receive/doEdit')}" method="post" class="form-horizontal">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">公司</label>
+                        <div class="col-sm-6">
+                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 联系人</label>
+                        <div class="col-sm-6">
+                            <input name="addressee" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">国家</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="country">
+                                <foreach name="country_list" item="v">
+                                    <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 省</label>
+                        <div class="col-sm-6">
+                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 市</label>
+                        <div class="col-sm-6">
+                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 具体地址</label>
+                        <div class="col-sm-10">
+                            <input name="address" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 邮编</label>
+                        <div class="col-sm-6">
+                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 手机</label>
+                        <div class="col-sm-6">
+                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">座机</label>
+                        <div class="col-sm-6">
+                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">出口商代码</label>
+                        <div class="col-sm-6">
+                            <input name="receiver_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">默认
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="checkbox i-checks">
+                                <label>
+                                    <input name="default" type="checkbox" value="1">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id"/>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <button class="btn btn-primary" type="button" onclick="remoteQuery();">偏远查询</button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
 
             <div class="modal-footer">
@@ -247,13 +460,107 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">窗口标题</h4>
-                <small class="font-bold">这里可以显示副标题。
+                <h4 class="modal-title">备用收货地址</h4>
             </div>
             <div class="modal-body">
-                <p><strong>H+</strong>
-                    是一个完全响应式，基于Bootstrap3.3.6最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术，她提供了诸多的强大的可以重新组合的UI组件，并集成了最新的jQuery版本(v2.1.1)，当然，也集成了很多功能强大，用途广泛的jQuery插件，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
-                </p>
+                <form id="editSpareReceiveForm" action="{:U('Receive/doEdit')}" method="post" class="form-horizontal">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">公司</label>
+                        <div class="col-sm-6">
+                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 联系人</label>
+                        <div class="col-sm-6">
+                            <input name="addressee" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">国家</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="country">
+                                <foreach name="country_list" item="v">
+                                    <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 省</label>
+                        <div class="col-sm-6">
+                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 市</label>
+                        <div class="col-sm-6">
+                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 具体地址</label>
+                        <div class="col-sm-10">
+                            <input name="address" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 邮编</label>
+                        <div class="col-sm-6">
+                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 手机</label>
+                        <div class="col-sm-6">
+                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">座机</label>
+                        <div class="col-sm-6">
+                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">出口商代码</label>
+                        <div class="col-sm-6">
+                            <input name="receiver_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">默认
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="checkbox i-checks">
+                                <label>
+                                    <input name="default" type="checkbox" value="1">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id"/>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <button class="btn btn-primary" type="button" onclick="remoteQuery();">偏远查询</button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
 
             <div class="modal-footer">
