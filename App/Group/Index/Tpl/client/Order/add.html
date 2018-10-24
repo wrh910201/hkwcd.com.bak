@@ -159,12 +159,11 @@
                 <h4 class="modal-title">发货地址列表</h4>
             </div>
             <div class="modal-body">
-
+                <table id="deliveryList"></table>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
@@ -178,12 +177,11 @@
                 <h4 class="modal-title">收货地址列表</h4>
             </div>
             <div class="modal-body">
-
+                <table id="receiveList"></table>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
@@ -198,26 +196,26 @@
                 <h4 class="modal-title">添加发货地址</h4>
             </div>
             <div class="modal-body">
-                <form id="addDeliveryForm" action="{:U('Delivery/doEdit')}" method="post" class="form-horizontal">
+                <form id="addDeliveryForm" action="/Delivery/ajaxAdd" method="post" class="form-horizontal">
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">公司</label>
                         <div class="col-sm-6">
-                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.company" name="company" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 联系人</label>
                         <div class="col-sm-6">
-                            <input name="consignor" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.consignor" name="consignor" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">国家</label>
                         <div class="col-sm-6">
-                            <select class="form-control m-b" name="country">
+                            <select class="form-control m-b" name="country" v-model="deliveryInfo.country">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
                                 </foreach>
@@ -228,56 +226,56 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 省</label>
                         <div class="col-sm-6">
-                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.state" name="state" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 市</label>
                         <div class="col-sm-6">
-                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.city" name="city" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 具体地址</label>
                         <div class="col-sm-10">
-                            <input name="detail_address" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.detail_address" name="detail_address" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 邮编</label>
                         <div class="col-sm-6">
-                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.postal_code" name="postal_code" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 手机</label>
                         <div class="col-sm-6">
-                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.mobile" name="mobile" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">座机</label>
                         <div class="col-sm-6">
-                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.phone" name="phone" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">出口商代码</label>
                         <div class="col-sm-6">
-                            <input name="exporter_code" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.exporter_code" name="exporter_code" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 有效证件号码</label>
                         <div class="col-sm-6">
-                            <input name="certificate_num" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="deliveryInfo.certificate_num" name="certificate_num" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
 
@@ -289,7 +287,7 @@
                                 <!--用来存放item-->
                                 <div id="fileList-1" class="uploader-list"></div>
                                 <div id="filePicker-1">选择图片</div>
-                                <input id="certificate1_url" name="certificate1_url" type="hidden"/>
+                                <input v-model="deliveryInfo.certificate1_url" id="certificate1_url" name="certificate1_url" type="hidden"/>
                             </div>
                         </div>
                     </div>
@@ -301,7 +299,7 @@
                                 <!--用来存放item-->
                                 <div id="fileList-2" class="uploader-list"></div>
                                 <div id="filePicker-2">选择图片</div>
-                                <input id="certificate2_url" name="certificate2_url" type="hidden"/>
+                                <input v-model="deliveryInfo.certificate2_url" id="certificate2_url" name="certificate2_url" type="hidden"/>
                             </div>
                         </div>
                     </div>
@@ -320,9 +318,8 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <input type="hidden" id="id" name="id"/>
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">保存内容</button>
+                            <button class="btn btn-primary" type="button" @click="addDelivery">保存内容</button>
                         </div>
                     </div>
                 </form>
@@ -331,7 +328,6 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
@@ -578,192 +574,401 @@
 <script src="/Public/client/hplus/js/plugins/webuploader/webuploader.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
 <!--<script src="/Public/client/hplus/js/demo/webuploader-demo.min.js"></script>-->
+
+<script>
+    var $deliveryList = $('#deliveryList'),$receiveList=$("#receiveList"),
+        selections = [];
+    var editing_index = -1;
+    var editing_row = '';
+    var selected_row = '';
+
+
+    function initDeliveryTable() {
+        $deliveryList.bootstrapTable({
+            method: "get",  //使用get请求到服务器获取数据
+            url: "/Order/getDeliveryList", //获取数据的Servlet地址
+            striped: true,  //表格显示条纹
+            pagination: false, //启动分页
+            pageSize: 10,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [5, 10, 15, 20, 25],  //记录数可选列表
+            search: false,  //是否启用查询
+            showColumns: false,  //显示下拉框勾选要显示的列
+            showRefresh: true,  //显示刷新按钮
+            sidePagination: "server", //表示服务端请求
+            dataType: 'json',
+            sortOrder: 'desc',
+            showExport: false,
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParamsType: "limit",
+            queryParams: function queryParams(params) {   //设置查询参数
+                var temp_params = dataQueryParams(params);
+//                temp_params.user_id = id;
+                return temp_params
+            },
+            responseHandler: function responseHandler(res) {
+                var result = {
+                    rows: res.data,
+                    total: res.total
+                };
+                return result;
+            },
+            columns: [
+                {
+                    title: '发货人',
+                    field: 'consignor',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '发货公司',
+                    field: 'company',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '发货地址',
+                    field: 'detail_address',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '是否默认',
+                    field: 'is_default',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    formatter: isDefaultFormatter
+                },
+                {
+                    title: '操作',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    events: operateEvents,
+                    formatter: deliveryOperateFormatter
+                }
+            ]
+        });
+
+        setTimeout(function () {
+            $deliveryList.bootstrapTable('resetView');
+        }, 200);
+        $deliveryList.on('check.bs.table uncheck.bs.table ' +
+            'check-all.bs.table uncheck-all.bs.table', function () {
+
+            selections = getIdSelections();
+
+        });
+        $deliveryList.on('expand-row.bs.table', function (e, index, row, $detail) {
+
+        });
+        $deliveryList.on('all.bs.table', function (e, name, args) {
+
+        });
+    }
+
+    function initReceiveTable() {
+        $receiveList.bootstrapTable({
+            method: "get",  //使用get请求到服务器获取数据
+            url: "/Order/getReceiveList", //获取数据的Servlet地址
+            striped: true,  //表格显示条纹
+            pagination: false, //启动分页
+            pageSize: 10,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [5, 10, 15, 20, 25],  //记录数可选列表
+            search: false,  //是否启用查询
+            showColumns: false,  //显示下拉框勾选要显示的列
+            showRefresh: true,  //显示刷新按钮
+            sidePagination: "server", //表示服务端请求
+            dataType: 'json',
+            sortOrder: 'desc',
+            showExport: false,
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParamsType: "limit",
+            queryParams: function queryParams(params) {   //设置查询参数
+                var temp_params = dataQueryParams(params);
+//                temp_params.user_id = id;
+                return temp_params
+            },
+            responseHandler: function responseHandler(res) {
+                var result = {
+                    rows: res.data,
+                    total: res.total
+                };
+                return result;
+            },
+            columns: [
+                {
+                    title: '收货人',
+                    field: 'consignor',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '收货公司',
+                    field: 'company',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '收货地址',
+                    field: 'detail_address',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '是否默认',
+                    field: 'is_default',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    formatter: isDefaultFormatter
+                },
+                {
+                    title: '操作',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    events: operateEvents,
+                    formatter: receiveOperateFormatter
+                }
+            ]
+        });
+
+        setTimeout(function () {
+            $receiveList.bootstrapTable('resetView');
+        }, 200);
+        $deliveryList.on('check.bs.table uncheck.bs.table ' +
+            'check-all.bs.table uncheck-all.bs.table', function () {
+
+            selections = getIdSelections();
+
+        });
+        $receiveList.on('expand-row.bs.table', function (e, index, row, $detail) {
+
+        });
+        $receiveList.on('all.bs.table', function (e, name, args) {
+
+        });
+    }
+
+    function dataQueryParams(params) {
+        return {
+            limit: params.limit,
+            order: params.order,
+            page: params.offset,
+            keywords: params.search
+        }
+    }
+
+    /*formatters*/
+
+    function deliveryOperateFormatter(value, row) {
+        var operate = [
+        ];
+        operate.push('<a class="delivery_choose" href="javascript:void(0)" title="选择">选择</a>&nbsp;');
+        return operate.join('');
+    }
+
+    function receiveOperateFormatter(value ,row) {
+        var operate = [
+        ];
+        operate.push('<a class="receive_choose" href="javascript:void(0)" title="选择">选择</a>&nbsp;');
+        return operate.join('');
+    }
+
+    /*formatters*/
+
+    /*operate events*/
+    window.operateEvents = {
+        'click .delivery_choose': function (e, value, row, index) {
+            addOrder.setDelivery(row);
+            $("#deliveryListModal").modal("hide");
+        },
+        'click .receive_choose': function (e, value, row, index) {
+            addOrder.setReceive(row);
+            $("#receiveListModal").modal("hide");
+        },
+    };
+
+    /*operate events*/
+    $(function () {
+        var scripts = [
+                '/Public/client/static/bootstrap/js/bootstrap-table.js',
+                '/Public/client/static/bootstrap/js/bootstrap-table-export.js',
+                '/Public/client/static/bootstrap/js/tableExport.js',
+                '/Public/client/static/bootstrap/js/bootstrap-table-editable.min.js',
+                '/Public/client/static/bootstrap/js/bootstrap-editable.js'
+            ],
+            eachSeries = function (arr, iterator, callback) {
+                callback = callback || function () {
+                };
+                if (!arr.length) {
+                    return callback();
+                }
+                var completed = 0;
+                var iterate = function () {
+                    iterator(arr[completed], function (err) {
+                        if (err) {
+                            callback(err);
+                            callback = function () {
+                            };
+                        }
+                        else {
+                            completed += 1;
+                            if (completed >= arr.length) {
+                                callback(null);
+                            }
+                            else {
+                                iterate();
+                            }
+                        }
+                    });
+                };
+                iterate();
+            };
+        eachSeries(scripts, getScript, null);
+    });
+
+    function getScript(url, callback) {
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = url;
+
+        var done = false;
+        // Attach handlers for all browsers
+        script.onload = script.onreadystatechange = function () {
+            if (!done && (!this.readyState ||
+                this.readyState == 'loaded' || this.readyState == 'complete')) {
+                done = true;
+                if (callback)
+                    callback();
+                // Handle memory leak in IE
+                script.onload = script.onreadystatechange = null;
+            }
+        };
+        head.appendChild(script);
+        // We handle everything using the script element injection
+        return undefined;
+    }
+
+
+    function isDefaultFormatter(value, row) {
+        var str = '';
+        value = parseInt(value);
+        switch(value) {
+            case 1: str = '是';break;
+            default: str = '否';break;
+        }
+        return str;
+    }
+
+
+    function doAdd() {
+        var jz;
+        var url = $('#addShopForm').attr('action');
+        $.ajax({
+            type:"POST",
+            url:url,
+            data:{'data' : $('#addShopForm').serialize()},// 你的formid
+            async: false,
+            beforeSend:function(){
+                jz = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+            },
+            error: function(request) {
+                layer.close(jz);
+                swal("网络错误!", "", "error");
+            },
+            success: function(data) {
+                //关闭加载层
+                layer.close(jz);
+                if(data.code == 1){
+                    swal(data.msg, "", "success");
+                    //更新数据
+                    $('#addShopModal').modal('hide');
+                }else{
+                    swal(data.msg, "", "error");
+                }
+
+            }
+        });
+
+        return false;
+    }
+
+    function doEdit(key) {
+        var jz;
+        var url = $('#' + key).attr('action');
+        $.ajax({
+            type:"POST",
+            url:url,
+            data:{'data' : $('#' + key).serialize()},// 你的formid
+            async: false,
+            dataType: 'json',
+            beforeSend:function(){
+                jz = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+            },
+            error: function(request) {
+                layer.close(jz);
+                swal("网络错误!", "", "error");
+            },
+            success: function(data) {
+                //关闭加载层
+                layer.close(jz);
+                if(data.code == 1){
+                    swal(data.msg, "", "success");
+                    //更新数据
+                    $('#editShopModal').modal('hide');
+                    $('#shopProfitModal').modal('hide');
+                }else{
+                    swal(data.msg, "", "error");
+                }
+            }
+        });
+
+        return false;
+    }
+
+</script>
+
 <script>
     $(document).ready(function () {
         $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
-    });
-
-    var BASE_URL = "/Public/client/hplus/js/plugins/webuploader";
-
-    var $list1 = $("#fileList-1");
-    var $list2 = $("#fileList-2");
-
-    var thumbnailWidth = 408;
-    var thumbnailHeight = 248;
-    var uploader1 = WebUploader.create({
-
-        // 选完文件后，是否自动上传。
-        auto: true,
-
-        // swf文件路径
-        swf: BASE_URL + '/Uploader.swf',
-
-        // 文件接收服务端。
-        server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
-
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#filePicker-1',
-
-        // 只允许选择图片文件。
-        accept: {
-            title: 'Images',
-            extensions: 'gif,jpg,jpeg,bmp,png',
-            mimeTypes: 'image/*'
-        }
-    });
-
-    uploader1.on( 'fileQueued', function( file ) {
-        var $li = $(
-            '<div id="' + file.id + '" class="file-item thumbnail">' +
-            '<img>' +
-            '<div class="info">' + file.name + '</div>' +
-            '</div>'
-            ),
-            $img = $li.find('img');
-
-
-        // $list1为容器jQuery实例
-        $list1.append( $li );
-
-        // 创建缩略图
-        // 如果为非图片文件，可以不用调用此方法。
-        // thumbnailWidth x thumbnailHeight 为 100 x 100
-        uploader1.makeThumb( file, function( error, src ) {
-            if ( error ) {
-                $img.replaceWith('<span>不能预览</span>');
-                return;
-            }
-
-            $img.attr( 'src', src );
-        }, thumbnailWidth, thumbnailHeight );
-    });
-
-    // 文件上传过程中创建进度条实时显示。
-    uploader1.on( 'uploadProgress', function( file, percentage ) {
-        var $li = $( '#'+file.id ),
-            $percent = $li.find('.progress span');
-
-        // 避免重复创建
-        if ( !$percent.length ) {
-            $percent = $('<p class="progress"><span></span></p>')
-                .appendTo( $li )
-                .find('span');
-        }
-
-        $percent.css( 'width', percentage * 100 + '%' );
-    });
-
-    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader1.on( 'uploadSuccess', function( file, response ) {
-        $( '#'+file.id ).addClass('upload-state-done');
-        $('#certificate1_url').val(response.url);
-    });
-
-    // 文件上传失败，显示上传出错。
-    uploader1.on( 'uploadError', function( file ) {
-        var $li = $( '#'+file.id ),
-            $error = $li.find('div.error');
-
-        // 避免重复创建
-        if ( !$error.length ) {
-            $error = $('<div class="error"></div>').appendTo( $li );
-        }
-
-        $error.text('上传失败');
-    });
-
-    // 完成上传完了，成功或者失败，先删除进度条。
-    uploader1.on( 'uploadComplete', function( file ) {
-        $( '#'+file.id ).find('.progress').remove();
-    });
-
-    var uploader2 = WebUploader.create({
-
-        // 选完文件后，是否自动上传。
-        auto: true,
-
-        // swf文件路径
-        swf: BASE_URL + '/Uploader.swf',
-
-        // 文件接收服务端。
-        server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
-
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#filePicker-2',
-
-        // 只允许选择图片文件。
-        accept: {
-            title: 'Images',
-            extensions: 'gif,jpg,jpeg,bmp,png',
-            mimeTypes: 'image/*'
-        }
-    });
-
-    uploader2.on( 'fileQueued', function( file ) {
-        var $li = $(
-            '<div id="' + file.id + '" class="file-item thumbnail">' +
-            '<img>' +
-            '<div class="info">' + file.name + '</div>' +
-            '</div>'
-            ),
-            $img = $li.find('img');
-
-
-        // $list1为容器jQuery实例
-        $list2.append( $li );
-
-        // 创建缩略图
-        // 如果为非图片文件，可以不用调用此方法。
-        // thumbnailWidth x thumbnailHeight 为 100 x 100
-        uploader2.makeThumb( file, function( error, src ) {
-            if ( error ) {
-                $img.replaceWith('<span>不能预览</span>');
-                return;
-            }
-
-            $img.attr( 'src', src );
-        }, thumbnailWidth, thumbnailHeight );
-    });
-
-    // 文件上传过程中创建进度条实时显示。
-    uploader2.on( 'uploadProgress', function( file, percentage ) {
-        var $li = $( '#'+file.id ),
-            $percent = $li.find('.progress span');
-
-        // 避免重复创建
-        if ( !$percent.length ) {
-            $percent = $('<p class="progress"><span></span></p>')
-                .appendTo( $li )
-                .find('span');
-        }
-
-        $percent.css( 'width', percentage * 100 + '%' );
-    });
-
-    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader2.on( 'uploadSuccess', function( file, response ) {
-        $( '#'+file.id ).addClass('upload-state-done');
-        $('#certificate2_url').val(response.url);
-    });
-
-    // 文件上传失败，显示上传出错。
-    uploader2.on( 'uploadError', function( file ) {
-        var $li = $( '#'+file.id ),
-            $error = $li.find('div.error');
-
-        // 避免重复创建
-        if ( !$error.length ) {
-            $error = $('<div class="error"></div>').appendTo( $li );
-        }
-
-        $error.text('上传失败');
-    });
-
-    // 完成上传完了，成功或者失败，先删除进度条。
-    uploader2.on( 'uploadComplete', function( file ) {
-        $( '#'+file.id ).find('.progress').remove();
     });
 
 </script>
@@ -880,6 +1085,8 @@
             },
             showDeliveryList: function() {
                 $("#deliveryListModal").modal();
+                $deliveryList.bootstrapTable("destroy");
+                initDeliveryTable();
             },
             showAddDelivery: function() {
                 $("#addDeliveryModal").modal();
@@ -887,6 +1094,8 @@
             },
             showReceiveList: function() {
                 $("#receiveListModal").modal();
+                $receiveList.bootstrapTable("destroy");
+                initReceiveTable();
 
             },
             showAddReceive: function() {
@@ -897,6 +1106,284 @@
             }
 
         }
+    });
+
+    var addDelivery = new Vue({
+        el: "#addDeliveryModal",
+        data: {
+            shown: false,
+            deliveryInfo: {
+                company: "",
+                country_id: "",
+                country_name: "",
+                enc_country_name: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                consignor: "",
+                mobile: "",
+                phone: "",
+                postal_code: "",
+                exporter_code: "",
+                certificate_num: "",
+                certificate1_url: "",
+                certificate2_url: "",
+                is_default: 0,
+            },
+            uploader1: null,
+            uploader2: null,
+        },
+        mounted: function() {
+            var that = this;
+            $('#addDeliveryModal input[name=is_default]').on('ifChecked', function(event){
+                that.deliveryInfo.is_default = 1;
+            });
+            $('#addDeliveryModal input[name=is_default]').on('ifUnchecked', function(event){
+                that.deliveryInfo.is_default = 0;
+            });
+        },
+        methods: {
+            addDelivery: function() {
+                var that = this;
+                var url = "/Order/ajaxAdd";
+                var data = {
+                    company: that.deliveryInfo.company,
+                    consignor: that.deliveryInfo.consignor,
+                    country: that.deliveryInfo.country,
+                    state: that.deliveryInfo.state,
+                    city: that.deliveryInfo.city,
+                    detail_address: that.deliveryInfo.detail_address,
+                    mobile: that.deliveryInfo.mobile,
+                    phone: that.deliveryInfo.phone,
+                    postal_code: that.deliveryInfo.postal_code,
+                    exporter_code: that.deliveryInfo.exporter_code,
+                    certificate_num: that.deliveryInfo.certificate_num,
+                    certificate1_url: that.deliveryInfo.certificate1_url,
+                    certificate2_url: that.deliveryInfo.certificate2_url,
+                    is_default: that.deliveryInfo.is_default,
+                };
+                $.post(url, data, function(response){
+
+                }, "json");
+            }
+        }
+    });
+
+    var addReceive = new Vue({
+        el: "#addReceiveModal",
+        data: {},
+        mounted: function() {
+
+        },
+        methods: {
+
+        }
+    });
+
+</script>
+
+<script>
+    var BASE_URL = "/Public/client/hplus/js/plugins/webuploader";
+
+    var $list1 = $("#fileList-1");
+    var $list2 = $("#fileList-2");
+
+    var thumbnailWidth = 408;
+    var thumbnailHeight = 248;
+    var uploader1;
+    var uploader2;
+
+    $("#addDeliveryModal").on("shown.bs.modal",function() {
+
+        uploader1 = WebUploader.create({
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: BASE_URL + '/Uploader.swf',
+
+            // 文件接收服务端。
+            server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker-1',
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+
+        uploader1.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                '<img>' +
+                '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
+
+            $list1.empty();
+            // $list1为容器jQuery实例
+            $list1.append($li);
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader1.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader1.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo($li)
+                    .find('span');
+            }
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader1.on('uploadSuccess', function (file, response) {
+            $('#' + file.id).addClass('upload-state-done');
+            $('#certificate1_url').val(response.url);
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader1.on('uploadError', function (file) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader1.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').remove();
+        });
+
+        uploader2 = WebUploader.create({
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: BASE_URL + '/Uploader.swf',
+
+            // 文件接收服务端。
+            server: "{:U(GROUP_NAME. '/Public/upload', array('tb' => 2))}",
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker-2',
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+
+        uploader2.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                '<img>' +
+                '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+                $img = $li.find('img');
+
+            $list2.empty();
+
+            // $list1为容器jQuery实例
+            $list2.append($li);
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader2.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader2.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress span');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo($li)
+                    .find('span');
+            }
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader2.on('uploadSuccess', function (file, response) {
+            $('#' + file.id).addClass('upload-state-done');
+            $('#certificate2_url').val(response.url);
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader2.on('uploadError', function (file) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader2.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').remove();
+        });
+
+
+        if( 1 == parseInt(addDelivery.deliveryInfo.is_default) ) {
+            $('#addDeliveryModal input[name=is_default]').iCheck('check');
+        } else {
+            $('#addDeliveryModal input[name=is_default]').iCheck('uncheck');
+        }
+
+    });
+
+    $("#addDeliveryModal").on("hidden.bs.modal",function() {
+        uploader1.destroy();
+        uploader2.destroy();
     });
 </script>
 

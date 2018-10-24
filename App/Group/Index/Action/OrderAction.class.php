@@ -2286,6 +2286,7 @@ class OrderAction extends BaseAction  {
         $this->response['code'] = 1;
         $this->response['msg'] = 'success';
         $this->response['data'] = empty($delivery_list) ? [] : $delivery_list;
+        $this->response['total'] = empty($delivery_list) ? 0 : count($delivery_list);
 //        var_dump($this->response);exit;
         echo json_encode($this->response);exit;
     }

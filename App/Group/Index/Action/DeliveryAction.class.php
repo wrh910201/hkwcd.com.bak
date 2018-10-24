@@ -180,6 +180,7 @@ class DeliveryAction extends BaseAction {
         $data['mobile'] = I('post.mobile', '', 'trim');
         $data['phone'] = I('post.phone', '', 'trim');
         $data['postal_code'] = I('post.postal_code', '', 'trim');
+        $data['exporter_code'] = I('post.exporter_code', '', 'trim');
         $data['certificate_num'] = I('post.certificate_num', '', 'trim');
         $data['certificate1_url'] = I('post.certificate1_url', '', 'trim');
         $data['certificate2_url'] = I('post.certificate2_url', '', 'trim');
