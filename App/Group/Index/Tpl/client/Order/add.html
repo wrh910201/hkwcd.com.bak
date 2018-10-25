@@ -459,26 +459,26 @@
                 <h4 class="modal-title">备用收货地址</h4>
             </div>
             <div class="modal-body">
-                <form id="editSpareReceiveForm" action="/Receive/doEdit" method="post" class="form-horizontal">
+                <form id="editSpareReceiveForm" action="" method="post" class="form-horizontal">
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">公司</label>
                         <div class="col-sm-6">
-                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.company" name="company" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 联系人</label>
                         <div class="col-sm-6">
-                            <input name="addressee" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.addressee" name="addressee" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">国家</label>
+                        <label class="col-sm-2 control-label">* 国家</label>
                         <div class="col-sm-6">
-                            <select class="form-control m-b" name="country">
+                            <select class="form-control m-b" name="country" v-model="spareReceiveInfo.country_id">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
                                 </foreach>
@@ -487,61 +487,61 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">* 省</label>
+                        <label class="col-sm-2 control-label">省</label>
                         <div class="col-sm-6">
-                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.state" name="state" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 市</label>
                         <div class="col-sm-6">
-                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.city" name="city" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 具体地址</label>
                         <div class="col-sm-10">
-                            <input name="address" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.detail_address" name="address" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 邮编</label>
                         <div class="col-sm-6">
-                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.postal_code" name="postal_code" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 手机</label>
                         <div class="col-sm-6">
-                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.mobile" name="mobile" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">座机</label>
                         <div class="col-sm-6">
-                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.phone" name="phone" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">出口商代码</label>
                         <div class="col-sm-6">
-                            <input name="receiver_code" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="spareReceiveInfo.receiver_code" name="receiver_code" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">默认
+                        <label class="col-sm-2 control-label">启用
                         </label>
                         <div class="col-sm-10">
                             <div class="checkbox i-checks">
                                 <label>
-                                    <input name="default" type="checkbox" value="1">
+                                    <input name="enable" type="checkbox" value="1">
                                     <i></i>
                                 </label>
                             </div>
@@ -551,8 +551,8 @@
                     <div class="form-group">
                         <input type="hidden" id="id" name="id"/>
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">保存内容</button>
-                            <button class="btn btn-primary" type="button" onclick="remoteQuery();">偏远查询</button>
+                            <button class="btn btn-primary" type="button" @click="saveSpare">{{spareReceiveInfo.enable ? '保存内容' : '关闭'}}</button>
+                            <button class="btn btn-primary" type="button" onclick="addReceive.remoteQuery();">偏远查询</button>
                         </div>
                     </div>
                 </form>
@@ -561,7 +561,6 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
@@ -1081,8 +1080,42 @@
                 this.receiveInfo.postal_code = data.postal_code;
                 this.receiveInfo.receiver_code = data.receiver_code;
             },
+            setSpareReceive: function(data) {
+                if( data ) {
+                    this.spareReceiveInfo.company = data.company;
+                    this.spareReceiveInfo.country_id = data.country_id;
+                    this.spareReceiveInfo.state = data.state;
+                    this.spareReceiveInfo.city = data.city;
+                    this.spareReceiveInfo.detail_address = data.detail_address;
+                    this.spareReceiveInfo.addressee = data.addressee;
+                    this.spareReceiveInfo.mobile = data.mobile;
+                    this.spareReceiveInfo.phone = data.phone;
+                    this.spareReceiveInfo.postal_code = data.postal_code;
+                    this.spareReceiveInfo.receiver_code = data.receiver_code;
+
+                } else {
+                    this.spareReceiveInfo = {
+                        company: "",
+                        country_id: 0,
+                        state: "",
+                        city: "",
+                        detail_address: "",
+                        addressee: "",
+                        mobile: "",
+                        phone: "",
+                        postal_code: "",
+                        receiver_code: "",
+                    };
+                }
+            },
             toggleSpareReceive: function() {
                 this.hasSpare = !this.hasSpare;
+                editSpareReceive.spareReceiveInfo.enable = false;
+                if( editSpareReceive.spareReceiveInfo.enable ) {
+                    $("#editSpareReceiveModal input[name=enable]").iCheck("check");
+                } else {
+                    $("#editSpareReceiveModal input[name=enable]").iCheck("uncheck");
+                }
             },
             showDeliveryList: function() {
                 $("#deliveryListModal").modal();
@@ -1112,6 +1145,7 @@
             },
             hideEditSpare: function() {
                 $("#editSpareReceiveModal").modal("hide");
+
             },
 
         }
@@ -1203,6 +1237,7 @@
                     certificate2_url: "",
                     is_default: 0,
                 };
+                $('#addDeliveryModal input[name=is_default]').iCheck('uncheck');
             }
         }
     });
@@ -1287,8 +1322,103 @@
                     receiver_code: "",
                     is_default: 0
                 };
+                $('#addReceiveModal input[name=is_default]').iCheck('uncheck');
             }
         }
+    });
+
+    var editSpareReceive  = new Vue({
+        el: "#editSpareReceiveModal",
+        data: {
+            spareReceiveInfo: {
+                company: "",
+                country_id: "",
+                country_name: "",
+                enc_country_name: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                addressee: "",
+                mobile: "",
+                phone: "",
+                postal_code: "",
+                receiver_code: "",
+                enable: false
+            }
+        },
+        mounted: function() {
+            var that = this;
+            $('#editSpareReceiveModal input[name=enable]').on('ifChecked', function(event){
+                that.spareReceiveInfo.enable = true;
+            });
+            $('#editSpareReceiveModal input[name=enable]').on('ifUnchecked', function(event){
+                that.spareReceiveInfo.enable = false;
+            });
+        },
+        methods: {
+            saveSpare: function() {
+                if( this.spareReceiveInfo.enable ) {
+                    if( !this.spareReceiveInfo.addressee ) {
+                        swal({
+                            title: "错误",
+                            text: "请输入联系人",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                    if( !this.spareReceiveInfo.country_id ) {
+                        swal({
+                            title: "错误",
+                            text: "请选择国家",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                    if( !this.spareReceiveInfo.city ) {
+                        swal({
+                            title: "错误",
+                            text: "请输入城市",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                    if( !this.spareReceiveInfo.detail_address ) {
+                        swal({
+                            title: "错误",
+                            text: "请输入具体地址",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                    if( !this.spareReceiveInfo.mobile && !this.spareReceiveInfo.phone ) {
+                        swal({
+                            title: "错误",
+                            text: "座机和手机至少输入一个",
+                            type: "error"
+                        });
+                        return false;
+                    }
+
+                    if( !this.spareReceiveInfo.postal_code ) {
+                        swal({
+                            title: "错误",
+                            text: "请输入邮编",
+                            type: "error"
+                        });
+                        return false;
+                    }
+
+
+
+                    addOrder.hasSpare = true;
+                    addOrder.setSpareReceive(this.spareReceiveInfo);
+                } else {
+                    addOrder.hasSpare = false;
+                    addOrder.setSpareReceive(null);
+                }
+                addOrder.hideEditSpare();
+            }
+        },
     });
 
 </script>
