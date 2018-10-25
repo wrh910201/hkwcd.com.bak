@@ -17,6 +17,7 @@
     <link href="/Public/client/hplus/css/style.min.css?v=4.1.0" rel="stylesheet">
     <link href="/Public/client/hplus/css/plugins/webuploader/webuploader.css" rel="stylesheet" type="text/css" >
     <link href="/Public/client/static/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/Public/client/hplus/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <!--<link href="/Public/client/hplus/css/demo/webuploader-demo.min.css" rel="stylesheet" type="text/css" >-->
 
     <style>
@@ -213,7 +214,7 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">国家</label>
+                        <label class="col-sm-2 control-label">* 国家</label>
                         <div class="col-sm-6">
                             <select class="form-control m-b" name="country" v-model="deliveryInfo.country">
                                 <foreach name="country_list" item="v">
@@ -224,7 +225,7 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">* 省</label>
+                        <label class="col-sm-2 control-label">省</label>
                         <div class="col-sm-6">
                             <input v-model="deliveryInfo.state" name="state" type="text" value="" placeholder="" class="form-control">
                         </div>
@@ -342,26 +343,26 @@
                 <h4 class="modal-title">添加收货地址</h4>
             </div>
             <div class="modal-body">
-                <form id="addReceiveForm" action="{:U('Receive/doEdit')}" method="post" class="form-horizontal">
+                <form id="addReceiveForm" action="/Receive/doEdit" method="post" class="form-horizontal">
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">公司</label>
                         <div class="col-sm-6">
-                            <input name="company" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.company" name="company" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 联系人</label>
                         <div class="col-sm-6">
-                            <input name="addressee" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.addressee"  name="addressee" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">国家</label>
+                        <label class="col-sm-2 control-label">* 国家</label>
                         <div class="col-sm-6">
-                            <select class="form-control m-b" name="country">
+                            <select class="form-control m-b" name="country" v-model="receiveInfo.country_id">
                                 <foreach name="country_list" item="v">
                                     <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
                                 </foreach>
@@ -370,51 +371,51 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">* 省</label>
+                        <label class="col-sm-2 control-label">省</label>
                         <div class="col-sm-6">
-                            <input name="state" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.state" name="state" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 市</label>
                         <div class="col-sm-6">
-                            <input name="city" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.city" name="city" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 具体地址</label>
                         <div class="col-sm-10">
-                            <input name="address" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.detail_address" name="address" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 邮编</label>
                         <div class="col-sm-6">
-                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.postal_code" name="postal_code" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 手机</label>
                         <div class="col-sm-6">
-                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.mobile" name="mobile" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">座机</label>
                         <div class="col-sm-6">
-                            <input name="phone" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.phone" name="phone" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">出口商代码</label>
+                        <label class="col-sm-2 control-label">进口商代码</label>
                         <div class="col-sm-6">
-                            <input name="receiver_code" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="receiveInfo.receiver_code" name="receiver_code" type="text" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -432,10 +433,9 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        <input type="hidden" id="id" name="id"/>
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">保存内容</button>
-                            <button class="btn btn-primary" type="button" onclick="remoteQuery();">偏远查询</button>
+                            <button class="btn btn-primary" type="button" @click="addReceive">保存内容</button>
+                            <button class="btn btn-primary" type="button" @click="remoteQuery">偏远查询</button>
                         </div>
                     </div>
                 </form>
@@ -459,7 +459,7 @@
                 <h4 class="modal-title">备用收货地址</h4>
             </div>
             <div class="modal-body">
-                <form id="editSpareReceiveForm" action="{:U('Receive/doEdit')}" method="post" class="form-horizontal">
+                <form id="editSpareReceiveForm" action="/Receive/doEdit" method="post" class="form-horizontal">
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">公司</label>
@@ -573,6 +573,7 @@
 <script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
 <script src="/Public/client/hplus/js/plugins/webuploader/webuploader.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
+<script src="/Public/client/hplus/js/plugins/sweetalert/sweetalert.min.js"></script>
 <!--<script src="/Public/client/hplus/js/demo/webuploader-demo.min.js"></script>-->
 
 <script>
@@ -1088,22 +1089,30 @@
                 $deliveryList.bootstrapTable("destroy");
                 initDeliveryTable();
             },
-            showAddDelivery: function() {
-                $("#addDeliveryModal").modal();
-
-            },
             showReceiveList: function() {
                 $("#receiveListModal").modal();
                 $receiveList.bootstrapTable("destroy");
                 initReceiveTable();
 
             },
+            showAddDelivery: function() {
+                $("#addDeliveryModal").modal();
+            },
+            hideAddDelivery: function() {
+                $("#addDeliveryModal").modal("hide");
+            },
             showAddReceive: function() {
                 $("#addReceiveModal").modal();
             },
+            hideAddReceive: function() {
+                $("#addReceiveModal").modal("hide");
+            },
             showEditSpare: function() {
                 $("#editSpareReceiveModal").modal();
-            }
+            },
+            hideEditSpare: function() {
+                $("#editSpareReceiveModal").modal("hide");
+            },
 
         }
     });
@@ -1111,7 +1120,6 @@
     var addDelivery = new Vue({
         el: "#addDeliveryModal",
         data: {
-            shown: false,
             deliveryInfo: {
                 company: "",
                 country_id: "",
@@ -1129,9 +1137,7 @@
                 certificate1_url: "",
                 certificate2_url: "",
                 is_default: 0,
-            },
-            uploader1: null,
-            uploader2: null,
+            }
         },
         mounted: function() {
             var that = this;
@@ -1145,7 +1151,7 @@
         methods: {
             addDelivery: function() {
                 var that = this;
-                var url = "/Order/ajaxAdd";
+                var url = "/Delivery/ajaxAdd";
                 var data = {
                     company: that.deliveryInfo.company,
                     consignor: that.deliveryInfo.consignor,
@@ -1162,21 +1168,126 @@
                     certificate2_url: that.deliveryInfo.certificate2_url,
                     is_default: that.deliveryInfo.is_default,
                 };
+                // console.log(data);
                 $.post(url, data, function(response){
-
+                    if( 1 == response.code ) {
+                        addOrder.setDelivery(response.data);
+                        addOrder.hideAddDelivery();
+                        that.resetDeliveryInfo();
+                    } else {
+                        var error_text = response.msg.split("<br />");
+                        swal({
+                            title: "参数错误",
+                            text: error_text[0],
+                            type: "error",
+                        })
+                    }
                 }, "json");
+            },
+            resetDeliveryInfo: function() {
+                this.deliveryInfo = {
+                    company: "",
+                    country_id: "",
+                    country_name: "",
+                    enc_country_name: "",
+                    state: "",
+                    city: "",
+                    detail_address: "",
+                    consignor: "",
+                    mobile: "",
+                    phone: "",
+                    postal_code: "",
+                    exporter_code: "",
+                    certificate_num: "",
+                    certificate1_url: "",
+                    certificate2_url: "",
+                    is_default: 0,
+                };
             }
         }
     });
 
     var addReceive = new Vue({
         el: "#addReceiveModal",
-        data: {},
+        data: {
+            receiveInfo: {
+                company: "",
+                country_id: "",
+                country_name: "",
+                enc_country_name: "",
+                state: "",
+                city: "",
+                detail_address: "",
+                addressee: "",
+                mobile: "",
+                phone: "",
+                postal_code: "",
+                receiver_code: "",
+                is_default: 0
+            }
+        },
         mounted: function() {
-
+            var that = this;
+            $('#addReceiveModal input[name=is_default]').on('ifChecked', function(event){
+                that.receiveInfo.is_default = 1;
+            });
+            $('#addReceiveModal input[name=is_default]').on('ifUnchecked', function(event){
+                that.receiveInfo.is_default = 0;
+            });
         },
         methods: {
-
+            addReceive: function() {
+                var that = this;
+                var url = "/Receive/ajaxAdd";
+                var data = {
+                    company: that.receiveInfo.company,
+                    addressee: that.receiveInfo.addressee,
+                    country: that.receiveInfo.country_id,
+                    state: that.receiveInfo.state,
+                    city: that.receiveInfo.city,
+                    detail_address: that.receiveInfo.detail_address,
+                    mobile: that.receiveInfo.mobile,
+                    phone: that.receiveInfo.phone,
+                    postal_code: that.receiveInfo.postal_code,
+                    receiver_code: that.receiveInfo.receiver_code,
+                    is_default: that.receiveInfo.is_default,
+                };
+                // console.log(data);
+                $.post(url, data, function(response){
+                    if( 1 == response.code ) {
+                        addOrder.setReceive(response.data);
+                        addOrder.hideAddReceive();
+                        that.resetReceiveInfo();
+                    } else {
+                        var error_text = response.msg.split("<br />");
+                        swal({
+                            title: "参数错误",
+                            text: error_text[0],
+                            type: "error",
+                        })
+                    }
+                }, "json");
+            },
+            remoteQuery: function() {
+                window.open("{:U('Remote/index')}");
+            },
+            resetReceiveInfo: function() {
+                this.receiveInfo = {
+                    company: "",
+                    country_id: "",
+                    country_name: "",
+                    enc_country_name: "",
+                    state: "",
+                    city: "",
+                    detail_address: "",
+                    addressee: "",
+                    mobile: "",
+                    phone: "",
+                    postal_code: "",
+                    receiver_code: "",
+                    is_default: 0
+                };
+            }
         }
     });
 
@@ -1262,7 +1373,7 @@
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
         uploader1.on('uploadSuccess', function (file, response) {
             $('#' + file.id).addClass('upload-state-done');
-            $('#certificate1_url').val(response.url);
+            addDelivery.deliveryInfo.certificate1_url = response.url;
         });
 
         // 文件上传失败，显示上传出错。
@@ -1351,7 +1462,8 @@
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
         uploader2.on('uploadSuccess', function (file, response) {
             $('#' + file.id).addClass('upload-state-done');
-            $('#certificate2_url').val(response.url);
+            // $('#certificate2_url').val(response.url);
+            addDelivery.deliveryInfo.certificate2_url = response.url;
         });
 
         // 文件上传失败，显示上传出错。
