@@ -138,17 +138,165 @@
                     <form class="form-horizontal">
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-1 control-label">公司</label>
+                            <label class="col-sm-2 control-label">* 渠道类型</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <foreach name="channel_list" item="v">
+                                        <option value="{$v.id}">{$v.name} / {$v.en_name}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">* 寄件类型</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="1">文件</option>
+                                    <option value="2">包裹</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">* 价格条款</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="FOB">FOB</option>
+                                    <option value="CIF">CIF</option>
+                                    <option value="C&F">C&F</option>
+                                    <option value="EXW">EXW</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">* 关税支付</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="Receiver">收货人</option>
+                                    <option value="Sender">寄件人</option>
+                                    <option value="3rd Party">第三方</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">装运参考</label>
                             <div class="col-sm-4">
                                 <input name="company" type="text" value="" placeholder="" class="form-control">
                             </div>
-                            <label class="col-sm-1 control-label">公司</label>
+                            <label class="col-sm-2 control-label">* 结汇方式</label>
                             <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="T/T">电汇</option>
+                                    <option value="D/P">托收</option>
+                                    <option value="L/C">信用证</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">相关委托书</label>
+                            <div class="col-sm-4">
+                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                            </div>
+                            <label class="col-sm-2 control-label">合同号</label>
+                            <div class="col-sm-4">
+                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">* 运输方式</label>
+                            <div class="col-sm-4">
+                                <input name="company" type="text" value="" placeholder="" class="form-control" disabled>
+                            </div>
+                            <label class="col-sm-2 control-label">* 运输类型</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="express service">快件</option>
+                                    <option value="air">空运</option>
+                                    <option value="sea shipping">海运</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">* 出口原因</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="Business">商业</option>
+                                    <option value="Exhibition">展览</option>
+                                    <option value="Sample">样品</option>
+                                    <option value="Return repair">返回维修</option>
+                                    <option value="After repair">修复后</option>
+                                    <option value="Gift">礼品</option>
+                                    <option value="Replacement">替换品</option>
+                                    <option value="Personal Use Not For Resale">个人用品,不转售</option>
+                                    <option value="Intercompany transfer">内部转移</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 control-label">* 出口性质</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" name="account">
+                                    <option value="Permanent">永久</option>
+                                    <option value="Temporarily">暂时</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">制造商或出口商及地址</label>
+                            <div class="col-sm-10">
+                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10">
+                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">托运备注</label>
+                            <div class="col-sm-10">
                                 <input name="company" type="text" value="" placeholder="" class="form-control">
                             </div>
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品信息（为了确保您的货物能够顺利通关，请一定要提供具体的商品名称）</h5>
+                    <div style="text-align: right">
+                        <button class="btn btn-primary" type="button" @click="">我的商品</button>
+                        <button class="btn btn-primary" type="button" @click="showAddProduct">录入</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="table-bar"></div>
+                    <table
+                            id="productList">
+                            <!--data-toolbar="#table-bar"-->
+                            <!--data-toggle="table">-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th data-field="id">编号</th>-->
+                            <!--<th data-field="product_name">品名</th>-->
+                            <!--<th data-field="goods_code">商品编码</th>-->
+                            <!--<th data-field="count">数量</th>-->
+                            <!--<th data-field="single_declared">单件申报价值(USD)</th>-->
+                            <!--<th data-field="total_declared">总申报价值(USD)</th>-->
+                            <!--<th data-field="origin">原产地</th>-->
+                            <!--<th data-field="texture">材质</th>-->
+                            <!--<th data-field="">操作</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -173,6 +321,25 @@
     </div>
 </div>
 <div class="modal inmodal fade" id="receiveListModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">收货地址列表</h4>
+            </div>
+            <div class="modal-body">
+                <table id="receiveList"></table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="productListModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -569,18 +736,111 @@
     </div>
 </div>
 
+<div class="modal inmodal fade" id="addProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">{{title}}</h4>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm" action="" method="post" class="form-horizontal">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 中文品名</label>
+                        <div class="col-sm-6">
+                            <input v-model="productInfo.product_name" name="product_name" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 英文品名</label>
+                        <div class="col-sm-6">
+                            <input v-model="productInfo.en_product_name" name="en_product_name" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 商品编号</label>
+                        <div class="col-sm-6">
+                            <input v-model="productInfo.goods_code" name="goods_code" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 数量</label>
+                        <div class="col-sm-4">
+                            <input v-model="productInfo.count" name="count" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control m-b" name="country" v-model="productInfo.unit">
+                                <foreach name="order_detail_unit" item="v" key="k">
+                                    <option value="{$k}">{$k}/{$v}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 单件申报价值</label>
+                        <div class="col-sm-10">
+                            <input v-model="productInfo.single_declared" name="single_declared" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">* 原产地</label>
+                        <div class="col-sm-6">
+                            <input v-model="productInfo.origin" name="origin" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">材质</label>
+                        <div class="col-sm-6">
+                            <input v-model="productInfo.texture" name="texture" type="text" value="" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <input type="hidden" name="id"/>
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="button" @click="saveProductInfo">保存内容</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="/Public/client/hplus/js/jquery.min.js?v=1.0.0"></script>
 <script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="/Public/client/hplus/js/content.min.js?v=1.0.0"></script>
+<!--<script src="/Public/client/hplus/js/content.min.js?v=1.0.0"></script>-->
 <script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
 <script src="/Public/client/hplus/js/plugins/webuploader/webuploader.min.js"></script>
 <script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
 <script src="/Public/client/hplus/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="/Public/client/static/bootstrap/js/bootstrap-table.js"></script>
+<script src="/Public/client/static/bootstrap/js/bootstrap-table-export.js"></script>
+<script src="/Public/client/static/bootstrap/js/tableExport.js"></script>
+<script src="/Public/client/static/bootstrap/js/bootstrap-table-editable.min.js"></script>
+<script src="/Public/client/static/bootstrap/js/bootstrap-editable.js"></script>
+
+
 <!--<script src="/Public/client/hplus/js/demo/webuploader-demo.min.js"></script>-->
 
 <script>
-    var $deliveryList = $('#deliveryList'),$receiveList=$("#receiveList"),
-        selections = [];
+    var $deliveryList = $('#deliveryList'),$receiveList=$("#receiveList");
+    var $productList = $("#productList");
+    var selections = [];
     var editing_index = -1;
     var editing_row = '';
     var selected_row = '';
@@ -776,7 +1036,7 @@
         setTimeout(function () {
             $receiveList.bootstrapTable('resetView');
         }, 200);
-        $deliveryList.on('check.bs.table uncheck.bs.table ' +
+        $receiveList.on('check.bs.table uncheck.bs.table ' +
             'check-all.bs.table uncheck-all.bs.table', function () {
 
             selections = getIdSelections();
@@ -787,6 +1047,97 @@
         });
         $receiveList.on('all.bs.table', function (e, name, args) {
 
+        });
+    }
+
+    function initProductTable() {
+        $("#productList").bootstrapTable({
+            columns: [
+                {
+                    title: '编号',
+                    field: 'id',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '品名',
+                    field: 'product_name',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+//                    searchable: true,
+//                    sortable: true,
+                    visible: true
+                },
+                {
+                    title: '商品编码',
+                    field: 'goods_code',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '单件申报价值',
+                    field: 'single_declared',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '总申报价值',
+                    field: 'total_declared',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '数量',
+                    field: 'count',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '原产地',
+                    field: 'origin',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '材质',
+                    field: 'texture',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '操作',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                    events: operateEvents,
+                    formatter: productOperateFormatter
+                }
+            ]
         });
     }
 
@@ -815,6 +1166,12 @@
         return operate.join('');
     }
 
+    function productOperateFormatter(value, row) {
+        var operate = [
+        ];
+        return operate.join('');
+    }
+
     /*formatters*/
 
     /*operate events*/
@@ -830,6 +1187,7 @@
     };
 
     /*operate events*/
+    /*
     $(function () {
         var scripts = [
                 '/Public/client/static/bootstrap/js/bootstrap-table.js',
@@ -867,7 +1225,7 @@
             };
         eachSeries(scripts, getScript, null);
     });
-
+    */
     function getScript(url, callback) {
         var head = document.getElementsByTagName('head')[0];
         var script = document.createElement('script');
@@ -1024,8 +1382,11 @@
                 postal_code: "",
                 receiver_code: "",
             },
+            orderInfo: {},
+            productList: [],
         },
         mounted: function() {
+            initProductTable();
             this.getDefaultDelivery();
             this.getDefaultReceive();
         },
@@ -1148,7 +1509,30 @@
             },
             hideEditSpare: function() {
                 $("#editSpareReceiveModal").modal("hide");
-
+            },
+            showProductList: function() {
+                $("#myProductList").bootstrapTable("destroy");
+                $("#productListModal").modal();
+            },
+            hideProductList: function() {
+                $("#productListModal").modal("hide");
+            },
+            showAddProduct: function(product) {
+                if( product ) {
+                    addProduct.productInfo.product_name = product.product_name;
+                    addProduct.productInfo.en_product_name = product.en_product_name;
+                    addProduct.productInfo.count = product.count;
+                    addProduct.productInfo.unit = product.unit;
+                    addProduct.productInfo.goods_code = product.goods_code;
+                    addProduct.productInfo.single_declared = product.single_declared;
+                    addProduct.productInfo.total_declared = product.total_declared;
+                    addProduct.productInfo.origin = product.origin;
+                    addProduct.productInfo.texture = product.texture;
+                }
+                $("#addProductModal").modal();
+            },
+            hideAddProduct: function() {
+                $("#addProductModal").modal("hide");
             },
 
         }
@@ -1423,6 +1807,35 @@
             }
         },
     });
+
+    var addProduct = new Vue({
+        el: "#addProductModal",
+        data: {
+            title: "添加商品",
+            editing: false,
+            productInfo: {
+                id: "",
+                product_name: "",
+                en_product_name: "",
+                goods_code: "",
+                single_declared: 0,
+                total_declared: 0,
+                count: 0,
+                origin: "",
+                texture: "",
+                unit: ""
+            }
+        },
+        mounted: function() {
+
+        },
+        methods: {
+            saveProductInfo: function() {
+
+            }
+        }
+    });
+
 
 </script>
 
