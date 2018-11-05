@@ -198,6 +198,7 @@ class ProductAction extends BaseAction
             $result = M("ClientProduct")
                 ->add($data);
             if( $result ) {
+                $data["id"] = M("ClientProduct")->getLastInsID();
                 $response['code'] = 1;
                 $response['msg'] = '添加商品成功';
                 $response['data'] = $data;
