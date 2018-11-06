@@ -294,7 +294,107 @@
                 </div>
                 <div class="ibox-content">
                     <div id="spec-table-bar"></div>
-                    <table id="specificationList"></table>
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-toolbar"></div>
+                        <div class="fixed-table-container">
+                            <div class="fixed-table-header" style="display: none;">
+                                <table></table>
+                            </div>
+                            <div class="fixed-table-body">
+                                <table id="specificationList" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="id" tabindex="0">
+                                            <div class="th-inner ">
+                                                编号
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="product_name" tabindex="0">
+                                            <div class="th-inner ">
+                                                品名
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="goods_code" tabindex="0">
+                                            <div class="th-inner ">
+                                                商品编码
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="origin" tabindex="0">
+                                            <div class="th-inner ">
+                                                原产地
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="weight" tabindex="0">
+                                            <div class="th-inner ">
+                                                重量
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="total_declared" tabindex="0">
+                                            <div class="th-inner ">
+                                                长 宽 高
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="count" tabindex="0">
+                                            <div class="th-inner ">
+                                                材积重
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="texture" tabindex="0">
+                                            <div class="th-inner ">
+                                                箱数
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="texture" tabindex="0">
+                                            <div class="th-inner ">
+                                                计费重量
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="9" tabindex="0">
+                                            <div class="th-inner ">
+                                                操作
+                                            </div>
+                                            <div class="fht-cell"></div></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <template v-for="(spec,index) in specificationList">
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{index + 1}}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].product_name}}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].goods_code}}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].origin}}</td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">
+                                            <a class="product_edit" href="javascript:void(0)" title="编辑">编辑</a>&nbsp;
+                                            <a class="product_remove" href="javascript:void(0)" title="删除">删除</a>&nbsp;
+                                        </td>
+                                    </tr>
+                                    <template v-for="(p,i) in spec.productList">
+                                    <tr v-if="i > 0">
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].product_name}}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].goods_code}}</td>
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].origin}}</td>
+                                    </tr>
+                                    </template>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-pagination" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
 
             </div>
@@ -861,7 +961,7 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 箱数</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-6">
                             <input v-model="specificationInfo.count" name="count" type="number" value="" placeholder="" class="form-control">
                         </div>
                     </div>
@@ -876,42 +976,45 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th>中文品名</th>
-                                    <th>英文品名</th>
-                                    <th>数量</th>
-                                    <th>操作</th>
+                                    <th clas="col-sm-4">中文品名</th>
+                                    <th clas="col-sm-4">英文品名</th>
+                                    <th clas="col-sm-2">数量</th>
+                                    <th class="col-sm-2 text-center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <template v-for="product in specificationInfo.productList">
+                                <template v-for="(product, index) in specificationInfo.productList">
                                 <tr v-show="!product.editing">
                                     <td>{{product.product_name}}</td>
                                     <td>{{product.en_product_name}}</td>
-                                    <td>{{product.count}}</td>
-                                    <td v-show="!product.editing">
-                                        <a href="javascript:void(0)">
+                                    <td>{{product.number}}</td>
+                                    <td class="text-center" v-show="!product.editing">
+                                        <a href="javascript:void(0)" @click="editProductRow(index)">
                                             <i class="fa fa-edit text-navy"></i>
                                         </a>
-                                        <a href="javascript:void(0)">
+                                        <a href="javascript:void(0)" @click="removeProductRow(index)">
                                             <i class="fa fa-remove text-navy"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr v-show="product.editing">
-                                    <td>
-                                        <select v-model="product.id">
+                                    <td clas="col-sm-4">
+                                        <select v-model="product.id" class="form-control m-b" @change="changeProduct(index)">
                                             <option v-for="p in unusedProductList" :value="p.id">{{p.product_name}}</option>
                                         </select>
                                     </td>
-                                    <td>
-                                        {{product.en_product_name}}
+                                    <td clas="col-sm-4">
+                                        <input disabled class="form-control m-b" type="text" v-model="product.en_product_name"/>
                                     </td>
-                                    <td>
-                                        {{product.count}}
+                                    <td clas="col-sm-2" style="max-width:180px">
+                                        <input class="form-control m-b" type="number" v-model="product.number"/>
                                     </td>
-                                    <td>
-                                        <a href="javascript:void(0)">
+                                    <td class="text-center col-sm-2">
+                                        <a href="javascript:void(0)" @click="saveProductRow(index)">
                                             <i class="fa fa-check text-navy"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" @click="removeProductRow(index)">
+                                            <i class="fa fa-remove text-navy"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -1375,108 +1478,6 @@
         });
     }
 
-    function initSpecificationTable() {
-        $("#specificationList").bootstrapTable({
-            columns: [
-                {
-                    title: '编号',
-                    field: 'id',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-//                    searchable: true,
-//                    sortable: true,
-                    formatter: specificationIndexFormatter,
-                    visible: true
-                },
-                {
-                    title: '品名',
-                    field: 'product_name',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-//                    searchable: true,
-//                    sortable: true,
-                    formatter: productNameFormatter,
-                    visible: true
-                },
-                {
-                    title: '商品编码',
-                    field: 'goods_code',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '原产地',
-                    field: 'origin',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '重量',
-                    field: 'weight',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '长 宽 高',
-                    field: 'total_declared',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '材积重',
-                    field: 'count',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '箱数',
-                    field: 'texture',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '计费重量',
-                    field: 'texture',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                },
-                {
-                    title: '操作',
-                    rowspan: 1,
-                    align: 'center',
-                    valign: 'middle',
-                    visible: true,
-                    sortable: false,
-                    events: operateEvents,
-                    formatter: productOperateFormatter
-                }
-            ]
-        });
-    }
-
     function dataQueryParams(params) {
         return {
             limit: params.limit,
@@ -1685,10 +1686,10 @@
             },
             orderInfo: {},
             productList: [],
+            specificationList: [],
         },
         mounted: function() {
             initProductTable();
-            initSpecificationTable();
             this.getDefaultDelivery();
             this.getDefaultReceive();
         },
@@ -1881,6 +1882,10 @@
                     addSpec.setSpecificationInfo(null);
                 }
                 $("#addSpecificationModal").modal();
+            },
+            hideAddSpecification: function() {
+                $("#addSpecificationModal").modal("hide");
+                // $("#specificationList").bootstrapTable("load", this.specificationList);
             }
 
         }
@@ -2311,6 +2316,7 @@
         methods: {
             setSpecificationInfo: function(specificationInfo) {
                 if( specificationInfo ) {
+                    this.title = "编辑规格";
                     var tempProductList = [];
                     if( specificationInfo.productList ) {
                         for( var i in specificationInfo.productList ) {
@@ -2325,6 +2331,7 @@
                                 texture: specificationInfo.productList[i].texture,
                                 unit: specificationInfo.productList[i].unit,
                                 count: specificationInfo.productList[i].count,
+                                number: specificationInfo.productList[i].number,
                                 editing: false,
                             };
                             tempProductList.push(temp);
@@ -2340,6 +2347,7 @@
                         count: specificationInfo.count,
                     };
                 } else {
+                    this.title = "添加规格";
                     this.specificationInfo = {
                         index: "",
                         weight: "",
@@ -2354,9 +2362,75 @@
                 this.refreshProductList();
             },
             saveSpecificationInfo: function() {
+                var that = this;
 
+                var tempProductList = [];
+                if( this.specificationInfo.productList ) {
+                    for( var i in this.specificationInfo.productList ) {
+                        var productTemp = {
+                            id: this.specificationInfo.productList[i].id,
+                            product_name: this.specificationInfo.productList[i].product_name,
+                            en_product_name: this.specificationInfo.productList[i].en_product_name,
+                            goods_code: this.specificationInfo.productList[i].goods_code,
+                            single_declared: this.specificationInfo.productList[i].single_declared,
+                            total_declared: this.specificationInfo.productList[i].total_declared,
+                            origin: this.specificationInfo.productList[i].origin,
+                            texture: this.specificationInfo.productList[i].texture,
+                            unit: this.specificationInfo.productList[i].unit,
+                            count: this.specificationInfo.productList[i].count,
+                            number: this.specificationInfo.productList[i].number,
+                        };
+                        tempProductList.push(productTemp);
+                    }
+                }
+
+                var temp = {
+                    weight: that.specificationInfo.weight,
+                    length: that.specificationInfo.length,
+                    width: that.specificationInfo.width,
+                    height: that.specificationInfo.height,
+                    count: that.specificationInfo.count,
+                    productList: tempProductList,
+                };
+
+
+                if( "" === this.specificationInfo.index ) {
+                    //添加
+                    addOrder.specificationList.push(temp);
+                } else {
+                    //更新
+                    addOrder.specificationList.splice(this.specificationInfo.index, 1, temp);
+                }
+                addOrder.hideAddSpecification();
+            },
+            changeProduct: function(index) {
+                var that = this;
+                // console.log(this.specificationInfo.productList[index]);
+                for( var j in this.unusedProductList ) {
+                    if( this.specificationInfo.productList[index].id == this.unusedProductList[j].id ) {
+                        var temp = {
+                            id: that.unusedProductList[j].id,
+                            product_name: that.unusedProductList[j].product_name,
+                            en_product_name: that.unusedProductList[j].en_product_name,
+                            goods_code: that.unusedProductList[j].goods_code,
+                            single_declared: that.unusedProductList[j].single_declared,
+                            total_declared: that.unusedProductList[j].total_declared,
+                            origin: that.unusedProductList[j].origin,
+                            texture: that.unusedProductList[j].texture,
+                            unit: that.unusedProductList[j].unit,
+                            count: that.unusedProductList[j].count,
+                            number: this.specificationInfo.productList[index].number,
+                            editing: true,
+                        };
+                        this.specificationInfo.productList.splice(index, 1, temp);
+                    }
+                }
             },
             addProductRow: function() {
+                if( this.editing ) {
+                    return false;
+                }
+                this.editing = true;
                 var that = this;
                 for(var i in this.unusedProductList ) {
                     var temp = {
@@ -2370,25 +2444,49 @@
                         texture: that.unusedProductList[i].texture,
                         unit: that.unusedProductList[i].unit,
                         count: that.unusedProductList[i].count,
+                        number: 0,
                         editing: true,
                     };
                     that.specificationInfo.productList.push(temp);
                     break;
                 }
+                // this.refreshProductList();
+            },
+            editProductRow: function(index) {
+                if( this.editing ) {
+                    return false;
+                }
+                this.editing = true;
+                for(var i in this.specificationInfo.productList ) {
+                    if( i == index ) {
+                        this.specificationInfo.productList[i].editing = true;
+                    }
+                }
                 this.refreshProductList();
             },
-            saveProductRow: function() {
-                
+            saveProductRow: function(index) {
+                this.editing = false;
+                for(var i in this.specificationInfo.productList ) {
+                    if( i == index ) {
+                        this.specificationInfo.productList[i].editing = false;
+                    }
+                }
+                this.refreshProductList();
             },
             removeProductRow: function(index) {
-
+                this.editing = false;
+                this.specificationInfo.productList.splice(index, 1);
+                this.refreshProductList();
             },
             refreshProductList: function() {
                 this.unusedProductList = [];
                 for(var i in addOrder.productList ) {
                     var exists = false;
                     for( var j in this.specificationInfo.productList ) {
-                        if( addOrder.productList[i].id == this.specificationInfo.productList[j].id ) {
+                        if( this.specificationInfo.productList[j].editing == true ) {
+                            continue;
+                        }
+                        if( addOrder.productList[i].id != this.specificationInfo.productList[j].id ) {
                             continue;
                         }
                         exists = true;
@@ -2405,6 +2503,7 @@
                             texture: addOrder.productList[i].texture,
                             unit: addOrder.productList[i].unit,
                             count: addOrder.productList[i].count,
+                            number: 0,
                             editing: false,
                         };
                         this.unusedProductList.push(temp);
@@ -2633,6 +2732,11 @@
         addProduct.productInfo.texture = "";
         addProduct.productInfo.unit = "";
         addProduct.productInfo.count = "";
+    });
+
+    $("#addSpecificationModal").on("hidden.bs.modal",function() {
+        addSpec.editing = false;
+        addSpec.specificationInfo.index = "";
     });
 </script>
 
