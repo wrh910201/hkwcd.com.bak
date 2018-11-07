@@ -289,7 +289,7 @@
                 <div class="ibox-title">
                     <h5>规格详情（材积重=长*宽*高/5000，重量与材积重两者取大收费）</h5>
                     <div style="text-align: right">
-                        <button class="btn btn-primary" type="button" @click="showAddSpecification(null)">录入</button>
+                        <button class="btn btn-primary" type="button" @click="showAddSpecification(null, null)">录入</button>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -321,7 +321,7 @@
                                             <div class="fht-cell"></div></th>
                                         <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="origin" tabindex="0">
                                             <div class="th-inner ">
-                                                原产地
+                                                数量
                                             </div>
                                             <div class="fht-cell"></div></th>
                                         <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="weight" tabindex="0">
@@ -344,11 +344,6 @@
                                                 箱数
                                             </div>
                                             <div class="fht-cell"></div></th>
-                                        <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="texture" tabindex="0">
-                                            <div class="th-inner ">
-                                                计费重量
-                                            </div>
-                                            <div class="fht-cell"></div></th>
                                         <th style="text-align: center; vertical-align: middle; " rowspan="1" data-field="9" tabindex="0">
                                             <div class="th-inner ">
                                                 操作
@@ -359,18 +354,17 @@
                                     <tbody>
                                     <template v-for="(spec,index) in specificationList">
                                     <tr>
-                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{index + 1}}</td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{indexFormatter(index)}}</td>
                                         <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].product_name}}</td>
                                         <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].goods_code}}</td>
-                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].origin}}</td>
-                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
-                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
-                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
-                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
-                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length"></td>
+                                        <td style="text-align: center; vertical-align: middle; ">{{spec.productList[0].number}}</td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{spec.weight}}KG</td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{spec.length}} {{spec.width}} {{spec.height}}</td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{volumeWeight(spec.length,spec.width,spec.height)}}</td>
+                                        <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">{{spec.count}}</td>
                                         <td style="text-align: center; vertical-align: middle; " :rowspan="spec.productList.length">
-                                            <a class="product_edit" href="javascript:void(0)" title="编辑">编辑</a>&nbsp;
-                                            <a class="product_remove" href="javascript:void(0)" title="删除">删除</a>&nbsp;
+                                            <a @click="showAddSpecification(spec, index)" href="javascript:void(0)" title="编辑">编辑</a>&nbsp;
+                                            <a @click="removeSpecification(index)" href="javascript:void(0)" title="删除">删除</a>&nbsp;
                                         </td>
                                     </tr>
                                     <template v-for="(p,i) in spec.productList">
@@ -381,6 +375,10 @@
                                     </tr>
                                     </template>
                                     </template>
+                                    <tr>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">计费重量</td>
+                                        <td colspan="8" style="vertical-align: middle; ">{{billingWeight}}</td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1687,6 +1685,7 @@
             orderInfo: {},
             productList: [],
             specificationList: [],
+            billingWeight: "",
         },
         mounted: function() {
             initProductTable();
@@ -1875,17 +1874,58 @@
                 //检查是否可以删除该商品
                 return true;
             },
-            showAddSpecification: function(specification) {
+            showAddSpecification: function(specification, index) {
                 if( specification ) {
-                    addSpec.setSpecificationInfo(specification);
+                    addSpec.setSpecificationInfo(specification, index);
                 } else {
-                    addSpec.setSpecificationInfo(null);
+                    addSpec.setSpecificationInfo(null, null);
                 }
                 $("#addSpecificationModal").modal();
             },
             hideAddSpecification: function() {
                 $("#addSpecificationModal").modal("hide");
                 // $("#specificationList").bootstrapTable("load", this.specificationList);
+            },
+            removeSpecification: function(index) {
+                this.specificationList.splice(index, 1);
+                this.calBillingWeight();
+            },
+            indexFormatter: function(index) {
+                var str = "";
+                var start = 0;
+                var end = 0;
+                for( var i in this.specificationList ) {
+                    start = end + 1;
+                    end = start + parseInt(this.specificationList[i].count) - 1;
+                    if( i == index ) {
+                        str = start + "-" + end;
+                        break;
+                    }
+                }
+                return str;
+            },
+            volumeWeight: function(length, width, height) {
+                var temp = length * width * height / 5000;
+                temp = temp.toFixed(2);
+                return temp;
+            },
+            calBillingWeight: function() {
+                var totalVolumeWeight = 0;
+                var totalWeight = 0;
+
+                for( var i in this.specificationList ) {
+                    totalWeight += this.specificationList[i]["weight"] * this.specificationList[i]["count"];
+                    var volumeWeight = this.volumeWeight(this.specificationList[i]["length"], this.specificationList[i]["width"], this.specificationList[i]["height"])
+                    totalVolumeWeight += volumeWeight * this.specificationList[i]["count"];
+                }
+                var result = totalVolumeWeight > totalWeight ? totalVolumeWeight : totalWeight;
+                result = result.toFixed(2);
+                console.log(result);
+                if( result ) {
+                    this.billingWeight = result + "KG";
+                } else {
+                    this.billingWeight = "";
+                }
             }
 
         }
@@ -2314,7 +2354,7 @@
 
         },
         methods: {
-            setSpecificationInfo: function(specificationInfo) {
+            setSpecificationInfo: function(specificationInfo, index) {
                 if( specificationInfo ) {
                     this.title = "编辑规格";
                     var tempProductList = [];
@@ -2338,7 +2378,7 @@
                         }
                     }
                     this.specificationInfo = {
-                        index: specificationInfo.index,
+                        index: index,
                         weight: specificationInfo.weight,
                         length: specificationInfo.length,
                         width: specificationInfo.width,
@@ -2363,6 +2403,69 @@
             },
             saveSpecificationInfo: function() {
                 var that = this;
+
+                if( parseFloat(this.specificationInfo.weight) <= 0 || isNaN(parseFloat(this.specificationInfo.weight)) ) {
+                    swal({
+                        title: "错误",
+                        text: "请输入重量",
+                        type: "error"
+                    });
+                    return false;
+                }
+                if( parseFloat(this.specificationInfo.length) <= 0 || isNaN(parseFloat(this.specificationInfo.length)) ) {
+                    swal({
+                        title: "错误",
+                        text: "请输入长度",
+                        type: "error"
+                    });
+                    return false;
+                }
+                if( parseFloat(this.specificationInfo.width) <= 0 || isNaN(parseFloat(this.specificationInfo.width)) ) {
+                    swal({
+                        title: "错误",
+                        text: "请输入宽度",
+                        type: "error"
+                    });
+                    return false;
+                }
+                if( parseFloat(this.specificationInfo.height) <= 0 || isNaN(parseFloat(this.specificationInfo.height)) ) {
+                    swal({
+                        title: "错误",
+                        text: "请输入高度",
+                        type: "error"
+                    });
+                    return false;
+                }
+                if( parseInt(this.specificationInfo.count) <= 0 || isNaN(parseInt(this.specificationInfo.count)) ) {
+                    swal({
+                        title: "错误",
+                        text: "请输入箱数",
+                        type: "error"
+                    });
+                    return false;
+                }
+                if( this.specificationInfo.productList.length == 0 ) {
+                    swal({
+                        title: "错误",
+                        text: "请至少选择一组商品",
+                        type: "error"
+                    });
+                    return false;
+                }
+
+                for( var i in this.specificationInfo.productList ) {
+                    if( parseInt(this.specificationInfo.productList[i].number) <= 0 ) {
+                        var row = parseInt(i + 1);
+                        var text = "请输入第" + row + "组商品的数量";
+                        swal({
+                            title: "错误",
+                            text: text,
+                            type: "error"
+                        });
+                        return false;
+                    }
+                }
+
 
                 var tempProductList = [];
                 if( this.specificationInfo.productList ) {
@@ -2737,6 +2840,7 @@
     $("#addSpecificationModal").on("hidden.bs.modal",function() {
         addSpec.editing = false;
         addSpec.specificationInfo.index = "";
+        addOrder.calBillingWeight();
     });
 </script>
 
