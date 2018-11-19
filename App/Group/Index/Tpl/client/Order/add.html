@@ -140,17 +140,19 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">* 渠道类型</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <foreach name="channel_list" item="v">
-                                        <option value="{$v.id}">{$v.name} / {$v.en_name}</option>
+                                <select class="form-control m-b" name="channel" v-model="orderInfo.channel">
+                                    <template v-for="(item, index) in dataDictionary.channel_list">
+                                        <option :value="item.id">{{item.name}} / {{item.en_name}}</option>
+                                    </template>
                                     </foreach>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label">* 寄件类型</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="1">文件</option>
-                                    <option value="2">包裹</option>
+                                <select  v-model="orderInfo.package_type" class="form-control m-b" name="package_type">
+                                    <template v-for="(item, index) in dataDictionary.package_type">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -158,19 +160,18 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">* 价格条款</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="FOB">FOB</option>
-                                    <option value="CIF">CIF</option>
-                                    <option value="C&F">C&F</option>
-                                    <option value="EXW">EXW</option>
+                                <select v-model="orderInfo.price_terms" class="form-control m-b" name="price_terms">
+                                    <template v-for="(item, index) in dataDictionary.price_terms">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label">* 关税支付</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="Receiver">收货人</option>
-                                    <option value="Sender">寄件人</option>
-                                    <option value="3rd Party">第三方</option>
+                                <select v-model="orderInfo.tariff_payment" class="form-control m-b" name="tariff_payment">
+                                    <template v-for="(item, index) in dataDictionary.tariff_payment">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -178,14 +179,14 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">装运参考</label>
                             <div class="col-sm-4">
-                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                                <input v-model="orderInfo.shipment_reference" name="shipment_reference" type="text" value="" class="form-control" placeholder="货物上的标记，例如 WCD">
                             </div>
                             <label class="col-sm-2 control-label">* 结汇方式</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="T/T">电汇</option>
-                                    <option value="D/P">托收</option>
-                                    <option value="L/C">信用证</option>
+                                <select v-model="orderInfo.settlement" class="form-control m-b" name="settlement">
+                                    <template v-for="(item, index) in dataDictionary.settlement">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -193,25 +194,25 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">相关委托书</label>
                             <div class="col-sm-4">
-                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                                <input v-model="orderInfo.declaration_of_power_attorney" name="declaration_of_power_attorney" type="text" value="" class="form-control" placeholder="正式报关需填写，默认为 快件报关">
                             </div>
                             <label class="col-sm-2 control-label">合同号</label>
                             <div class="col-sm-4">
-                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                                <input v-model="orderInfo.contract_num" name="contract_num" type="text" value="" placeholder="" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">* 运输方式</label>
                             <div class="col-sm-4">
-                                <input name="company" type="text" value="" placeholder="" class="form-control" disabled>
+                                <input v-model="orderInfo.mode_of_transportation" name="mode_of_transportation" type="text" value="" placeholder="" class="form-control" disabled>
                             </div>
                             <label class="col-sm-2 control-label">* 运输类型</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="express service">快件</option>
-                                    <option value="air">空运</option>
-                                    <option value="sea shipping">海运</option>
+                                <select v-model="orderInfo.express_service" class="form-control m-b" name="express_service">
+                                    <template v-for="(item, index) in dataDictionary.express_service">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -219,23 +220,18 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">* 出口原因</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="Business">商业</option>
-                                    <option value="Exhibition">展览</option>
-                                    <option value="Sample">样品</option>
-                                    <option value="Return repair">返回维修</option>
-                                    <option value="After repair">修复后</option>
-                                    <option value="Gift">礼品</option>
-                                    <option value="Replacement">替换品</option>
-                                    <option value="Personal Use Not For Resale">个人用品,不转售</option>
-                                    <option value="Intercompany transfer">内部转移</option>
+                                <select v-model="orderInfo.export_reason" class="form-control m-b" name="export_reason">
+                                    <template v-for="(item, index) in dataDictionary.export_reason">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                             <label class="col-sm-2 control-label">* 出口性质</label>
                             <div class="col-sm-4">
-                                <select class="form-control m-b" name="account">
-                                    <option value="Permanent">永久</option>
-                                    <option value="Temporarily">暂时</option>
+                                <select v-model="orderInfo.export_nature" class="form-control m-b" name="export_nature">
+                                    <template v-for="(item, index) in dataDictionary.export_nature">
+                                        <option :value="index">{{item}}</option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -243,21 +239,21 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">制造商或出口商及地址</label>
                             <div class="col-sm-10">
-                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                                <input v-model="orderInfo.manufacturer" name="manufacturer" type="text" value="" class="form-control" placeholder="不能填写物流公司">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                                <input v-model="orderInfo.remark" name="remark" type="text" value=""  class="form-control" placeholder="订单信息需要补充的特别事宜，例如：购买保险。">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">托运备注</label>
                             <div class="col-sm-10">
-                                <input name="company" type="text" value="" placeholder="" class="form-control">
+                                <input v-model="orderInfo.specifications_remark" name="specifications_remark" type="text" value="" class="form-control" placeholder="请填写国内物流信息或工厂联系人信息">
                             </div>
                         </div>
                     </form>
@@ -377,7 +373,8 @@
                                     </template>
                                     <tr>
                                         <td colspan="1" style="text-align: center; vertical-align: middle; ">计费重量</td>
-                                        <td colspan="8" style="vertical-align: middle; ">{{billingWeight}}</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; border-right: 0px">{{billingWeight}}</td>
+                                        <td colspan="7" style="vertical-align: middle; border-left: 0px"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -393,8 +390,15 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                </div>
 
+
+                </div>
+                <div class="ibox-content">
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="button" @click="commitOrder(0)">保存</button>
+                        <button class="btn btn-primary" type="button" @click="commitOrder(1)">保存并提交</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1065,6 +1069,7 @@
     var editing_index = -1;
     var editing_row = '';
     var selected_row = '';
+    var init_data = {$init_data}
 
 
     function initDeliveryTable() {
@@ -1556,6 +1561,7 @@
             var productInfo = row;
             addProduct.setProductInfo(productInfo);
             // $("#productListModal").modal("hide");
+            addProduct.title = "编辑规格";
             $("#addProductModal").modal();
         },
         'click .product_remove': function (e, value, row, index) {
@@ -1566,13 +1572,14 @@
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 showCancelButton: true,
-                closeOnConfirm: true,
+                closeOnConfirm: false,
                 closeOnCancel: true,
             }, function (confirm) {
                 if (confirm) {
                     if( addOrder.checkProductDeletable(index) ) {
                         addOrder.productList.splice(index, 1);
                         $("#productList").bootstrapTable("load", addOrder.productList);
+                        swal.close();
                     } else {
                         swal({
                             title: "警告",
@@ -1638,11 +1645,12 @@
     var addOrder = new Vue({
         el: "#addOrder",
         data: {
+            dataDictionary: {},
             deliveryInfo: {
                 id: 0,
                 company: "",
                 country_name: "",
-                enc_country_name: "",
+                en_country_name: "",
                 state: "",
                 city: "",
                 detail_address: "",
@@ -1659,7 +1667,7 @@
                 id: 0,
                 company: "",
                 country_name: "",
-                enc_country_name: "",
+                en_country_name: "",
                 state: "",
                 city: "",
                 detail_address: "",
@@ -1668,6 +1676,7 @@
                 phone: "",
                 postal_code: "",
                 receiver_code: "",
+                type: 0,
             },
             hasSpare: false,
             spareReceiveInfo: {
@@ -1689,10 +1698,115 @@
         },
         mounted: function() {
             initProductTable();
+            this.initOrder();
             this.getDefaultDelivery();
             this.getDefaultReceive();
         },
         methods: {
+            initOrder: function() {
+                //初始化订单需要的数据字典
+                this.dataDictionary = init_data;
+                this.orderInfo.channel = this.dataDictionary.channel_list[0].id;
+                this.orderInfo.package_type = 1;
+                this.orderInfo.declaration_of_power_attorney = "快件报关";
+                for( var i in this.dataDictionary.price_terms ) {
+                    this.orderInfo.price_terms = i;
+                    break;
+                }
+                for( var i in this.dataDictionary.tariff_payment ) {
+                    this.orderInfo.tariff_payment = i;
+                    break;
+                }
+                for( var i in this.dataDictionary.settlement ) {
+                    this.orderInfo.settlement = i;
+                    break;
+                }
+                for( var i in this.dataDictionary.express_service ) {
+                    this.orderInfo.express_service = i;
+                    break;
+                }
+                for( var i in this.dataDictionary.export_reason ) {
+                    this.orderInfo.export_reason = i;
+                    break;
+                }
+                for( var i in this.dataDictionary.export_nature ) {
+                    this.orderInfo.export_nature = i;
+                    break;
+                }
+                this.orderInfo.manufacturer = "";
+                this.orderInfo.remark = "";
+                this.orderInfo.specifications_remark = "";
+
+            },
+            saveOrder: function(commit) {
+                //保存订单，commit=1代表提交
+                var that = this;
+                var url = "/Order/ajaxAdd";
+                var param = {
+                    delivery_id: that.deliveryInfo.id,
+                    receive_id: that.receiveInfo.id,
+                    enable_spare: that.hasSpare,
+                    spare_receive_info: that.spareReceiveInfo,
+                    order_info: that.orderInfo,
+                    product_list: [],
+                    specification_list: [],
+                    commit: commit
+                };
+
+                for(var i in that.productList) {
+                    param.product_list.push(that.productList[i]);
+                }
+                for(var i in that.specificationList) {
+                    param.specification_list.push(that.specificationList[i]);
+                }
+
+                console.log(param);
+
+                $.post(url, param, function(response) {
+                    if( response.code == 1 ) {
+                        swal({
+                            title: "",
+                            text: response.msg,
+                            type: "success",
+                        }, function (confirm) {
+                            if( window.parent !== window ) {
+                                window.parent.createNewTab("/Order/index.html", "订单列表");
+                            }
+                            window.location.reload();
+                        });
+                    } else {
+                        swal({
+                            title: "",
+                            text: response.msg,
+                            type: "error",
+                        });
+                    }
+                }, "json");
+            },
+            commitOrder: function(commit) {
+                var that = this;
+                if( 0 == commit ) {
+                    var title = "确定添加订单？";
+                    var text = "";
+                } else {
+                    var title = "确定添加订单并提交？";
+                    var text = "（订单提交之后进入待审核状态，无法编辑）";
+                }
+                swal({
+                    title: title,
+                    text: text,
+                    type: "info",
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    closeOnCancel: true,
+                }, function (confirm) {
+                    if (confirm) {
+                        that.saveOrder(commit);
+                    }
+                });
+            },
             getDefaultDelivery: function() {
                 var that = this;
                 var url = "/Order/getDefaultDelivery";
@@ -1720,6 +1834,8 @@
                 this.deliveryInfo.certificate_num = data.certificate_num;
                 this.deliveryInfo.certificate1_url = data.certificate1_url;
                 this.deliveryInfo.certificate2_url = data.certificate2_url;
+
+                this.set_mode_of_transportation();
             },
             getDefaultReceive: function() {
                 var that = this;
@@ -1745,6 +1861,20 @@
                 this.receiveInfo.phone = data.phone;
                 this.receiveInfo.postal_code = data.postal_code;
                 this.receiveInfo.receiver_code = data.receiver_code;
+                this.receiveInfo.type = data.type;
+
+                this.set_mode_of_transportation();
+            },
+            set_mode_of_transportation: function() {
+                var str = '';
+                if( this.deliveryInfo && this.receiveInfo ) {
+                    if( this.receiveInfo.type == 0 ) {
+                        str += 'From '+ this.receiveInfo.en_country_name + ' to Guangzhou';
+                    } else {
+                        str += 'From Guangzhou to ' + this.receiveInfo.en_country_name;
+                    }
+                }
+                addOrder.orderInfo.mode_of_transportation = str;
             },
             setSpareReceive: function(data) {
                 if( data ) {
@@ -1851,20 +1981,44 @@
                         break;
                     }
                 }
+                var temp = {
+                    id: productInfo.id,
+                    product_name: productInfo.product_name,
+                    en_product_name: productInfo.en_product_name,
+                    goods_code: productInfo.goods_code,
+                    single_declared: productInfo.single_declared,
+                    total_declared: productInfo.total_declared,
+                    origin: productInfo.origin,
+                    texture: productInfo.texture,
+                    unit: productInfo.unit,
+                    count: productInfo.count,
+                };
                 if( false === exists ) {
-                    var temp = {
-                        id: productInfo.id,
-                        product_name: productInfo.product_name,
-                        en_product_name: productInfo.en_product_name,
-                        goods_code: productInfo.goods_code,
-                        single_declared: productInfo.single_declared,
-                        total_declared: productInfo.total_declared,
-                        origin: productInfo.origin,
-                        texture: productInfo.texture,
-                        unit: productInfo.unit,
-                        count: productInfo.count,
-                    };
                     addOrder.productList.push(temp);
+                }
+                this.refreshSpecificationProduct(temp);
+            },
+            refreshSpecificationProduct: function(product) {
+                //每次调用addProductToProductList之后，刷新规格里面的产品
+                for( var i in this.specificationList ) {
+                    for( var j in this.specificationList[i].productList ) {
+                        if( product.id == this.specificationList[i].productList[j].id  ) {
+                            var temp = {
+                                id: product.id,
+                                product_name: product.product_name,
+                                en_product_name: product.en_product_name,
+                                goods_code: product.goods_code,
+                                single_declared: product.single_declared,
+                                total_declared: product.total_declared,
+                                origin: product.origin,
+                                texture: product.texture,
+                                unit: product.unit,
+                                count: product.count,
+                                number: this.specificationList[i].productList[j].number,
+                            };
+                            this.specificationList[i].productList.splice(j, 1, temp);
+                        }
+                    }
                 }
             },
             refreshProductList: function() {
@@ -1872,6 +2026,23 @@
             },
             checkProductDeletable: function(index) {
                 //检查是否可以删除该商品
+                var id = "";
+                for( var i in this.productList ) {
+                    if( i == index ) {
+                        id = this.productList[i].id;
+                    }
+                }
+                if( "" === id ) {
+                    return true;
+                }
+
+                for( var i in this.specificationList ) {
+                    for( var j in this.specificationList[i].productList ) {
+                        if( id == this.specificationList[i].productList[j].id ) {
+                            return false;
+                        }
+                    }
+                }
                 return true;
             },
             showAddSpecification: function(specification, index) {
@@ -1952,7 +2123,7 @@
                 company: "",
                 country_id: "",
                 country_name: "",
-                enc_country_name: "",
+                en_country_name: "",
                 state: "",
                 city: "",
                 detail_address: "",
@@ -2017,7 +2188,7 @@
                     company: "",
                     country_id: "",
                     country_name: "",
-                    enc_country_name: "",
+                    en_country_name: "",
                     state: "",
                     city: "",
                     detail_address: "",
@@ -2043,7 +2214,7 @@
                 company: "",
                 country_id: "",
                 country_name: "",
-                enc_country_name: "",
+                en_country_name: "",
                 state: "",
                 city: "",
                 detail_address: "",
@@ -2105,7 +2276,7 @@
                     company: "",
                     country_id: "",
                     country_name: "",
-                    enc_country_name: "",
+                    en_country_name: "",
                     state: "",
                     city: "",
                     detail_address: "",
@@ -2128,7 +2299,7 @@
                 company: "",
                 country_id: "",
                 country_name: "",
-                enc_country_name: "",
+                en_country_name: "",
                 state: "",
                 city: "",
                 detail_address: "",

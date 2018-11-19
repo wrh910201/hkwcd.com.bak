@@ -44,6 +44,23 @@ class OrderAction extends BaseAction  {
             $order_detail_unit = $temp;
         }
 
+        $channel_list = M('Channel')->where(['status' => 1])->select();
+
+        $init_data = [
+            "order_detail_unit" => $order_detail_unit,
+            "package_type" => C('package_type'),
+            "price_terms" => C('price_terms'),
+            "tariff_payment" => C('tariff_payment'),
+            "settlement" => C('settlement'),
+            "express_service" => C('express_service'),
+            "export_reason" => C('export_reason'),
+            "export_nature" => C('export_nature'),
+            "package_type" => C('package_type'),
+            "channel_list" => $channel_list,
+        ];
+
+        $this->assign("init_data", json_encode($init_data, 320));
+
         $this->assign('order_detail_unit', $order_detail_unit);
         $this->assign('package_type', C('package_type'));
         $this->assign('price_terms', C('price_terms'));
@@ -52,7 +69,6 @@ class OrderAction extends BaseAction  {
         $this->assign('express_service', C('express_service'));
         $this->assign('export_reason', C('export_reason'));
         $this->assign('export_nature', C('export_nature'));
-        $channel_list = M('Channel')->where(['status' => 1])->select();
         $this->assign('channel_list', $channel_list);
         //国家
         $where = array('pid' => 0,'types'=>0);
@@ -177,6 +193,7 @@ class OrderAction extends BaseAction  {
             $page = 1;
         }
         $limit = C('usercenter_page_count');
+        $limit = I("limit", $limit, "intval");
         $offset = ($page - 1) * $limit;
 
         $order_list = M('ClientOrder')->where($where)->limit($offset, $limit)->order('id desc')->select();
@@ -268,163 +285,169 @@ class OrderAction extends BaseAction  {
 
     public function ajaxAdd() {
         $data = $this->_get_order_params();
-        $data = $this->_build_delivery_address($data);
-        $data = $this->_build_receive_address($data);
-        $data = $this->_build_spare_address($data);
+        $insert_data[] = $this->_build_delivery_address($data);
+        $insert_data[] = $this->_build_receive_address($data);
+        $insert_data[] = $this->_build_spare_address($data);
+        $insert_data[] = $this->_build_order_info($data);
 
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
+        $product_list = $this->_build_order_detail($data);
+        $specification_list = $this->_build_order_specification($data);
+
+        $temp = [];
+        foreach( $insert_data as $v ) {
+            $temp = array_merge($temp, $v);
         }
+        $insert_data = $temp;
 
-        $data = $this->_build_order_info($data);
-
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
-        }
-
-        $order_detail = $data['order_detail'];
-        unset($data['order_detail']);
-        $order_detail = $this->_build_order_detail($order_detail);
-
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
-        }
-        $order_specifications = $data['order_specifications'];
-        unset($data['order_specifications']);
-        $order_specifications = $this->_build_order_specification($order_specifications);
-//        var_dump($order_specifications);exit;
-
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
-        }
         $commit = $data['commit'];
-        unset($data['commit']);
+        unset($insert_data['commit']);
+        unset($insert_data["product_list"]);
+        unset($insert_data["order_info"]);
+        unset($insert_data["specification_list"]);
+        unset($insert_data["spare_receive_info"]);
 
-        $data['client_status'] = $commit == 0 ? 0 : 1;
+        $insert_data['client_status'] = $commit == 0 ? 0 : 1;
         $msg = $commit == 0 ? '添加订单成功' : '订单添加成功，并已提交';
+        $time = time();
         if( $commit == 1 ) {
-            $time = time();
-            $data['commit_time'] = date('Y-m-d H:i:s', $time);
-            $data['add_time'] = date('Y-m-d H:i:s', $time);
+            $insert_data['commit_time'] = date('Y-m-d H:i:s', $time);
+            $insert_data['add_time'] = date('Y-m-d H:i:s', $time);
+        } else {
+            $insert_data['add_time'] = date('Y-m-d H:i:s', $time);
         }
-        $data['client_id'] = $this->client_id;
+        $insert_data['client_id'] = $this->client_id;
+
 
         //事务开始，插入订单
         $model = new Model();
-        $transaction = true;
-        $model->startTrans();
+        try {
+            $transaction = true;
+            $model->startTrans();
 
-        /**
-         * 1、插入订单，返回订单编号
-         * 2、插入订单详情，
-         * 3、插入订单规格
-         * 4、插入详情和规格的映射
-         */
-        $order_id = 0;
-        $order_num = '';
-        $today_time = strtotime(date('Y-', time()).'01-01');
-        $total_map = [
+            /**
+             * 1、插入订单，返回订单编号
+             * 2、插入订单详情，
+             * 3、插入订单规格
+             * 4、插入详情和规格的映射
+             */
+            $order_id = 0;
+            $order_num = '';
+            $today_time = strtotime(date('Y-', time()) . '01-01');
+            $total_map = [
 //            'client_id' => $this->client_id,
-            'add_time' => ['gt', date('Y-m-d H:i:s', $today_time)],
-        ];
+                'add_time' => ['gt', date('Y-m-d H:i:s', $today_time)],
+            ];
 //        echo date('Y-m-d H:i:s', $today_time);exit;
-        for( $i = 0; $i < 5; $i++ ) {
-            $total = M('ClientOrder')->where($total_map)->count();
+            for ($i = 0; $i < 5; $i++) {
+                $total = M('ClientOrder')->where($total_map)->count();
 //            echo $total;exit;
-            $total++;
+                $total++;
 //            echo $total;exit;
-            $total_number = $this->_total_to_str($total);
+                $total_number = $this->_total_to_str($total);
 //            $order_num = 'HD' . date('Ymd', time()) . $this->client_id . $total_number;
-            $order_num = date('Ymd', time()) . $total_number;
+                $order_num = date('Ymd', time()) . $total_number;
 //            echo $order_num;exit;
-            $data['order_num'] = $order_num;
-            $add_order_result = M('ClientOrder')->add($data);
-            if (!$add_order_result) {
-                $transaction = false;
-            } else {
-                $order_id = M('ClientOrder')->getLastInsID();
-                break;
-            }
-        }
-
-        if( $transaction ) {
-            foreach( $order_detail as $k => $v ) {
-                $v['order_num'] = $order_num;
-                $v['order_id'] = $order_id;
-                $temp_result = M('ClientOrderDetail')->add($v);
-                if( !$temp_result ) {
+                $insert_data['order_num'] = $order_num;
+                $add_order_result = M('ClientOrder')->add($insert_data);
+                if (!$add_order_result) {
                     $transaction = false;
-                    break;
+                    throw new Exception("添加订单失败");
                 } else {
-                    $order_detail[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
+                    $order_id = M('ClientOrder')->getLastInsID();
+                    break;
                 }
             }
-        }
 
-        if( $transaction ) {
-            foreach( $order_specifications as $k => $v ) {
-                unset($v['id']);
-                $v['order_num'] = $order_num;
-                $v['order_id'] = $order_id;
-                $temp_result = M('ClientOrderSpecifications')->add($v);
-                if( !$temp_result ) {
-                    $transaction = false;
-                    break;
-                } else {
-                    $order_specifications[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
-                }
-            }
-        }
-
-        if( $transaction ) {
-            foreach( $order_specifications as $k => $v ) {
-                foreach( $v['cargo'] as $d ) {
-                    $temp = [
-                        'specifications_id' => $v['id'],
-                        'detail_id' => $order_detail[$d['product_index']]['id'],
-//                        'number' => $v['detail_number'][$d],
-                        'number' => $d['product_count'],
-                    ];
-                    $temp_result = M('ClientOrderMap')->add($temp);
-                    if( !$temp_result ) {
+            if ($transaction) {
+                foreach ($product_list as $k => $v) {
+                    $product = $v;
+                    unset($product["id"]);
+                    $product['order_num'] = $order_num;
+                    $product['order_id'] = $order_id;
+                    $temp_result = M('ClientOrderDetail')->field(true)
+                        ->add($product);
+                    if (!$temp_result) {
                         $transaction = false;
+                        throw new Exception("添加订单详情失败");
+                        break;
+                    } else {
+                        $product_list[$k]['product_id'] = $v["id"];
+                        $product_list[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
+                    }
+                }
+            }
+
+            if ($transaction) {
+                foreach ($specification_list as $k => $v) {
+                    $specification = $v;
+                    unset($specification['id']);
+                    $specification['order_num'] = $order_num;
+                    $specification['order_id'] = $order_id;
+                    $temp_result = M('ClientOrderSpecifications')->field(true)
+                        ->add($specification);
+                    if (!$temp_result) {
+                        $transaction = false;
+                        throw new Exception("添加订单规格失败");
+                        break;
+                    } else {
+                        $specification_list[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
+                    }
+                }
+            }
+
+
+            if ($transaction) {
+                foreach ($specification_list as $k => $v) {
+                    foreach ($v['product_list'] as $d) {
+                        foreach( $product_list as $p ) {
+                            if( $p["product_id"] == $d["id"]) {
+                                $temp = [
+                                    'specifications_id' => $v['id'],
+                                    'detail_id' => $p['id'],
+//                                    'number' => $v['detail_number'][$d],
+                                    'number' => $d['number'],
+                                ];
+                                $temp_result = M('ClientOrderMap')->add($temp);
+                                if (!$temp_result) {
+                                    throw new Exception("添加订单规格失败");
+                                    $transaction = false;
+                                    break;
+                                }
+                                break;
+                            }
+                        }
+
+                    }
+                    if (!$transaction) {
                         break;
                     }
                 }
-                if( !$transaction ) {
-                    break;
-                }
             }
-        }
 
-        if( $transaction ) {
-            $model->commit();
-            //插入操作日志
-            $log_data = [
-                'order_num' => $order_num,
-                'order_id' => $order_id,
-                'user_id' => $this->client_id,
-                'type' => 1,
-                'content' => $msg,
-            ];
-            M('ClientOrderLog')->add($log_data);
+            if ($transaction) {
+                $model->commit();
+                //插入操作日志
+                $log_data = [
+                    'order_num' => $order_num,
+                    'order_id' => $order_id,
+                    'user_id' => $this->client_id,
+                    'type' => 1,
+                    'content' => $msg,
+                ];
+                M('ClientOrderLog')->add($log_data);
 
-            $this->response['code'] = 1;
-            $this->response['msg'] = $msg;
-            $this->response['url'] = U('Order/index');
-        } else {
-            $model->rollback();
+                $this->response['code'] = 1;
+                $this->response['msg'] = $msg;
+                $this->response['url'] = U('Order/index');
+            } else {
+                $model->rollback();
 //            echo $model->getError();
-            $this->response['msg'] = '系统繁忙，请稍后重试';
+                $this->response['msg'] = '系统繁忙，请稍后重试';
 //            $this->response['msg'] = $model->getDbError();
+            }
+        } catch ( \Exception $e ) {
+            $model->rollback();
+            $this->response['msg'] = $e->getMessage();
         }
         echo json_encode($this->response);
         exit;
@@ -434,177 +457,190 @@ class OrderAction extends BaseAction  {
         $data = [];
         $data['delivery_id'] = I('post.delivery_id', 0, 'intval');
         $data['receive_id'] = I('post.receive_id', 0, 'intval');
-        $data['spare_company'] = I('post.spare_receive_company', '', 'trim');
-        $data['spare_addressee'] = I('post.spare_receive_addressee', '', 'trim');
-        $data['spare_country_id'] = I('post.spare_country', '', 'trim');
-        $data['spare_state'] = I('post.spare_state', '', 'trim');
-        $data['spare_city'] = I('post.spare_city', '', 'trim');
-        $data['spare_detail_address'] = I('post.spare_receive_detail_address', '', 'trim');
-        $data['spare_phone'] = I('post.spare_receive_phone', '', 'trim');
-        $data['spare_mobile'] = I('post.spare_receive_mobile', '', 'trim');
-        $data['spare_postal_code'] = I('post.spare_receive_postal_code', '', 'trim');
-        $data['spare_receiver_code'] = I('post.spare_receiver_code', '', 'trim');
         $data['enable_spare'] = I('post.enable_spare', 0, 'intval');
-        $data['channel_id'] = I('post.channel', '', 'trim');
-        $data['package_type'] = I('post.package_type', 1, 'intval');
-        $data['price_terms'] = I('post.price_terms', '', 'trim');
-        $data['tariff_payment'] = I('post.tariff_payment', '', 'trim');
-        $data['shipment_reference'] = I('post.shipment_reference', '', 'trim');
-        $data['settlement'] = I('post.settlement', '', 'trim');
-        $data['declaration_of_power_attorney'] = I('post.declaration_of_power_attorney', '', 'trim');
-        $data['contract_num'] = I('post.contract_num', '', 'trim');
-        $data['mode_of_transportation'] = I('post.mode_of_transportation', '', 'trim');
-        $data['express_service'] = I('post.express_service', '', 'trim');
-        $data['manufacturer'] = I('post.manufacturer', '', 'trim');
-        $data['export_nature'] = I('post.export_nature', '', 'trim');
-        $data['export_reason'] = I('post.export_reason', '', 'trim');
-        $data['remark'] = I('post.remark', '', 'trim');
-        $data['specifications_remark'] = I('post.specifications_remark', '', 'trim');
+        $data['spare_receive_info'] = I('post.spare_receive_info', []);
+        $data['order_info'] = I('post.order_info', []);
+        $data['product_list'] = I('post.product_list', [], "");
+        $data['specification_list'] = I('post.specification_list', [], "");
         $data['commit'] = I('post.commit', 0, 'trim');
-
-        $data['order_detail'] = $_POST['order_detail'];
-        $data['order_specifications'] = $_POST['order_specifications'];
-//        var_dump($data);exit;
         return $data;
     }
 
     private function _build_delivery_address($data) {
         //构造发货数据
+        $temp = [];
         $where = ['status' => 1, 'client_id' => $this->client_id, 'id' => $data['delivery_id']];
         $delivery = M('DeliveryAddress')->where($where)->find();
         if( empty($delivery) ) {
             $this->has_error = true;
             $this->error_msg = '请输入发货信息';
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
         } else {
-//            $data['delivery_id'] = $data['delivery_id'];
-            $data['delivery_company'] = $delivery['company'];
-            $data['delivery_consignor'] = $delivery['consignor'];
-            $data['delivery_country_id'] = $delivery['country_id'];
-            $data['delivery_state'] = $delivery['state'];
-            $data['delivery_city'] = $delivery['city'];
-            $data['delivery_phone'] = $delivery['phone'];
-            $data['delivery_mobile'] = $delivery['mobile'];
-            $data['delivery_detail_address'] = $delivery['detail_address'];
-            $data['delivery_postal_code'] = $delivery['postal_code'];
-            $data['exporter_code'] = $delivery['exporter_code'];
+            $temp['delivery_id'] = $data['delivery_id'];
+            $temp['delivery_company'] = $delivery['company'];
+            $temp['delivery_consignor'] = $delivery['consignor'];
+            $temp['delivery_country_id'] = $delivery['country_id'];
+            $temp['delivery_state'] = $delivery['state'];
+            $temp['delivery_city'] = $delivery['city'];
+            $temp['delivery_phone'] = $delivery['phone'];
+            $temp['delivery_mobile'] = $delivery['mobile'];
+            $temp['delivery_detail_address'] = $delivery['detail_address'];
+            $temp['delivery_postal_code'] = $delivery['postal_code'];
+            $temp['exporter_code'] = $delivery['exporter_code'];
 
             $country = M('Country')->where(['id' => $data['delivery_country_id']])->find();
             if( $country ) {
 
-                $data['delivery_country_name'] = $country['name'];
-                $data['delivery_country_en_name'] = $country['ename'];
+                $temp['delivery_country_name'] = $country['name'];
+                $temp['delivery_country_en_name'] = $country['ename'];
             }
         }
-        return $data;
+        return $temp;
     }
 
     private function _build_receive_address($data) {
         //构造收货数据
+        $temp = [];
         $where = ['status' => 1, 'client_id' => $this->client_id, 'id' => $data['receive_id']];
         $receive = M('ReceiveAddress')->where($where)->find();
         if( empty($receive) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入发货信息' : '请输入发货信息';
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
         } else {
-//            $data['receive_id'] = $receive_id;
-            $data['receive_company'] = $receive['company'];
-            $data['receive_addressee'] = $receive['addressee'];
-            $data['receive_country_id'] = $receive['country_id'];
-            $data['receive_state'] = $receive['state'];
-            $data['receive_city'] = $receive['city'];
-            $data['receive_phone'] = $receive['phone'];
-            $data['receive_mobile'] = $receive['mobile'];
-            $data['receive_detail_address'] = $receive['detail_address'];
-            $data['receive_postal_code'] = $receive['postal_code'];
-            $data['receiver_code'] = $receive['receiver_code'];
+            $temp['receive_id'] = $receive["id"];
+            $temp['receive_company'] = $receive['company'];
+            $temp['receive_addressee'] = $receive['addressee'];
+            $temp['receive_country_id'] = $receive['country_id'];
+            $temp['receive_state'] = $receive['state'];
+            $temp['receive_city'] = $receive['city'];
+            $temp['receive_phone'] = $receive['phone'];
+            $temp['receive_mobile'] = $receive['mobile'];
+            $temp['receive_detail_address'] = $receive['detail_address'];
+            $temp['receive_postal_code'] = $receive['postal_code'];
+            $temp['receiver_code'] = $receive['receiver_code'];
             $country = M('Country')->where(['id' => $data['receive_country_id']])->find();
             if( $country ) {
-                $data['receive_country_name'] = $country['name'];
-                $data['receive_country_en_name'] = $country['ename'];
+                $temp['receive_country_name'] = $country['name'];
+                $temp['receive_country_en_name'] = $country['ename'];
             }
         }
-        return $data;
+        return $temp;
     }
 
     private function _build_spare_address($data)
     {
-
+        $temp = [];
         if (empty($data['enable_spare'])) {
-            $data['spare_company'] = '';
-            $data['spare_addressee'] = '';
-            $data['spare_country_id'] = '';
-            $data['spare_state'] = '';
-            $data['spare_city'] = '';
-            $data['spare_detail_address'] = '';
-            $data['spare_phone'] = '';
-            $data['spare_mobile'] = '';
-            $data['spare_postal_code'] = '';
-            $data['spare_receiver_code'] = '';
-            $data['spare_country_name'] = '';
-            $data['spare_country_en_name'] = '';
+            $temp['spare_company'] = '';
+            $temp['spare_addressee'] = '';
+            $temp['spare_country_id'] = '';
+            $temp['spare_state'] = '';
+            $temp['spare_city'] = '';
+            $temp['spare_detail_address'] = '';
+            $temp['spare_phone'] = '';
+            $temp['spare_mobile'] = '';
+            $temp['spare_postal_code'] = '';
+            $temp['spare_receiver_code'] = '';
+            $temp['spare_country_name'] = '';
+            $temp['spare_country_en_name'] = '';
         } else {
             foreach ($this->spare_info_array as $v) {
                 if (empty($data[$v])) {
                     $this->has_error = true;
                     $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请完善备用信息,*为必填' : '请完善备用信息,*为必填';
+                    $this->response['msg'] = $this->error_msg;
+                    echo json_encode($this->response);
+                    exit;
                     break;
                 }
             }
 
             $country = M('Country')->where(['id' => $data['spare_country_id']])->find();
             if ($country) {
-                $data['spare_country_name'] = $country['name'];
-                $data['spare_country_en_name'] = $country['ename'];
+                $temp['spare_country_name'] = $country['name'];
+                $temp['spare_country_en_name'] = $country['ename'];
             }
         }
-        return $data;
+        return $temp;
     }
 
     private function _build_order_info($data) {
         //构造其他信息
-        $channel = M('Channel')->where(['status' => 1, 'id' => $data['channel_id']])->find();
+        $temp = $data["order_info"];
+        $channel = M('Channel')->where(['status' => 1, 'id' => $temp['channel']])->find();
         if( empty($channel) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请选择渠道' : '请选择渠道';
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
         }
-        $data['channel_name'] = $channel['name'];
-        $data['channel_en_name'] = $channel['en_name'];
-        $data['package_type'] = $data['package_type'] == 1 ? 1 : 2;
+        $temp["channel_id"] = $channel["id"];
+        $temp['channel_name'] = $channel['name'];
+        $temp['channel_en_name'] = $channel['en_name'];
+        $temp['package_type'] = $data['package_type'] == 1 ? 1 : 2;
+        unset($temp["channel"]);
 
         foreach( $this->order_info_array as $k => $v ) {
-            if( $data[$k] == '' ) {
+            if( $temp[$k] == '' ) {
                 $this->has_error = true;
                 $this->error_msg = $this->error_msg ? $this->error_msg.'<br />'.$v : $v;
+                $this->response['msg'] = $this->error_msg;
+                echo json_encode($this->response);
+                exit;
             }
         }
         return $data;
     }
 
-    private function _build_order_detail($order_detail) {
+    private function _build_order_detail($data) {
         //构造产品详情
-        $temp = [];
-        if( !is_array($order_detail) ) {
+        if( empty($data["product_list"]) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
+        }
+        $temp = [];
+        if( !is_array($data["product_list"]) ) {
+            $this->has_error = true;
+            $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
         } else {
-            if( count($order_detail) < 1 ) {
+            if( count($data["product_list"]) < 1 ) {
                 $this->has_error = true;
                 $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品详情' : '请输入产品详情';
+                $this->response['msg'] = $this->error_msg;
+                echo json_encode($this->response);
+                exit;
             } else {
-                foreach ($order_detail as $k => $v) {
+                foreach ($data["product_list"] as $k => $v) {
+                    $temp[$k]["product_id"] = $v["id"];
                     $temp[$k]['product_name'] = isset($v['product_name']) ? $v['product_name'] : '';
                     $temp[$k]['en_product_name'] = isset($v['en_product_name']) ? $v['en_product_name'] : '';
-                    $temp[$k]['goods_code'] = isset($v['detail_goods_code']) ? $v['detail_goods_code'] : '';
-                    $temp[$k]['count'] = isset($v['detail_count']) ? $v['detail_count'] : 0;
+                    $temp[$k]['goods_code'] = isset($v['goods_code']) ? $v['goods_code'] : '';
+                    $temp[$k]['count'] = isset($v['count']) ? $v['count'] : 0;
                     $temp[$k]['unit'] = isset($v['unit']) ? $v['unit'] : '';
                     $temp[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
                     $temp[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
+                    $temp[$k]["texture"] = isset($v['texture']) ? $v['texture'] : '';
                 }
                 $order_detail = $temp;
                 foreach( $order_detail as $k => $v ) {
                     if( $v['product_name'] == '' || $v['en_product_name'] == '' || $v['goods_code'] == '' || $v['count'] <= 0 || $v['unit'] == '' || $v['single_declared'] <= 0 || $v['origin'] == '' ) {
                         $this->has_error = true;
                         $this->error_msg = $this->error_msg ? $this->error_msg.'<br />产品详情内容有误，请重新输入' : '产品详情内容有误，请重新输入';
+                        $this->response['msg'] = $this->error_msg;
+                        echo json_encode($this->response);
+                        exit;
                         break;
                     }
                 }
@@ -613,27 +649,38 @@ class OrderAction extends BaseAction  {
         return $order_detail;
     }
 
-    private function _build_order_specification($order_specifications) {
+    private function _build_order_specification($data) {
         //构造产品规格
-        if( !is_array($order_specifications) ) {
+        $order_specifications = $data["specification_list"];
+        if( !is_array($data["specification_list"]) ) {
             $this->has_error = true;
             $this->error_msg = $this->error_msg ? $this->error_msg.'<br />请输入产品规格' : '请输入产品规格';
+            $this->response['msg'] = $this->error_msg;
+            echo json_encode($this->response);
+            exit;
         } else {
-            if (count($order_specifications) < 1) {
+            if (count($data["specification_list"]) < 1) {
                 $this->has_error = true;
                 $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请输入产品规格' : '请输入产品规格';
+                $this->response['msg'] = $this->error_msg;
+                echo json_encode($this->response);
+                exit;
             } else {
-                foreach( $order_specifications as $k => $v ) {
+                foreach( $data["specification_list"] as $k => $v ) {
                     $order_specifications[$k]['count'] = intval($v['count']);
                     $order_specifications[$k]['weight'] = floatval($v['weight']);
                     $order_specifications[$k]['length'] = floatval($v['length']);
                     $order_specifications[$k]['width'] = floatval($v['width']);
                     $order_specifications[$k]['height'] = floatval($v['height']);
+                    $order_specifications[$k]["product_list"] = $v["product_list"];
                 }
-                foreach( $order_specifications as $k => $v ) {
+                foreach( $data["specification_list"] as $k => $v ) {
                     if( $v['weight'] <= 0 || $v['length'] < 0 || $v['width'] < 0 || $v['height'] < 0 || $v['count'] < 0 ) {
                         $this->has_error = true;
                         $this->error_msg = $this->error_msg ? $this->error_msg.'<br />产品规格内容有误，请重新输入' : '产品规格内容有误，请重新输入';
+                        $this->response['msg'] = $this->error_msg;
+                        echo json_encode($this->response);
+                        exit;
                         break;
                     }
                 }
