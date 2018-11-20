@@ -210,6 +210,72 @@ class OrderAction extends BaseAction  {
         exit;
     }
 
+    public function getOrder() {
+        $client_id = session('hkwcd_user.user_id');
+        $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
+
+        $id = I('id');
+        $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+
+        $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
+        if( $order_detail ) {
+            $temp = [];
+            foreach( $order_detail as $k => $v ) {
+                $v["id"] = $v["product_id"];
+                unset($v["product_id"]);
+                $v["total_declared"] = $v["single_declared"] * $v["count"];
+                $temp[] = $v;
+            }
+            $order_detail = $temp;
+        }
+
+        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+        if( $order_specifications ) {
+            $temp = [];
+            $specifications_id_list = [];
+            foreach( $order_specifications as $s ) {
+                $specifications_id_list[] = $s["id"];
+            }
+            if( $specifications_id_list ) {
+                $product_list = M('ClientOrderMap')
+                    ->alias("m")
+                    ->field("p.*, m.specifications_id, m.number")
+                    ->join("left join hx_client_order_detail as p on p.id = m.detail_id")
+                    ->where(["specifications_id" => ["IN", $specifications_id_list]])
+                    ->select();
+                if( $product_list ) {
+                    foreach( $order_specifications as $k => $s ) {
+                        foreach( $product_list as $p ) {
+                            if( $s["id"] == $p["specifications_id"] ) {
+                                unset($p["specifications_id"]);
+                                $p["id"] = $p["product_id"];
+                                unset($p["product_id"]);
+                                $s["productList"][] = $p;
+                            }
+                        }
+                        $temp[$k] = $s;
+                    }
+                }
+            }
+            $order_specifications = $temp;
+        }
+        $order_fee = M('ClientOrderFee')->where(['order_id' => $id])->find();
+
+        $order['status_str'] = _order_status($order);
+        $this->response["code"] = 1;
+        $this->response["msg"] = "";
+        $this->response["data"] = [
+            "order_info" => $order,
+            "product_list" => $order_detail,
+            "specification_list" => $order_specifications,
+            "order_fee" => $order_fee,
+        ];
+        echo json_encode($this->response, 320);exit;
+    }
+
     public function add() {
 
         $client_id = session('hkwcd_user.user_id');
@@ -317,7 +383,6 @@ class OrderAction extends BaseAction  {
         }
         $insert_data['client_id'] = $this->client_id;
 
-
         //事务开始，插入订单
         $model = new Model();
         try {
@@ -361,7 +426,6 @@ class OrderAction extends BaseAction  {
             if ($transaction) {
                 foreach ($product_list as $k => $v) {
                     $product = $v;
-                    unset($product["id"]);
                     $product['order_num'] = $order_num;
                     $product['order_id'] = $order_id;
                     $temp_result = M('ClientOrderDetail')->field(true)
@@ -371,7 +435,6 @@ class OrderAction extends BaseAction  {
                         throw new Exception("添加订单详情失败");
                         break;
                     } else {
-                        $product_list[$k]['product_id'] = $v["id"];
                         $product_list[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
                     }
                 }
@@ -395,10 +458,9 @@ class OrderAction extends BaseAction  {
                 }
             }
 
-
             if ($transaction) {
                 foreach ($specification_list as $k => $v) {
-                    foreach ($v['product_list'] as $d) {
+                    foreach ($v['productList'] as $d) {
                         foreach( $product_list as $p ) {
                             if( $p["product_id"] == $d["id"]) {
                                 $temp = [
@@ -595,7 +657,7 @@ class OrderAction extends BaseAction  {
                 exit;
             }
         }
-        return $data;
+        return $temp;
     }
 
     private function _build_order_detail($data) {
@@ -691,6 +753,8 @@ class OrderAction extends BaseAction  {
 
     public function edit() {
         $client_id = session('hkwcd_user.user_id');
+
+        $this->title = "编辑订单";
 
         $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();

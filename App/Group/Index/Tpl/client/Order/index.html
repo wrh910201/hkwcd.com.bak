@@ -48,115 +48,192 @@
     </div>
 </div>
 
-<div class="modal inmodal fade" id="editReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">编辑收货人地址</h4>
+                <h4 class="modal-title">订单详情</h4>
                 <small class="font-bold"></small>
             </div>
             <div class="modal-body">
-                <form id="editReceiveForm" action="{:U('Receive/doEdit')}" method="post" class="form-horizontal">
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">公司</label>
-                        <div class="col-sm-6">
-                            <input name="company" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">* 联系人</label>
-                        <div class="col-sm-6">
-                            <input name="addressee" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">国家</label>
-                        <div class="col-sm-6">
-                            <select class="form-control m-b" name="country">
-                                <foreach name="country_list" item="v">
-                                    <option value="{$v.id}" >{$v.name} / {$v.ename}</option>
-                                </foreach>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">* 省</label>
-                        <div class="col-sm-6">
-                            <input name="state" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">* 市</label>
-                        <div class="col-sm-6">
-                            <input name="city" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">* 具体地址</label>
-                        <div class="col-sm-10">
-                            <input name="address" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">* 邮编</label>
-                        <div class="col-sm-6">
-                            <input name="postal_code" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">* 手机</label>
-                        <div class="col-sm-6">
-                            <input name="mobile" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">座机</label>
-                        <div class="col-sm-6">
-                            <input name="phone" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">出口商代码</label>
-                        <div class="col-sm-6">
-                            <input name="receiver_code" type="text" value="" placeholder="" class="form-control">
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">默认
-                        </label>
-                        <div class="col-sm-10">
-                            <div class="checkbox i-checks">
-                                <label>
-                                    <input name="default" type="checkbox" value="1">
-                                    <i></i>
-                                </label>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox-content p-xl">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>订单编号：</h4>
+                                <h4 class="text-navy">{{orderInfo.order_num}}</h4>
+                                <address>
+                                    渠道类型：{{orderInfo.channel_name}} / {{orderInfo.channel_en_name}}<br />
+                                    价格条款：{{orderInfo.price_terms}}<br />
+                                    装运参考：{{orderInfo.shipment_reference}}<br />
+                                    相关委托书：{{orderInfo.declaration_of_power_attorney}}<br />
+                                    出口原因：{{orderInfo.export_reason}}<br />
+                                    运输方式：{{orderInfo.mode_of_transportation}}&nbsp;{{orderInfo.express_service}}<br />
+                                    制造商或出口商及地址：{{orderInfo.manufacturer}}<br />
+                                </address>
+                            </div>
+                            <div class="col-sm-6">
+                                <h4>订单状态：</h4>
+                                <h4 class="text-navy">{{orderInfo.status_str}}</h4>
+                                <address>
+                                    寄件类型：{{packageTypeFormatter(orderInfo.package_type)}}<br />
+                                    关税支付：{{orderInfo.tariff_payment}}<br />
+                                    结汇方式：{{orderInfo.settlement}}<br />
+                                    合同号：{{orderInfo.contract_num}}<br />
+                                    出口原因：{{orderInfo.export_nature}}<br />
+                                </address>
                             </div>
                         </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        <input type="hidden" id="id" name="id"/>
-                        <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">保存内容</button>
-                            <button class="btn btn-primary" type="button" onclick="remoteQuery();">偏远查询</button>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>发货信息</h5>
+                                <address>
+                                    发货公司：<strong>{{orderInfo.delivery_company}}</strong><br />
+                                    发货地址：{{orderInfo.delivery_detail_address}}<br />
+                                    邮编：{{orderInfo.delivery_postal_code}}<br />
+                                    发货人：{{orderInfo.delivery_consignor}}<br />
+                                    手机：{{orderInfo.delivery_mobile}}<br />
+                                    座机：{{orderInfo.delivery_phone}}<br />
+                                    出口商代码：{{orderInfo.exporter_code}}<br />
+                                </address>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div v-bind:class="{ 'col-sm-6': orderInfo.enable_spare, 'col-sm-12': !orderInfo.enable_spare }">
+                                <h5>收货信息</h5>
+                                <address>
+                                    收货公司：<strong>{{orderInfo.receive_company}}</strong><br />
+                                    收货地址：{{orderInfo.receive_detail_address}}<br />
+                                    邮编：{{orderInfo.receive_postal_code}}<br />
+                                    收货人：{{orderInfo.receive_addressee}}<br />
+                                    手机：{{orderInfo.receive_mobile}}<br />
+                                    座机：{{orderInfo.receive_phone}}<br />
+                                    进口商代码：{{orderInfo.receiver_code}}<br />
+                                </address>
+                            </div>
+                            <div class="col-sm-6" v-show="orderInfo.enable_spare">
+                                <h5>备用收货信息</h5>
+                                <address>
+                                    收货公司：<strong>{{orderInfo.spare_company}}</strong><br />
+                                    收货地址：{{orderInfo.spare_detail_address}}<br />
+                                    邮编：{{orderInfo.spare_postal_code}}<br />
+                                    收货人：{{orderInfo.spare_addressee}}<br />
+                                    手机：{{orderInfo.spare_mobile}}<br />
+                                    座机：{{orderInfo.spare_phone}}<br />
+                                    进口商代码：{{orderInfo.spare_receiver_code}}<br />
+                                </address>
+                            </div>
+                        </div>
+
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="table-responsive m-t">
+                            <table class="table invoice-table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">编号</th>
+                                    <th class="text-center">品名</th>
+                                    <th class="text-center">商品编码</th>
+                                    <th class="text-center">单件申报价值</th>
+                                    <th class="text-center">数量</th>
+                                    <th class="text-center">总申报价值</th>
+                                    <th class="text-center">原产地</th>
+                                    <th class="text-center">材质</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(product,index) in productList">
+                                <tr>
+                                    <td class="text-center">{{index + 1}}</td>
+                                    <td class="text-center">
+                                        <div><strong>{{product.product_name}}</strong><br /><strong>{{product.en_product_name}}</strong></div>
+                                    </td>
+                                    <td class="text-center">{{product.goods_code}}</td>
+                                    <td class="text-center">{{product.single_declared}}</td>
+                                    <td class="text-center">{{product.count}}</td>
+                                    <td class="text-center">{{product.total_declared}}</td>
+                                    <td class="text-center">{{product.origin}}</td>
+                                    <td class="text-center">{{product.texture}}</td>
+                                </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="table-responsive m-t">
+                            <table class="table invoice-table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">编号</th>
+                                    <th class="text-center">品名</th>
+                                    <th class="text-center">商品编码</th>
+                                    <th class="text-center">数量</th>
+                                    <th class="text-center">重量</th>
+                                    <th class="text-center">长 宽 高</th>
+                                    <th class="text-center">材积重</th>
+                                    <th class="text-center">箱数</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="(spec,index) in specificationList">
+                                    <tr>
+                                        <td class="text-center" :rowspan="spec.productList.length">{{indexFormatter(index)}}</td>
+                                        <td class="text-center">{{spec.productList[0].product_name}}</td>
+                                        <td class="text-center">{{spec.productList[0].goods_code}}</td>
+                                        <td class="text-center">{{spec.productList[0].number}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length">{{spec.weight}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length">{{spec.length}} {{spec.width}} {{spec.height}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length">{{volumeWeight(spec.length,spec.width,spec.height)}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length">{{spec.count}}</td>
+                                    </tr>
+                                    <template v-for="(p,i) in spec.productList">
+                                        <tr v-if="i > 0">
+                                            <td class="text-center">{{spec.productList[i].product_name}}</td>
+                                            <td class="text-center">{{spec.productList[i].goods_code}}</td>
+                                            <td class="text-center">{{spec.productList[i].origin}}</td>
+                                        </tr>
+                                    </template>
+                                </template>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /table-responsive -->
+
+                        <table class="table invoice-total" v-show="billingWeight">
+                            <tbody>
+                            <tr>
+                                <td><strong>计费重量：</strong>
+                                </td>
+                                <td>{{billingWeight}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="well m-t" v-show="orderInfo.remark">
+                            <strong>备注：</strong> {{orderInfo.remark}}
+                        </div>
+                        <div class="well m-t" v-show="orderInfo.specifications_remark">
+                            <strong>托运备注：</strong> {{orderInfo.specifications_remark}}
+                        </div>
+                        <div class="text-right" v-show="0 == orderInfo.client_status">
+                            <button class="btn btn-primary" @click="commitOrder(orderInfo.id)"></i> 提交</button>
+                        </div>
+                        <div class="text-right" v-show="1 == orderInfo.exam_status && 0 == orderInfo.ensure_status">
+                            <button class="btn btn-primary"></i> 确认</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
             </div>
@@ -172,6 +249,7 @@
 <script src="/Public/client/static/layer/2.1/layer.min.js"></script>
 <script src="/Public/client/static/finance/js/fm.selectator.jquery.js"></script>
 <script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
 
 <script>
     var $example = $('#example'),$details=$("#details"), $shopDetails = $('#shop_details'),
@@ -208,7 +286,6 @@
             method: "get",  //使用get请求到服务器获取数据
             url: "/Order/getList", //获取数据的Servlet地址
             striped: true,  //表格显示条纹
-            pagination: true, //启动分页
             pageSize: 10,  //每页显示的记录数
             pageNumber: 1, //当前第几页
             pageList: [5, 10, 20, 25],  //记录数可选列表
@@ -216,6 +293,7 @@
             showColumns: false,  //显示下拉框勾选要显示的列
             showRefresh: true,  //显示刷新按钮
             sidePagination: "server", //表示服务端请求
+            pagination: true, //启动分页
             dataType: 'json',
             sortOrder: 'desc',
             showExport: false,
@@ -317,72 +395,80 @@
     function operateFormatter(value, row) {
         var operate = [
         ];
-        operate.push('<a class="submit" href="javascript:void(0)" title="提交">提交</a>&nbsp;');
-        operate.push('<a class="edit" href="javascript:void(0)" title="编辑">编辑</a>&nbsp;');
         operate.push('<a class="detail" href="javascript:void(0)" title="详情">详情</a>&nbsp;');
-        operate.push('<a class="remove" href="javascript:void(0)" title="删除">删除</a>&nbsp;');
-        operate.push('<a class="reject" href="javascript:void(0)" title="驳回日志">驳回日志</a>&nbsp;');
-        operate.push('<a class="confirm" href="javascript:void(0)" title="待确认">待确认</a>&nbsp;');
-        operate.push('<a class="trace" href="javascript:void(0)" title="跟踪">跟踪</a>&nbsp;');
-        operate.push('<a class="hand_over" href="javascript:void(0)" title="交接清单">交接清单</a>&nbsp;');
-        operate.push('<a class="packing" href="javascript:void(0)" title="装箱单">装箱单</a>&nbsp;');
-        operate.push('<a class="invoice" href="javascript:void(0)" title="商业发票">商业发票</a>&nbsp;');
-        operate.push('<a class="remark" href="javascript:void(0)" title="处理备注">处理备注</a>&nbsp;');
+        if( 0 == row.client_status ) {
+            // operate.push('<a class="submit" href="javascript:void(0)" title="提交">提交</a>&nbsp;');
+            operate.push('<a class="edit" href="javascript:void(0)" title="编辑">编辑</a>&nbsp;');
+            operate.push('<a class="remove" href="javascript:void(0)" title="删除">删除</a>&nbsp;');
+            if( 1 == row.is_rejected ) {
+                operate.push('<a class="reject" href="javascript:void(0)" title="驳回日志">驳回日志</a>&nbsp;');
+            }
+        }
+        if( 1 == row.exam_status && 0 == row.ensure_status ) {
+            operate.push('<a class="confirm" href="javascript:void(0)" title="待确认">待确认</a>&nbsp;');
+        }
+        if( 1 == row.express_status ) {
+            operate.push('<a class="trace" href="javascript:void(0)" title="跟踪">跟踪</a>&nbsp;');
+            operate.push('<a class="hand_over" href="javascript:void(0)" title="交接清单">交接清单</a>&nbsp;');
+            operate.push('<a class="packing" href="javascript:void(0)" title="装箱单">装箱单</a>&nbsp;');
+            operate.push('<a class="invoice" href="javascript:void(0)" title="商业发票">商业发票</a>&nbsp;');
+        }
+        if( "" != row.operate_remark ) {
+            operate.push('<a class="remark" href="javascript:void(0)" title="处理备注">处理备注</a>&nbsp;');
+        }
         return operate.join('');
     }
     /*formatters*/
 
     /*operate events*/
     window.operateEvents = {
-        'click .default': function (e, value, row, index) {
-            swal({
-                title:"",
-                text:"是否设置为默认",
-                type:"info",
-                confirmButtonText:"确定",
-                cancelButtonText:"取消",
-                showCancelButton: true,
-                closeOnConfirm:true,
-                closeOnCancel:true,
-            }, function(confirm){
-                if( confirm ) {
-                    window.location.href = "/Receive/setDefault?id=" + row.id;
-                }
-            });
+        'click .detail': function (e, value, row, index) {
+            orderDetail.getOrderInfo(row.id);
+        },
+        'click .submit': function (e, value, row, index) {
+            orderDetail.commitOrder(row.id);
         },
         'click .edit': function (e, value, row, index) {
-            $('#editReceiveForm input[name=company]').val(row.company);
-            $('#editReceiveForm input[name=addressee]').val(row.addressee);
-            $('#editReceiveForm select[name=country]').val(row.country_id);
-            $('#editReceiveForm input[name=company]').val(row.company);
-            $('#editReceiveForm input[name=state]').val(row.state);
-            $('#editReceiveForm input[name=city]').val(row.city);
-            $('#editReceiveForm input[name=address]').val(row.detail_address);
-            $('#editReceiveForm input[name=postal_code]').val(row.postal_code);
-            $('#editReceiveForm input[name=mobile]').val(row.mobile);
-            $('#editReceiveForm input[name=phone]').val(row.phone);
-            $('#editReceiveForm input[name=receiver_code]').val(row.receiver_code);
-            $('#editReceiveModal input[id=id]').val(row.id);
-            if( 1 == parseInt(row.is_default) ) {
-                $('#editReceiveModal input[name=default]').iCheck('check');
+            if( window.parent !== window ) {
+                window.parent.createNewTab("/Order/edit/id/" + row.id + ".html", "编辑订单");
             } else {
-                $('#editReceiveModal input[name=default]').iCheck('uncheck');
+                window.location.href = "/Order/edit/id/" + row.id + ".html";
             }
-            $("#editReceiveModal").modal();
         },
-        'click .del': function (e, value, row, index) {
+        'click .remove': function (e, value, row, index) {
+            var title = "确定删除订单吗";
+            var text = "";
+
             swal({
-                title: "",
-                text: "是否删除",
+                title: title,
+                text: text,
                 type: "info",
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 showCancelButton: true,
-                closeOnConfirm: true,
+                closeOnConfirm: false,
                 closeOnCancel: true,
             }, function (confirm) {
                 if (confirm) {
-                    window.location.href = "/Receive/del?id=" + row.id;
+                    var url = '/Order/delete';
+                    var param = {id:row.id};
+                    $.post(url, param, function(response) {
+                        if( 1 == response.code ) {
+                            swal({
+                                title: "",
+                                text: response.msg,
+                                type: "success",
+                            }, function (confirm) {
+                                $example.bootstrapTable("refresh");
+                            });
+                        } else {
+                            swal({
+                                title: "",
+                                text: response.msg,
+                                type: "error",
+                            });
+                        }
+                    }, 'json');
                 }
             });
         }
@@ -535,6 +621,128 @@
         $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
     });
 
+</script>
+<script>
+    var orderDetail = new Vue({
+        el: "#orderDetailModal",
+        data: {
+            orderInfo: {},  //订单信息
+            productList: [],
+            specificationList: [],
+            orderFee: {},
+            billingWeight: "",
+        },
+        mounted: function() {
+
+        },
+        methods: {
+            getOrderInfo: function(order_id) {
+                var that = this;
+                var url = "/Order/getOrder";
+                var param = {
+                    id: order_id
+                };
+                $.post(url, param, function(response) {
+                    if( 1 == response.code ) {
+                        that.orderInfo = response.data.order_info;
+                        that.orderInfo.enable_spare = parseInt(that.orderInfo.enable_spare);
+                        that.productList = response.data.product_list;
+                        that.specificationList = response.data.specification_list;
+                        that.orderFee = response.data.order_fee;
+                        that.calBillingWeight();
+                    }
+                    $("#orderDetailModal").modal();
+                }, "json");
+            },
+            refreshTraceInfo: function(order_id) {
+
+            },
+            commitOrder: function(order_id) {
+                var that = this;
+
+                var title = "确定提交订单？";
+                var text = "（订单提交之后进入待审核状态，无法编辑）";
+
+                swal({
+                    title: title,
+                    text: text,
+                    type: "info",
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    closeOnCancel: true,
+                }, function (confirm) {
+                    if (confirm) {
+                        var url = '/Order/commit';
+                        var param = {id:order_id};
+                        $.post(url, param, function(response) {
+                            if( 1 == response.code ) {
+                                swal({
+                                    title: "",
+                                    text: response.msg,
+                                    type: "success",
+                                }, function (confirm) {
+                                    $("#orderDetailModal").modal("hide");
+                                   $example.bootstrapTable("refresh");
+                                });
+                            } else {
+                                swal({
+                                    title: "",
+                                    text: response.msg,
+                                    type: "error",
+                                });
+                            }
+                        }, 'json');
+                    }
+                });
+            },
+            indexFormatter: function(index) {
+                var str = "";
+                var start = 0;
+                var end = 0;
+                for( var i in this.specificationList ) {
+                    start = end + 1;
+                    end = start + parseInt(this.specificationList[i].count) - 1;
+                    if( i == index ) {
+                        str = start + "-" + end;
+                        break;
+                    }
+                }
+                return str;
+            },
+            packageTypeFormatter: function(package_type) {
+                package_type = parseInt(package_type);
+                switch( package_type ) {
+                    case 1: return "文件";
+                    case 2: return "包裹";
+                }
+            },
+            volumeWeight: function(length, width, height) {
+                var temp = length * width * height / 5000;
+                temp = temp.toFixed(2);
+                return temp;
+            },
+            calBillingWeight: function() {
+                var totalVolumeWeight = 0;
+                var totalWeight = 0;
+
+                for( var i in this.specificationList ) {
+                    totalWeight += this.specificationList[i]["weight"] * this.specificationList[i]["count"];
+                    var volumeWeight = this.volumeWeight(this.specificationList[i]["length"], this.specificationList[i]["width"], this.specificationList[i]["height"])
+                    totalVolumeWeight += volumeWeight * this.specificationList[i]["count"];
+                }
+                var result = totalVolumeWeight > totalWeight ? totalVolumeWeight : totalWeight;
+                result = result.toFixed(2);
+                console.log(result);
+                if( result ) {
+                    this.billingWeight = result + "KG";
+                } else {
+                    this.billingWeight = "";
+                }
+            }
+        }
+    });
 </script>
 
 </body>
