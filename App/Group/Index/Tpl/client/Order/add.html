@@ -1745,7 +1745,7 @@
                 var param = {
                     delivery_id: that.deliveryInfo.id,
                     receive_id: that.receiveInfo.id,
-                    enable_spare: that.hasSpare,
+                    enable_spare: that.hasSpare ? 1 : 0,
                     spare_receive_info: that.spareReceiveInfo,
                     order_info: that.orderInfo,
                     product_list: [],
