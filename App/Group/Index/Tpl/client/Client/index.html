@@ -378,6 +378,14 @@
         return false
     }
 
+    function closeCurrentTab() {
+        $(".page-tabs-content").children("[data-id]").not(":first").each(function() {
+            if( $(this).is(".active") ) {
+                $(this).remove();
+            }
+        });
+    }
+
     function g(n) {
         var o = f($(n).prevAll()), q = f($(n).nextAll());
         var l = f($(".content-tabs").children().not(".J_menuTabs"));

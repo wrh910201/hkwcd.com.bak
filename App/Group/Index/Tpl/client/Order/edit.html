@@ -367,7 +367,7 @@
                                             <tr v-if="i > 0">
                                                 <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].product_name}}</td>
                                                 <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].goods_code}}</td>
-                                                <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].origin}}</td>
+                                                <td style="text-align: center; vertical-align: middle; ">{{spec.productList[i].number}}</td>
                                             </tr>
                                         </template>
                                     </template>
@@ -1069,7 +1069,8 @@
     var editing_index = -1;
     var editing_row = '';
     var selected_row = '';
-    var init_data = {$init_data}
+    var init_data = {$init_data};
+    var order_id = '{$order.id}';
 
 
     function initDeliveryTable() {
@@ -1645,6 +1646,7 @@
     var addOrder = new Vue({
         el: "#addOrder",
         data: {
+            orderId: 0,
             dataDictionary: {},
             deliveryInfo: {
                 id: 0,
@@ -1699,13 +1701,53 @@
         mounted: function() {
             initProductTable();
             this.initOrder();
-            this.getDefaultDelivery();
-            this.getDefaultReceive();
+            // this.getDefaultDelivery();
+            // this.getDefaultReceive();
         },
         methods: {
             initOrder: function() {
                 //初始化订单需要的数据字典
                 this.dataDictionary = init_data;
+                this.orderId = order_id;
+                var that = this;
+
+                var url = "/Order/getOrder";
+                var param = {
+                    id: that.orderId
+                };
+
+                $.get(url, param, function(response) {
+                    if( 1 == response.code ) {
+                        that.setDelivery(response.data.delivery_address);
+                        that.setReceive(response.data.receive_address);
+                        for( var i in response.data.product_list ) {
+                            that.addProductToProductList(response.data.product_list[i]);
+                        }
+                        that.refreshProductList();
+                        for( var i in response.data.specification_list ) {
+                            that.specificationList.push(response.data.specification_list[i]);
+                        }
+                        that.calBillingWeight();
+
+                        that.orderInfo.channel = response.data.order_info.channel_id;
+                        that.orderInfo.package_type = response.data.order_info.package_type;
+                        that.orderInfo.price_terms = response.data.order_info.price_terms;
+                        that.orderInfo.tariff_payment = response.data.order_info.tariff_payment;
+                        that.orderInfo.shipment_reference = response.data.order_info.shipment_reference;
+                        that.orderInfo.settlement = response.data.order_info.settlement;
+                        that.orderInfo.declaration_of_power_attorney = response.data.order_info.declaration_of_power_attorney;
+                        that.orderInfo.contract_num = response.data.order_info.contract_num;
+                        that.orderInfo.mode_of_transportation = response.data.order_info.mode_of_transportation;
+                        that.orderInfo.express_service = response.data.order_info.express_service;
+                        that.orderInfo.export_reason = response.data.order_info.export_reason;
+                        that.orderInfo.export_nature = response.data.order_info.export_nature;
+                        that.orderInfo.manufacturer = response.data.order_info.manufacturer;
+                        that.orderInfo.remark = response.data.order_info.remark;
+                        that.orderInfo.specifications_remark = response.data.order_info.specifications_remark;
+                    }
+                }, "json");
+
+
                 this.orderInfo.channel = this.dataDictionary.channel_list[0].id;
                 this.orderInfo.package_type = 1;
                 this.orderInfo.declaration_of_power_attorney = "快件报关";
@@ -1741,8 +1783,9 @@
             saveOrder: function(commit) {
                 //保存订单，commit=1代表提交
                 var that = this;
-                var url = "/Order/ajaxAdd";
+                var url = "/Order/ajaxEdit";
                 var param = {
+                    id: that.orderId,
                     delivery_id: that.deliveryInfo.id,
                     receive_id: that.receiveInfo.id,
                     enable_spare: that.hasSpare,
@@ -1770,9 +1813,11 @@
                             type: "success",
                         }, function (confirm) {
                             if( window.parent !== window ) {
+                                window.parent.closeCurrentTab();
                                 window.parent.createNewTab("/Order/index.html", "订单列表");
+                            } else {
+                                window.location.href = "/Order/index";
                             }
-                            window.location.reload();
                         });
                     } else {
                         swal({
@@ -1786,10 +1831,10 @@
             commitOrder: function(commit) {
                 var that = this;
                 if( 0 == commit ) {
-                    var title = "确定添加订单？";
+                    var title = "确定保存订单？";
                     var text = "";
                 } else {
-                    var title = "确定添加订单并提交？";
+                    var title = "确定保存订单并提交？";
                     var text = "（订单提交之后进入待审核状态，无法编辑）";
                 }
                 swal({

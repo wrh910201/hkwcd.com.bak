@@ -14,7 +14,12 @@ class OrderAction extends BaseAction  {
     public $error_msg = '';
 
     public $spare_info_array = [
-        'spare_addressee','spare_country_id','spare_city','spare_detail_address','spare_mobile','spare_postal_code'
+        'addressee',
+        'country_id',
+        'city',
+        'detail_address',
+        'mobile',
+        'postal_code'
     ];
 
     public $order_info_array = [
@@ -220,6 +225,61 @@ class OrderAction extends BaseAction  {
             $this->error('订单不存在');
         }
 
+        $spare_receive = [];
+        if( !empty($order["enable_spare"]) ) {
+            $spare_receive = [
+                "company" => $order["spare_company"],
+                "country_id" => $order["spare_country_id"],
+                "country_name" => $order["spare_country_name"],
+                "en_country_name" => $order["spare_country_en_name"],
+                "state" => $order["spare_state"],
+                "city" => $order["spare_city"],
+                "detail_address" => $order["spare_detail_address"],
+                "addressee" => $order["spare_addressee"],
+                "mobile" => $order["spare_mobile"],
+                "phone" => $order["spare_phone"],
+                "postal_code" => $order["spare_postal_code"],
+                "receiver_code" => $order["spare_receiver_code"],
+            ];
+        }
+
+        $delivery = [
+            "id" => $order["delivery_id"],
+            "company" => $order["delivery_company"],
+            "country_id" => $order["delivery_country_id"],
+            "country_name" => $order["delivery_country_name"],
+            "en_country_name" => $order["delivery_country_en_name"],
+            "state" => $order["delivery_state"],
+            "city" => $order["delivery_city"],
+            "detail_address" => $order["delivery_detail_address"],
+            "consignor" => $order["delivery_consignor"],
+            "mobile" => $order["delivery_mobile"],
+            "phone" => $order["delivery_phone"],
+            "postal_code" => $order["delivery_postal_code"],
+            "exporter_code" => $order["delivery_exporter_code"],
+        ];
+
+        $receive_address = M("ReceiveAddress")
+            ->where(["id" => $order["receive_id"]])
+            ->find();
+
+        $receive = [
+            "id" => $order["receive_id"],
+            "company" => $order["receive_company"],
+            "country_id" => $order["receive_country_id"],
+            "country_name" => $order["receive_country_name"],
+            "en_country_name" => $order["receive_country_en_name"],
+            "state" => $order["receive_state"],
+            "city" => $order["receive_city"],
+            "detail_address" => $order["receive_detail_address"],
+            "addressee" => $order["receive_addressee"],
+            "mobile" => $order["receive_mobile"],
+            "phone" => $order["receive_phone"],
+            "postal_code" => $order["receive_postal_code"],
+            "receiver_code" => $order["receive_receiver_code"],
+            "type" => $receive_address["type"],
+        ];
+
         $order_detail = M('ClientOrderDetail')->where(['order_num' => $order['order_num']])->select();
         if( $order_detail ) {
             $temp = [];
@@ -269,6 +329,9 @@ class OrderAction extends BaseAction  {
         $this->response["msg"] = "";
         $this->response["data"] = [
             "order_info" => $order,
+            "delivery_address" => $delivery,
+            "receive_address" => $receive,
+            "spare_receive" => $spare_receive,
             "product_list" => $order_detail,
             "specification_list" => $order_specifications,
             "order_fee" => $order_fee,
@@ -519,7 +582,7 @@ class OrderAction extends BaseAction  {
         $data = [];
         $data['delivery_id'] = I('post.delivery_id', 0, 'intval');
         $data['receive_id'] = I('post.receive_id', 0, 'intval');
-        $data['enable_spare'] = I('post.enable_spare', 0, 'intval');
+        $data['enable_spare'] = I('post.enable_spare');
         $data['spare_receive_info'] = I('post.spare_receive_info', []);
         $data['order_info'] = I('post.order_info', []);
         $data['product_list'] = I('post.product_list', [], "");
@@ -610,9 +673,11 @@ class OrderAction extends BaseAction  {
             $temp['spare_receiver_code'] = '';
             $temp['spare_country_name'] = '';
             $temp['spare_country_en_name'] = '';
+            $temp["enable_spare"] = 0;
         } else {
+            $temp["enable_spare"] = 1;
             foreach ($this->spare_info_array as $v) {
-                if (empty($data[$v])) {
+                if (empty($data["spare_receive_info"][$v])) {
                     $this->has_error = true;
                     $this->error_msg = $this->error_msg ? $this->error_msg . '<br />请完善备用信息,*为必填' : '请完善备用信息,*为必填';
                     $this->response['msg'] = $this->error_msg;
@@ -620,14 +685,16 @@ class OrderAction extends BaseAction  {
                     exit;
                     break;
                 }
+                $temp["spare_{$v}"] = $data["spare_receive_info"][$v];
             }
 
-            $country = M('Country')->where(['id' => $data['spare_country_id']])->find();
+            $country = M('Country')->where(['id' => $data["spare_receive_info"]['country_id']])->find();
             if ($country) {
                 $temp['spare_country_name'] = $country['name'];
                 $temp['spare_country_en_name'] = $country['ename'];
             }
         }
+//        var_dump($temp);exit;
         return $temp;
     }
 
@@ -853,7 +920,7 @@ class OrderAction extends BaseAction  {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
 
-        $id = I('order_id');
+        $id = I('id');
         $order = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id, 'status' => 1])->find();
         if( empty($order) ) {
             $this->response['msg'] = '订单不存在';
@@ -865,200 +932,203 @@ class OrderAction extends BaseAction  {
             echo json_encode($this->response);
             exit;
         }
+
         $data = $this->_get_order_params();
-        $data = $this->_build_delivery_address($data);
-        $data = $this->_build_receive_address($data);
-        $data = $this->_build_spare_address($data);
 
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
+        $update_data = [];
+        $update_data[] = $this->_build_delivery_address($data);
+        $update_data[] = $this->_build_receive_address($data);
+        $update_data[] = $this->_build_spare_address($data);
+        $update_data[] = $this->_build_order_info($data);
+
+        $product_list = $this->_build_order_detail($data);
+        $specification_list = $this->_build_order_specification($data);
+
+        $temp = [];
+        foreach( $update_data as $v ) {
+            $temp = array_merge($temp, $v);
         }
+        $update_data = $temp;
 
-        $data = $this->_build_order_info($data);
+        $commit = $data['commit'];
+        unset($update_data['commit']);
+        unset($update_data["product_list"]);
+        unset($update_data["order_info"]);
+        unset($update_data["specification_list"]);
+        unset($update_data["spare_receive_info"]);
 
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
-        }
-
-        $order_detail = $data['order_detail'];
-        unset($data['order_detail']);
-        $order_detail = $this->_build_order_detail($order_detail);
-
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
-        }
-        $order_specifications = $data['order_specifications'];
-        unset($data['order_specifications']);
-        $order_specifications = $this->_build_order_specification($order_specifications);
-//        var_dump($order_specifications);exit;
-
-        if( $this->has_error ) {
-            $this->response['msg'] = $this->error_msg;
-            echo json_encode($this->response);
-            exit;
-        }
 
         $commit = $data['commit'];
         unset($data['commit']);
-        $data['client_status'] = $commit == 0 ? 0 : 1;
+        $update_data['client_status'] = $commit == 0 ? 0 : 1;
         $msg = $commit == 0 ? '修改订单成功' : '订单修改成功，并已提交';
         if( $commit == 1 ) {
             $time = time();
             $data['commit_time'] = date('Y-m-d H:i:s', $time);
         }
-        $data['client_id'] = $client_id;
-
+        $update_data['client_id'] = $client_id;
 
         //事务开始
         //修改订单
 
+        $order_id = $id;
+        $order_num = $order["order_num"];
+
         $model = new Model();
-        $transaction = true;
-        $model->startTrans();
 
-        /**
-         * 1、更新订单
-         * 2、删除原订单详情，删除原订单规格，删除原详情和规格的映射
-         * 3、插入新的订单详情
-         * 4、插入新的订单规格
-         * 5、插入新的详情和规格的映射
-         */
+        try {
+            $transaction = true;
+            $model->startTrans();
 
-        $result = M('ClientOrder')->where(['id' => $id, 'client_id' => $client_id])->save($data);
+            /**
+             * 1、更新订单
+             * 2、删除原订单详情，删除原订单规格，删除原详情和规格的映射
+             * 3、插入新的订单详情
+             * 4、插入新的订单规格
+             * 5、插入新的详情和规格的映射
+             */
 
-        if( !is_numeric($result) ) {
-            $transaction = false;
-        }
+            $result = M('ClientOrder')
+                ->where(['id' => $id, 'client_id' => $client_id])
+                ->save($update_data);
 
-        $old_specifications_list = [];
-        if( $transaction ) {
-            $old_specifications = M("ClientOrderSpecifications")
-                ->field("id")
-                ->where(["order_id" => $id])
-                ->select();
-            if( $old_specifications ) {
-                foreach( $old_specifications as $v ) {
-                    $old_specifications_list[] = $v['id'];
+            if (!is_numeric($result)) {
+                throw new Exception("修改订单失败");
+                $transaction = false;
+            }
+
+            $old_specifications_list = [];
+            if( $transaction ) {
+                $old_specifications = M("ClientOrderSpecifications")
+                    ->field("id")
+                    ->where(["order_id" => $id])
+                    ->select();
+                if( $old_specifications ) {
+                    foreach( $old_specifications as $v ) {
+                        $old_specifications_list[] = $v['id'];
+                    }
                 }
             }
-        }
 
-        if( $transaction ) {
-            $truncate_order_detail = M("ClientOrderDetail")
-                ->where(['order_id' => $id])
-                ->delete();
-            if( !$truncate_order_detail ) {
-                $transaction = false;
-            }
-        }
-
-        if( $transaction ) {
-            $truncate_order_specifications = M("ClientOrderSpecifications")
-                ->where(['order_id' => $id])
-                ->delete();
-            if( !$truncate_order_specifications ) {
-                $transaction = false;
-            }
-        }
-
-
-
-        if( $transaction ) {
-            $truncate_map = M("ClientOrderMap")
-                ->where("specifications_id in (".implode(',', $old_specifications_list).")")
-                ->delete();
-            if( !is_numeric($truncate_map) ) {
-                $transaction = false;
-            }
-        }
-
-
-        if( $transaction ) {
-            foreach( $order_detail as $k => $v ) {
-                $v['order_num'] = $order['order_num'];
-                $v['order_id'] = $id;
-                $temp_result = M('ClientOrderDetail')->add($v);
-                if( !$temp_result ) {
+            if ($transaction) {
+                $truncate_order_detail = M("ClientOrderDetail")
+                    ->where(['order_id' => $id])
+                    ->delete();
+                if (!is_numeric($truncate_order_detail)) {
+                    throw new Exception("修改订单详情失败~");
                     $transaction = false;
-                    break;
-                } else {
-                    $order_detail[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
                 }
             }
-        }
 
-
-
-        if( $transaction ) {
-            foreach( $order_specifications as $k => $v ) {
-                unset($v['id']);
-                $v['order_num'] = $order['order_num'];
-                $v['order_id'] = $id;
-                $temp_result = M('ClientOrderSpecifications')->add($v);
-                if( !$temp_result ) {
+            if ($transaction) {
+                $truncate_order_specifications = M("ClientOrderSpecifications")
+                    ->where(['order_id' => $id])
+                    ->delete();
+                if (!is_numeric($truncate_order_specifications)) {
+                    throw new Exception("修改订单规格失败！");
                     $transaction = false;
-                    break;
-                } else {
-                    $order_specifications[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
                 }
             }
-        }
 
-//        $this->response['transaction'] = $transaction;
-//        $this->response['msg'] = M("ClientOrderSpecifications")->getLastSql();
-//        $model->rollback();
-//        var_dump($order_specifications);
-//        echo json_encode($this->response);exit;
 
-        if( $transaction ) {
-            foreach( $order_specifications as $k => $v ) {
-                foreach( $v['cargo'] as $d ) {
-                    $temp = [
-                        'specifications_id' => $v['id'],
-                        'detail_id' => $order_detail[$d['product_index']]['id'],
-//                        'number' => $v['detail_number'][$d],
-                        'number' => $d['product_count'],
-                    ];
-                    $temp_result = M('ClientOrderMap')->add($temp);
-                    if( !$temp_result ) {
+            if ($transaction) {
+                $truncate_map = M("ClientOrderMap")
+                    ->where("specifications_id in (" . implode(',', $old_specifications_list) . ")")
+                    ->delete();
+                if (!is_numeric($truncate_map)) {
+                    throw new Exception("修改订单规格失败~");
+                    $transaction = false;
+                }
+            }
+
+
+            if ($transaction) {
+                foreach ($product_list as $k => $v) {
+                    $product = $v;
+                    $product['order_num'] = $order_num;
+                    $product['order_id'] = $order_id;
+                    $temp_result = M('ClientOrderDetail')->field(true)
+                        ->add($product);
+                    if (!$temp_result) {
                         $transaction = false;
+                        throw new Exception("修改订单详情失败");
+                        break;
+                    } else {
+                        $product_list[$k]['id'] = M('ClientOrderDetail')->getLastInsID();
+                    }
+                }
+            }
+
+            if ($transaction) {
+                foreach ($specification_list as $k => $v) {
+                    $specification = $v;
+                    unset($specification['id']);
+                    $specification['order_num'] = $order_num;
+                    $specification['order_id'] = $order_id;
+                    $temp_result = M('ClientOrderSpecifications')->field(true)
+                        ->add($specification);
+                    if (!$temp_result) {
+                        $transaction = false;
+                        throw new Exception("修改订单规格失败");
+                        break;
+                    } else {
+                        $specification_list[$k]['id'] = M('ClientOrderSpecifications')->getLastInsID();
+                    }
+                }
+            }
+
+            if ($transaction) {
+                foreach ($specification_list as $k => $v) {
+                    foreach ($v['productList'] as $d) {
+                        foreach( $product_list as $p ) {
+                            if( $p["product_id"] == $d["id"]) {
+                                $temp = [
+                                    'specifications_id' => $v['id'],
+                                    'detail_id' => $p['id'],
+//                                    'number' => $v['detail_number'][$d],
+                                    'number' => $d['number'],
+                                ];
+                                $temp_result = M('ClientOrderMap')->add($temp);
+                                if (!$temp_result) {
+                                    throw new Exception("修改订单规格失败");
+                                    $transaction = false;
+                                    break;
+                                }
+                                break;
+                            }
+                        }
+
+                    }
+                    if (!$transaction) {
                         break;
                     }
                 }
-                if( !$transaction ) {
-                    break;
-                }
             }
-        }
 
 
+            if ($transaction) {
+                $model->commit();
+                //插入操作日志
+                $log_data = [
+                    'order_num' => $order['order_num'],
+                    'order_id' => $order['id'],
+                    'user_id' => $client_id,
+                    'type' => 1,
+                    'content' => $msg,
+                ];
+                M('ClientOrderLog')->add($log_data);
 
-
-        if( $transaction ) {
-            $model->commit();
-            //插入操作日志
-            $log_data = [
-                'order_num' => $order['order_num'],
-                'order_id' => $order['id'],
-                'user_id' => $client_id,
-                'type' => 1,
-                'content' => $msg,
-            ];
-            M('ClientOrderLog')->add($log_data);
-
-            $this->response['code'] = 1;
-            $this->response['msg'] = $msg;
-            $this->response['url'] = U('Order/index');
-        } else {
+                $this->response['code'] = 1;
+                $this->response['msg'] = $msg;
+                $this->response['url'] = U('Order/index');
+            } else {
+                $model->rollback();
+                $this->response['msg'] = '系统繁忙，请稍后重试';
+                $this->response['msg'] = $model->getDbError();
+            }
+        } catch ( \Exception $e ) {
             $model->rollback();
-            $this->response['msg'] = '系统繁忙，请稍后重试';
-            $this->response['msg'] = $model->getDbError();
+            $this->response['msg'] = $e->getMessage();
         }
         echo json_encode($this->response);
         exit;
