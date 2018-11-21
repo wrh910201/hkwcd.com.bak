@@ -1168,6 +1168,9 @@ function _order_status($order)
 
     if ($order['client_status'] == 0) {
         $status = '未提交';
+        if ($order['is_rejected']) {
+            $status .= '（驳回）';
+        }
     }
     if ($order['client_status'] == 1 && $order['exam_status'] == 0) {
         $status = '待审核';

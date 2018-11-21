@@ -87,6 +87,9 @@
                                 </address>
                             </div>
                         </div>
+
+
+
                         <div class="hr-line-dashed"></div>
 
                         <div class="row">
@@ -191,10 +194,10 @@
                                         <td class="text-center">{{spec.productList[0].product_name}}</td>
                                         <td class="text-center">{{spec.productList[0].goods_code}}</td>
                                         <td class="text-center">{{spec.productList[0].number}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length">{{spec.weight}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length">{{spec.length}} {{spec.width}} {{spec.height}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length"><del>{{spec.weight}}</del><br />{{spec.real_weight}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length"><del>{{spec.length}} {{spec.width}} {{spec.height}}</del><br />{{spec.real_length}} {{spec.real_width}} {{spec.real_height}}</td>
                                         <td class="text-center" :rowspan="spec.productList.length">{{volumeWeight(spec.length,spec.width,spec.height)}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length">{{spec.count}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length"><del>{{spec.count}}</del><br />{{spec.real_count}}</td>
                                     </tr>
                                     <template v-for="(p,i) in spec.productList">
                                         <tr v-if="i > 0">
@@ -225,12 +228,94 @@
                         <div class="well m-t" v-show="orderInfo.specifications_remark">
                             <strong>托运备注：</strong> {{orderInfo.specifications_remark}}
                         </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="row" v-show="orderFee">
+                            <div v-bind:class="{ 'col-sm-4': orderFee.length > 2, 'col-sm-6': orderFee.length > 1 && orderFee.length <= 2, 'col-sm-12': orderFee.length == 1 }" v-show="orderFee.length > 0">
+                                <table class="table invoice-total" v-show="orderFee">
+                                    <tbody>
+                                    <template v-for="(item,index) in orderFee" >
+                                    <tr v-show="(index % 3) == 0">
+                                        <td><strong>{{item.label}}：</strong>
+                                        </td>
+                                        <td>{{moneyFormatter(item.value)}}</td>
+                                    </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div v-bind:class="{ 'col-sm-4': orderFee.length > 2, 'col-sm-6': orderFee.length > 1 && orderFee.length <= 2 }" v-show="orderFee.length > 1">
+                                <table class="table invoice-total" v-show="orderFee">
+                                    <tbody>
+                                    <template v-for="(item,index) in orderFee" >
+                                        <tr v-show="(index % 3) == 1">
+                                            <td><strong>{{item.label}}：</strong>
+                                            </td>
+                                            <td>{{moneyFormatter(item.value)}}</td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-4" v-show="orderFee.length > 2">
+                                <table class="table invoice-total" v-show="orderFee">
+                                    <tbody>
+                                    <template v-for="(item,index) in orderFee" >
+                                        <tr v-show="(index % 3) == 2">
+                                            <td><strong>{{item.label}}：</strong>
+                                            </td>
+                                            <td>{{moneyFormatter(item.value)}}</td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-12">
+                                <table class="table invoice-total" v-show="orderFee.length > 0">
+                                    <tbody>
+                                    <tr>
+                                        <td><strong>总费用：</strong>
+                                        </td>
+                                        <td>{{moneyFormatter(totalFee)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>结算方式：</strong>
+                                        </td>
+                                        <td>{{settlementMethod}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>签名：</strong>
+                                        </td>
+                                        <td v-show="1 == orderInfo.exam_status && 0 == orderInfo.ensure_status">
+                                            <input type="text" class="" id="signature" name="signature" v-model="signature">
+                                        </td>
+                                        <td v-show="1 == orderInfo.exam_status && 1 == orderInfo.ensure_status">
+                                            {{orderInfo.autograph}}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group" v-show="1 == orderInfo.exam_status && 0 == orderInfo.ensure_status">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" class="i-checks checkbox" id="agree" name="agree">
+                                        我已经认真阅读并同意<a href="javascript:void(0)" onclick="show_agreement()">《华度运输协议》</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="text-right" v-show="0 == orderInfo.client_status">
                             <button class="btn btn-primary" @click="commitOrder(orderInfo.id)"></i> 提交</button>
                         </div>
                         <div class="text-right" v-show="1 == orderInfo.exam_status && 0 == orderInfo.ensure_status">
-                            <button class="btn btn-primary"></i> 确认</button>
+                            <button class="btn btn-primary" @click="ensureOrder(orderInfo.id)"></i> 确认</button>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -242,6 +327,41 @@
     </div>
 </div>
 
+<div class="modal inmodal fade" id="rejectHistoryModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">驳回历史</h4>
+                <small class="font-bold"></small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <ul class="sortable-list connectList agile-list">
+                                    <template v-for="(message, index) in messageList">
+                                    <li class="danger-element">
+                                        {{message.content}}
+                                        <div class="agile-detail">
+                                            <i class="fa fa-clock-o"></i> {{message.created_at}}
+                                        </div>
+                                    </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/Public/client/static/jquery/2.1.4/jquery.min.js"></script>
 <script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -406,7 +526,7 @@
             }
         }
         if( 1 == row.exam_status && 0 == row.ensure_status ) {
-            operate.push('<a class="confirm" href="javascript:void(0)" title="待确认">待确认</a>&nbsp;');
+            // operate.push('<a class="confirm" href="javascript:void(0)" title="待确认">待确认</a>&nbsp;');
         }
         if( 1 == row.express_status ) {
             operate.push('<a class="trace" href="javascript:void(0)" title="跟踪">跟踪</a>&nbsp;');
@@ -472,7 +592,18 @@
                     }, 'json');
                 }
             });
-        }
+        },
+        'click .reject': function (e, value, row, index) {
+            var url = '/Order/reject';
+            var param = {'id':row.id};
+            $.post(url, param, function(response) {
+                rejectHistory.messageList = response.data;
+                $("#rejectHistoryModal").modal();
+            }, 'json');
+        },
+        'click .confirm': function (e, value, row, index) {
+
+        },
     };
 
     /*operate events*/
@@ -537,83 +668,16 @@
     }
 
 
-    function isDefaultFormatter(value, row) {
-        var str = '';
-        value = parseInt(value);
-        switch(value) {
-            case 1: str = '是';break;
-            default: str = '否';break;
-        }
-        return str;
-    }
+    function show_agreement() {
 
-
-    function doAdd() {
-        var jz;
-        var url = $('#addShopForm').attr('action');
-        $.ajax({
-            type:"POST",
-            url:url,
-            data:{'data' : $('#addShopForm').serialize()},// 你的formid
-            async: false,
-            beforeSend:function(){
-                jz = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
-            },
-            error: function(request) {
-                layer.close(jz);
-                swal("网络错误!", "", "error");
-            },
-            success: function(data) {
-                //关闭加载层
-                layer.close(jz);
-                if(data.code == 1){
-                    swal(data.msg, "", "success");
-                    //更新数据
-                    $('#addShopModal').modal('hide');
-                    $example.bootstrapTable('refresh');
-//                    initTable();
-                }else{
-                    swal(data.msg, "", "error");
-                }
-
-            }
+        tips = layer.open({
+            type: 2,
+            title: false,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['900px', '700px'], //宽高,
+            shadeClose: true,
+            content: '/pdf.pdf'
         });
-
-        return false;
-    }
-
-    function doEdit(key) {
-        var jz;
-        var url = $('#' + key).attr('action');
-        $.ajax({
-            type:"POST",
-            url:url,
-            data:{'data' : $('#' + key).serialize()},// 你的formid
-            async: false,
-            dataType: 'json',
-            beforeSend:function(){
-                jz = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
-            },
-            error: function(request) {
-                layer.close(jz);
-                swal("网络错误!", "", "error");
-            },
-            success: function(data) {
-                //关闭加载层
-                layer.close(jz);
-                if(data.code == 1){
-                    swal(data.msg, "", "success");
-                    //更新数据
-                    $('#editShopModal').modal('hide');
-                    $('#shopProfitModal').modal('hide');
-                    $example.bootstrapTable('refresh');
-                }else{
-                    swal(data.msg, "", "error");
-                }
-            }
-        });
-
-        return false;
     }
 
 </script>
@@ -632,6 +696,27 @@
             specificationList: [],
             orderFee: {},
             billingWeight: "",
+            orderFeeMap: {
+                delivery_fee: "运费",
+                fuel_cost: "燃油费",
+                customs_charges: "报关费",
+                pick_up_charge: "提货费",
+                express_fee: "快递费",
+                insurance_premium: "保险费",
+                packing_charges: "包装费",
+                inspection_fee: "验货费",
+                remote_fee: "偏远费",
+                over_weight_fee: "超重费",
+                over_length_fee: "超长费",
+                storage_fee: "储存费",
+                incidental: "杂费",
+                other_fee: "其他费用",
+                // total_fee: "总费用",
+                // settlement_method: "结算",
+            },
+            totalFee: 0,
+            settlementMethod: "",
+            signature: "",
         },
         mounted: function() {
 
@@ -649,7 +734,12 @@
                         that.orderInfo.enable_spare = parseInt(that.orderInfo.enable_spare);
                         that.productList = response.data.product_list;
                         that.specificationList = response.data.specification_list;
-                        that.orderFee = response.data.order_fee;
+                        that.initOrderFee(response.data.order_fee);
+                        if( response.data.order_fee ) {
+                            that.totalFee = response.data.order_fee.total_fee;
+                            that.settlementMethod = response.data.order_fee.settlement_method;
+                        }
+                        that.signature = "";
                         that.calBillingWeight();
                     }
                     $("#orderDetailModal").modal();
@@ -698,6 +788,7 @@
                     }
                 });
             },
+
             indexFormatter: function(index) {
                 var str = "";
                 var start = 0;
@@ -741,9 +832,102 @@
                 } else {
                     this.billingWeight = "";
                 }
+            },
+            initOrderFee: function(order_fee) {
+                this.orderFee = [];
+                if( order_fee ) {
+                    for( var i in order_fee ) {
+                        for( var j in this.orderFeeMap ) {
+                            if( i == j ) {
+                                var temp = {
+                                    label: this.orderFeeMap[j],
+                                    key: i,
+                                    value: order_fee[i],
+                                };
+                                this.orderFee.push(temp);
+                            }
+                        }
+                        // if( this.orderFee.length > 1 ) {
+                        //     break;
+                        // }
+                    }
+                }
+            },
+            moneyFormatter: function(value) {
+                if( !isNaN(parseFloat(value)) ) {
+                    return parseFloat(value).toFixed(2);
+                } else {
+                    return value;
+                }
+            },
+            ensureOrder: function(order_id) {
+                var that = this;
+                var title = "确定发货吗";
+                var text = "";
+
+                if( !($("#agree").is(":checked")) ) {
+                    swal({
+                        title: "",
+                        text: "请同意华度运输协议",
+                        type: "error",
+                    });
+                    return false;
+                }
+
+                swal({
+                    title: title,
+                    text: text,
+                    type: "info",
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    closeOnCancel: true,
+                }, function (confirm) {
+                    if (confirm) {
+                        var url = '/Order/doEnsure';
+                        var param = {
+                            id:order_id,
+                            autograph: that.signature
+                        };
+
+                        $.post(url, param, function(response) {
+                            if( 1 == response.code ) {
+                                swal({
+                                    title: "",
+                                    text: response.msg,
+                                    type: "success",
+                                }, function (confirm) {
+                                    $example.bootstrapTable("refresh");
+                                    $("#orderDetailModal").modal("hide");
+                                });
+                            } else {
+                                swal({
+                                    title: "",
+                                    text: response.msg,
+                                    type: "error",
+                                });
+                            }
+                        }, 'json');
+                    }
+                });
             }
         }
     });
+
+    var rejectHistory = new Vue({
+        "el": "#rejectHistoryModal",
+        data: {
+            messageList: [],
+        },
+        mounted: function() {
+
+        },
+        methods: {}
+    });
+</script>
+<script>
+
 </script>
 
 </body>
