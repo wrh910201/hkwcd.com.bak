@@ -691,11 +691,18 @@ class ClientorderAction extends CommonContentAction {
         }
         $order['package_type_name'] = $order['package_type'] == 1 ? '文件' : '包裹';
         $order['status_str'] = _order_status($order);
-        $trace_result = S('hkwcd_trace_result_'.$order['order_num']);
-        if( !$trace_result ) {
-            $trace_result = query_express($order['express_type'], $order['express_order_num']);
+        if( 0 == $order["self_express"] ) {
+            $trace_result = S('hkwcd_trace_result_' . $order['order_num']);
+            if (!$trace_result) {
+                $trace_result = query_express($order['express_type'], $order['express_order_num']);
 //            var_dump($trace_result);exit;
-            S('hkwcd_trace_result_'.$order['order_num'], $trace_result, 7200);
+                S('hkwcd_trace_result_' . $order['order_num'], $trace_result, 7200);
+            }
+        } else {
+            S('hkwcd_trace_result_' . $order['order_num'], null);
+            $express_detail = M("ClientOrderSelfExpress")->where(['order_id' => $id])->select();
+            $this->assign("express_detail", $express_detail);
+
         }
         $trace_result_array = json_decode($trace_result, true);
         $this->assign('order', $order);

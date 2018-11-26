@@ -47,25 +47,46 @@
     </div>
     <div class="list">
         <div class="operate">订单跟踪</div>
-        <if condition="$trace_result.message eq 'ok'">
-        <table width="100%">
-            <tr>
-                <th>时间</th>
-                <th>地点和跟踪进度</th>
-            </tr>
-            <foreach name="trace_result.data" item="v">
-            <tr>
-                <td>{$v.time}</td>
-                <td>{$v.context}</td>
-            </tr>
-            </foreach>
-        </table>
+        <if condition="$order.self_express eq 0">
+            <if condition="$trace_result.message eq 'ok'">
+            <table width="100%">
+                <tr>
+                    <th>时间</th>
+                    <th>地点和跟踪进度</th>
+                </tr>
+                <foreach name="trace_result.data" item="v">
+                <tr>
+                    <td>{$v.time}</td>
+                    <td>{$v.context}</td>
+                </tr>
+                </foreach>
+            </table>
+            <else />
+            <table width="100%">
+                <tr>
+                    <th>{$trace_result.message}</th>
+                </tr>
+            </table>
+            </if>
         <else />
-        <table width="100%">
-            <tr>
-                <th>{$trace_result.message}</th>
-            </tr>
-        </table>
+            <table width="100%">
+                <tr>
+                    <th>时间</th>
+                    <th>国家/地区</th>
+                    <th>城市</th>
+                    <th>状态</th>
+                    <th>备注</th>
+                </tr>
+                <foreach name='express_detail' item='v'>
+                    <tr>
+                        <td>{$v.time}</td>
+                        <td>{$v.country}</td>
+                        <td>{$v.city}</td>
+                        <td>{$v.status}</td>
+                        <td>{$v.remark}</td>
+                    </tr>
+                </foreach>
+            </table>
         </if>
     </div>
 
