@@ -193,13 +193,14 @@ class OrderAction extends BaseAction  {
         import('ORG.Util.Page');
         $count = M('ClientOrder')->where($where)->count();
 
-        $page = I("page", 1, "intval");
+        $page = I("page", 0, "intval");
         if( $page <= 0 ) {
-            $page = 1;
+            $page = 0;
         }
+        $offset = $page;
         $limit = C('usercenter_page_count');
         $limit = I("limit", $limit, "intval");
-        $offset = ($page - 1) * $limit;
+//        $offset = ($page - 1) * $limit;
 
         $order_list = M('ClientOrder')->where($where)->limit($offset, $limit)->order('id desc')->select();
         if( $order_list ) {
@@ -615,9 +616,8 @@ class OrderAction extends BaseAction  {
             $temp['delivery_postal_code'] = $delivery['postal_code'];
             $temp['exporter_code'] = $delivery['exporter_code'];
 
-            $country = M('Country')->where(['id' => $data['delivery_country_id']])->find();
+            $country = M('Country')->where(['id' => $temp['delivery_country_id']])->find();
             if( $country ) {
-
                 $temp['delivery_country_name'] = $country['name'];
                 $temp['delivery_country_en_name'] = $country['ename'];
             }
@@ -648,7 +648,7 @@ class OrderAction extends BaseAction  {
             $temp['receive_detail_address'] = $receive['detail_address'];
             $temp['receive_postal_code'] = $receive['postal_code'];
             $temp['receiver_code'] = $receive['receiver_code'];
-            $country = M('Country')->where(['id' => $data['receive_country_id']])->find();
+            $country = M('Country')->where(['id' => $temp['receive_country_id']])->find();
             if( $country ) {
                 $temp['receive_country_name'] = $country['name'];
                 $temp['receive_country_en_name'] = $country['ename'];
@@ -2166,6 +2166,7 @@ class OrderAction extends BaseAction  {
         exit;
     }
 
+    //发票
     public function invoice() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
@@ -2282,6 +2283,7 @@ class OrderAction extends BaseAction  {
 
     }
 
+    //装箱单
     public function packing() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
@@ -2381,6 +2383,7 @@ class OrderAction extends BaseAction  {
         $this->display();
     }
 
+    //交接清单
     public function transfer() {
         $client_id = session('hkwcd_user.user_id');
         $client = M('Client')->where(['status' => 1, 'id' => $client_id])->find();
@@ -2402,15 +2405,17 @@ class OrderAction extends BaseAction  {
         $start_time = date('Y-m-d H:i:s', $today_time);
         $end_time = date('Y-m-d H:i:s', $tomorrow_time);
         $map = [
+            "client_id" => $this->client_id,
             'add_time' => ['between', [$start_time, $end_time]],
             'express_status' => 1,
         ];
 
         $client = M('Client')->where(['id' => $order['client_id']])->find();
 
-        $order_package_total_count = 0;
-        $order_document_total_count = 0;
-        $order_total_count = 0;
+        $order_package_total_count = 0;     //包裹数量
+        $order_document_total_count = 0;    //文件数量
+        $order_total_count = 0;             //总箱数
+        $order_num_list = [];
         $order_list = M('ClientOrder')->where($map)->select();
         if( $order_list ) {
             foreach( $order_list as $k => $v ) {
@@ -2420,7 +2425,27 @@ class OrderAction extends BaseAction  {
                 if( $v['package_type'] == 2 ) {
                     $order_package_total_count++;
                 }
-                $order_total_count += $v['total_count'];
+                $order_list[$k]["total_count"] = M("ClientOrderSpecifications")
+                    ->where(["order_num" => $v["order_num"]])
+                    ->sum("real_count");
+                $s_list = M("ClientOrderSpecifications")->where(["order_num" => $v["order_num"]])
+                    ->select();
+                $temp_weight = 0;
+                $temp_rate = 0;
+                foreach( $s_list as $s ) {
+                    $temp_weight += $s["real_weight"] * $s["real_count"];
+                    $temp_rate += sprintf("%.2f", ($s["real_length"] * $s["real_width"] * $s["real_height"] * $s["real_count"] / 5000));
+                }
+                $order_list[$k]["total_weight"] = $temp_weight;
+                $order_list[$k]["total_rate"] = $temp_rate;
+                $order_list[$k]["delivery_weight"] = $temp_weight > $temp_rate ? $temp_weight : $temp_rate;
+
+                $order_num_list[] = $v["order_num"];
+            }
+            if( $order_num_list ) {
+                $order_total_count = M("ClientOrderSpecifications")
+                    ->where(["order_num" => ["IN", $order_num_list]])
+                    ->sum("real_count");
             }
         }
 

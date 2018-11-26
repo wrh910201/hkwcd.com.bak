@@ -207,7 +207,7 @@
                                         <tr v-if="i > 0">
                                             <td class="text-center">{{spec.productList[i].product_name}}</td>
                                             <td class="text-center">{{spec.productList[i].goods_code}}</td>
-                                            <td class="text-center">{{spec.productList[i].origin}}</td>
+                                            <td class="text-center">{{spec.productList[i].number}}</td>
                                         </tr>
                                     </template>
                                 </template>
@@ -534,7 +534,7 @@
         }
         if( 1 == row.express_status ) {
             operate.push('<a class="trace" href="javascript:void(0)" title="跟踪">跟踪</a>&nbsp;');
-            operate.push('<a class="hand_over" href="javascript:void(0)" title="交接清单">交接清单</a>&nbsp;');
+            operate.push('<a class="transfer" href="javascript:void(0)" title="交接清单">交接清单</a>&nbsp;');
             operate.push('<a class="packing" href="javascript:void(0)" title="装箱单">装箱单</a>&nbsp;');
             operate.push('<a class="invoice" href="javascript:void(0)" title="商业发票">商业发票</a>&nbsp;');
         }
@@ -607,6 +607,9 @@
         },
         'click .confirm': function (e, value, row, index) {
 
+        },
+        'click .transfer': function (e, value, row, index) {
+            window.open("/Order/transfer/id/" + row.id);
         },
     };
 

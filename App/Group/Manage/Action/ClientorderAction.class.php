@@ -1163,15 +1163,17 @@ class ClientorderAction extends CommonContentAction {
         $start_time = date('Y-m-d H:i:s', $today_time);
         $end_time = date('Y-m-d H:i:s', $tomorrow_time);
         $map = [
+            "client_id" => $order['client_id'],
             'add_time' => ['between', [$start_time, $end_time]],
             'express_status' => 1,
         ];
 
         $client = M('Client')->where(['id' => $order['client_id']])->find();
 
-        $order_package_total_count = 0;
-        $order_document_total_count = 0;
-        $order_total_count = 0;
+        $order_package_total_count = 0;     //包裹数量
+        $order_document_total_count = 0;    //文件数量
+        $order_total_count = 0;             //总箱数
+        $order_num_list = [];
         $order_list = M('ClientOrder')->where($map)->select();
         if( $order_list ) {
             foreach( $order_list as $k => $v ) {
@@ -1181,7 +1183,27 @@ class ClientorderAction extends CommonContentAction {
                 if( $v['package_type'] == 2 ) {
                     $order_package_total_count++;
                 }
-                $order_total_count += $v['total_count'];
+                $order_list[$k]["total_count"] = M("ClientOrderSpecifications")
+                    ->where(["order_num" => $v["order_num"]])
+                    ->sum("real_count");
+                $s_list = M("ClientOrderSpecifications")->where(["order_num" => $v["order_num"]])
+                    ->select();
+                $temp_weight = 0;
+                $temp_rate = 0;
+                foreach( $s_list as $s ) {
+                    $temp_weight += $s["real_weight"] * $s["real_count"];
+                    $temp_rate += sprintf("%.2f", ($s["real_length"] * $s["real_width"] * $s["real_height"] * $s["real_count"] / 5000));
+                }
+                $order_list[$k]["total_weight"] = $temp_weight;
+                $order_list[$k]["total_rate"] = $temp_rate;
+                $order_list[$k]["delivery_weight"] = $temp_weight > $temp_rate ? $temp_weight : $temp_rate;
+
+                $order_num_list[] = $v["order_num"];
+            }
+            if( $order_num_list ) {
+                $order_total_count = M("ClientOrderSpecifications")
+                    ->where(["order_num" => ["IN", $order_num_list]])
+                    ->sum("real_count");
             }
         }
 
