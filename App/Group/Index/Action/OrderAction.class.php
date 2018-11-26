@@ -2279,7 +2279,7 @@ class OrderAction extends BaseAction  {
         $this->type = '商业发票';
         $this->assign("is_client", 1);
 //        $this->display();
-        $this->display();
+        $this->display("./App/Group/Index/Tpl/wcd56/Order_invoice.html");
 
     }
 
@@ -2380,7 +2380,7 @@ class OrderAction extends BaseAction  {
         $this->assign('order_specifications', $order_specifications);
         $this->assign('order_detail_remain', $order_detail_remain);
         $this->type = '装箱单';
-        $this->display();
+        $this->display("./App/Group/Index/Tpl/wcd56/Order_packing.html");
     }
 
     //交接清单
