@@ -2590,7 +2590,7 @@ class OrderAction extends BaseAction  {
             $this->response['msg'] = '订单不存在';
         } else {
             $this->response['code'] = 1;
-            $this->response['data'] = "&nbsp;&nbsp;".$order['operate_remark'];
+            $this->response['data'] = $order['operate_remark'];
         }
         echo json_encode($this->response);
         exit;

@@ -367,6 +367,71 @@
     </div>
 </div>
 
+<div class="modal inmodal fade" id="orderTraceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">订单跟踪</h4>
+                <small class="font-bold"></small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <div id="vertical-timeline-1" class="vertical-container dark-timeline">
+                                    <template v-for="(item, index) in traceList">
+                                    <div class="vertical-timeline-block">
+                                        <div class="vertical-timeline-icon black-bg">
+                                            <i class="fa fa-arrow-circle-up"></i>
+                                        </div>
+
+                                        <div class="vertical-timeline-content">
+                                            <p>{{item.context}}</p>
+                                            <span class="vertical-date"><small>{{item.time}}</small></span>
+                                        </div>
+                                    </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="orderOperateRemarkModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">处理备注</h4>
+                <small class="font-bold"></small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="alert alert-danger">
+                            {{operateRemark}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="/Public/client/static/jquery/2.1.4/jquery.min.js"></script>
 <script src="/Public/client/static/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="/Public/client/static/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
@@ -538,8 +603,8 @@
             operate.push('<a class="packing" href="javascript:void(0)" title="装箱单">装箱单</a>&nbsp;');
             operate.push('<a class="invoice" href="javascript:void(0)" title="商业发票">商业发票</a>&nbsp;');
         }
-        if( "" != row.operate_remark ) {
-            operate.push('<a class="remark" href="javascript:void(0)" title="处理备注">处理备注</a>&nbsp;');
+        if( row.operate_remark ) {
+            operate.push('<a class="remark" href="javascript:void(0)" style="color:#ff0000" title="处理备注">处理备注</a>&nbsp;');
         }
         return operate.join('');
     }
@@ -608,6 +673,9 @@
         'click .confirm': function (e, value, row, index) {
 
         },
+        'click .trace': function (e, value, row, index) {
+            orderTrace.getOrderTrace(row.id);
+        },
         'click .transfer': function (e, value, row, index) {
             window.open("/Order/transfer/id/" + row.id);
         },
@@ -616,6 +684,9 @@
         },
         'click .invoice': function (e, value, row, index) {
             window.open("/Order/invoice/id/" + row.id);
+        },
+        'click .remark': function (e, value, row, index) {
+            orderOperateRemark.getOrderOperateRemark(row.id);
         },
 
     };
@@ -916,6 +987,7 @@
 
                         $.post(url, param, function(response) {
                             if( 1 == response.code ) {
+                                $("#agree").iCheck("uncheck");
                                 swal({
                                     title: "",
                                     text: response.msg,
@@ -947,6 +1019,66 @@
 
         },
         methods: {}
+    });
+
+    var orderTrace = new Vue({
+        el: "#orderTraceModal",
+        data: {
+            message: "",
+            traceList: []
+        },
+        mounted: function() {
+
+        },
+        methods: {
+            getOrderTrace: function(id) {
+                var that = this;
+                var url = "/Order/trace";
+                var param = {id: id};
+                $.post(url, param, function(response) {
+                    if( response.code == 1 ) {
+                        that.message = response.data.message;
+                        that.traceList = response.data.data;
+                        $("#orderTraceModal").modal();
+                    } else {
+                        swal({
+                            title: "",
+                            text: response.msg,
+                            type: "error",
+                        });
+                    }
+                }, "json");
+            }
+        }
+    });
+
+    var orderOperateRemark = new Vue({
+        el: "#orderOperateRemarkModal",
+        data: {
+            operateRemark: ""
+        },
+        mounted: function() {
+
+        },
+        methods: {
+            getOrderOperateRemark: function(id) {
+                var that = this;
+                var url = "/Order/show_remark";
+                var param = {id: id};
+                $.post(url, param, function(response) {
+                    if( response.code == 1 ) {
+                        that.operateRemark = response.data;
+                        $("#orderOperateRemarkModal").modal();
+                    } else {
+                        swal({
+                            title: "",
+                            text: response.msg,
+                            type: "error",
+                        });
+                    }
+                }, "json");
+            }
+        }
     });
 </script>
 <script>
