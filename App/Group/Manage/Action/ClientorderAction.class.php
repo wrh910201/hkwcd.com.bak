@@ -292,6 +292,32 @@ class ClientorderAction extends CommonContentAction {
         $this->assign('order_detail', $order_detail);
         $this->assign('express_type', $express_type);
         $this->type = '客户订单详情';
+
+        $has_next = false;
+        $has_previous = false;
+        $next_id = "";
+        $previous_id = "";
+
+        $next_order = M("ClientOrder")->where("id < {$id}  and client_status= 1")
+            ->order("id desc")
+            ->find();
+        $previous_order = M("ClientOrder")->where("id > {$id}  and client_status= 1")
+            ->order("id asc")
+            ->find();
+        if( $next_order ) {
+            $has_next = true;
+            $next_id = $next_order["id"];
+        }
+        if( $previous_order ) {
+            $has_previous = true;
+            $previous_id = $previous_order["id"];
+        }
+
+        $this->assign("has_next", $has_next);
+        $this->assign("has_previous", $has_previous);
+        $this->assign("next_id", $next_id);
+        $this->assign("previous_id", $previous_id);
+
         $this->display();
 
     }

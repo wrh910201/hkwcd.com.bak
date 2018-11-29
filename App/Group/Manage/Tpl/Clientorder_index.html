@@ -46,9 +46,10 @@
                 <tr>
                     <th><input type="checkbox" id="check"></th>
                     <th>订单编号</th>
+                    <th>转运单号</th>
                     <th>用户名</th>
-                    <th>发货公司</th>
-                    <th>收货公司</th>
+                    <th>收件国家</th>
+                    <th>收件人</th>
                     <th>状态</th>
                     <th>添加时间</th>
                     <th>操作</th>
@@ -57,9 +58,10 @@
                     <tr>
                         <td><input type="checkbox" name="key[]" value="{$v.id}"></td>
                         <td>{$v.order_num}</td>
+                        <td>{$v.express_order_num}</td>
                         <td>{$v.username}</td>
-                        <td>{$v.delivery_company}</td>
-                        <td>{$v.receive_company}</td>
+                        <td>{$v.receive_country_name}/{$v.receive_country_en_name}</td>
+                        <td>{$v.receive_addressee}</td>
                         <td>{$v.status_str}</td>
                         <td>{$v.add_time}</td>
                         <td>
