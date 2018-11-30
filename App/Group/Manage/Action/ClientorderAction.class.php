@@ -150,6 +150,39 @@ class ClientorderAction extends CommonContentAction {
         }
     }
 
+    public function complete() {
+//        if( $this->hkwcd_admin['order_exam'] != 1 && $this->hkwcd_admin['order_manage'] != 1 ) {
+//            $this->error('您没有审核订单的权限');
+//        }
+        $id = I('id', 0, 'intval');
+        $order = M('ClientOrder')->where(['id' => $id])->find();
+        if( empty($order) ) {
+            $this->error('订单不存在');
+        }
+        if( !($order['express_status'] == 1 && $order['receive_status'] == 0 ) ) {
+            $this->error('当前订单不是待收货状态');
+        }
+        $data = [
+            'receive_status' => 1,
+        ];
+        $result = M('ClientOrder')->where(['id' => $id])->save($data);
+        if( is_numeric($result) ) {
+            //插入操作日志
+            $log_data = [
+                'order_num' => $order['order_num'],
+                'order_id' => $order['id'],
+                'operator_id' => session('yang_adm_user_id'),
+                'type' => 2,
+                'content' => '订单完成',
+            ];
+            M('ClientOrderLog')->add($log_data);
+
+            $this->success('操作成功');
+        } else {
+            $this->error('系统繁忙，请稍后重试');
+        }
+    }
+
     public function detail() {
         $id = I('id', 0, 'intval');
         $order = M('ClientOrder')->where(['id' => $id])->find();

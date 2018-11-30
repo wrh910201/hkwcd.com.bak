@@ -1191,7 +1191,7 @@ function _order_status($order)
         $status = '已发货';
     }
     if ($order['client_status'] == 1 && $order['exam_status'] == 1 && $order['ensure_status'] == 1 && $order['pay_status'] == 1 && $order['express_status'] == 1 && $order['receive_status'] == 1) {
-        $status = '已收货';
+        $status = '已签收';
     }
     $status = '' == $status ? '订单异常' : $status;
     return $status;

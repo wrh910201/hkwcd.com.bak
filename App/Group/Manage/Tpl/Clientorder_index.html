@@ -86,8 +86,8 @@
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/packing',array('id' => $v['id']), '')}">装箱单</a>
                                 <a target="_blank" href="{:U(GROUP_NAME. '/Clientorder/invoice',array('id' => $v['id']), '')}">商业发票</a>
 
-                                <if condition="$v.express_status eq 1">
-                                    <!--<a href="javascript:void(0);" onclick="">跟踪</a>-->
+                                <if condition="$v.express_status eq 1 && $v.receive_status eq 0">
+                                    <a href="javascript:void(0);" onclick="doConfirm('{:U(GROUP_NAME. '/Clientorder/complete',array('id' => $v['id']), '')}', '确定订单已签收？')">完成</a>
                                 </if>
                             </if>
                             <a <if condition="$v['operate_remark']">style="color:#ff0000"</if> href="{:U(GROUP_NAME. '/Clientorder/remark',array('id' => $v['id']), '')}">备注</a>
