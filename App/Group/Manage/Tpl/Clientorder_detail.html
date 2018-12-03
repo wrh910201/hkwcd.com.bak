@@ -293,6 +293,13 @@
         <input type="button" class="btn btn_blue" id="reject" onclick="window.location.href='{:U(GROUP_NAME. '/Clientorder/reject',array('id' => $order['id']), '')}';" value="驳 回">
     </div>
     </if>
+    <if condition="$order.exam_status eq 1">
+    <div class="form_b">
+        <if condition="$order.ensure_status eq 0">
+            <input type="button" class="btn btn_blue" id="fee" onclick="show_input_fee_form()" value="录入费用">
+        </if>
+    </div>
+    </if>
     <if condition="$order.ensure_status eq 1">
     <div class="form_b">
         <input type="button" class="btn btn_blue" id="" onclick="show_input_fee_disabled_form()" value="查看费用">
