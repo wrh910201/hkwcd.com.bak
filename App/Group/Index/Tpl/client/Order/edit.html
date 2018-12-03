@@ -44,16 +44,15 @@
                 <div class="ibox-content">
                     <address>
                         <strong>{{deliveryInfo.company}}</strong><br>
-                        <p>{{deliveryInfo.detail_address}}</p><br>
-                        <abbr title="Phone" v-if="deliveryInfo.phone">Tel:</abbr> {{deliveryInfo.phone}}<br />
-                        <abbr title="Mobile" v-if="deliveryInfo.mobile">手机:</abbr> {{deliveryInfo.mobile}}<br />
-                        <abbr title="ExporterCode" v-if="deliveryInfo.exporter_code">出口商代码:</abbr> {{deliveryInfo.exporter_code}}<br />
-                        <abbr title="PostalCode" v-if="deliveryInfo.postal_code">邮编:</abbr> {{deliveryInfo.postal_code}}<br />
-                    </address>
-                    <address>
-                        <strong v-if="deliveryInfo.country_name">{{deliveryInfo.country_name}} / {{deliveryInfo.en_country_name}}</strong><br />
-                        <strong>{{deliveryInfo.state}}</strong>&nbsp;<strong>{{deliveryInfo.city}}</strong><br>
-                        <a href="#">{{deliveryInfo.consignor}}</a>
+                        <p>详细地址:{{deliveryInfo.detail_address}}</p><br>
+                        <abbr title="Phone" v-if="deliveryInfo.phone">Tel:</abbr> {{deliveryInfo.phone}}<br v-if="deliveryInfo.phone"/>
+                        <abbr title="Mobile" v-if="deliveryInfo.mobile">手机:</abbr> {{deliveryInfo.mobile}}<br v-if="deliveryInfo.mobile"/>
+                        <abbr title="ExporterCode" v-if="deliveryInfo.exporter_code">出口商代码:</abbr> {{deliveryInfo.exporter_code}}<br v-if="deliveryInfo.exporter_code"/>
+                        <abbr title="PostalCode" v-if="deliveryInfo.postal_code">邮编:</abbr> {{deliveryInfo.postal_code}}<br v-if="deliveryInfo.postal_code"/>
+                        <abbr title="Country" v-if="deliveryInfo.country_name">国家:</abbr> {{deliveryInfo.country_name}} / {{deliveryInfo.en_country_name}}<br v-if="deliveryInfo.country_name"/>
+                        <abbr title="State" v-if="deliveryInfo.state">省:</abbr> {{deliveryInfo.state}}<br v-if="deliveryInfo.state"/>
+                        <abbr title="City" v-if="deliveryInfo.city">城市:</abbr> {{deliveryInfo.city}}<br v-if="deliveryInfo.city"/>
+                        <abbr title="Consignor" v-if="deliveryInfo.consignor">联系人:</abbr><a href="#">{{deliveryInfo.consignor}}</a>
                     </address>
                     <button class="btn btn-primary" type="button" @click="getDefaultDelivery">默认地址</button>
                     <button class="btn btn-primary" type="button" @click="showDeliveryList">列表</button>
@@ -72,16 +71,15 @@
                 <div class="ibox-content">
                     <address>
                         <strong>{{receiveInfo.company}}</strong><br>
-                        <p>{{receiveInfo.detail_address}}</p><br>
-                        <abbr title="Phone" v-if="receiveInfo.phone">Tel:</abbr> {{receiveInfo.phone}}<br />
-                        <abbr title="Mobile" v-if="receiveInfo.mobile">手机:</abbr> {{receiveInfo.mobile}}<br />
-                        <abbr title="ExporterCode" v-if="receiveInfo.receiver_code">进口商代码:</abbr> {{receiveInfo.receiver_code}}<br />
-                        <abbr title="PostalCode" v-if="receiveInfo.postal_code">邮编:</abbr> {{receiveInfo.postal_code}}<br />
-                    </address>
-                    <address>
-                        <strong v-if="receiveInfo.country_name">{{receiveInfo.country_name}} / {{receiveInfo.en_country_name}}</strong><br />
-                        <strong>{{receiveInfo.state}}</strong>&nbsp;<strong>{{receiveInfo.city}}</strong><br>
-                        <a href="#">{{receiveInfo.addressee}}</a>
+                        <p>详细地址:{{receiveInfo.detail_address}}</p><br>
+                        <abbr title="Phone" v-if="receiveInfo.phone">Tel:</abbr> {{receiveInfo.phone}}<br v-if="receiveInfo.phone"/>
+                        <abbr title="Mobile" v-if="receiveInfo.mobile">手机:</abbr> {{receiveInfo.mobile}}<br v-if="receiveInfo.mobile"/>
+                        <abbr title="ExporterCode" v-if="receiveInfo.receiver_code">进口商代码:</abbr> {{receiveInfo.receiver_code}}<br v-if="receiveInfo.receiver_code"/>
+                        <abbr title="PostalCode" v-if="receiveInfo.postal_code">邮编:</abbr> {{receiveInfo.postal_code}}<br v-if="receiveInfo.postal_code"/>
+                        <abbr title="Country" v-if="receiveInfo.country_name">国家:</abbr> {{receiveInfo.country_name}} / {{receiveInfo.en_country_name}}<br v-if="receiveInfo.country_name"/>
+                        <abbr title="State" v-if="receiveInfo.state">省:</abbr> {{receiveInfo.state}}<br v-if="receiveInfo.state"/>
+                        <abbr title="City" v-if="receiveInfo.city">城市:</abbr> {{receiveInfo.city}}<br v-if="receiveInfo.city"/>
+                        <abbr title="Addressee" v-if="receiveInfo.addressee">联系人:</abbr><a href="#">{{receiveInfo.addressee}}</a>
                     </address>
                     <button class="btn btn-primary" type="button" @click="getDefaultReceive">默认地址</button>
                     <button class="btn btn-primary" type="button" @click="showReceiveList">列表</button>
@@ -100,16 +98,15 @@
                 <div class="ibox-content">
                     <address>
                         <strong>{{spareReceiveInfo.company}}</strong><br>
-                        <p>{{spareReceiveInfo.detail_address}}</p><br>
-                        <abbr title="Phone" v-if="spareReceiveInfo.phone">Tel:</abbr> {{spareReceiveInfo.phone}}<br />
-                        <abbr title="Mobile" v-if="spareReceiveInfo.mobile">手机:</abbr> {{spareReceiveInfo.mobile}}<br />
-                        <abbr title="ExporterCode" v-if="spareReceiveInfo.receiver_code">进口商代码:</abbr> {{spareReceiveInfo.receiver_code}}<br />
-                        <abbr title="PostalCode" v-if="spareReceiveInfo.postal_code">邮编:</abbr> {{spareReceiveInfo.postal_code}}<br />
-                    </address>
-                    <address>
-                        <strong v-if="spareReceiveInfo.country_name">{{spareReceiveInfo.country_name}} / {{spareReceiveInfo.en_country_name}}</strong><br />
-                        <strong>{{spareReceiveInfo.state}}</strong>&nbsp;<strong>{{spareReceiveInfo.city}}</strong><br>
-                        <a href="#">{{spareReceiveInfo.addressee}}</a>
+                        <p>详细地址:{{spareReceiveInfo.detail_address}}</p><br>
+                        <abbr title="Phone" v-if="spareReceiveInfo.phone">Tel:</abbr> {{spareReceiveInfo.phone}}<br v-if="spareReceiveInfo.phone"/>
+                        <abbr title="Mobile" v-if="spareReceiveInfo.mobile">手机:</abbr> {{spareReceiveInfo.mobile}}<br v-if="spareReceiveInfo.mobile"/>
+                        <abbr title="ExporterCode" v-if="spareReceiveInfo.receiver_code">进口商代码:</abbr> {{spareReceiveInfo.receiver_code}}<br v-if="spareReceiveInfo.receiver_code"/>
+                        <abbr title="PostalCode" v-if="spareReceiveInfo.postal_code">邮编:</abbr> {{spareReceiveInfo.postal_code}}<br v-if="spareReceiveInfo.postal_code"/>
+                        <abbr title="Country" v-if="spareReceiveInfo.country_name">国家:</abbr> {{spareReceiveInfo.country_name ? spareReceiveInfo.country_name + '/' + spareReceiveInfo.en_country_name : ''}}<br v-if="spareReceiveInfo.country_name"/>
+                        <abbr title="State" v-if="spareReceiveInfo.state">省:</abbr> {{spareReceiveInfo.state}}<br v-if="spareReceiveInfo.state"/>
+                        <abbr title="City" v-if="spareReceiveInfo.city">城市:</abbr> {{spareReceiveInfo.city}}<br v-if="spareReceiveInfo.city"/>
+                        <abbr title="Addressee" v-if="spareReceiveInfo.addressee">联系人:</abbr><a href="#">{{spareReceiveInfo.addressee}}</a>
                     </address>
                     <button class="btn btn-primary" type="button" @click="showEditSpare">编辑</button>
                     <button class="btn btn-primary" type="button" @click="toggleSpareReceive">取消备用</button>
@@ -909,6 +906,7 @@
                         <input type="hidden" name="id" v-model="productInfo.id"/>
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-primary" type="button" @click="saveProductInfo">保存内容</button>
+                            <button class="btn btn-primary" type="button" @click="goodsCodeQuery">编码查询</button>
                         </div>
                     </div>
                 </form>
@@ -1071,6 +1069,7 @@
     var selected_row = '';
     var init_data = {$init_data};
     var order_id = '{$order.id}';
+    var country = {$json_country_list};
 
 
     function initDeliveryTable() {
@@ -1744,6 +1743,28 @@
                         that.orderInfo.manufacturer = response.data.order_info.manufacturer;
                         that.orderInfo.remark = response.data.order_info.remark;
                         that.orderInfo.specifications_remark = response.data.order_info.specifications_remark;
+
+                        that.hasSpare = response.data.order_info.enable_spare ? true : false;
+                        if( 1 == parseInt(response.data.order_info.enable_spare) ) {
+                            that.hasSpare = true;
+                            var tempSpare = {
+                                company: response.data.order_info.spare_company,
+                                country_id: response.data.order_info.spare_country_id,
+                                country_name: response.data.order_info.spare_country_name,
+                                en_country_name: response.data.order_info.spare_country_en_name,
+                                state: response.data.order_info.spare_state,
+                                city: response.data.order_info.spare_city,
+                                detail_address: response.data.order_info.spare_detail_address,
+                                addressee: response.data.order_info.spare_addressee,
+                                mobile: response.data.order_info.spare_mobile,
+                                phone: response.data.order_info.spare_phone,
+                                postal_code: response.data.order_info.spare_postal_code,
+                                receiver_code: response.data.order_info.spare_receiver_code,
+                            };
+                            that.setSpareReceive(tempSpare);
+                        } else {
+                            that.hasSpare = false;
+                        }
                     }
                 }, "json");
 
@@ -1925,6 +1946,8 @@
                 if( data ) {
                     this.spareReceiveInfo.company = data.company;
                     this.spareReceiveInfo.country_id = data.country_id;
+                    this.spareReceiveInfo.country_name = data.country_name;
+                    this.spareReceiveInfo.en_country_name = data.en_country_name;
                     this.spareReceiveInfo.state = data.state;
                     this.spareReceiveInfo.city = data.city;
                     this.spareReceiveInfo.detail_address = data.detail_address;
@@ -1982,7 +2005,28 @@
                 $("#addReceiveModal").modal("hide");
             },
             showEditSpare: function() {
+                var that = this;
+                var temp = {
+                    company: that.spareReceiveInfo.company,
+                    country_id: that.spareReceiveInfo.country_id,
+                    country_name: that.spareReceiveInfo.country_name,
+                    en_country_name: that.spareReceiveInfo.en_country_name,
+                    state: that.spareReceiveInfo.state,
+                    city: that.spareReceiveInfo.city,
+                    detail_address: that.spareReceiveInfo.detail_address,
+                    addressee: that.spareReceiveInfo.addressee,
+                    mobile: that.spareReceiveInfo.mobile,
+                    phone: that.spareReceiveInfo.phone,
+                    postal_code: that.spareReceiveInfo.postal_code,
+                    receiver_code: that.spareReceiveInfo.receiver_code,
+                };
+                editSpareReceive.setSpareReceive(temp);
                 $("#editSpareReceiveModal").modal();
+                if( that.hasSpare ) {
+                    $("#editSpareReceiveModal input[name=enable]").iCheck("check");
+                } else {
+                    $("#editSpareReceiveModal input[name=enable]").iCheck("uncheck");
+                }
             },
             hideEditSpare: function() {
                 $("#editSpareReceiveModal").modal("hide");
@@ -2366,6 +2410,37 @@
             });
         },
         methods: {
+            setSpareReceive: function(data) {
+                if( data ) {
+                    this.spareReceiveInfo.company = data.company;
+                    this.spareReceiveInfo.country_id = data.country_id;
+                    this.spareReceiveInfo.country_name = data.country_name;
+                    this.spareReceiveInfo.en_country_name = data.en_country_name;
+                    this.spareReceiveInfo.state = data.state;
+                    this.spareReceiveInfo.city = data.city;
+                    this.spareReceiveInfo.detail_address = data.detail_address;
+                    this.spareReceiveInfo.addressee = data.addressee;
+                    this.spareReceiveInfo.mobile = data.mobile;
+                    this.spareReceiveInfo.phone = data.phone;
+                    this.spareReceiveInfo.postal_code = data.postal_code;
+                    this.spareReceiveInfo.receiver_code = data.receiver_code;
+
+                } else {
+                    this.spareReceiveInfo = {
+                        company: "",
+                        country_id: 0,
+                        state: "",
+                        city: "",
+                        detail_address: "",
+                        addressee: "",
+                        mobile: "",
+                        phone: "",
+                        postal_code: "",
+                        receiver_code: "",
+                        enable_spare: false,
+                    };
+                }
+            },
             saveSpare: function() {
                 if( this.spareReceiveInfo.enable ) {
                     if( !this.spareReceiveInfo.addressee ) {
@@ -2418,7 +2493,13 @@
                         return false;
                     }
 
-
+                    for( var i in country ) {
+                        if( this.spareReceiveInfo.country_id == country[i].id ) {
+                            this.spareReceiveInfo.country_name = country[i].name;
+                            this.spareReceiveInfo.en_country_name = country[i].ename;
+                            break;
+                        }
+                    }
 
                     addOrder.hasSpare = true;
                     addOrder.setSpareReceive(this.spareReceiveInfo);
@@ -2453,6 +2534,9 @@
 
         },
         methods: {
+            goodsCodeQuery: function() {
+                window.open("http://www.censtatd.gov.hk/trader/hscode/index_tc.jsp");
+            },
             saveProductInfo: function() {
                 if( this.productInfo.id ) {
                     var isUpdate = true;
