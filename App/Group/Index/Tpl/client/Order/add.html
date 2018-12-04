@@ -865,6 +865,11 @@
                         <div class="col-sm-6">
                             <input v-model="productInfo.goods_code" name="goods_code" type="text" value="" placeholder="" class="form-control">
                         </div>
+                        <div class="col-sm-2">
+                            <span class="input-group-btn col-sm-3">
+                                <button type="button" class="btn btn-primary" @click="goodsCodeQuery">编码查询</button>
+                            </span>
+                        </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
@@ -906,7 +911,7 @@
                         <input type="hidden" name="id" v-model="productInfo.id"/>
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-primary" type="button" @click="saveProductInfo">保存内容</button>
-                            <button class="btn btn-primary" type="button" @click="goodsCodeQuery">编码查询</button>
+                            <!--<button class="btn btn-primary" type="button" @click="goodsCodeQuery">编码查询</button>-->
                         </div>
                     </div>
                 </form>
@@ -1868,9 +1873,11 @@
                 var str = '';
                 if( this.deliveryInfo && this.receiveInfo ) {
                     if( this.receiveInfo.type == 0 ) {
-                        str += 'From '+ this.receiveInfo.en_country_name + ' to Guangzhou';
+                        // str += 'From '+ this.receiveInfo.en_country_name + ' to Guangzhou';
+                        str += 'From '+ this.receiveInfo.en_country_name + ' to ' + this.deliveryInfo.en_country_name;
                     } else {
-                        str += 'From Guangzhou to ' + this.receiveInfo.en_country_name;
+                        // str += 'From Guangzhou to ' + this.receiveInfo.en_country_name;
+                        str += 'From ' + this.deliveryInfo.en_country_name  + ' to ' + this.receiveInfo.en_country_name;
                     }
                 }
                 addOrder.orderInfo.mode_of_transportation = str;
