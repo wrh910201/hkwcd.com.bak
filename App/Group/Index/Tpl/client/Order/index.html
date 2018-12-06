@@ -199,10 +199,10 @@
                                         <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 0">{{spec.length}} {{spec.width}} {{spec.height}}</td>
                                         <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 0">{{volumeWeight(spec.length,spec.width,spec.height)}}</td>
                                         <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 0">{{spec.count}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 1"><del>{{spec.weight}}</del><br />{{spec.real_weight}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 1"><del>{{spec.length}} {{spec.width}} {{spec.height}}</del><br />{{spec.real_length}} {{spec.real_width}} {{spec.real_height}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length"v-show="orderInfo.express_status == 1"><del>{{volumeWeight(spec.length,spec.width,spec.height)}}</del><br />{{volumeWeight(spec.real_length,spec.real_width,spec.real_height)}}</td>
-                                        <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 1"><del>{{spec.count}}</del><br />{{spec.real_count}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 1">{{spec.real_weight}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 1">{{spec.real_length}} {{spec.real_width}} {{spec.real_height}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length"v-show="orderInfo.express_status == 1">{{volumeWeight(spec.real_length,spec.real_width,spec.real_height)}}</td>
+                                        <td class="text-center" :rowspan="spec.productList.length" v-show="orderInfo.express_status == 1">{{spec.real_count}}</td>
                                     </tr>
                                     <template v-for="(p,i) in spec.productList">
                                         <tr v-if="i > 0">
