@@ -161,9 +161,9 @@
                                         <div><strong>{{product.product_name}}</strong><br /><strong>{{product.en_product_name}}</strong></div>
                                     </td>
                                     <td class="text-center">{{product.goods_code}}</td>
-                                    <td class="text-center">{{product.single_declared}}</td>
+                                    <td class="text-center">USD {{product.single_declared}}</td>
                                     <td class="text-center">{{product.count}}</td>
-                                    <td class="text-center">{{product.total_declared}}</td>
+                                    <td class="text-center">USD {{parseInt(product.total_declared).toFixed(2)}}</td>
                                     <td class="text-center">{{product.origin}}</td>
                                     <td class="text-center">{{product.texture}}</td>
                                 </tr>

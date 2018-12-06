@@ -1323,6 +1323,7 @@
                     valign: 'middle',
                     visible: true,
                     sortable: false,
+                    formatter: currencyFormatter,
                 },
                 {
                     title: '总申报价值',
@@ -1332,6 +1333,7 @@
                     valign: 'middle',
                     visible: true,
                     sortable: false,
+                    formatter: currencyFormatter,
                 },
                 {
                     title: '数量',
@@ -1444,6 +1446,7 @@
                     valign: 'middle',
                     visible: true,
                     sortable: false,
+                    formatter: currencyFormatter,
                 },
                 {
                     title: '单位',
@@ -1497,6 +1500,9 @@
 
     /*formatters*/
 
+    function currencyFormatter(value, row) {
+        return "USD " + parseInt(value).toFixed(2);
+    }
 
     function specificationIndexFormatter(value, row, index) {
         return index + 1;
