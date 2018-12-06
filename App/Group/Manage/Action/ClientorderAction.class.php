@@ -365,8 +365,9 @@ class ClientorderAction extends CommonContentAction {
         if( empty($order) ) {
             $this->error('订单不存在');
         }
-        if( !($order['client_status'] == 1 && $order['exam_status'] == 0) ) {
-            $this->error('当前订单不是待审核状态');
+        if( !(($order['client_status'] == 1 && $order['exam_status'] == 0) || ($order['client_status'] == 1 && $order['exam_status'] == 1 && 0 == $order['ensure_status'])) ) {
+//            $this->error('当前订单不是待审核状态');
+            $this->error('当前订单不能输入费用');
         }
         $data['delivery_fee'] = I('delivery_fee', 0, 'floatval');
         $data['fuel_cost'] = I('fuel_cost', 0, 'floatval');

@@ -515,13 +515,14 @@
                     visible: true
                 },
                 {
-                    title: '收货地址',
-                    field: 'receive_detail_address',
+                    title: '收货国家',
+                    field: 'receive_country_name',
                     rowspan: 1,
                     align: 'center',
                     valign: 'middle',
 //                    searchable: true,
 //                    sortable: true,
+                    formatter: countryFormatter,
                     visible: true
                 },
                 {
@@ -601,6 +602,12 @@
             return value
         }
     }
+
+    function countryFormatter(value, row) {
+        return row.receive_country_name + " / " + row.receive_country_en_name;
+    }
+
+
 
     function operateFormatter(value, row) {
         var operate = [
@@ -806,15 +813,15 @@
                 fuel_cost: "燃油费",
                 customs_charges: "报关费",
                 pick_up_charge: "提货费",
-                express_fee: "快递费",
+                express_fee: "垫付费用",
                 insurance_premium: "保险费",
-                packing_charges: "包装费",
-                inspection_fee: "验货费",
+                packing_charges: "包材费",
+                inspection_fee: "QC费",
                 remote_fee: "偏远费",
                 over_weight_fee: "超重费",
                 over_length_fee: "超长费",
                 storage_fee: "储存费",
-                incidental: "杂费",
+                incidental: "单证费",
                 other_fee: "其他费用",
                 // total_fee: "总费用",
                 // settlement_method: "结算",

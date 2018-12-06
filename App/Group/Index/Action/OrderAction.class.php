@@ -685,8 +685,18 @@ class OrderAction extends BaseAction  {
                     exit;
                     break;
                 }
-                $temp["spare_{$v}"] = $data["spare_receive_info"][$v];
+//                $temp["spare_{$v}"] = $data["spare_receive_info"][$v];
             }
+            $temp['spare_company'] = $data["spare_receive_info"]['company'];
+            $temp['spare_addressee'] = $data["spare_receive_info"]['addressee'];
+            $temp['spare_country_id'] = $data["spare_receive_info"]['country_id'];
+            $temp['spare_state'] = $data["spare_receive_info"]['state'];
+            $temp['spare_city'] = $data["spare_receive_info"]['city'];
+            $temp['spare_detail_address'] = $data["spare_receive_info"]['detail_address'];
+            $temp['spare_phone'] = $data["spare_receive_info"]['phone'];
+            $temp['spare_mobile'] = $data["spare_receive_info"]['mobile'];
+            $temp['spare_postal_code'] = $data["spare_receive_info"]['postal_code'];
+            $temp['spare_receiver_code'] = $data["spare_receive_info"]['receiver_code'];
 
             $country = M('Country')->where(['id' => $data["spare_receive_info"]['country_id']])->find();
             if ($country) {
