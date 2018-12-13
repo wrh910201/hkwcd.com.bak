@@ -368,6 +368,17 @@
                                     </tr>
                                     </template>
                                     </template>
+                                    <tr v-if="specificationList.length > 0">
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">合计</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">KG</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">KG</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="1" style="text-align: center; vertical-align: middle; ">计费重量</td>
                                         <td colspan="1" style="text-align: center; vertical-align: middle; border-right: 0px">{{billingWeight}}</td>
@@ -889,21 +900,21 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 单件申报价值</label>
                         <div class="col-sm-6">
-                            <input v-model="productInfo.single_declared" name="single_declared" type="number" value="" placeholder="" class="form-control">
+                            <input v-model="productInfo.single_declared" name="single_declared" type="number" value="" placeholder="请输入金额，如100.00" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 原产地</label>
                         <div class="col-sm-6">
-                            <input v-model="productInfo.origin" name="origin" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="productInfo.origin" name="origin" type="text" value="" placeholder="请填写国家英文名称，如China" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">材质</label>
                         <div class="col-sm-6">
-                            <input v-model="productInfo.texture" name="texture" type="text" value="" placeholder="" class="form-control">
+                            <input v-model="productInfo.texture" name="texture" type="text" value="" placeholder="请用英文填写" class="form-control">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -1282,6 +1293,7 @@
 
     function initProductTable() {
         $("#productList").bootstrapTable({
+            // showFooter: true,
             columns: [
                 {
                     title: '编号',
@@ -1289,10 +1301,14 @@
                     rowspan: 1,
                     align: 'center',
                     valign: 'middle',
+                    colspan: 1,
 //                    searchable: true,
 //                    sortable: true,
                     formatter: productIndexFormatter,
-                    visible: true
+                    visible: true,
+                    // footerFormatter:function (value) {
+                    //     return "合计总价";
+                    // }
                 },
                 {
                     title: '品名',
@@ -1333,6 +1349,13 @@
                     visible: true,
                     sortable: false,
                     formatter: currencyFormatter,
+                    // footerFormatter: function(rows){
+                    //     var sum = 0;
+                    //     for (var i=0;i<rows.length;i++) {
+                    //         sum += rows[i].single_declared * rows[i].count;
+                    //     }
+                    //     return "USD" + parseInt(sum).toFixed(2);
+                    // }
                 },
                 {
                     title: '数量',
@@ -1588,6 +1611,7 @@
                 if (confirm) {
                     if( addOrder.checkProductDeletable(index) ) {
                         addOrder.productList.splice(index, 1);
+                        addOrder.calTotalDeclared();
                         $("#productList").bootstrapTable("load", addOrder.productList);
                         swal.close();
                     } else {
@@ -1704,6 +1728,7 @@
             orderInfo: {},
             productList: [],
             specificationList: [],
+            totalDeclared: "",
             billingWeight: "",
         },
         mounted: function() {
@@ -2011,6 +2036,7 @@
                     addOrder.productList.push(temp);
                 }
                 this.refreshSpecificationProduct(temp);
+                this.calTotalDeclared();
             },
             refreshSpecificationProduct: function(product) {
                 //每次调用addProductToProductList之后，刷新规格里面的产品
@@ -2125,6 +2151,13 @@
                 } else {
                     this.billingWeight = "";
                 }
+            },
+            calTotalDeclared: function() {
+                var total = 0;
+                for( var i in this.productList ) {
+                    total += this.productList[i].single_declared * this.productList[i].count;
+                }
+                this.totalDeclared = "USD " + parseInt(total).toFixed(2);
             }
 
         }
@@ -3043,6 +3076,7 @@
         addProduct.productInfo.texture = "";
         addProduct.productInfo.unit = "";
         addProduct.productInfo.count = "";
+        addOrder.calTotalDeclared();
     });
 
     $("#addSpecificationModal").on("hidden.bs.modal",function() {
