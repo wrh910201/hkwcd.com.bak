@@ -250,7 +250,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">托运备注</label>
                             <div class="col-sm-10">
-                                <input v-model="orderInfo.specifications_remark" name="specifications_remark" type="text" value="" class="form-control" placeholder="请填写国内物流信息或工厂联系人信息">
+                                <input v-model="orderInfo.specifications_remark" name="specifications_remark" type="text" value="" class="form-control" placeholder="请填写国内物流信息或工厂联系人信息，国内共多少个包裹需要寄运，具体箱数以及每箱分别是哪些货物。如：圆通1箱xx，顺丰2箱xx">
                             </div>
                         </div>
                     </form>
@@ -271,6 +271,8 @@
                 <div class="ibox-content">
                     <div id="table-bar"></div>
                     <table id="productList"></table>
+                    <p class="text-danger"></p>
+                    <p class="text-danger">货物要报关，品名请具体化，相似货物可以归类后申报取中间值，确实少量的品种可以不用填上。商品编码按您的货物选择描述最接近的，申报价值单位国际统一为美金。</p>
                 </div>
 
             </div>
@@ -398,7 +400,8 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-
+                    <p class="text-danger"></p>
+                    <p class="text-danger">重量、尺寸先大概填写，货物打包后工作人员会根据实际情况进行修改。</p>
 
                 </div>
                 <div class="ibox-content">
@@ -900,7 +903,10 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">* 单件申报价值</label>
                         <div class="col-sm-6">
+                            <div class="input-group m-b">
+                            <span class="input-group-addon">$</span>
                             <input v-model="productInfo.single_declared" name="single_declared" type="number" value="" placeholder="请输入金额，如100.00" class="form-control">
+                            </div>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
