@@ -368,6 +368,17 @@
                                             </tr>
                                         </template>
                                     </template>
+                                    <tr v-if="specificationList.length > 0">
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">合计</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">{{totalWeight}}</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">{{totalVolumeWeight}}</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; ">{{totalCount}}箱</td>
+                                        <td colspan="1" style="text-align: center; vertical-align: middle; "></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="1" style="text-align: center; vertical-align: middle; ">计费重量</td>
                                         <td colspan="1" style="text-align: center; vertical-align: middle; border-right: 0px">{{billingWeight}}</td>
@@ -1706,7 +1717,11 @@
             orderInfo: {},
             productList: [],
             specificationList: [],
+            totalDeclared: "",
             billingWeight: "",
+            totalVolumeWeight: "",
+            totalWeight: "",
+            totalCount: 0
         },
         mounted: function() {
             initProductTable();
@@ -2199,8 +2214,10 @@
             calBillingWeight: function() {
                 var totalVolumeWeight = 0;
                 var totalWeight = 0;
+                var totalCount = 0;
 
                 for( var i in this.specificationList ) {
+                    totalCount += parseInt(this.specificationList[i]["count"]);
                     totalWeight += this.specificationList[i]["weight"] * this.specificationList[i]["count"];
                     var volumeWeight = this.volumeWeight(this.specificationList[i]["length"], this.specificationList[i]["width"], this.specificationList[i]["height"])
                     totalVolumeWeight += volumeWeight * this.specificationList[i]["count"];
@@ -2213,6 +2230,16 @@
                 } else {
                     this.billingWeight = "";
                 }
+                this.totalVolumeWeight = totalVolumeWeight + "KG";
+                this.totalWeight = totalWeight + "KG";
+                this.totalCount = totalCount;
+            },
+            calTotalDeclared: function() {
+                var total = 0;
+                for( var i in this.productList ) {
+                    total += this.productList[i].single_declared * this.productList[i].count;
+                }
+                this.totalDeclared = "USD " + parseInt(total).toFixed(2);
             }
 
         }
