@@ -1036,69 +1036,10 @@ class ClientorderAction extends CommonContentAction {
             $order_detail_remain[] = [];
         }
 
-        $order_specifications = M('ClientOrderSpecifications')
-            ->alias('s')
-            ->field('s.*, m.detail_id,m.number, d.product_name, d.en_product_name, d.unit, d.origin, d.goods_code')
-            ->join('left join hx_client_order_map as m on m.specifications_id = s.id')
-            ->join('left join hx_client_order_detail as d on d.id = m.detail_id')
-            ->where(['s.order_num' => $order['order_num']])
-            ->select();
-        if( $order_specifications ) {
-            $temp = [];
-            foreach( $order_specifications as $k => $v ) {
-                if( !isset($temp['item-'.$v['id']]) ) {
-                    $temp['item-'.$v['id']] = $v;
-                }
-                $temp['item-'.$v['id']]['detail'][] = [
-                    'product_name' => $v['product_name'],
-                    'en_product_name' => $v['en_product_name'],
-                    'unit' => $v['unit'],
-                    'number' => $v['number'],
-                    'origin' => $v['origin'],
-                    'goods_code' => $v['goods_code'],
-                ];
-            }
-            $order_specifications = $temp;
-        }
-        $order['specifications_total_weight'] = 0;
-        $order['specifications_total_rate'] = 0;
-        $order['specifications_calculate_weight'] = 0;
-        $order['specifications_total_count'] = 0;
-        if( $order_specifications ) {
-            $start = 1;
-            $real_start = 1;
-            foreach( $order_specifications as $k => $v ) {
-                $end = $start + $v['count'] - 1;
-                $order_specifications[$k]['no'] = $start.'-'.$end;
-                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']);
-                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']);
-                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']);
-                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']);
-                $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
-                $order_specifications[$k]['calculate_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
-                $order['specifications_total_weight'] += $v['weight'] * $v['count'];
-                $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
-                $order['specifications_total_count'] += $v['count'];
-                $order['specifications_calculate_weight'] += $order_specifications[$k]['calculate_weight'] * $v['count'];
-                $order_specifications[$k]['rowspan'] = count($v['detail']);
-                $start = $end + 1;
-                //real
-                $real_end = $real_start + $v['real_count'] - 1;
-                $order_specifications[$k]['real_no'] = $real_start.'-'.$real_end;
-                $order_specifications[$k]['real_weight'] = sprintf('%.2f', $v['real_weight']);
-                $order_specifications[$k]['real_length'] = sprintf('%.2f', $v['real_length']);
-                $order_specifications[$k]['real_width'] = sprintf('%.2f', $v['real_width']);
-                $order_specifications[$k]['real_height'] = sprintf('%.2f', $v['real_height']);
-                $order_specifications[$k]['real_rate'] = ($v['real_height'] * $v['real_length'] * $v['real_width'] / 5000);
-                $order_specifications[$k]['real_calculate_weight'] = $v['real_weight'] > $order_specifications[$k]['real_rate'] ? $v['real_weight'] : $order_specifications[$k]['real_rate'];
-                $order['real_specifications_total_weight'] += $v['real_weight'] * $v['real_count'];
-                $order['real_specifications_total_rate'] += $order_specifications[$k]['real_rate'] * $v['real_count'];
-                $order['real_specifications_total_count'] += $v['real_count'];
-                $order['real_specifications_calculate_weight'] += $order_specifications[$k]['real_calculate_weight'] * $v['real_count'];
-                $order_specifications[$k]['rowspan'] = count($v['detail']);
-                $real_start = $real_end + 1;
-            }
-        }
+        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+
+        $order["delivery_weight"] = calBillingWeight($order_specifications, $order["express_status"]);
+
         $order["mode_of_transportation"] = str_replace("From ", "From: ", $order["mode_of_transportation"]);
         $order["mode_of_transportation"] = str_replace("to ", "To: ", $order["mode_of_transportation"]);
         $client = M("Client")->find($order["client_id"]);
@@ -1152,28 +1093,13 @@ class ClientorderAction extends CommonContentAction {
             }
             $order_specifications = $temp;
         }
-        $order['specifications_total_weight'] = 0;
-        $order['specifications_total_rate'] = 0;
-        $order['specifications_calculate_weight'] = 0;
-        $order['specifications_total_count'] = 0;
+        $order['total_weighting_weight'] = 0;      //总的过磅重量
+        $order['total_volume_weight'] = 0;  //总的材积重量
+        $order['total_count'] = 0;  //总的计费重量
         if( $order_specifications ) {
             $start = 1;
             $real_start = 1;
             foreach( $order_specifications as $k => $v ) {
-                $end = $start + $v['count'] - 1;
-                $order_specifications[$k]['no'] = $start.'-'.$end;
-                $order_specifications[$k]['weight'] = sprintf('%.2f', $v['weight']);
-                $order_specifications[$k]['length'] = sprintf('%.2f', $v['length']);
-                $order_specifications[$k]['width'] = sprintf('%.2f', $v['width']);
-                $order_specifications[$k]['height'] = sprintf('%.2f', $v['height']);
-                $order_specifications[$k]['rate'] = ($v['height'] * $v['length'] * $v['width'] / 5000);
-                $order_specifications[$k]['calculate_weight'] = $v['weight'] > $order_specifications[$k]['rate'] ? $v['weight'] : $order_specifications[$k]['rate'];
-                $order['specifications_total_weight'] += $v['weight'] * $v['count'];
-                $order['specifications_total_rate'] += $order_specifications[$k]['rate'] * $v['count'];
-                $order['specifications_total_count'] += $v['count'];
-                $order['specifications_calculate_weight'] += $order_specifications[$k]['calculate_weight'] * $v['count'];
-                $order_specifications[$k]['rowspan'] = count($v['detail']);
-                $start = $end + 1;
                 //real
                 $real_end = $real_start + $v['real_count'] - 1;
                 $order_specifications[$k]['real_no'] = $real_start.'-'.$real_end;
@@ -1181,12 +1107,11 @@ class ClientorderAction extends CommonContentAction {
                 $order_specifications[$k]['real_length'] = sprintf('%.2f', $v['real_length']);
                 $order_specifications[$k]['real_width'] = sprintf('%.2f', $v['real_width']);
                 $order_specifications[$k]['real_height'] = sprintf('%.2f', $v['real_height']);
-                $order_specifications[$k]['real_rate'] = ($v['real_height'] * $v['real_length'] * $v['real_width'] / 5000);
-                $order_specifications[$k]['real_calculate_weight'] = $v['real_weight'] > $order_specifications[$k]['real_rate'] ? $v['real_weight'] : $order_specifications[$k]['real_rate'];
-                $order['real_specifications_total_weight'] += $v['real_weight'] * $v['real_count'];
-                $order['real_specifications_total_rate'] += $order_specifications[$k]['real_rate'] * $v['real_count'];
-                $order['real_specifications_total_count'] += $v['real_count'];
-                $order['real_specifications_calculate_weight'] += $order_specifications[$k]['real_calculate_weight'] * $v['real_count'];
+                $order_specifications[$k]['volume_weight'] = calVolumeWeight($order_specifications[$k]['real_length'], $order_specifications[$k]['real_width'], $order_specifications[$k]['real_height']);
+                $order_specifications[$k]['cubage_of_volume'] = calCubageOfVolume($order_specifications[$k]['real_length'], $order_specifications[$k]['real_width'], $order_specifications[$k]['real_height']);
+                $order['total_weighting_weight'] += $v['real_weight'] * $v['real_count'];
+                $order['total_volume_weight'] += $order_specifications[$k]['volume_weight'] * $v['real_count'];
+                $order['total_count'] += $v['real_count'];
                 $order_specifications[$k]['rowspan'] = count($v['detail']);
                 $real_start = $real_end + 1;
             }

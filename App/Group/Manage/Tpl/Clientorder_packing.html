@@ -143,7 +143,7 @@
                 </if>
             </foreach>
                 <td rowspan="{$v.rowspan}">{$v.real_weight}KG</td>
-                <td rowspan="{$v.rowspan}">{$v["real_rate"] / 20}</td>
+                <td rowspan="{$v.rowspan}">{$v.cubage_of_volume}</td>
                 <td rowspan="{$v.rowspan}">{$v.real_count}</td>
             </tr>
             <foreach name="v.detail" item="d" key="j">
@@ -170,9 +170,9 @@
             </foreach>
             <tr>
                 <td colspan="4">总 / Total</td>
-                <td>{$order.real_specifications_total_weight}KG</td>
-                <td>{$order.real_specifications_total_rate}KG</td>
-                <td>{$order.real_specifications_total_count}</td>
+                <td>{$order.total_weighting_weight}KG</td>
+                <td>{$order.total_volume_weight}</td>
+                <td>{$order.total_count}</td>
             </tr>
             <tr>
                 <td>备注 / Remark</td>

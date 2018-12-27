@@ -1218,7 +1218,7 @@ function calBillingWeight($specification_list = [], $express_status = 0) {
         if( $specification_list ) {
             foreach ($specification_list as $k => $v) {
                 $total_weight += $v["weight"] * $v["count"];
-                $volume_weight = $v["length"] * $v["width"] * $v["height"] / 5000;
+                $volume_weight = calVolumeWeight($v["length"], $v["width"], $v["height"]);
                 $total_volume_weight += $volume_weight * $v["count"];
             }
         }
@@ -1226,13 +1226,38 @@ function calBillingWeight($specification_list = [], $express_status = 0) {
         if( $specification_list ) {
             foreach ($specification_list as $k => $v) {
                 $total_weight += $v["real_weight"] * $v["real_count"];
-                $volume_weight = $v["real_length"] * $v["real_width"] * $v["real_height"] / 5000;
+                $volume_weight = calVolumeWeight($v["real_length"], $v["real_width"], $v["real_height"]);
                 $total_volume_weight += $volume_weight * $v["real_count"];
             }
         }
     }
     $billing_weight = $total_volume_weight > $total_weight ? $total_volume_weight : $total_weight;
     return $billing_weight;
+}
+
+/**
+ * 材积计算立方数,传入数值的单位都是cm
+ * @param int $length
+ * @param int $width
+ * @param int $height
+ * @return int
+ */
+function calCubageOfVolume($length = 0, $width = 0, $height = 0) {
+
+    $cubage_of_volume = $length * $width * $height / 100 / 100 / 100;
+    return sprintf('%.4f', $cubage_of_volume);
+}
+
+/**
+ * 计算材积重
+ * @param int $length
+ * @param int $width
+ * @param int $height
+ * @return string
+ */
+function calVolumeWeight($length = 0, $width = 0, $height = 0) {
+    $volume_weight = $length * $width * $height / 5000;
+    return sprintf('%.2f', $volume_weight);
 }
 
 ?>
