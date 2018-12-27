@@ -1095,6 +1095,7 @@ class ClientorderAction extends CommonContentAction {
         }
         $order['total_weighting_weight'] = 0;      //总的过磅重量
         $order['total_volume_weight'] = 0;  //总的材积重量
+        $order['total_cubage_of_volume'] = 0;  //总的材积立方数
         $order['total_count'] = 0;  //总的计费重量
         if( $order_specifications ) {
             $start = 1;
@@ -1111,6 +1112,7 @@ class ClientorderAction extends CommonContentAction {
                 $order_specifications[$k]['cubage_of_volume'] = calCubageOfVolume($order_specifications[$k]['real_length'], $order_specifications[$k]['real_width'], $order_specifications[$k]['real_height']);
                 $order['total_weighting_weight'] += $v['real_weight'] * $v['real_count'];
                 $order['total_volume_weight'] += $order_specifications[$k]['volume_weight'] * $v['real_count'];
+                $order['total_cubage_of_volume'] += $order_specifications[$k]['cubage_of_volume'] * $v['real_count'];
                 $order['total_count'] += $v['real_count'];
                 $order_specifications[$k]['rowspan'] = count($v['detail']);
                 $real_start = $real_end + 1;
