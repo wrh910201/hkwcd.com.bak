@@ -1204,4 +1204,35 @@ function packageTypeFormatter($type) {
     }
 }
 
+/**
+ * 计算计费重量
+ * @param $specification_list
+ * @param int $express_status
+ * @return int
+ */
+function calBillingWeight($specification_list = [], $express_status = 0) {
+
+    $total_weight = 0;
+    $total_volume_weight = 0;
+    if( 0 == $express_status ) {
+        if( $specification_list ) {
+            foreach ($specification_list as $k => $v) {
+                $total_weight += $v["weight"] * $v["count"];
+                $volume_weight = $v["length"] * $v["width"] * $v["height"] / 5000;
+                $total_volume_weight += $volume_weight * $v["count"];
+            }
+        }
+    } else {
+        if( $specification_list ) {
+            foreach ($specification_list as $k => $v) {
+                $total_weight += $v["real_weight"] * $v["real_count"];
+                $volume_weight = $v["real_length"] * $v["real_width"] * $v["real_height"] / 5000;
+                $total_volume_weight += $volume_weight * $v["real_count"];
+            }
+        }
+    }
+    $billing_weight = $total_volume_weight > $total_weight ? $total_volume_weight : $total_weight;
+    return $billing_weight;
+}
+
 ?>

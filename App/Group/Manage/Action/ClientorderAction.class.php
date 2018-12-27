@@ -1315,6 +1315,10 @@ class ClientorderAction extends CommonContentAction {
         }
         $order['detail_declared_total'] = sprintf('%.2f', $order['detail_declared_total']);
 
+        $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
+
+        $order["delivery_weight"] = calBillingWeight($order_specifications, $order["express_status"]);
+
         $this->assign('detail_start', count($order_detail));
         $this->assign('detail_end', 10);
         $this->assign('order_detail', $order_detail);
