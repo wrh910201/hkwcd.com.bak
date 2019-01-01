@@ -40,7 +40,33 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div id="table-bar"></div>
+                    <div id="table-bar">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input id="start_date" class="form-control layer-date" placeholder="起始日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})">
+                                    <!--<label class="laydate-icon"></label>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input id="end_date" class="form-control layer-date" placeholder="结束日期" onclick="laydate({istime: true, format: 'YYYY-MM-DD'})">
+                                    <!--<label class="laydate-icon"></label>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <button type="button" class="btn btn-w-m btn-primary" onclick="searchOrderByDate()">搜索</button>
+                            <script>
+                                function searchOrderByDate() {
+                                    $example.bootstrapTable("destroy");
+                                    initTable();
+                                }
+                            </script>
+                        </div>
+                    </div>
                     <table id="example"></table>
                 </div>
 
@@ -442,6 +468,7 @@
 <script src="/Public/client/static/layer/2.1/layer.min.js"></script>
 <script src="/Public/client/static/finance/js/fm.selectator.jquery.js"></script>
 <script src="/Public/client/hplus/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/Public/client/hplus/js/plugins/layer/laydate/laydate.js"></script>
 <script type="text/javascript" src="__PUBLIC__/vue/2.3.4/vue.min.js"></script>
 
 <script>
@@ -495,6 +522,12 @@
             queryParamsType: "limit",
             queryParams: function queryParams(params) {   //设置查询参数
                 var temp_params = dataQueryParams(params);
+                if( $("#start_date").val() ) {
+                    temp_params.start_date =  $("#start_date").val();
+                }
+                if( $("#end_date").val() ) {
+                    temp_params.end_date =  $("#end_date").val();
+                }
 //                temp_params.user_id = id;
                 return temp_params
             },
