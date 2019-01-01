@@ -117,6 +117,7 @@ class ProductAction extends BaseAction
             $data["single_declared"] = I("single_declared", "", "trim");
             $data["origin"] = I("origin", "", "trim");
             $data["texture"] = I("texture", "", "trim");
+            $data["usage"] = I("usage", "", "trim");
 
             if( empty($data["product_name"]) ) {
                 $this->error('请输入中文品名');
@@ -158,6 +159,7 @@ class ProductAction extends BaseAction
             $data["single_declared"] = I("single_declared", "", "trim");
             $data["origin"] = I("origin", "", "trim");
             $data["texture"] = I("texture", "", "trim");
+            $data["usage"] = I("usage", "", "trim");
 
             $has_error = false;
             $errorMsg = "";
@@ -252,6 +254,7 @@ class ProductAction extends BaseAction
             $data["single_declared"] = I("single_declared", "", "trim");
             $data["origin"] = I("origin", "", "trim");
             $data["texture"] = I("texture", "", "trim");
+            $data["usage"] = I("usage", "", "trim");
 
             if( empty($data["product_name"]) ) {
                 $this->error('请输入中文品名');

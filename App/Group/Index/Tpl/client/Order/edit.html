@@ -925,6 +925,13 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">用途</label>
+                        <div class="col-sm-6">
+                            <input v-model="productInfo.usage" name="usage" type="text" value="" placeholder="请用英文填写" class="form-control">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
                         <input type="hidden" name="id" v-model="productInfo.id"/>
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-primary" type="button" @click="saveProductInfo">保存内容</button>
@@ -1381,6 +1388,15 @@
                     sortable: false,
                 },
                 {
+                    title: '用途',
+                    field: 'usage',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
                     title: '操作',
                     rowspan: 1,
                     align: 'center',
@@ -1486,6 +1502,15 @@
                 {
                     title: '材质',
                     field: 'texture',
+                    rowspan: 1,
+                    align: 'center',
+                    valign: 'middle',
+                    visible: true,
+                    sortable: false,
+                },
+                {
+                    title: '用途',
+                    field: 'usage',
                     rowspan: 1,
                     align: 'center',
                     valign: 'middle',
@@ -1611,7 +1636,7 @@
                     } else {
                         swal({
                             title: "警告",
-                            text: "该商品品已被使用，请先删除对应规格",
+                            text: "该商品已被使用，请先删除对应规格",
                             type: "error",
                         })
                     }
@@ -2097,6 +2122,7 @@
                             total_declared: productInfo.total_declared,
                             origin: productInfo.origin,
                             texture: productInfo.texture,
+                            usage: productInfo.usage,
                             unit: productInfo.unit,
                             count: productInfo.count,
                         };
@@ -2113,6 +2139,7 @@
                     total_declared: productInfo.total_declared,
                     origin: productInfo.origin,
                     texture: productInfo.texture,
+                    usage: productInfo.usage,
                     unit: productInfo.unit,
                     count: productInfo.count,
                 };
@@ -2135,6 +2162,7 @@
                                 total_declared: product.total_declared,
                                 origin: product.origin,
                                 texture: product.texture,
+                                usage: product.usage,
                                 unit: product.unit,
                                 count: product.count,
                                 number: this.specificationList[i].productList[j].number,
@@ -2670,6 +2698,7 @@
                         total_declared: productInfo.total_declared,
                         origin: productInfo.origin,
                         texture: productInfo.texture,
+                        usage: productInfo.usage,
                         unit: productInfo.unit,
                         count: productInfo.count,
                     };
@@ -2683,6 +2712,7 @@
                         total_declared: "",
                         origin: "",
                         texture: "",
+                        usage: "",
                         unit: "",
                         count: "",
                     };

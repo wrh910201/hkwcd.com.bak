@@ -771,6 +771,7 @@ class OrderAction extends BaseAction  {
                     $temp[$k]['single_declared'] = isset($v['single_declared']) ? $v['single_declared'] : 0;
                     $temp[$k]['origin'] = isset($v['origin']) ? $v['origin'] : 'China';
                     $temp[$k]["texture"] = isset($v['texture']) ? $v['texture'] : '';
+                    $temp[$k]["usage"] = isset($v['usage']) ? $v['usage'] : '';
                 }
                 $order_detail = $temp;
                 foreach( $order_detail as $k => $v ) {
