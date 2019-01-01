@@ -182,6 +182,8 @@
                 <th>单件申报价值</th>
                 <th>总申报价值</th>
                 <th>原产地</th>
+                <th>材质</th>
+                <th>用途</th>
             </tr>
             <foreach name="order_detail" item="v">
             <tr>
@@ -193,6 +195,8 @@
                 <td>{$v.single_declared}</td>
                 <td>{$v.declared}</td>
                 <td>{$v.origin}</td>
+                <td>{$v.texture}</td>
+                <td>{$v.usage}</td>
             </tr>
             </foreach>
             <tr>
@@ -203,6 +207,8 @@
                 <td></td>
                 <td></td>
                 <td>{$order.detail_declared_total}</td>
+                <td></td>
+                <td></td>
                 <td></td>
             </tr>
         </table>
