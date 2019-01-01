@@ -36,12 +36,13 @@
                     <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'pay'])}')" class="btn_blue" value="待收款">
                     <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'express'])}')" class="btn_blue" value="待发货">
                     <input type="button" onclick="goUrl('{:U(GROUP_NAME. '/Clientorder/index', ['status' => 'receive'])}')" class="btn_blue" value="待签收">
+                    <input type="button" onclick="doConfirmBatch('{:U(GROUP_NAME.'/Clientorder/multiComplete', array('batchFlag' => 1))}', '确实选择的订单已签收吗？')" class="btn_blue" value="批量签收">
                 </form>
             </div>
         </if>
     </div>
     <div class="list">
-        <form action="{:U(GROUP_NAME.'/Clientorder/multiDel')}" method="post" id="form_do" name="form_do">
+        <form action="{:U(GROUP_NAME.'/Clientorder/multiComplete')}" method="post" id="form_do" name="form_do">
             <table width="100%">
                 <tr>
                     <th><input type="checkbox" id="check"></th>

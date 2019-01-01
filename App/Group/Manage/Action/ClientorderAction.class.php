@@ -173,7 +173,7 @@ class ClientorderAction extends CommonContentAction {
                 'order_id' => $order['id'],
                 'operator_id' => session('yang_adm_user_id'),
                 'type' => 2,
-                'content' => '订单完成',
+                'content' => '订单完成（签收）',
             ];
             M('ClientOrderLog')->add($log_data);
 
@@ -181,6 +181,59 @@ class ClientorderAction extends CommonContentAction {
         } else {
             $this->error('系统繁忙，请稍后重试');
         }
+    }
+
+    public function multiComplete() {
+        $idArr = I('key',0 , 'intval');
+        if (!is_array($idArr)) {
+            $this->error('请选择要签收的订单');
+        }
+        $where = array('id' => array('in', $idArr));
+        $order_list = M("ClientOrder")
+            ->where($where)
+            ->select();
+        if( $order_list ) {
+            foreach( $order_list as $order ) {
+                if( !( 1 == $order["express_status"] && 0 == $order["receive_status"] ) ) {
+                    $this->error('存在不可签收的订单');
+                }
+            }
+        } else {
+            $this->error('请选择要签收的订单');
+        }
+        $model = new Model();
+        try {
+            $success_count = 0;
+            $transaction = true;
+            $model->startTrans();
+            foreach( $order_list as $order ) {
+                $result = M("ClientOrder")
+                    ->where(["id" => $order["id"]])
+                    ->save(["receive_status" => 1]);
+                if( is_numeric($result) ) {
+                    //插入操作日志
+                    $log_data = [
+                        'order_num' => $order['order_num'],
+                        'order_id' => $order['id'],
+                        'operator_id' => session('yang_adm_user_id'),
+                        'type' => 2,
+                        'content' => '订单完成（签收）',
+                    ];
+                    M('ClientOrderLog')->add($log_data);
+                    $success_count++;
+                } else {
+                    $model->rollback();
+                    $this->error('系统繁忙，请稍后重试');
+                }
+            }
+            $model->commit();
+            $this->success('成功签收' . $success_count . '张订单');
+        } catch ( \Exception $e ) {
+            $model->rollback();
+            $this->error('系统繁忙，请稍后重试');
+//            $this->response['msg'] = $e->getMessage();
+        }
+
     }
 
     public function detail() {
