@@ -1091,6 +1091,7 @@ class ClientorderAction extends CommonContentAction {
 
         $order_specifications = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->select();
 
+        $order["real_specifications_total_count"] = M('ClientOrderSpecifications')->where(['order_num' => $order['order_num']])->sum("real_count");
         $order["delivery_weight"] = calBillingWeight($order_specifications, $order["express_status"]);
 
         $order["mode_of_transportation"] = str_replace("From ", "From: ", $order["mode_of_transportation"]);
