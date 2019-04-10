@@ -1094,8 +1094,20 @@ function query_express($type, $postid, $id = 1, $valicode = '') {
     $temp = rand(0, 100000000);
     $temp /= 100000000;
     $params = 'type='.$type.'&postid='.$postid.'&id='.$id.'&valicode='.$valicode.'&temp='.$temp;
-    $http_header = ["User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"];
-    return get($url, $params, $http_header);
+    $http_header = [
+        "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+//        "Accept-Encoding: gzip, deflate, br",
+        "Accept-Language: zh-CN,zh;q=0.9",
+        "Cache-Control: no-cache",
+        'Connection: Keep-Alive',
+        "Host: www.kuaidi100.com",
+        "Pragma: no-cache",
+        "Upgrade-Insecure-Requests: 1",
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+        "Referer: https://www.kuaidi100.com",
+    ];
+    $cookie = "WWWID=WWW";
+    return get($url, $params, $http_header, $cookie);
 }
 
 /**
@@ -1106,7 +1118,7 @@ function query_express($type, $postid, $id = 1, $valicode = '') {
  * @author winsen
  * @date 2014-10-24
  */
-function get($url, $params = '', $http_header = [])
+function get($url, $params = '', $http_header = [],$cookie = "")
 {
     $curl = curl_init();
     if($params != '')
@@ -1119,6 +1131,9 @@ function get($url, $params = '', $http_header = [])
 //    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
     if( $http_header ) {
         curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
+    }
+    if( $cookie ) {
+        curl_setopt($curl, CURLOPT_COOKIE, $cookie);
     }
     $data = curl_exec($curl);
     curl_close($curl);
@@ -1160,6 +1175,48 @@ function post($url, $params = array(), $encode = true)
     $data = curl_exec($curl);
     curl_close($curl);
     return $data;
+}
+
+function getCookie($url = "") {
+    $ch = curl_init();
+
+    if ( stripos($url, "https://") !== false )
+    {
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 1); //CURL_SSLVERSION_TLSv1
+    }
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "Accept-Encoding: gzip, deflate, br",
+        "Accept-Language: zh-CN,zh;q=0.9",
+        "Cache-Control: no-cache",
+        'Connection: Keep-Alive',
+        "Host: www.kuaidi100.com",
+        "Pragma: no-cache",
+        "Upgrade-Insecure-Requests: 1",
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+    ));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 0);//忽略超时
+//    curl_setopt($ch, CURLOPT_NOBODY, false);
+
+    $str = curl_exec($ch);
+
+    // 获得响应结果里的：头大小
+    $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    // 根据头大小去获取头信息内容
+    $header = substr($str, 0, $headerSize);
+//        echo $header;exit;
+    $pattern = '#Set-Cookie:([^;]*);#';
+    if (preg_match_all($pattern, $header, $results)) {
+        $cookies = implode(';', $results[1]);
+        echo $cookies;exit;
+    }
+    curl_close($ch);
 }
 
 function _order_status($order)
