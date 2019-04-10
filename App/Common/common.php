@@ -1094,7 +1094,8 @@ function query_express($type, $postid, $id = 1, $valicode = '') {
     $temp = rand(0, 100000000);
     $temp /= 100000000;
     $params = 'type='.$type.'&postid='.$postid.'&id='.$id.'&valicode='.$valicode.'&temp='.$temp;
-    return get($url, $params);
+    $http_header = ["User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"];
+    return get($url, $params, $http_header);
 }
 
 /**
@@ -1105,7 +1106,7 @@ function query_express($type, $postid, $id = 1, $valicode = '') {
  * @author winsen
  * @date 2014-10-24
  */
-function get($url, $params = '')
+function get($url, $params = '', $http_header = [])
 {
     $curl = curl_init();
     if($params != '')
@@ -1116,6 +1117,9 @@ function get($url, $params = '')
     curl_setopt($curl, CURLOPT_HEADER, 0);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 //    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+    if( $http_header ) {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $http_header);
+    }
     $data = curl_exec($curl);
     curl_close($curl);
     return $data;
